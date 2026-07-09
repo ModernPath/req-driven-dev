@@ -11,6 +11,19 @@ The process has two evidence loops coordinated by one development loop:
 
 The V-model defines traceability. The loops define how work moves in small verified increments.
 
+## Repository Ownership
+
+Work progress belongs in the main repository being changed, beside the product code and tests. Do not keep a separate local `epic/` or `epics/` folder in this instruction/template repository.
+
+Repo-relative process artifacts:
+
+- `WORKLIST.md` is the main repository's live development control surface.
+- `epics/` in the main repository stores epic records.
+- Epic records may be single files or folders with a main epic file and multiple task files.
+- Task files may be handed to subagents for focused lower-loop work; the main chat keeps oversight by monitoring those files and keeping the parent epic and `WORKLIST.md` synchronized.
+
+Unless otherwise stated, paths in this process are relative to the main repository.
+
 ## Grounded Recording
 
 All recorded facts, decisions, requirements, scenarios, system requirements, tasks, status changes, and completion claims must be grounded in source material.
@@ -29,7 +42,7 @@ Rules:
 - No information may be recorded as fact without a source reference.
 - Unsourced claims must be recorded as open questions.
 - Conflicting sources must be recorded as conflicts until resolved by a sourced decision.
-- Decisions must be recorded in the relevant epic file with their source and consequence.
+- Decisions must be recorded in the relevant epic record with their source and consequence.
 - Completion claims must include code and test or validation evidence.
 
 ## Loop Chart
@@ -87,7 +100,7 @@ Trace chain:
 
 ## Development Loop
 
-The development loop coordinates the upper and lower loops. It is driven by `WORKLIST.md`.
+The development loop coordinates the upper and lower loops. It is driven by the main repository's `WORKLIST.md`.
 
 No implementation work starts outside the work-list. Every active epic, scenario, system requirement, and task must appear in the work-list with trace links and completion status.
 
@@ -203,7 +216,7 @@ Rules:
 
 ## Work-List
 
-`WORKLIST.md` is the live control artifact for the development loop.
+`WORKLIST.md` is the live control artifact for the development loop and belongs in the main repository being changed.
 
 It tracks:
 
@@ -214,7 +227,7 @@ It tracks:
 - human approval status for epic and user-requirement completion;
 - blocked or deferred gaps.
 
-`WORKLIST.md` is an index and status rollup. It does not replace epic files. The authoritative details for user stories, acceptance scenarios, system requirements, tasks, and evidence maps live under `epics/`.
+`WORKLIST.md` is an index, status rollup, and oversight surface. It does not replace epic records. The authoritative details for user stories, acceptance scenarios, system requirements, tasks, and evidence maps live under the main repository's `epics/`.
 
 Status vocabulary:
 
@@ -253,15 +266,15 @@ Required work-list sections:
 
 ## Epic Rollup
 
-| Epic | Epic file | User requirements | Acceptance scenarios | System requirements | Tasks | Upper status | Lower status | Overall status | Human approval | Evidence / gaps |
+| Epic | Epic record | User requirements | Acceptance scenarios | System requirements | Tasks | Upper status | Lower status | Overall status | Human approval | Evidence / gaps |
 |---|---|---|---|---|---|---|---|---|---|---|
-| EPIC-<AREA>-NNN | epics/EPIC-<AREA>-NNN-<title>.md | UR-<AREA>-NNN | SCN-<AREA>-NNN | SR-<AREA>-NNN | TASK-<AREA>-NNN | PROPOSED | PROPOSED | PROPOSED | - | - |
+| EPIC-<AREA>-NNN | epics/EPIC-<AREA>-NNN-<title>.md or epics/EPIC-<AREA>-NNN-<title>/EPIC.md | UR-<AREA>-NNN | SCN-<AREA>-NNN | SR-<AREA>-NNN | TASK-<AREA>-NNN | PROPOSED | PROPOSED | PROPOSED | - | - |
 
 ## Work Rows
 
-| Task / slice | Epic | Epic file | User requirement | Acceptance scenario | System requirement | Scope | Status | Lower test evidence | Upper BDD/E2E evidence | Code reference | Notes |
+| Task / slice | Epic | Epic record / task file | User requirement | Acceptance scenario | System requirement | Scope | Status | Lower test evidence | Upper BDD/E2E evidence | Code reference | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| TASK-<AREA>-NNN | EPIC-<AREA>-NNN | epics/EPIC-<AREA>-NNN-<title>.md | UR-<AREA>-NNN | SCN-<AREA>-NNN | SR-<AREA>-NNN | API/UI/service/data/vertical | READY | - | - | - | - |
+| TASK-<AREA>-NNN | EPIC-<AREA>-NNN | epics/EPIC-<AREA>-NNN-<title>.md or epics/EPIC-<AREA>-NNN-<title>/tasks/TASK-<AREA>-NNN.md | UR-<AREA>-NNN | SCN-<AREA>-NNN | SR-<AREA>-NNN | API/UI/service/data/vertical | READY | - | - | - | - |
 
 ## Blocked / Deferred
 
@@ -280,9 +293,9 @@ Completion roll-up:
 
 ## Epic Storage
 
-Store epics as first-class parent artifacts under `epics/`.
+Store epics as first-class parent artifacts under the main repository's `epics/`.
 
-Required layout:
+Allowed layouts:
 
 ```text
 epics/
@@ -290,7 +303,20 @@ epics/
   EPIC-<AREA>-NNN-<short-title>.md
 ```
 
-Each epic file owns the complete local tree for that capability:
+or:
+
+```text
+epics/
+  README.md
+  EPIC-<AREA>-NNN-<short-title>/
+    EPIC.md
+    tasks/
+      TASK-<AREA>-NNN-<short-title>.md
+```
+
+Use the folder layout when the epic has multiple independently executable tasks or when task files are useful for subagent handoff. The main epic file owns the parent trace map and rollup. Task files own focused lower-loop task detail and evidence, but they do not replace the parent epic or `WORKLIST.md`.
+
+Each epic record owns the complete repo-local tree for that capability:
 
 ```text
 EPIC
@@ -308,16 +334,16 @@ EPIC
 
 Rules:
 
-- Every epic must have exactly one file in `epics/`.
-- `WORKLIST.md` must link to the epic file.
-- Epic files contain the detailed parent-child trace map.
-- Epic files identify the main bounded context, key domain models, and key domain events for the capability.
-- `WORKLIST.md` contains only the cross-epic status rollup and active development rows.
-- A task/slice must be listed in its parent epic before it appears as an active work row in `WORKLIST.md`.
+- Every epic must have exactly one canonical epic record: either a single file in `epics/` or one folder in `epics/` with a main epic file.
+- `WORKLIST.md` must link to the canonical epic record. If task files exist, active work rows should also link to the relevant task file.
+- The main epic record contains the detailed parent-child trace map.
+- The main epic record identifies the main bounded context, key domain models, and key domain events for the capability.
+- `WORKLIST.md` contains the cross-epic status rollup, active development rows, and subagent oversight status.
+- A task/slice must be listed in its parent epic before it appears as an active work row in `WORKLIST.md` or is handed to a subagent.
 - A BDD acceptance scenario must be listed in its parent epic before lower-loop tasks can be marked `LOWER_VERIFIED`.
-- Evidence must be linked in both places: summarized in `WORKLIST.md`, detailed in the parent epic.
+- Evidence must be linked in the parent epic, summarized in `WORKLIST.md`, and linked from the task file when a task file exists.
 
-Epic filename format:
+Epic record naming:
 
 ```text
 EPIC-<AREA>-NNN-<kebab-title>.md
@@ -327,6 +353,7 @@ Example:
 
 ```text
 epics/EPIC-AUTH-001-password-reset.md
+epics/EPIC-AUTH-001-password-reset/EPIC.md
 ```
 
 ## Artifact Hierarchy
@@ -550,7 +577,7 @@ Rules:
 
 An epic is properly specced and implementation loops may start only when:
 
-1. The epic file exists under `epics/` and uses the required epic template.
+1. The epic record exists under the main repository's `epics/` as either a single epic file or an epic folder with a main epic file, and it uses the required epic template.
 2. The epic has a sourced user outcome and at least one linked user requirement.
 3. Users or actors are recorded.
 4. Main bounded context is identified, or a blocking open question records why it cannot be identified yet.
@@ -566,6 +593,8 @@ An epic is properly specced and implementation loops may start only when:
 14. Deferred gaps have a reason, owner, and trace to the affected epic/scenario/system requirement/task.
 
 If any gate item fails, the epic remains `PROPOSED` or `BLOCKED`; do not start implementation loops.
+
+When all gate items pass, end the interview or epic creation flow by outputting an implementation kickoff prompt. The prompt must identify the main repository, epic record, active `WORKLIST.md` rows, task files eligible for subagent handoff, required upper-loop and lower-loop TDD sequence, and evidence/status synchronization rules.
 
 ## BDD Acceptance Scenarios
 

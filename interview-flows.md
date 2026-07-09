@@ -8,6 +8,8 @@ All recorded information must be grounded. No fact, decision, requirement, scena
 
 Use these flows together. Epic creation is an orchestration flow that calls topic, decision, BDD scenario, system requirement, task, gap, and review flows until the epic is ready for implementation loops.
 
+All work-progress artifacts belong in the main repository being changed. Treat `WORKLIST.md`, `epics/`, epic files, epic folders, task files, and validation artifacts as main-repository paths. Do not create or maintain a separate local `epic/` or `epics/` folder in this instruction/template repository.
+
 ## Grounding Rules
 
 Every recorded fact or decision must cite one or more sources.
@@ -34,7 +36,7 @@ Rules:
 
 ## Required Epic Sections
 
-Every epic file in `epics/` must include these source-backed sections:
+Every main epic record in the main repository's `epics/` must include these source-backed sections:
 
 ```markdown
 ## Source material
@@ -70,9 +72,9 @@ Use this at the start of every working session.
 ```text
 Read:
 - V-model-loop.md
-- WORKLIST.md
-- epics/README.md
-- relevant files under epics/
+- main repository WORKLIST.md
+- main repository epics/README.md, if present
+- relevant files or folders under the main repository's epics/
 
 First establish status:
 1. Summarize active epics from WORKLIST.md.
@@ -116,7 +118,7 @@ Use this when the user wants to create a new epic or turn a topic into implement
 ```text
 1. Run Flow 1: Session Intake.
 2. Confirm the topic does not already belong to an existing epic.
-3. Create a new epic file only when there is a sourced user outcome or sourced user requirement.
+3. Create a new epic record only when there is a sourced user outcome or sourced user requirement.
 4. Run Flow 3: Topic or Epic Interview to define the outcome, users, domain context, models, events, facts, decisions, and open questions.
 5. Run Flow 4: Decision Capture for any scope, priority, behavior, or acceptance decision.
 6. Run Flow 5: BDD Acceptance Scenario Interview for each user-visible behavior needed to prove the epic.
@@ -124,13 +126,14 @@ Use this when the user wants to create a new epic or turn a topic into implement
 8. Run Flow 9: Gap or Conflict Handling for missing sources, unresolved conflicts, or unknown implementation blockers.
 9. Run Flow 8: Epic Review before marking the epic READY for implementation loops.
 10. Update WORKLIST.md only after the epic satisfies the Epic Specification Gate.
+11. When the Epic Specification Gate passes, end by outputting the Flow 11 implementation kickoff prompt.
 ```
 
 Epic Specification Gate:
 
 An epic is properly specced and implementation loops may start only when:
 
-1. The epic file exists under `epics/` and uses the required epic template.
+1. The epic record exists under the main repository's `epics/` as either a single epic file or an epic folder with a main epic file, and it uses the required epic template.
 2. The epic has a sourced user outcome and at least one linked user requirement.
 3. Users or actors are recorded.
 4. Main bounded context is identified, or a blocking open question records why it cannot be identified yet.
@@ -153,13 +156,13 @@ Use this when the user wants to discuss a topic, new epic, or existing epic.
 
 ```text
 1. Identify whether the topic maps to an existing epic.
-2. If it maps to an existing epic, open that epic file.
-3. If it does not, propose a new EPIC-<AREA>-NNN file under epics/.
+2. If it maps to an existing epic, open that epic record.
+3. If it does not, propose a new EPIC-<AREA>-NNN file or folder under the main repository's epics/.
 4. Ask for the user outcome, affected users/actors, and intended workflow.
 5. Identify the main bounded context, supporting bounded contexts, key domain models, and key domain events.
 6. Separate facts, decisions, assumptions, and open questions.
 7. For each fact or decision, identify the source.
-8. Record sourced facts and decisions in the epic file.
+8. Record sourced facts and decisions in the epic record.
 9. Record unsourced or ambiguous claims as open questions.
 10. Update WORKLIST.md only after the epic trace links are clear.
 ```
@@ -259,6 +262,7 @@ Use this when the discussion is about APIs, UI units, services, data behavior, i
 6. Record new facts with sources.
 7. Record gaps as open questions or blocked/deferred items.
 8. Update WORKLIST.md with the active task row.
+9. If the epic uses a folder layout, create or update the task file that a subagent can own, and keep its status and evidence synchronized with the parent epic and WORKLIST.md.
 ```
 
 Required questions:
@@ -277,6 +281,7 @@ Rules:
 - The lower loop is TDD: failing lower-loop test first, then implementation, then passing evidence.
 - `LOWER_VERIFIED` requires test references and code references.
 - A task/slice cannot be active in WORKLIST.md before it exists in its parent epic.
+- Subagent task files are execution records, not independent sources of truth. The main chat remains responsible for rollup status, cross-task conflicts, and final evidence review.
 
 ## Flow 7: Evidence and Completion Review
 
@@ -328,7 +333,7 @@ Completion rules:
 Use this to inspect an existing epic and determine what is done, what is ready, and what gaps remain.
 
 ```text
-1. Open WORKLIST.md and the epic file.
+1. Open WORKLIST.md and the epic record.
 2. Check that the epic satisfies the Epic Specification Gate if implementation has started or is requested.
 3. Review linked user requirements:
    - source exists,
@@ -350,9 +355,10 @@ Use this to inspect an existing epic and determine what is done, what is ready, 
    - approval exists before epic `DONE`,
    - approval source and scope are recorded,
    - rejected or changes-requested approvals create gaps.
-8. Compare the epic file with WORKLIST.md and fix status drift.
+8. Compare the epic record with WORKLIST.md and fix status drift.
 9. Record remaining gaps as open questions, blocked/deferred items, or new work-list rows.
 10. Report what is complete, what is ready next, what is blocked, and what evidence or approval is missing.
+11. If the epic satisfies the Epic Specification Gate and has `READY` implementation rows, output the Flow 11 implementation kickoff prompt.
 ```
 
 Review output format:
@@ -369,6 +375,7 @@ Review output format:
 - Approval gaps:
 - Blocked/deferred:
 - Required updates:
+- Implementation kickoff prompt:
 ```
 
 Rules:
@@ -403,7 +410,7 @@ Use this before ending a session.
 ```text
 Report:
 1. Discussion target.
-2. Epic files changed.
+2. Epic records changed.
 3. Facts recorded, with source ids.
 4. Decisions recorded, with source ids.
 5. Open questions or conflicts created.
@@ -413,3 +420,50 @@ Report:
 ```
 
 Do not claim that anything is complete unless the relevant epic and WORKLIST.md rows contain the required source, code, and test references.
+
+## Flow 11: Implementation Kickoff Prompt
+
+Use this at the end of epic creation or epic review when the epic satisfies the Epic Specification Gate and `WORKLIST.md` has active `READY` rows for implementation.
+
+Do not output this prompt for a `PROPOSED` or `BLOCKED` epic. Instead, report the missing gate items and the sources or decisions needed to unblock the epic.
+
+The prompt must be specific enough that a new main chat can start implementation without re-interviewing the user, and constrained enough that subagents only work on their assigned task files.
+
+Prompt format:
+
+```markdown
+## Implementation kickoff prompt
+
+Start implementing `<EPIC-ID>` in `<main-repository-path>`.
+
+Read first:
+- `V-model-loop.md`
+- `WORKLIST.md`
+- `<epic-record-path>`
+- `<task-file-paths, if any>`
+
+Implementation rules:
+- Start from the next `READY` rows in `WORKLIST.md`; do not begin work outside those rows.
+- Confirm the trace chain `UR -> EPIC -> SCN -> SR -> TASK` before editing code.
+- Run the upper loop first by writing or confirming failing BDD/E2E/user-flow evidence for the acceptance scenario.
+- For each task, run the lower loop with failing unit/component/API/contract/integration test first, then implement the smallest slice, then record passing evidence.
+- Use subagents for independent task files under `<epic-folder>/tasks/` when the tasks can be verified separately. Give each subagent exactly one task file, its linked system requirement, expected failing test, and evidence update responsibility.
+- Keep the main chat responsible for coordination, cross-task conflicts, upper-loop validation, status rollup, and final evidence review.
+- After each task, update the task file, parent epic record, and `WORKLIST.md` with lower-loop test evidence, code references, and status.
+- Do not mark `LOWER_VERIFIED`, `UPPER_VALIDATED`, `DONE`, or `VALIDATED` without linked test/validation evidence and code references.
+- Do not mark the epic `DONE` or a user requirement `VALIDATED` until human approval is recorded in the parent epic.
+
+Active work rows:
+- `<TASK-ID>`: `<WORKLIST row summary and path to task file or epic record>`
+
+Subagent handoff candidates:
+- `<TASK-ID>`: `<task file path>`; expected evidence: `<test type / file / command>`
+
+Start by reporting the selected first `READY` row, the failing upper-loop evidence to create or confirm, and the subagents to launch.
+```
+
+Rules:
+
+- Preserve concrete IDs, paths, test commands, and source references from the epic and `WORKLIST.md`.
+- If there are no independent task files, set `Subagent handoff candidates` to `none` and keep implementation in the main chat.
+- If the kickoff prompt would require unsourced behavior, do not output it; record the missing source as an open question or blocker.

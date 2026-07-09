@@ -1,8 +1,8 @@
 # V-Model Loop Work-List
 
-This file is the live control surface for the development loop. Every active user requirement, epic, acceptance scenario, system requirement, and task/slice must be traceable here.
+This file is the live control surface for the development loop and belongs in the main repository being changed. Every active user requirement, epic, acceptance scenario, system requirement, and task/slice must be traceable here.
 
-Detailed epic contents live in `epics/`. This file is the cross-epic index and completion rollup.
+Detailed epic contents live in the main repository's `epics/`. Epics may be single files or folders with a main epic file and task files. This file is the cross-epic index, completion rollup, and oversight surface for any task work delegated to subagents.
 
 Both loops use TDD:
 
@@ -24,13 +24,13 @@ Both loops use TDD:
 
 ## Epic Rollup
 
-| Epic | Epic file | User requirements | Acceptance scenarios | System requirements | Tasks | Upper status | Lower status | Overall status | Human approval | Evidence / gaps |
+| Epic | Epic record | User requirements | Acceptance scenarios | System requirements | Tasks | Upper status | Lower status | Overall status | Human approval | Evidence / gaps |
 |---|---|---|---|---|---|---|---|---|---|---|
 | - | - | - | - | - | - | - | - | - | - | - |
 
 ## Work Rows
 
-| Task / slice | Epic | Epic file | User requirement | Acceptance scenario | System requirement | Scope | Status | Lower test evidence | Upper BDD/E2E evidence | Code reference | Notes |
+| Task / slice | Epic | Epic record / task file | User requirement | Acceptance scenario | System requirement | Scope | Status | Lower test evidence | Upper BDD/E2E evidence | Code reference | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | - | - | - | - | - | - | - | - | - | - | - | - |
 
