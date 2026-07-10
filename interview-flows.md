@@ -10,6 +10,14 @@ Use these flows together. Epic creation is an orchestration flow that calls topi
 
 All work-progress artifacts belong in the main repository being changed. Treat `WORKLIST.md`, `epics/`, epic files, epic folders, task files, and validation artifacts as main-repository paths. Do not create or maintain a separate local `epic/` or `epics/` folder in this instruction/template repository.
 
+Progress ownership:
+
+- `WORKLIST.md` owns top-level progress: cross-epic rollup, active work rows, blocked/deferred rows, approval summaries, and evidence summaries.
+- Parent epic records own internal completion for their capability: detailed trace maps, scenario/system-requirement/task status, evidence maps, decisions, gaps, and approval records.
+- Task files, when present, own task-local execution detail only.
+- After each lower-loop or upper-loop status change, update the parent epic record and task file if one exists, then update `WORKLIST.md` with the top-level rollup.
+- If `WORKLIST.md`, the parent epic, and any task file disagree, reconcile the drift before starting the next row or claiming completion.
+
 ## Grounding Rules
 
 Every recorded fact or decision must cite one or more sources.
@@ -305,8 +313,9 @@ Use this before marking anything complete.
    - approval scope,
    - decision: approved, rejected, or changes requested.
 6. Record approval in the parent epic before changing the rollup status.
-7. Update statuses only where evidence and required approval exist.
-8. Record any missing proof or approval as an evidence gap.
+7. Update epic-internal completion status in the parent epic before updating the top-level rollup in WORKLIST.md.
+8. Update statuses only where evidence and required approval exist.
+9. Record any missing proof or approval as an evidence gap in the parent epic, and summarize active gaps in WORKLIST.md.
 ```
 
 Human approval prompt:
@@ -449,7 +458,7 @@ Implementation rules:
 - For each task, run the lower loop with failing unit/component/API/contract/integration test first, then implement the smallest slice, then record passing evidence.
 - Use subagents for independent task files under `<epic-folder>/tasks/` when the tasks can be verified separately. Give each subagent exactly one task file, its linked system requirement, expected failing test, and evidence update responsibility.
 - Keep the main chat responsible for coordination, cross-task conflicts, upper-loop validation, status rollup, and final evidence review.
-- After each task, update the task file, parent epic record, and `WORKLIST.md` with lower-loop test evidence, code references, and status.
+- After each task, update the task file if one exists, update the parent epic record with internal completion, lower-loop test evidence, and code references, then update `WORKLIST.md` with the top-level rollup status and evidence summary.
 - Do not mark `LOWER_VERIFIED`, `UPPER_VALIDATED`, `DONE`, or `VALIDATED` without linked test/validation evidence and code references.
 - Do not mark the epic `DONE` or a user requirement `VALIDATED` until human approval is recorded in the parent epic.
 

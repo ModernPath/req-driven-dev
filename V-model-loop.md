@@ -17,10 +17,12 @@ Work progress belongs in the main repository being changed, beside the product c
 
 Repo-relative process artifacts:
 
-- `WORKLIST.md` is the main repository's live development control surface.
+- `WORKLIST.md` is the main repository's live top-level development control surface.
+- `WORKLIST.md` owns top-level progress: cross-epic rollups, active work rows, status summaries, approval summaries, and blocked/deferred items.
 - `epics/` in the main repository stores epic records.
+- Parent epic records own internal completion for their capability: detailed trace maps, scenario/system-requirement/task status, evidence maps, decisions, gaps, and approval records.
 - Epic records may be single files or folders with a main epic file and multiple task files.
-- Task files may be handed to subagents for focused lower-loop work; the main chat keeps oversight by monitoring those files and keeping the parent epic and `WORKLIST.md` synchronized.
+- Task files may be handed to subagents for focused lower-loop work; they own task-local execution details only. The main chat keeps oversight by monitoring those files and keeping the task file, parent epic, and `WORKLIST.md` synchronized.
 
 Unless otherwise stated, paths in this process are relative to the main repository.
 
@@ -100,9 +102,9 @@ Trace chain:
 
 ## Development Loop
 
-The development loop coordinates the upper and lower loops. It is driven by the main repository's `WORKLIST.md`.
+The development loop coordinates the upper and lower loops. It is driven by the main repository's `WORKLIST.md` for top-level progress and next-work selection.
 
-No implementation work starts outside the work-list. Every active epic, scenario, system requirement, and task must appear in the work-list with trace links and completion status.
+No implementation work starts outside the work-list. Every active epic, scenario, system requirement, and task must appear in the work-list with trace links and top-level completion status.
 
 Flow:
 
@@ -142,7 +144,7 @@ Detailed state flow:
 
 ```text
                          WORKLIST.md
-                    source of truth for state
+              source of truth for top-level progress
 
                               |
                               v
@@ -206,19 +208,21 @@ Rules:
 - The development loop must start from `WORKLIST.md`.
 - A row may enter implementation only when its trace chain is complete or explicitly marked as a technical enabler.
 - An epic may enter implementation loops only after it passes the Epic Specification Gate.
-- Lower-loop work updates task and system-requirement status.
-- Upper-loop work updates acceptance-scenario, epic, and user-requirement status.
+- Lower-loop work records task and system-requirement internal completion, test evidence, and code references in the parent epic record and task file if one exists, then updates `WORKLIST.md` with the top-level status and evidence summary.
+- Upper-loop work records acceptance-scenario validation, epic progress, evidence, gaps, and approval details in the parent epic record, then updates `WORKLIST.md` with the top-level status and evidence summary.
 - Any discovered gap must be added to the work-list as a new row or marked on the blocked row.
-- The work-list is the source of truth for completion state.
+- `WORKLIST.md` is the source of truth for top-level progress, queueing, and cross-epic rollup.
+- The parent epic record is the source of truth for internal completion and detailed evidence trace for that epic.
+- If `WORKLIST.md`, the parent epic, and any task file disagree, reconcile the drift before starting another row or claiming completion.
 - Any item marked `LOWER_VERIFIED`, `UPPER_VALIDATED`, `DONE`, or `VALIDATED` must reference the code and test case or validation evidence that verifies the claim.
 - `DONE` and `VALIDATED` also require human approval recorded in the parent epic.
 - Upper-loop and lower-loop work both follow red-first TDD.
 
 ## Work-List
 
-`WORKLIST.md` is the live control artifact for the development loop and belongs in the main repository being changed.
+`WORKLIST.md` is the live top-level control artifact for the development loop and belongs in the main repository being changed.
 
-It tracks:
+At the top level, it tracks:
 
 - trace links across `UR -> EPIC -> SCN -> SR -> TASK`;
 - current completion status;
@@ -227,7 +231,7 @@ It tracks:
 - human approval status for epic and user-requirement completion;
 - blocked or deferred gaps.
 
-`WORKLIST.md` is an index, status rollup, and oversight surface. It does not replace epic records. The authoritative details for user stories, acceptance scenarios, system requirements, tasks, and evidence maps live under the main repository's `epics/`.
+`WORKLIST.md` is an index, top-level status rollup, and oversight surface. It does not replace epic records. The authoritative internal completion details for user stories, acceptance scenarios, system requirements, tasks, decisions, gaps, approvals, and evidence maps live under the main repository's `epics/`.
 
 Status vocabulary:
 
@@ -314,7 +318,7 @@ epics/
       TASK-<AREA>-NNN-<short-title>.md
 ```
 
-Use the folder layout when the epic has multiple independently executable tasks or when task files are useful for subagent handoff. The main epic file owns the parent trace map and rollup. Task files own focused lower-loop task detail and evidence, but they do not replace the parent epic or `WORKLIST.md`.
+Use the folder layout when the epic has multiple independently executable tasks or when task files are useful for subagent handoff. The main epic file owns the internal trace map and completion rollup for that epic. Task files own focused lower-loop task detail and evidence, but they do not replace the parent epic or `WORKLIST.md`.
 
 Each epic record owns the complete repo-local tree for that capability:
 
@@ -338,7 +342,7 @@ Rules:
 - `WORKLIST.md` must link to the canonical epic record. If task files exist, active work rows should also link to the relevant task file.
 - The main epic record contains the detailed parent-child trace map.
 - The main epic record identifies the main bounded context, key domain models, and key domain events for the capability.
-- `WORKLIST.md` contains the cross-epic status rollup, active development rows, and subagent oversight status.
+- `WORKLIST.md` contains the top-level cross-epic status rollup, active development rows, and subagent oversight status.
 - A task/slice must be listed in its parent epic before it appears as an active work row in `WORKLIST.md` or is handed to a subagent.
 - A BDD acceptance scenario must be listed in its parent epic before lower-loop tasks can be marked `LOWER_VERIFIED`.
 - Evidence must be linked in the parent epic, summarized in `WORKLIST.md`, and linked from the task file when a task file exists.

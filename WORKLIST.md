@@ -1,8 +1,16 @@
 # V-Model Loop Work-List
 
-This file is the live control surface for the development loop and belongs in the main repository being changed. Every active user requirement, epic, acceptance scenario, system requirement, and task/slice must be traceable here.
+This file is the live top-level control surface for the development loop and belongs in the main repository being changed. Every active user requirement, epic, acceptance scenario, system requirement, and task/slice must be traceable here at rollup level.
 
-Detailed epic contents live in the main repository's `epics/`. Epics may be single files or folders with a main epic file and task files. This file is the cross-epic index, completion rollup, and oversight surface for any task work delegated to subagents.
+Detailed epic contents live in the main repository's `epics/`. Epics may be single files or folders with a main epic file and task files. This file is the cross-epic index, top-level progress rollup, and oversight surface for any task work delegated to subagents. It summarizes epic-internal completion but does not replace the parent epic record.
+
+## Progress Ownership
+
+- `WORKLIST.md` owns top-level progress: Epic Rollup, active Work Rows, blocked/deferred rows, approval summaries, and evidence summaries.
+- Parent epic records own internal completion: user stories, acceptance scenarios, system requirements, tasks, decisions, gaps, approvals, detailed evidence maps, and code/test references.
+- Task files, when present, own task-local execution detail only.
+- After each lower-loop or upper-loop status change, update the parent epic record and task file if one exists, then update `WORKLIST.md` with the top-level rollup.
+- If `WORKLIST.md`, the parent epic, and any task file disagree, reconcile the drift before starting the next row or claiming completion.
 
 Both loops use TDD:
 
