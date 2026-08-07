@@ -11,7 +11,7 @@
 
 ## Specification status
 
-SPEC_DRAFT — «scope of the specs set»
+SPEC-DRAFT — «scope of the specs set»
 
 ## Linked user requirements
 

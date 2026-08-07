@@ -226,13 +226,13 @@ Before implementation, an epic must have:
 Specification state:
 
 ```text
-SPEC_DRAFT -> SPEC_READY -> SPEC_APPROVED
+SPEC-DRAFT -> SPEC-READY -> SPEC-APPROVED
                   |              |
                   |              +-- attributable human approval
                   +-- open specification gate
 ```
 
-No epic-path RED test is written before `SPEC_APPROVED`. Writing the test is
+No epic-path RED test is written before `SPEC-APPROVED`. Writing the test is
 implementation-loop work, not specification work.
 
 ## Fast lane
