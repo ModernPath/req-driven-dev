@@ -1,16 +1,26 @@
-# V-Model Loop Work-List
+# Work-list projection template
 
-This file is the live top-level control surface for the development loop and belongs in the main repository being changed. Every active user requirement, epic, acceptance scenario, system requirement, and task/slice must be traceable here at rollup level.
+Copy this file into a consuming project only when a versioned local work-list is
+needed. The ModernPath Delivery System is authoritative for loop state; this is
+its reviewable repository projection. Every active user requirement, epic,
+acceptance scenario, system requirement, and task/slice must be traceable here
+at rollup level.
 
-Detailed epic contents live in the main repository's `epics/`. Epics may be single files or folders with a main epic file and task files. This file is the cross-epic index, top-level progress rollup, and oversight surface for any task work delegated to subagents. It summarizes epic-internal completion but does not replace the parent epic record.
+Detailed epic contents live in the consuming repository's `epics/`. This file
+summarizes epic-internal completion; it does not replace the parent epic or
+Delivery System state.
 
-## Progress Ownership
+## Projection ownership
 
-- `WORKLIST.md` owns top-level progress: Epic Rollup, active Work Rows, blocked/deferred rows, approval summaries, and evidence summaries.
-- Parent epic records own internal completion: user stories, acceptance scenarios, system requirements, tasks, decisions, gaps, approvals, detailed evidence maps, and code/test references.
+- The Delivery System owns top-level progress and loop relationships.
+- `WORKLIST.md` projects cross-epic status, active rows, blockers, approval
+  summaries, and evidence links for version control.
+- Parent epic records project internal trace/evidence detail.
 - Task files, when present, own task-local execution detail only.
-- After each lower-loop or upper-loop status change, update the parent epic record and task file if one exists, then update `WORKLIST.md` with the top-level rollup.
-- If `WORKLIST.md`, the parent epic, and any task file disagree, reconcile the drift before starting the next row or claiming completion.
+- After each transition, update the affected local records and synchronize the
+  Delivery System.
+- If the Delivery System, `WORKLIST.md`, epic, and task disagree, reconcile the
+  drift before starting another row or claiming completion.
 
 Both loops use TDD:
 
@@ -24,11 +34,13 @@ Both loops use TDD:
 | `PROPOSED` | Identified but not ready for development |
 | `READY` | Trace links and acceptance expectations are clear |
 | `IN_PROGRESS` | Lower-loop implementation or upper-loop validation is underway |
+| `IN_REVIEW` | Both evidence arms pass; human completion approval or delivery/reconciliation is pending |
 | `LOWER_VERIFIED` | Red-first lower-loop tests pass for the linked task/system requirement |
 | `UPPER_VALIDATED` | Red-first upper-loop BDD/E2E evidence passes for the linked scenario |
 | `DONE` | Upper and lower evidence are complete, rolled up, and human-approved |
 | `BLOCKED` | Cannot proceed; blocker must be recorded |
 | `DEFERRED` | Consciously postponed; reason must be recorded |
+| `OBSOLETE` | Superseded; replacement source is recorded |
 
 ## Epic Rollup
 
@@ -56,3 +68,5 @@ Both loops use TDD:
 - An epic is `DONE` when all linked scenarios are upper-validated, all linked system requirements are lower-verified, and human approval is recorded.
 - A user requirement is `VALIDATED` when all linked epics are done and human approval is recorded.
 - A work-list row is `DONE` only when the linked task is `LOWER_VERIFIED`, the linked acceptance scenario is `UPPER_VALIDATED`, no unrecorded gap remains, and the parent epic has human approval before epic-level `DONE`.
+- Local completion is not final until the Delivery System, source delivery,
+  release scope, and this projection agree.

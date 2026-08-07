@@ -1,478 +1,271 @@
-# Interview Flows
+# Human-input and review flows
 
-These interview flows drive user interaction for the V-model loop process. They define how an agent gathers grounded information, creates or reviews epics, records decisions, and moves work through evidence gates.
+Use these flows when work needs human intent, a product decision,
+specification approval, or completion approval. They materialize answers into
+the trace model in [`V-model-loop.md`](V-model-loop.md) and the ModernPath
+Delivery System.
 
-The agent must first establish current status and what the user wants to discuss. Then it may dive into an epic, topic, decision, scenario, system requirement, task, or evidence gap.
+Do not interview for facts that can be read safely from product docs, code,
+tests, or Delivery System state. Ask only for decisions that require human
+authority.
 
-All recorded information must be grounded. No fact, decision, requirement, scenario, or status claim may be recorded without a source reference.
+## Common rules
 
-Use these flows together. Epic creation is an orchestration flow that calls topic, decision, BDD scenario, system requirement, task, gap, and review flows until the epic is ready for implementation loops.
+- Establish the active workspace, release, epic, and gate before asking.
+- Present current evidence and the exact decision needed.
+- Attribute the actual human actor; never infer identity from a tool/session.
+- Record `USER:<date>:<summary>` and the affected UR/EPIC/SCN/SR/TASK ids.
+- An unanswered or ambiguous question keeps affected work `BLOCKED`.
+- An answer changes intent only. Apply it to specs/requirements/tasks/code in a
+  separate, traceable step.
+- Mission Control and the CLI answer the same Delivery System gates. The
+  server's first accepted answer wins; pull/apply before proceeding.
+- Every opened gate includes the brief defined in `AGENTS.md`.
 
-All work-progress artifacts belong in the main repository being changed. Treat `WORKLIST.md`, `epics/`, epic files, epic folders, task files, and validation artifacts as main-repository paths. Do not create or maintain a separate local `epic/` or `epics/` folder in this instruction/template repository.
+## 1. Session intake
 
-Progress ownership:
+Inspect rather than ask:
 
-- `WORKLIST.md` owns top-level progress: cross-epic rollup, active work rows, blocked/deferred rows, approval summaries, and evidence summaries.
-- Parent epic records own internal completion for their capability: detailed trace maps, scenario/system-requirement/task status, evidence maps, decisions, gaps, and approval records.
-- Task files, when present, own task-local execution detail only.
-- After each lower-loop or upper-loop status change, update the parent epic record and task file if one exists, then update `WORKLIST.md` with the top-level rollup.
-- If `WORKLIST.md`, the parent epic, and any task file disagree, reconcile the drift before starting the next row or claiming completion.
+1. current repository and Delivery System state;
+2. active release and selected epic/task;
+3. open gates, blockers, deferrals, and conflicts;
+4. evidence drift and items awaiting review;
+5. the next `READY` traces.
 
-## Grounding Rules
+Then identify the user's target: status, new outcome, existing epic,
+requirement/scenario, system behavior, decision, gap, or evidence review.
 
-Every recorded fact or decision must cite one or more sources.
-
-Accepted source types:
-
-| Source type | Format | Use |
-|---|---|---|
-| User statement | `USER:<date>:<short-summary>` | User-provided facts, goals, decisions, priorities |
-| Document | `DOC:<path>#<heading-or-section>` | Product docs, external docs, requirements, design notes |
-| Code | `CODE:<path>:<line-or-symbol>` | Existing implementation behavior |
-| Test | `TEST:<path>:<test-name>` | Existing or new verification evidence |
-| Run artifact | `RUN:<command-or-report>` | Test run, validation run, generated report |
-| Epic | `EPIC:<path>#<heading>` | Existing epic-local source material |
-
-Rules:
-
-- If a statement has no source, record it as an open question, not as a fact.
-- If a source conflicts with another source, record the conflict and ask for resolution.
-- If the user makes a decision, record it as a decision with `USER:<date>:...` as the source.
-- If code behavior is cited, include the file and line/symbol.
-- If completion is claimed, include the code reference and the test or validation evidence.
-- Do not silently promote assumptions into requirements.
-
-## Required Epic Sections
-
-Every main epic record in the main repository's `epics/` must include these source-backed sections:
+Output:
 
 ```markdown
-## Source material
-| Source id | Type | Reference | Notes |
-|---|---|---|---|
-| SRC-<AREA>-NNN | USER/DOC/CODE/TEST/RUN/EPIC | <reference> | <why it matters> |
+Current state: <release, epic/task, loop status>
+Evidence/blockers: <direct summary>
+Decision needed: <only if one exists>
+Next executable item: <id or none>
+```
 
-## Grounded facts
-| Fact id | Fact | Source |
-|---|---|---|
-| FACT-<AREA>-NNN | <fact> | SRC-<AREA>-NNN |
+## 2. New outcome / epic discovery
 
-## Decisions
-| Decision id | Decision | Source | Consequence |
-|---|---|---|---|
-| DEC-<AREA>-NNN | <decision> | SRC-<AREA>-NNN | <impact on epic/scenario/task> |
+Use when the user wants new product behavior.
 
-## Open questions
-| Question id | Question | Source / trigger | Needed to proceed |
-|---|---|---|---|
-| OQ-<AREA>-NNN | <question> | SRC-<AREA>-NNN | yes/no |
+1. Search existing requirements and epics to avoid duplication.
+2. Establish the actor, desired outcome, intended use, and source.
+3. Identify the primary domain/bounded context and affected interfaces from
+   product/code sources; ask only where sources are missing or conflicting.
+4. Separate facts, decisions, assumptions, and open questions.
+5. Draft the UR and initial user journey.
+6. Determine whether the epic or fast lane applies using the canonical tests.
+7. If epic-path, create its record/spec set and continue through scenario and
+   system-decomposition flows.
+8. Publish the proposal to Delivery System state without marking it approved.
 
-## Human approval
-| Approval id | Approver | Role | Source | Scope | Decision |
+Ask concisely:
+
+```text
+Which actor needs what outcome, and why?
+What observable workflow would prove the outcome?
+Which constraints or exclusions are deliberate decisions?
+Who can approve the specification?
+```
+
+## 3. Decision capture
+
+Use for scope, behavior, architecture, acceptance, priority, release, or
+workflow decisions.
+
+1. Show the gate brief and concrete options/tradeoffs.
+2. State the recommendation separately from the decision.
+3. Ask the authorized human to choose, revise, defer, or reject.
+4. Record actor, role, option/free text, source tag, timestamp, and scope.
+5. Pull/apply or sync the answer according to its origin.
+6. Update all affected specifications and trace items; record consequences.
+7. Re-run the specification gate if acceptance or scope changed.
+
+Decision record:
+
+```markdown
+| Decision | Actor | Role | Source | Affects | Consequence |
 |---|---|---|---|---|---|
-| APP-<AREA>-NNN | <name> | product/domain/QA/owner | USER:<date>:<summary> | EPIC-<AREA>-NNN | approved/rejected/changes requested |
+| DEC-<AREA>-NNN | <name> | <role> | USER:<date>:<summary> | UR/SCN/SR/TASK | <change> |
 ```
 
-## Flow 1: Session Intake
+A decision alone never grants an evidence status.
 
-Use this at the start of every working session.
+## 4. Acceptance-scenario interview
 
-```text
-Read:
-- V-model-loop.md
-- main repository WORKLIST.md
-- main repository epics/README.md, if present
-- relevant files or folders under the main repository's epics/
+Use when observable user behavior is missing or disputed.
 
-First establish status:
-1. Summarize active epics from WORKLIST.md.
-2. Summarize blocked/deferred items.
-3. Summarize rows missing code/test evidence.
-4. Summarize epics or user requirements missing human approval for DONE/VALIDATED.
-5. Summarize rows that are READY or IN_PROGRESS.
-
-Then ask the user what they want to discuss:
-- current status,
-- a new epic,
-- an existing epic,
-- a user requirement,
-- a BDD acceptance scenario,
-- a system requirement or task/slice,
-- a decision,
-- a gap/blocker,
-- code/test evidence.
-
-Do not start changing requirements until the discussion target is clear.
-```
-
-Output format:
-
-```markdown
-## Current status
-- Active epics:
-- Blocked/deferred:
-- Evidence gaps:
-- Approval gaps:
-- Next READY rows:
-
-## Discussion target
-Ask: What do you want to focus on now?
-```
-
-## Flow 2: Epic Creation Orchestration
-
-Use this when the user wants to create a new epic or turn a topic into implementation-ready work.
-
-```text
-1. Run Flow 1: Session Intake.
-2. Confirm the topic does not already belong to an existing epic.
-3. Create a new epic record only when there is a sourced user outcome or sourced user requirement.
-4. Run Flow 3: Topic or Epic Interview to define the outcome, users, domain context, models, events, facts, decisions, and open questions.
-5. Run Flow 4: Decision Capture for any scope, priority, behavior, or acceptance decision.
-6. Run Flow 5: BDD Acceptance Scenario Interview for each user-visible behavior needed to prove the epic.
-7. Run Flow 6: System Requirement and Task Interview for the system behavior needed by each acceptance scenario.
-8. Run Flow 9: Gap or Conflict Handling for missing sources, unresolved conflicts, or unknown implementation blockers.
-9. Run Flow 8: Epic Review before marking the epic READY for implementation loops.
-10. Update WORKLIST.md only after the epic satisfies the Epic Specification Gate.
-11. When the Epic Specification Gate passes, end by outputting the Flow 11 implementation kickoff prompt.
-```
-
-Epic Specification Gate:
-
-An epic is properly specced and implementation loops may start only when:
-
-1. The epic record exists under the main repository's `epics/` as either a single epic file or an epic folder with a main epic file, and it uses the required epic template.
-2. The epic has a sourced user outcome and at least one linked user requirement.
-3. Users or actors are recorded.
-4. Main bounded context is identified, or a blocking open question records why it cannot be identified yet.
-5. Supporting bounded contexts, key domain models, and key domain events are recorded with sources, or explicitly recorded as unknown open questions.
-6. At least one user story or journey traces to a linked user requirement.
-7. BDD acceptance scenarios cover the initial intended workflow needed for implementation to begin.
-8. Each BDD scenario has sourced Given/When/Then claims or open questions for missing sources.
-9. System requirements exist for the behavior needed by the first implementation loop.
-10. Tasks/slices exist for the first lower-loop work and trace to system requirements and acceptance scenarios.
-11. The initial failing-test strategy is recorded for upper-loop and lower-loop work.
-12. WORKLIST.md has an Epic Rollup row and active Work Rows for the first implementation loop.
-13. No blocking open question prevents the first implementation loop from starting.
-14. Deferred gaps have a reason, owner, and trace to the affected epic/scenario/system requirement/task.
-
-If any gate item fails, the epic remains `PROPOSED` or `BLOCKED`; do not start implementation loops.
-
-## Flow 3: Topic or Epic Interview
-
-Use this when the user wants to discuss a topic, new epic, or existing epic.
-
-```text
-1. Identify whether the topic maps to an existing epic.
-2. If it maps to an existing epic, open that epic record.
-3. If it does not, propose a new EPIC-<AREA>-NNN file or folder under the main repository's epics/.
-4. Ask for the user outcome, affected users/actors, and intended workflow.
-5. Identify the main bounded context, supporting bounded contexts, key domain models, and key domain events.
-6. Separate facts, decisions, assumptions, and open questions.
-7. For each fact or decision, identify the source.
-8. Record sourced facts and decisions in the epic record.
-9. Record unsourced or ambiguous claims as open questions.
-10. Update WORKLIST.md only after the epic trace links are clear.
-```
-
-Required interview questions:
-
-```text
-What user outcome are we discussing?
-Which user or actor is affected?
-Is this a new epic or part of an existing epic?
-What is the main bounded context for this capability?
-Which supporting bounded contexts does it touch?
-What domain models are involved?
-What domain events are emitted, consumed, or observed?
-What source supports this? User statement, document, code, or test?
-What decisions have already been made?
-What is still unknown?
-What would prove this works from the user's point of view?
-```
-
-Recording rules:
-
-- User goals become user requirements only when sourced.
-- Main bounded context, domain models, and domain events must be sourced or recorded as open questions.
-- User journeys become stories only when tied to a user requirement.
-- BDD acceptance scenarios must be grounded in a story, user requirement, or decision.
-- System requirements must trace to an acceptance scenario or justified technical enabler.
-- Tasks/slices must trace to a system requirement.
-
-## Flow 4: Decision Capture
-
-Use this when the user decides scope, behavior, priority, design, or acceptance criteria.
-
-```text
-1. Restate the decision in one sentence.
-2. Ask for confirmation if the decision changes behavior, scope, or completion criteria.
-3. Record the decision in the relevant epic under Decisions.
-4. Link the decision to affected user requirements, scenarios, system requirements, and tasks.
-5. Update WORKLIST.md if the decision changes status, scope, or priority.
-```
-
-Decision entry format:
-
-```markdown
-| Decision id | Decision | Source | Consequence |
-|---|---|---|---|
-| DEC-<AREA>-NNN | <decision> | USER:<date>:<summary> | <affected epic/scenario/task> |
-```
-
-Rules:
-
-- Do not record a decision without a source.
-- Do not hide disagreement. If a decision conflicts with docs, code, or tests, record the conflict.
-- Do not update status to `DONE`, `VALIDATED`, `UPPER_VALIDATED`, or `LOWER_VERIFIED` from a decision alone. Evidence is required.
-
-## Flow 5: BDD Acceptance Scenario Interview
-
-Use this when the discussion is about user-visible behavior.
-
-```text
-1. Open the parent epic.
-2. Identify the linked user requirement and story.
-3. Ask for the observable behavior.
-4. Write or update the BDD scenario in Gherkin.
-5. Identify the source for every Given/When/Then claim.
-6. Mark missing sources as open questions.
-7. Add the scenario to the epic's BDD acceptance scenarios table.
-8. Add or update WORKLIST.md rows only after the scenario has trace links.
-```
-
-Scenario prompt:
+1. Open the linked UR, journey, product source, and epic.
+2. Ask for the initial state, actor action, and observable result.
+3. Draft Given/When/Then in product language.
+4. Cite each normative claim or open a question for it.
+5. Identify negative/edge behavior that is necessary to prove the outcome.
+6. Record the SCN and its planned upper-RED test.
+7. Link the SRs needed to satisfy it; do not turn the SCN into tasks.
 
 ```gherkin
 Scenario: <observable behavior>
-  Given <sourced initial state>
-  When <sourced user/system action>
-  Then <sourced observable result>
-  And <sourced observable result>
+  Given <sourced state>
+  When <actor action/event>
+  Then <observable result>
 ```
 
-Rules:
+## 5. System requirement and task decomposition
 
-- The scenario must describe behavior, not implementation.
-- The upper loop is TDD: create failing BDD/E2E/user-flow evidence before marking the scenario complete.
-- `UPPER_VALIDATED` requires failing-then-passing BDD/E2E evidence and code references.
+Use after a scenario is sourced.
 
-## Flow 6: System Requirement and Task Interview
+For each system behavior:
 
-Use this when the discussion is about APIs, UI units, services, data behavior, integrations, or implementation slices.
+1. identify its owning boundary/interface;
+2. write one testable `SR-*` statement;
+3. select the verification level;
+4. define the smallest vertical `TASK-*` that advances a scenario;
+5. name the expected lower-RED test and implementation path;
+6. cite product/code/contract sources;
+7. record blockers and technical enablers explicitly;
+8. publish trace links to the Delivery System.
+
+Questions:
 
 ```text
-1. Open the parent epic.
-2. Identify the acceptance scenario that needs the system behavior.
-3. Define the system requirement.
-4. Define the task/slice that implements the smallest verified increment.
-5. Identify code and tests that already exist, if any.
-6. Record new facts with sources.
-7. Record gaps as open questions or blocked/deferred items.
-8. Update WORKLIST.md with the active task row.
-9. If the epic uses a folder layout, create or update the task file that a subagent can own, and keep its status and evidence synchronized with the parent epic and WORKLIST.md.
+Which SCN does this behavior support?
+What must the system do at which boundary?
+What focused test should fail first, and why?
+What is the smallest vertical change that can make it pass?
 ```
 
-Required questions:
+## 6. Specification review gate
 
-```text
-Which acceptance scenario does this support?
-What system behavior or interface must exist?
-Is this API, UI, service, data, integration, domain, or vertical scope?
-What test will fail first?
-What code path will satisfy the test?
-What source supports this behavior?
-```
+Use before any epic-path RED test is written.
 
-Rules:
+Audit the canonical specification-gate checklist, then present:
 
-- The lower loop is TDD: failing lower-loop test first, then implementation, then passing evidence.
-- `LOWER_VERIFIED` requires test references and code references.
-- A task/slice cannot be active in WORKLIST.md before it exists in its parent epic.
-- Subagent task files are execution records, not independent sources of truth. The main chat remains responsible for rollup status, cross-task conflicts, and final evidence review.
+- user outcome and excluded scope;
+- URs, journeys, and SCNs;
+- contexts/models/events/interfaces;
+- SR/task decomposition and RED strategy;
+- open questions, risks, and deferrals;
+- release and delivery path;
+- brief and recommendation.
 
-## Flow 7: Evidence and Completion Review
+Ask the authorized human for one result:
 
-Use this before marking anything complete.
+- approve specification;
+- request changes;
+- defer;
+- reject.
 
-```text
-1. Open WORKLIST.md and the parent epic.
-2. Check the full trace chain: UR -> EPIC -> SCN -> SR -> TASK -> TEST -> CODE.
-3. Verify lower-loop evidence:
-   - failing test existed first,
-   - passing test exists now,
-   - code reference is linked.
-4. Verify upper-loop evidence:
-   - failing BDD/E2E/user-flow test existed first,
-   - passing BDD/E2E/user-flow evidence exists now,
-   - code reference is linked.
-5. If epic-level DONE or user-requirement VALIDATED is requested, collect human approval:
-   - approver name,
-   - approver role,
-   - approval source,
-   - approval scope,
-   - decision: approved, rejected, or changes requested.
-6. Record approval in the parent epic before changing the rollup status.
-7. Update epic-internal completion status in the parent epic before updating the top-level rollup in WORKLIST.md.
-8. Update statuses only where evidence and required approval exist.
-9. Record any missing proof or approval as an evidence gap in the parent epic, and summarize active gaps in WORKLIST.md.
-```
+Record the result in the Delivery System and the epic's specification status.
+Only approval unlocks upper/lower RED work.
 
-Human approval prompt:
+## 7. Evidence review
 
-```text
-The tests prove the lower and upper loops, but full epic completion requires human approval.
-Who is approving this epic or user requirement?
-What is their role?
-What source records the approval?
-Is the approval for EPIC DONE, user requirement VALIDATED, or changes requested?
-Are any gaps, exclusions, or follow-up items part of the approval?
-```
+Use before `IN_REVIEW`, `DONE`, or `VALIDATED`.
 
-Completion rules:
+Audit each trace, not just status labels:
 
-- `LOWER_VERIFIED` requires code and lower-loop test evidence.
-- `UPPER_VALIDATED` requires code and BDD/E2E/user-flow evidence.
-- `DONE` requires both lower-loop and upper-loop evidence plus human approval recorded in the parent epic.
-- `VALIDATED` requires completed epic references plus human approval proving the user requirement is accepted.
-- No completion status may be set from memory, assumption, or unsourced user expectation.
+1. `UR -> EPIC -> SCN -> SR -> TASK -> TEST -> CODE` links exist;
+2. upper RED failed for the expected missing behavior;
+3. each lower RED failed for the expected missing behavior;
+4. lower tests and required regression/contract gates now pass;
+5. upper E2E/user-flow evidence now passes;
+6. UI runtime/screenshot evidence was actually inspected where required;
+7. evidence is pinned to the current code and has no drift;
+8. implementation delivery and local/server synchronization are current;
+9. gaps and deferrals are disclosed.
 
-## Flow 8: Epic Review
+Classify every item:
 
-Use this to inspect an existing epic and determine what is done, what is ready, and what gaps remain.
+- proven complete;
+- contradicted;
+- incomplete;
+- evidence too indirect;
+- missing evidence.
 
-```text
-1. Open WORKLIST.md and the epic record.
-2. Check that the epic satisfies the Epic Specification Gate if implementation has started or is requested.
-3. Review linked user requirements:
-   - source exists,
-   - acceptance scenarios cover the requirement,
-   - status matches evidence.
-4. Review domain ownership:
-   - main bounded context is recorded,
-   - supporting bounded contexts are recorded,
-   - key models and events are sourced or open questions exist.
-5. Review BDD acceptance scenarios:
-   - each scenario traces to a story and user requirement,
-   - each Given/When/Then claim is sourced or recorded as an open question,
-   - failing and passing upper-loop evidence exists for `UPPER_VALIDATED` scenarios.
-6. Review system requirements and tasks:
-   - each system requirement traces to a scenario or justified technical enabler,
-   - each task traces to a system requirement,
-   - lower-loop test and code evidence exists for `LOWER_VERIFIED` items.
-7. Review human approval:
-   - approval exists before epic `DONE`,
-   - approval source and scope are recorded,
-   - rejected or changes-requested approvals create gaps.
-8. Compare the epic record with WORKLIST.md and fix status drift.
-9. Record remaining gaps as open questions, blocked/deferred items, or new work-list rows.
-10. Report what is complete, what is ready next, what is blocked, and what evidence or approval is missing.
-11. If the epic satisfies the Epic Specification Gate and has `READY` implementation rows, output the Flow 11 implementation kickoff prompt.
-```
+Only the first class can support completion.
 
-Review output format:
+## 8. Completion approval gate
+
+Open only after the evidence review proves both arms.
+
+Present the brief plus:
+
+- visible outcome and scope delivered;
+- SCN and SR/TASK result summary;
+- runtime/browser evidence;
+- known gaps/deferrals and risks;
+- PR/commit/release/sync state.
+
+Ask the human for approval, rejection, or changes requested. Record:
 
 ```markdown
-## Epic review
-- Epic:
-- Current rollup status:
-- Ready for implementation loops: yes/no
-- Done items:
-- Ready next:
-- Evidence gaps:
-- Source gaps:
-- Approval gaps:
-- Blocked/deferred:
-- Required updates:
-- Implementation kickoff prompt:
+| Approval | Approver | Role | Source | Scope | Decision | Conditions |
+|---|---|---|---|---|---|---|
+| APP-<AREA>-NNN | <name> | <role> | USER:<date>:<summary> | EPIC/UR | approved/rejected/changes requested | <gaps> |
 ```
 
-Rules:
+Approval is necessary but not sufficient: code must also be delivered and all
+state representations reconciled before `DONE`/`VALIDATED`.
 
-- Do not treat a checked box or status label as proof. Status must be backed by source, code, test, validation, or approval evidence.
-- If WORKLIST.md and the epic disagree, the review must record the mismatch and update the incorrect artifact.
-- If an epic is not properly specced, keep it out of implementation loops until the Epic Specification Gate passes.
+## 9. Gap, conflict, or deferral
 
-## Flow 9: Gap or Conflict Handling
+When a claim is unsourced, contradicted, or intentionally postponed:
 
-Use this when a claim is unclear, unsourced, contradicted, or incomplete.
+1. do not record it as fact or silently narrow the requirement;
+2. record source/trigger and affected traces;
+3. classify as open question, conflict, blocker, deferral, or discovery;
+4. name decision/owner and next point of review;
+5. open a Delivery System gate if human authority is needed;
+6. keep work at the strongest status current evidence supports.
 
-```text
-1. Do not record the claim as fact.
-2. Add an open question or blocked/deferred item in the parent epic.
-3. Add a row in WORKLIST.md Blocked / Deferred if it affects active work.
-4. Include the source or trigger that exposed the gap.
-5. Ask the user what source or decision should resolve it.
+Deferral record:
+
+```markdown
+| Item | Status | Reason | Source | Owner | Target/review point | Affects |
+|---|---|---|---|---|---|---|
+| <id> | DEFERRED | <why not now> | USER:/DOC:/RUN: | <owner> | <release/date/gate> | <trace ids> |
 ```
 
-Rules:
+## 10. Implementation kickoff
 
-- Missing source means open question.
-- Conflicting sources mean conflict entry and user decision.
-- Missing test/code evidence means evidence gap.
-- Deferred work must state reason and owner.
+After specification approval, provide a self-contained kickoff:
 
-## Flow 10: End-of-Session Summary
+```markdown
+Start `<EPIC-ID>` in `<repository>`.
 
-Use this before ending a session.
+Read:
+- project `AGENTS.md`
+- `req-driven-dev/AGENTS.md`
+- `<epic>/EPIC.md` and specs
+- active task records
 
-```text
+State:
+- release/system: <ids>
+- specification gate: <approved source>
+- next trace: UR -> EPIC -> SCN -> SR -> TASK
+
+Evidence sequence:
+1. run/record upper RED for <SCN>;
+2. run lower RED/GREEN for <TASK> using <test command>;
+3. run proportional regression gates;
+4. run upper validation and required browser/runtime check;
+5. update local trace records, sync, and report evidence;
+6. stop at IN_REVIEW for human completion approval.
+```
+
+Do not issue a kickoff for a draft, blocked, or unapproved specification.
+
+## 11. End-of-session handoff
+
 Report:
-1. Discussion target.
-2. Epic records changed.
-3. Facts recorded, with source ids.
-4. Decisions recorded, with source ids.
-5. Open questions or conflicts created.
-6. WORKLIST.md status changes.
-7. Evidence gaps.
-8. Next recommended discussion target.
-```
 
-Do not claim that anything is complete unless the relevant epic and WORKLIST.md rows contain the required source, code, and test references.
+- target and current release/trace;
+- files/code changed;
+- RED and GREEN evidence with commands/results;
+- decisions/approvals with source and actor;
+- Delivery System sync/evidence status;
+- discoveries, deferrals, conflicts, and blockers;
+- exact next `READY` item.
 
-## Flow 11: Implementation Kickoff Prompt
-
-Use this at the end of epic creation or epic review when the epic satisfies the Epic Specification Gate and `WORKLIST.md` has active `READY` rows for implementation.
-
-Do not output this prompt for a `PROPOSED` or `BLOCKED` epic. Instead, report the missing gate items and the sources or decisions needed to unblock the epic.
-
-The prompt must be specific enough that a new main chat can start implementation without re-interviewing the user, and constrained enough that subagents only work on their assigned task files.
-
-Prompt format:
-
-```markdown
-## Implementation kickoff prompt
-
-Start implementing `<EPIC-ID>` in `<main-repository-path>`.
-
-Read first:
-- `V-model-loop.md`
-- `WORKLIST.md`
-- `<epic-record-path>`
-- `<task-file-paths, if any>`
-
-Implementation rules:
-- Start from the next `READY` rows in `WORKLIST.md`; do not begin work outside those rows.
-- Confirm the trace chain `UR -> EPIC -> SCN -> SR -> TASK` before editing code.
-- Run the upper loop first by writing or confirming failing BDD/E2E/user-flow evidence for the acceptance scenario.
-- For each task, run the lower loop with failing unit/component/API/contract/integration test first, then implement the smallest slice, then record passing evidence.
-- Use subagents for independent task files under `<epic-folder>/tasks/` when the tasks can be verified separately. Give each subagent exactly one task file, its linked system requirement, expected failing test, and evidence update responsibility.
-- Keep the main chat responsible for coordination, cross-task conflicts, upper-loop validation, status rollup, and final evidence review.
-- After each task, update the task file if one exists, update the parent epic record with internal completion, lower-loop test evidence, and code references, then update `WORKLIST.md` with the top-level rollup status and evidence summary.
-- Do not mark `LOWER_VERIFIED`, `UPPER_VALIDATED`, `DONE`, or `VALIDATED` without linked test/validation evidence and code references.
-- Do not mark the epic `DONE` or a user requirement `VALIDATED` until human approval is recorded in the parent epic.
-
-Active work rows:
-- `<TASK-ID>`: `<WORKLIST row summary and path to task file or epic record>`
-
-Subagent handoff candidates:
-- `<TASK-ID>`: `<task file path>`; expected evidence: `<test type / file / command>`
-
-Start by reporting the selected first `READY` row, the failing upper-loop evidence to create or confirm, and the subagents to launch.
-```
-
-Rules:
-
-- Preserve concrete IDs, paths, test commands, and source references from the epic and `WORKLIST.md`.
-- If there are no independent task files, set `Subagent handoff candidates` to `none` and keep implementation in the main chat.
-- If the kickoff prompt would require unsourced behavior, do not output it; record the missing source as an open question or blocker.
+Use honest status language. “Implemented locally,” “verified,” “in review,”
+and “done” are different states.

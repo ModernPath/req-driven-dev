@@ -1,787 +1,487 @@
-# V-Model Loop Development Template
+# Requirement-driven V-model delivery loop
 
-This template defines the authoritative work-item and evidence structure for loop-based development on top of the V-model.
+This is the canonical lifecycle for turning human intent into verified,
+delivered software. It combines three loops:
 
-The process has two evidence loops coordinated by one development loop:
+- **human loop** — supplies intent, resolves ambiguity, and approves gates;
+- **development loop** — selects the next incomplete trace and iterates;
+- **V-model evidence loops** — upper-loop acceptance of user behavior and
+  lower-loop verification of system behavior.
 
-- **Upper loop:** user requirements, epics, user stories, BDD acceptance scenarios, and end-to-end validation.
-- **Lower loop:** system requirements, tasks/slices, interfaces, APIs, UI units, services, and verification evidence.
-- **Development loop:** selects the next incomplete work-list item, runs the required upper or lower loop, records evidence, and updates completion status.
-- **Development method:** TDD in both loops. Upper-loop BDD/E2E acceptance tests are written before the scenario is complete. Lower-loop unit/component/API/contract/integration tests are written before implementation. Completed items must link to the code and test evidence that prove the claim.
+The ModernPath Delivery System holds their state. Mission Control and the
+`modernpath` CLI expose it; repository artifacts provide the versioned local
+representation. See [`delivery-system.md`](delivery-system.md).
 
-The V-model defines traceability. The loops define how work moves in small verified increments.
+## The model
 
-## Repository Ownership
+```text
+                         HUMAN LOOP
+        product intent -> spec/decision gate -> approval/rejection
+              ^                                      |
+              |                                      v
+              +-------- completion evidence <- completion gate
 
-Work progress belongs in the main repository being changed, beside the product code and tests. Do not keep a separate local `epic/` or `epics/` folder in this instruction/template repository.
+                       DEVELOPMENT LOOP
+        ORIENT -> SPECIFY -> RED -> GREEN -> VERIFY -> VALIDATE
+           ^                                                  |
+           +---- CAPTURE <- REVIEW <- DELIVER <- RECONCILE ---+
 
-Repo-relative process artifacts:
+                           V-MODEL
 
-- `WORKLIST.md` is the main repository's live top-level development control surface.
-- `WORKLIST.md` owns top-level progress: cross-epic rollups, active work rows, status summaries, approval summaries, and blocked/deferred items.
-- `epics/` in the main repository stores epic records.
-- Parent epic records own internal completion for their capability: detailed trace maps, scenario/system-requirement/task status, evidence maps, decisions, gaps, and approval records.
-- Epic records may be single files or folders with a main epic file and multiple task files.
-- Task files may be handed to subagents for focused lower-loop work; they own task-local execution details only. The main chat keeps oversight by monitoring those files and keeping the task file, parent epic, and `WORKLIST.md` synchronized.
+  UPPER LOOP                     BUILD                    UPPER LOOP
+  user intent                                               evidence
+       |                                                       ^
+       v                                                       |
+  USER REQUIREMENT (UR) ---------------------- BDD/E2E validation
+       |                                                       ^
+       v                                                       |
+  EPIC -> STORY/JOURNEY -> SCENARIO (SCN) ---------------------+
+       |
+       | decomposes
+       v
+  SYSTEM REQUIREMENT (SR) ---------------- focused verification
+       |                                                       ^
+       v                                                       |
+  TASK / VERTICAL SLICE -> implementation -> unit/component/API/
+                                            contract/integration test
 
-Unless otherwise stated, paths in this process are relative to the main repository.
+  Canonical trace: UR -> EPIC -> SCN -> SR -> TASK -> TEST -> CODE
 
-## Grounded Recording
+                  MODERNPATH DELIVERY SYSTEM
+  requirements | epics | specs | tasks | gates | evidence | traces
+  statuses | releases | actors | audit events | sessions/jobs
+```
 
-All recorded facts, decisions, requirements, scenarios, system requirements, tasks, status changes, and completion claims must be grounded in source material.
+The left side states what must be true. The right side proves it. Code in the
+middle is necessary but never sufficient evidence by itself.
 
-Accepted source types:
+## Lifecycle
 
-- `USER:<date>:<short-summary>`
-- `DOC:<path>#<heading-or-section>`
-- `CODE:<path>:<line-or-symbol>`
-- `TEST:<path>:<test-name>`
-- `RUN:<command-or-report>`
-- `EPIC:<path>#<heading>`
+### 1. Discover
+
+Input: user interviews, regulations, product goals, incidents, existing
+behavior, and technical constraints.
+
+Output: sourced product/domain documentation, vocabulary, rules, architecture,
+contracts, and open questions. Do not turn ambiguity into a requirement by
+guessing.
+
+### 2. Plan
+
+Derive user requirements and system requirements from the product sources.
+Write observable acceptance criteria, establish ownership and release scope,
+and route work into an epic or the fast lane.
+
+### 3. Build and verify
+
+Run both V-model arms red-first. Lower-loop tasks make system behavior correct;
+upper-loop scenarios prove the intended user workflow. Record evidence and
+human approval, deliver in the implementation's source repository, and
+reconcile every state projection.
+
+Planning and building are iterative. Discoveries feed the planning loop without
+silently expanding the current implementation slice.
+
+## Trace hierarchy
+
+### User requirement (`UR-*`)
+
+A user requirement states an outcome for a named actor in a real context. It
+contains no implementation choice unless the choice is itself a user or
+regulatory constraint.
+
+Minimum fields:
+
+```markdown
+## UR-<AREA>-NNN — <outcome>
+- Actor: <role>
+- Statement: <actor can achieve/experience outcome>
+- Intended use: <context and value>
+- Source: USER:/DOC:
+- Validation: <linked SCN ids>
+- Status: PROPOSED | READY | IN_PROGRESS | IN_REVIEW | VALIDATED | BLOCKED | DEFERRED | OBSOLETE
+```
+
+### Epic (`EPIC-*`)
+
+An epic groups one coherent user-visible capability. A technical-enabler epic
+must identify the user-visible epic or requirement it enables.
+
+An epic owns:
+
+- sourced user outcome and linked URs;
+- actors, primary domain/bounded context, supporting contexts;
+- key models, events, interfaces, and constraints;
+- decisions and open questions;
+- BDD scenarios, SRs, and thin tasks;
+- specifications and both human gates;
+- evidence map, gaps, discoveries, and completion record.
+
+Use a folder for new epics:
+
+```text
+epics/EPIC-<AREA>-NNN-<slug>/
+  EPIC.md
+  specs/
+    requirements.md        # required
+    architecture.md        # as needed
+    api.md                  # as needed
+    data.md                 # as needed
+    testing.md              # as needed
+  tasks/
+    TASK-<AREA>-NNN-<slug>.md
+```
+
+### Acceptance scenario (`SCN-*`)
+
+A scenario is observable upper-loop behavior, normally Given/When/Then. It is
+not a task.
+
+```gherkin
+Scenario: <observable outcome>
+  Given <sourced initial state>
+  When <actor action or event>
+  Then <observable result>
+```
+
+Each scenario links upward to a UR/epic and downward to the SRs/tasks needed to
+make it pass.
+
+### System requirement (`SR-*`)
+
+A system requirement states testable system behavior, contract behavior, data
+behavior, or a quality constraint needed by a scenario.
+
+```markdown
+## SR-<AREA>-NNN — <behavior>
+- Statement: The system shall <testable behavior>.
+- Source: <SCN/UR/DOC/CODE source>
+- Boundary: domain | API | UI | data | integration | operations
+- Verification method: unit | component | API | contract | integration
+- Linked tasks: TASK-...
+- Status: PROPOSED | READY | IN_PROGRESS | LOWER_VERIFIED | BLOCKED | DEFERRED | OBSOLETE
+```
+
+### Task or slice (`TASK-*`)
+
+A task is the smallest useful vertical increment that implements and verifies
+part of an SR. It records the expected failing test, passing test, code path,
+and trace links.
+
+A repository may retain an established `REQ-*` ledger id as the task/slice id.
+In that case record whether the row represents a user or system requirement and
+link it explicitly to the epic, SCN, and SR. Do not create a parallel id merely
+to satisfy the diagram.
+
+## Sources and decisions
+
+Use stable source tags:
+
+| Tag | Meaning |
+|---|---|
+| `USER:<date>:<summary>` | attributable human fact, decision, or approval |
+| `DOC:<path>#<section>` | product/domain/architecture source |
+| `CODE:<path>:<symbol>` | observed existing behavior |
+| `TEST:<path>:<name>` | test definition or result target |
+| `RUN:<command-or-report>` | observed command/runtime evidence |
+| `EPIC:<path>#<section>` | trace to an existing epic record |
 
 Rules:
 
-- No information may be recorded as fact without a source reference.
-- Unsourced claims must be recorded as open questions.
-- Conflicting sources must be recorded as conflicts until resolved by a sourced decision.
-- Decisions must be recorded in the relevant epic record with their source and consequence.
-- Completion claims must include code and test or validation evidence.
+- normative claims need a source;
+- missing sources become open questions;
+- conflicting sources remain conflicts until a human resolves them;
+- record a decision's consequence on affected UR/SCN/SR/TASK items;
+- an answer is not an implementation or a passing gate by itself.
 
-## Loop Chart
+## Epic entry and specification gate
 
-```text
-                         UPPER LOOP
-        user intent, user-facing behavior, acceptance validation
+An epic is required when any of these are true:
 
-  +-------------------------------------------------------------------+
-  |                                                                   |
-  |  USER NEED / INTENDED USE                                         |
-  |            |                                                      |
-  |            v                                                      |
-  |  USER REQUIREMENT (UR)                                            |
-  |            |                                                      |
-  |            v                                                      |
-  |  EPIC  -------------------- owns --------------------+            |
-  |    |                                                 |            |
-  |    v                                                 v            |
-  |  USER STORY / JOURNEY                     BDD ACCEPTANCE SCENARIO |
-  |            |                                      |               |
-  |            |                                      v               |
-  |            |                         E2E / USER-FLOW VALIDATION   |
-  |            |                                      |               |
-  |            +---------------- validates -----------+               |
-  |                                                                   |
-  +-------------------------------------------------------------------+
-                    |                                ^
-                    | decomposes into                | evidence rolls up
-                    v                                |
-  +-------------------------------------------------------------------+
-  |                                                                   |
-  |  SYSTEM REQUIREMENT (SR)                                          |
-  |            |                                                      |
-  |            v                                                      |
-  |  TASK / SLICE                                                     |
-  |            |                                                      |
-  |            v                                                      |
-  |  API / UI UNIT / SERVICE / DATA / INTEGRATION CHANGE              |
-  |            |                                                      |
-  |            v                                                      |
-  |  UNIT / COMPONENT / CONTRACT / API / INTEGRATION TEST EVIDENCE    |
-  |            |                                                      |
-  |            +---------------- verifies ----------------------------+
-  |                                                                   |
-  +-------------------------------------------------------------------+
+1. design or specification content is needed beyond one requirement's
+   acceptance criteria;
+2. a contract surface changes (API, schema, event, protocol, public component);
+3. the work spans bounded contexts or repositories;
+4. it needs more than one independently verified task or is expected to exceed
+   one working day;
+5. it changes product-visible behavior.
 
-                         LOWER LOOP
-        system behavior, interfaces, components, verification evidence
+If one becomes true during a fast-lane change, stop and promote the work into
+an epic.
 
-Trace chain:
+Before implementation, an epic must have:
 
-  UR -> EPIC -> SCN -> SR -> TASK -> TEST -> CODE
-```
+1. an epic record and `specs/requirements.md`;
+2. sourced user outcome, UR, actors, and release/scope;
+3. sourced primary/supporting contexts, models, events, and contracts, or
+   blocking open questions;
+4. user story/journey and Given/When/Then scenarios covering the first slice;
+5. testable SRs and thin tasks linked to those scenarios;
+6. upper-RED and lower-RED test strategy;
+7. recorded gaps and deferrals with owner/reason;
+8. visibility in the Delivery System and local projection;
+9. a plain-language decision brief;
+10. explicit human specification approval.
 
-## Development Loop
-
-The development loop coordinates the upper and lower loops. It is driven by the main repository's `WORKLIST.md` for top-level progress and next-work selection.
-
-No implementation work starts outside the work-list. Every active epic, scenario, system requirement, and task must appear in the work-list with trace links and top-level completion status.
-
-Flow:
+Specification state:
 
 ```text
-  +----------------------------------------------------------------+
-  | DEVELOPMENT LOOP                                               |
-  |                                                                |
-  |  1. Select next READY work-list row                            |
-  |            |                                                   |
-  |            v                                                   |
-  |  2. Confirm trace chain: UR -> EPIC -> SCN -> SR -> TASK       |
-  |            |                                                   |
-  |            v                                                   |
-  |  3. Run lower loop if system behavior is incomplete            |
-  |            |                                                   |
-  |            v                                                   |
-  |  4. Record lower-loop evidence and mark task/SR verified       |
-  |            |                                                   |
-  |            v                                                   |
-  |  5. Run upper loop with BDD/E2E acceptance test first          |
-  |            |                                                   |
-  |            v                                                   |
-  |  6. Record upper-loop evidence and mark scenario validated     |
-  |            |                                                   |
-  |            v                                                   |
-  |  7. Request and record human approval for epic / UR completion |
-  |            |                                                   |
-  |            v                                                   |
-  |  8. Roll up completion to epic and user requirement            |
-  |            |                                                   |
-  |            +------------------ next incomplete row -------------+
-  |                                                                |
-  +----------------------------------------------------------------+
+SPEC_DRAFT -> SPEC_READY -> SPEC_APPROVED
+                  |              |
+                  |              +-- attributable human approval
+                  +-- open specification gate
 ```
 
-Detailed state flow:
+No epic-path RED test is written before `SPEC_APPROVED`. Writing the test is
+implementation-loop work, not specification work.
+
+## Fast lane
+
+The fast lane is for a single spec-light requirement/task. All must hold:
+
+- behavior is already unambiguous in a sourced requirement;
+- no contract or product-visible behavior changes;
+- one bounded context and source repository;
+- one task, expected within one working day;
+- no new product/architecture/acceptance decision;
+- the row has Given/When/Then criteria, expected RED test, owner, and release;
+- it is visible in the Delivery System before implementation;
+- the project defines the human review path for fast-lane completion.
+
+The fast lane removes epic ceremony, not TDD, traceability, evidence, review,
+or sync.
+
+## Development loop
+
+### 0. Orient
+
+- inspect repository state and preserve unrelated work;
+- converge local/server state per `delivery-system.md`;
+- confirm active release and current item;
+- inspect blockers, open gates, evidence drift, and next `READY` trace;
+- read the relevant product, code, test, epic/spec, and task sources.
+
+### 1. Specify
+
+- sharpen acceptance criteria without changing sourced intent;
+- create or update UR -> EPIC -> SCN -> SR -> TASK links;
+- route ambiguity to an open question/gate;
+- pass the epic specification gate or prove every fast-lane criterion.
+
+### 2. Upper RED
+
+- create or identify the BDD/E2E/user-flow test for the SCN;
+- run it against the incomplete behavior;
+- record the expected failure and why it proves the missing outcome;
+- reject false-red evidence caused by a broken harness or unrelated failure.
+
+### 3. Lower RED
+
+- select one thin task/SR;
+- write the smallest focused unit/component/API/contract/integration test;
+- run it and record the expected failure;
+- link test id/name to the task/SR.
+
+### 4. Green
+
+- implement only the behavior needed by the failing test;
+- keep domain logic at the owning boundary;
+- derive from canonical contracts;
+- capture discoveries rather than silently expanding scope.
+
+### 5. Lower verify
+
+- run the focused test, then proportional regression/architecture/contract
+  gates;
+- link test result, code, command, branch/SHA, and task/SR;
+- move TASK/SR to `LOWER_VERIFIED` only when all linked lower work passes.
+
+### 6. Upper validate
+
+- run the BDD/E2E/user-flow acceptance path;
+- link failing-then-passing evidence and code to the SCN;
+- for UI work, run against the live stack, assert assets loaded, and inspect an
+  actual screenshot for layout/styling defects;
+- never mutate real production-like data merely to verify a control's rendering.
+
+### 7. Review
+
+- audit every criterion against direct evidence;
+- present the brief, visible behavior, risks, gaps, deferrals, and test results;
+- set requirement/epic `IN_REVIEW` only after lower verification and upper
+  validation are complete;
+- record the human completion decision with actual actor and scope.
+
+### 8. Deliver and reconcile
+
+- merge code in its source-of-truth repository;
+- integrate any workspace snapshot according to project rules;
+- update requirement, epic, task, evidence, and local rollups atomically;
+- sync and report evidence to the Delivery System;
+- confirm server state, local state, release, PR/commit, and generated views
+  agree before `DONE`/`VALIDATED`.
+
+### 9. Capture and continue
+
+Record the six completion facts: **Done, Decisions, Deferred, Discovered,
+Follow-ups, Gate result**. Route every new item, then return to Orient.
+
+## Upper loop
+
+Question: **Does the delivered workflow satisfy the user requirement?**
+
+Required evidence:
+
+- sourced SCN and expected observation;
+- failing BDD/E2E/user-flow result before the implementation satisfied it;
+- passing result after lower-loop slices;
+- runtime/browser/manual evidence proportional to the behavior;
+- linked code revision;
+- human acceptance at epic/UR completion.
 
 ```text
-                         WORKLIST.md
-              source of truth for top-level progress
-
-                              |
-                              v
-                   +----------------------+
-                   | next READY work row  |
-                   +----------------------+
-                              |
-                              v
-               +--------------------------------------+
-               | trace complete?                      |
-               | UR -> EPIC -> SCN -> SR -> TASK      |
-               +--------------------------------------+
-                    | yes                  | no
-                    v                      v
-          +-------------------+     +-------------------+
-          | set IN_PROGRESS   |     | BLOCKED / add gap |
-          +-------------------+     +-------------------+
-                    |
-                    v
-        +-------------------------------+
-        | lower-loop evidence complete? |
-        +-------------------------------+
-             | no                    | yes
-             v                       v
-  +------------------------+   +------------------------+
-  | run lower loop         |   | mark TASK / SR         |
-  | implement slice        |   | LOWER_VERIFIED         |
-  | unit/API/UI/contract   |   +------------------------+
-  | integration tests      |              |
-  +------------------------+              v
-                                  +-------------------------------+
-                                  | upper-loop evidence complete? |
-                                  +-------------------------------+
-                                       | no                    | yes
-                                       v                       v
-                         +---------------------------+   +----------------------+
-                         | run upper loop            |   | mark SCN            |
-                         | failing BDD/E2E first     |   | UPPER_VALIDATED     |
-                         | then user-flow pass       |   +----------------------+
-                         +---------------------------+              |
-                                                                    v
-                                                     +--------------------------+
-                                                     | approval required for    |
-                                                     | EPIC DONE / UR VALIDATED |
-                                                     +--------------------------+
-                                                                    |
-                                                                    v
-                                                     +--------------------------+
-                                                     | roll up epic / UR state  |
-                                                     | after approval           |
-                                                     +--------------------------+
-                                                                    |
-                                                                    v
-                                                     +--------------------------+
-                                                     | next incomplete row      |
-                                                     +--------------------------+
+UR -> EPIC -> SCN -> failing acceptance test
+                         |
+                         v
+                   lower-loop slices
+                         |
+                         v
+                   passing acceptance test -> UPPER_VALIDATED
 ```
 
-Rules:
+## Lower loop
 
-- The development loop must start from `WORKLIST.md`.
-- A row may enter implementation only when its trace chain is complete or explicitly marked as a technical enabler.
-- An epic may enter implementation loops only after it passes the Epic Specification Gate.
-- Lower-loop work records task and system-requirement internal completion, test evidence, and code references in the parent epic record and task file if one exists, then updates `WORKLIST.md` with the top-level status and evidence summary.
-- Upper-loop work records acceptance-scenario validation, epic progress, evidence, gaps, and approval details in the parent epic record, then updates `WORKLIST.md` with the top-level status and evidence summary.
-- Any discovered gap must be added to the work-list as a new row or marked on the blocked row.
-- `WORKLIST.md` is the source of truth for top-level progress, queueing, and cross-epic rollup.
-- The parent epic record is the source of truth for internal completion and detailed evidence trace for that epic.
-- If `WORKLIST.md`, the parent epic, and any task file disagree, reconcile the drift before starting another row or claiming completion.
-- Any item marked `LOWER_VERIFIED`, `UPPER_VALIDATED`, `DONE`, or `VALIDATED` must reference the code and test case or validation evidence that verifies the claim.
-- `DONE` and `VALIDATED` also require human approval recorded in the parent epic.
-- Upper-loop and lower-loop work both follow red-first TDD.
+Question: **Does each system part satisfy its specified behavior and
+interface?**
 
-## Work-List
+Choose evidence by boundary:
 
-`WORKLIST.md` is the live top-level control artifact for the development loop and belongs in the main repository being changed.
+- domain rules: unit/property tests;
+- UI units: component tests plus upper real-browser validation;
+- APIs: endpoint and contract tests;
+- persistence/integration: integration tests;
+- cross-service contracts: consumer/provider or schema-conformance tests;
+- operational behavior: harness/smoke tests.
 
-At the top level, it tracks:
+```text
+SR -> TASK -> failing focused test -> smallest implementation
+                                      |
+                                      v
+                         focused + regression tests -> LOWER_VERIFIED
+```
 
-- trace links across `UR -> EPIC -> SCN -> SR -> TASK`;
-- current completion status;
-- lower-loop verification evidence;
-- upper-loop validation evidence;
-- human approval status for epic and user-requirement completion;
-- blocked or deferred gaps.
+## Status model
 
-`WORKLIST.md` is an index, top-level status rollup, and oversight surface. It does not replace epic records. The authoritative internal completion details for user stories, acceptance scenarios, system requirements, tasks, decisions, gaps, approvals, and evidence maps live under the main repository's `epics/`.
-
-Status vocabulary:
+Top-level work status:
 
 | Status | Meaning |
 |---|---|
-| `PROPOSED` | Identified but not ready for development |
-| `READY` | Trace links and acceptance expectations are clear |
-| `IN_PROGRESS` | Lower-loop implementation or upper-loop validation is underway |
-| `LOWER_VERIFIED` | Red-first lower-loop tests pass for the linked task/system requirement |
-| `UPPER_VALIDATED` | Red-first upper-loop BDD/E2E evidence passes for the linked scenario |
-| `DONE` | Upper and lower evidence are complete, rolled up, and human-approved |
-| `BLOCKED` | Cannot proceed; blocker must be recorded |
-| `DEFERRED` | Consciously postponed; reason must be recorded |
+| `PROPOSED` | identified, not ready |
+| `READY` | sourced acceptance and entry gate complete |
+| `IN_PROGRESS` | either evidence loop is underway |
+| `IN_REVIEW` | lower verified + upper validated; completion approval/delivery pending |
+| `DONE` | evidence, human approval, source delivery, and reconciliation complete |
+| `BLOCKED` | cannot proceed; blocker/gate linked |
+| `DEFERRED` | explicitly postponed; reason, owner, and target recorded |
+| `OBSOLETE` | superseded; replacement source linked |
 
-Completion evidence rule:
+Evidence waypoints:
 
-- `LOWER_VERIFIED` requires a code reference and lower-loop test reference.
-- `UPPER_VALIDATED` requires failing-then-passing BDD/E2E/user-flow evidence and the code under test.
-- `DONE` requires both lower-loop and upper-loop evidence references plus human approval.
-- `VALIDATED` requires completed epic references plus human approval proving the user requirement is accepted.
+- `LOWER_VERIFIED` belongs to TASK/SR evidence;
+- `UPPER_VALIDATED` belongs to SCN/epic upper evidence;
+- `VALIDATED` belongs to a user requirement after its linked epics are done
+  and the human acceptance is recorded.
 
-Acceptance gates:
+A lower or upper waypoint does not independently make top-level work `DONE`.
 
-| Gate | Required before status | Evidence / approval |
-|---|---|---|
-| Trace gate | `READY` | UR, EPIC, SCN, SR, TASK links exist or technical-enabler justification is recorded |
-| Lower TDD gate | `LOWER_VERIFIED` | failing lower-loop test, passing lower-loop test, code reference |
-| Upper TDD gate | `UPPER_VALIDATED` | failing BDD/E2E/user-flow test, passing BDD/E2E/user-flow test, code reference |
-| Epic approval gate | `DONE` | all scenarios `UPPER_VALIDATED`, all system requirements `LOWER_VERIFIED`, no unrecorded gaps, human approval recorded |
-| User validation gate | `VALIDATED` | all linked epics `DONE`, human approval recorded |
+## Requirement ledgers and local projections
 
-Required work-list sections:
+A project may keep requirement ledgers, epic folders, a work-list, backlog,
+and generated progress views for versioned collaboration. Project instructions
+define their exact paths and parser-safe formats.
 
-```markdown
-# V-Model Loop Work-List
+Minimum ledger content:
 
-## Epic Rollup
+- stable id and kind (user/system/task adapter);
+- statement, source, owner, release/scope, and status;
+- Given/When/Then acceptance criteria;
+- linked epic/SCN/SR/TASK;
+- test/evidence and code/PR references;
+- deferral/blocker/supersession metadata.
 
-| Epic | Epic record | User requirements | Acceptance scenarios | System requirements | Tasks | Upper status | Lower status | Overall status | Human approval | Evidence / gaps |
-|---|---|---|---|---|---|---|---|---|---|---|
-| EPIC-<AREA>-NNN | epics/EPIC-<AREA>-NNN-<title>.md or epics/EPIC-<AREA>-NNN-<title>/EPIC.md | UR-<AREA>-NNN | SCN-<AREA>-NNN | SR-<AREA>-NNN | TASK-<AREA>-NNN | PROPOSED | PROPOSED | PROPOSED | - | - |
+If a status is duplicated in a dashboard, detail block, totals line, or
+generated projection, update all copies in one logical change and validate the
+counts. The Delivery System remains authoritative for loop state.
 
-## Work Rows
+## Planning and discoveries
 
-| Task / slice | Epic | Epic record / task file | User requirement | Acceptance scenario | System requirement | Scope | Status | Lower test evidence | Upper BDD/E2E evidence | Code reference | Notes |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| TASK-<AREA>-NNN | EPIC-<AREA>-NNN | epics/EPIC-<AREA>-NNN-<title>.md or epics/EPIC-<AREA>-NNN-<title>/tasks/TASK-<AREA>-NNN.md | UR-<AREA>-NNN | SCN-<AREA>-NNN | SR-<AREA>-NNN | API/UI/service/data/vertical | READY | - | - | - | - |
+Capture first, triage separately:
 
-## Blocked / Deferred
-
-| Item | Status | Reason | Required decision | Owner |
-|---|---|---|---|---|
-| <id> | BLOCKED | <reason> | <decision needed> | <owner> |
-```
-
-Completion roll-up:
-
-- A task is `LOWER_VERIFIED` when its red-first lower-loop tests pass and code references are linked.
-- A system requirement is `LOWER_VERIFIED` when all linked tasks are lower-verified and code/test references are linked.
-- An acceptance scenario is `UPPER_VALIDATED` when its red-first BDD/E2E/user-flow evidence passes and code references are linked.
-- An epic is `DONE` when all linked scenarios are upper-validated, all linked system requirements are lower-verified, and human approval is recorded.
-- A user requirement is `VALIDATED` when all linked epics are done and human approval is recorded.
-
-## Epic Storage
-
-Store epics as first-class parent artifacts under the main repository's `epics/`.
-
-Allowed layouts:
-
-```text
-epics/
-  README.md
-  EPIC-<AREA>-NNN-<short-title>.md
-```
-
-or:
-
-```text
-epics/
-  README.md
-  EPIC-<AREA>-NNN-<short-title>/
-    EPIC.md
-    tasks/
-      TASK-<AREA>-NNN-<short-title>.md
-```
-
-Use the folder layout when the epic has multiple independently executable tasks or when task files are useful for subagent handoff. The main epic file owns the internal trace map and completion rollup for that epic. Task files own focused lower-loop task detail and evidence, but they do not replace the parent epic or `WORKLIST.md`.
-
-Each epic record owns the complete repo-local tree for that capability:
-
-```text
-EPIC
-  -> MAIN BOUNDED CONTEXT
-  -> KEY DOMAIN MODELS
-  -> KEY DOMAIN EVENTS
-  -> linked USER REQUIREMENTS
-  -> USER STORIES / JOURNEYS
-  -> BDD ACCEPTANCE SCENARIOS
-  -> SYSTEM REQUIREMENTS
-  -> TASKS / SLICES
-  -> EVIDENCE MAP
-  -> BLOCKED / DEFERRED ITEMS
-```
-
-Rules:
-
-- Every epic must have exactly one canonical epic record: either a single file in `epics/` or one folder in `epics/` with a main epic file.
-- `WORKLIST.md` must link to the canonical epic record. If task files exist, active work rows should also link to the relevant task file.
-- The main epic record contains the detailed parent-child trace map.
-- The main epic record identifies the main bounded context, key domain models, and key domain events for the capability.
-- `WORKLIST.md` contains the top-level cross-epic status rollup, active development rows, and subagent oversight status.
-- A task/slice must be listed in its parent epic before it appears as an active work row in `WORKLIST.md` or is handed to a subagent.
-- A BDD acceptance scenario must be listed in its parent epic before lower-loop tasks can be marked `LOWER_VERIFIED`.
-- Evidence must be linked in the parent epic, summarized in `WORKLIST.md`, and linked from the task file when a task file exists.
-
-Epic record naming:
-
-```text
-EPIC-<AREA>-NNN-<kebab-title>.md
-```
-
-Example:
-
-```text
-epics/EPIC-AUTH-001-password-reset.md
-epics/EPIC-AUTH-001-password-reset/EPIC.md
-```
-
-## Artifact Hierarchy
-
-Use this hierarchy for all product work:
-
-```text
-USER NEED / INTENDED USE
-  -> USER REQUIREMENT
-     -> EPIC
-        -> USER STORY / USER JOURNEY
-           -> BDD ACCEPTANCE SCENARIO
-              -> SYSTEM REQUIREMENT
-                 -> TASK / SLICE
-                    -> TEST EVIDENCE
-```
-
-Each level must trace upward and downward. No task is valid unless it traces to a system requirement. No system requirement is valid unless it traces to a user requirement or a justified technical enabler. No epic is complete until its BDD acceptance scenarios have failing-then-passing E2E/user-flow evidence, lower-loop tests pass for all linked system requirements, and human approval is recorded.
-
-## Work Items vs Evidence Artifacts
-
-Keep these concepts separate:
-
-| Type | Artifact | Purpose |
-|---|---|---|
-| Requirement artifact | User requirement | Defines what the user must be able to achieve |
-| Work item | Epic | Groups user stories, acceptance scenarios, system requirements, and tasks into one user-visible capability |
-| Behavior artifact | BDD acceptance scenario | Defines concrete user-visible behavior that must pass |
-| Requirement artifact | System requirement | Defines required system behavior, interface behavior, data behavior, or UI behavior |
-| Work item | Task / slice | Implements and verifies one small vertical piece of a system requirement |
-| Evidence artifact | Test evidence | Proves that the behavior works at the required level |
-
-BDD acceptance scenarios are not tasks. They are acceptance evidence. Tasks implement the system behavior needed to make the scenarios pass.
-
-## Upper Loop
-
-The upper loop validates that the product satisfies user requirements. Upper-loop validation uses TDD: write the BDD/E2E acceptance test first, see it fail against incomplete behavior, then build enough verified lower-loop slices to make the acceptance test pass.
-
-Flow:
-
-```text
-USER REQUIREMENT
-  -> EPIC
-     -> USER STORY / USER JOURNEY
-        -> BDD ACCEPTANCE SCENARIO
-           -> E2E VALIDATION EVIDENCE
-```
-
-The upper loop answers:
-
-> Does the product behavior satisfy the user requirement in the intended workflow?
-
-Required evidence:
-
-- BDD acceptance scenarios.
-- Failing BDD/E2E acceptance-test evidence before the scenario is complete.
-- End-to-end test runs.
-- User-flow validation results.
-- Product/domain review when needed.
-- Links from scenarios to system requirements and tasks.
-- Code references for the feature path under validation.
-
-TDD sequence:
-
-```text
-USER REQUIREMENT / EPIC
-  -> write BDD acceptance scenario
-     -> automate E2E/user-flow test and observe it fail
-        -> implement verified lower-loop slices
-           -> run E2E/user-flow test until it passes
-              -> link acceptance test and code evidence
-                 -> mark SCN UPPER_VALIDATED
-```
-
-## Lower Loop
-
-The lower loop verifies that the system pieces satisfy their system requirements. Lower-loop implementation uses TDD.
-
-Flow:
-
-```text
-SYSTEM REQUIREMENT
-  -> TASK / SLICE
-     -> API, UI, service, data, contract, or integration change
-        -> UNIT / COMPONENT / CONTRACT / API / INTEGRATION TEST EVIDENCE
-```
-
-The lower loop answers:
-
-> Does each system part meet its specified behavior and interface contract?
-
-Required evidence:
-
-- Failing test evidence before implementation.
-- Unit tests for isolated rules.
-- UI component tests for user-interface units.
-- API tests for endpoint behavior.
-- Contract tests for interface compatibility.
-- Integration tests for cross-component behavior.
-- Trace links back to the system requirement and epic acceptance scenario.
-- Code references for the implementation under test.
-
-TDD sequence:
-
-```text
-SYSTEM REQUIREMENT
-  -> write failing unit/component/API/contract/integration test
-     -> implement the smallest slice that passes
-        -> run lower-loop tests
-           -> link test and code evidence
-              -> mark TASK / SR LOWER_VERIFIED
-```
-
-## User Requirements
-
-A user requirement states what a user must be able to do or experience. It belongs to the upper-left side of the V-model.
-
-Format:
-
-```markdown
-## UR-<AREA>-NNN - <short title>
-
-**Statement:** The system shall allow <user/actor> to <goal> so that <reason/outcome>.
-
-**User / actor:** <role>
-**Intended use:** <context>
-**Source:** <customer input, product decision, regulation, workflow, etc.>
-**Linked epics:** EPIC-<AREA>-NNN
-**Validation method:** BDD E2E scenario / manual validation / product review
-**Status:** PROPOSED | READY | IN_PROGRESS | VALIDATED | BLOCKED | DEFERRED
-```
-
-Rules:
-
-- A user requirement must describe user value, not implementation.
-- A user requirement must link to at least one epic before implementation starts.
-- A user requirement is validated only by upper-loop evidence and human approval after linked epics are done.
-
-## Epics
-
-An epic is the primary user-visible work item. It groups the stories, BDD acceptance scenarios, system requirements, and tasks needed to deliver one coherent capability.
-
-Each epic must also identify its DDD ownership:
-
-- **Main bounded context:** the primary domain boundary responsible for the capability.
-- **Supporting bounded contexts:** other contexts touched by the capability.
-- **Key domain models:** aggregates, entities, value objects, read models, or external models used by the epic.
-- **Key domain events:** events emitted, consumed, or observed by the epic.
-
-Format:
-
-```markdown
-# EPIC-<AREA>-NNN - <capability name>
-
-## User outcome
-<What the user can do when this epic is complete.>
-
-## Linked user requirements
-- UR-<AREA>-NNN - <title>
-
-## Users / actors
-- <user role>
-- <system actor if applicable>
-
-## Domain ownership
-**Main bounded context:** <context name / code>
-**Supporting bounded contexts:** <context name / code, if any>
-
-## Key domain models
-| Model | Type | Context | Source |
-|---|---|---|---|
-| <model name> | aggregate/entity/value object/read model/external model | <context> | SRC-<AREA>-NNN |
-
-## Key domain events
-| Event | Direction | Producer | Consumer | Source |
-|---|---|---|---|---|
-| <event name> | emitted/consumed/observed | <producer> | <consumer> | SRC-<AREA>-NNN |
-
-## User stories / journeys
-- As a <user>, I want <capability> so that <outcome>.
-- As a <user>, I want <failure/edge behavior> so that <outcome>.
-
-## BDD acceptance scenarios
-- SCN-<AREA>-NNN - <scenario title>
-
-## System requirements
-- SR-<AREA>-NNN - <system behavior>
-
-## Tasks / slices
-- TASK-<AREA>-NNN - <slice title>
-
-## Evidence
-| Acceptance scenario | System requirements | Tasks / slices | Test evidence | Code reference |
-|---|---|---|---|---|
-| SCN-<AREA>-NNN | SR-<AREA>-NNN | TASK-<AREA>-NNN | <test/report link> | <code link> |
-
-## Human approval
-| Approval id | Approver | Role | Source | Scope | Decision |
-|---|---|---|---|---|---|
-| APP-<AREA>-NNN | <name> | product/domain/QA/owner | USER:<date>:<summary> | EPIC-<AREA>-NNN | approved/rejected/changes requested |
-
-## Done when
-- All linked user requirements are covered by BDD acceptance scenarios.
-- All BDD acceptance scenarios have failing-then-passing E2E/user-flow evidence.
-- All linked system requirements are `LOWER_VERIFIED`.
-- All linked tasks are `LOWER_VERIFIED`.
-- Evidence links are complete from epic to scenario to system requirement to task to test and code.
-- Human approval is recorded for the epic.
-```
-
-Rules:
-
-- An epic must be user-visible or explicitly marked as a technical enabler for a user-visible epic.
-- An epic must link to at least one user requirement.
-- An epic must identify its main bounded context.
-- An epic must list key domain models and events, or explicitly state that none are known yet and record an open question.
-- An epic must contain BDD acceptance scenarios before lower-loop tasks are considered complete.
-- An epic is complete only when upper-loop validation and lower-loop verification both pass and human approval is recorded.
-
-## Epic Specification Gate
-
-An epic is properly specced and implementation loops may start only when:
-
-1. The epic record exists under the main repository's `epics/` as either a single epic file or an epic folder with a main epic file, and it uses the required epic template.
-2. The epic has a sourced user outcome and at least one linked user requirement.
-3. Users or actors are recorded.
-4. Main bounded context is identified, or a blocking open question records why it cannot be identified yet.
-5. Supporting bounded contexts, key domain models, and key domain events are recorded with sources, or explicitly recorded as unknown open questions.
-6. At least one user story or journey traces to a linked user requirement.
-7. BDD acceptance scenarios cover the initial intended workflow needed for implementation to begin.
-8. Each BDD scenario has sourced Given/When/Then claims or open questions for missing sources.
-9. System requirements exist for the behavior needed by the first implementation loop.
-10. Tasks/slices exist for the first lower-loop work and trace to system requirements and acceptance scenarios.
-11. The initial failing-test strategy is recorded for upper-loop and lower-loop work.
-12. `WORKLIST.md` has an Epic Rollup row and active Work Rows for the first implementation loop.
-13. No blocking open question prevents the first implementation loop from starting.
-14. Deferred gaps have a reason, owner, and trace to the affected epic/scenario/system requirement/task.
-
-If any gate item fails, the epic remains `PROPOSED` or `BLOCKED`; do not start implementation loops.
-
-When all gate items pass, end the interview or epic creation flow by outputting an implementation kickoff prompt. The prompt must identify the main repository, epic record, active `WORKLIST.md` rows, task files eligible for subagent handoff, required upper-loop and lower-loop TDD sequence, and evidence/status synchronization rules.
-
-## BDD Acceptance Scenarios
-
-BDD acceptance scenarios define the concrete behavior that proves a user story or epic works.
-
-They are written in Gherkin:
-
-```gherkin
-Feature: <epic capability>
-
-  Scenario: <observable behavior>
-    Given <initial state>
-    When <user or system action>
-    Then <observable result>
-    And <additional observable result>
-```
-
-Example:
-
-```gherkin
-Feature: Password reset
-
-  Scenario: Request reset email for a registered account
-    Given a registered user exists
-    When the user requests a password reset
-    Then a reset email is sent
-    And the reset token can be used once
-
-  Scenario: Reject an expired reset token
-    Given a password reset token has expired
-    When the user opens the reset link
-    Then the reset request is rejected
-    And the user is told to request a new link
-```
-
-Rules:
-
-- A scenario must describe observable behavior, not implementation steps.
-- A scenario must link to an epic.
-- A scenario must link to the system requirements and tasks that make it pass.
-- A scenario must follow TDD: failing BDD/E2E test first, then implementation through lower-loop slices, then passing BDD/E2E evidence.
-- A scenario passes only through upper-loop evidence: a passing E2E test, user-flow test, or recorded validation run.
-
-## System Requirements
-
-A system requirement defines the lower-level behavior needed to satisfy a user requirement and epic scenario. It belongs to the lower-left side of the V-model.
-
-Format:
-
-```markdown
-## SR-<AREA>-NNN - <short title>
-
-**Statement:** The system shall <required behavior>.
-
-**Source:** UR-<AREA>-NNN / EPIC-<AREA>-NNN / SCN-<AREA>-NNN
-**Interface / component:** API | UI | service | data | integration | domain
-**Verification method:** unit | component | API | contract | integration | E2E support
-**Linked tasks:** TASK-<AREA>-NNN
-**Test evidence:** <test file / test case / report>
-**Code reference:** <implementation file / symbol>
-**Status:** PROPOSED | READY | IN_PROGRESS | LOWER_VERIFIED | BLOCKED | DEFERRED
-```
-
-Rules:
-
-- A system requirement must be testable.
-- A system requirement must specify the interface, component, or behavior being verified.
-- A system requirement must link upward to a user requirement, epic, or acceptance scenario.
-- A system requirement is verified by lower-loop evidence.
-- A system requirement cannot be marked `LOWER_VERIFIED` without code and test references.
-
-## Tasks / Slices
-
-A task is the lower-loop work item. It implements and verifies one small vertical slice of system behavior.
-
-Use `TASK-*` when describing the work-item layer. If an existing repository already uses `REQ-*` rows as implementation work items, treat those rows as task/slice records and add links to the epic, scenario, and system requirement.
-
-Format:
-
-```markdown
-## TASK-<AREA>-NNN - <slice title>
-
-**Goal:** <small verified system behavior>
-**Linked system requirement:** SR-<AREA>-NNN
-**Linked acceptance scenario:** SCN-<AREA>-NNN
-**Scope:** API | UI | service | data | integration | vertical
-**Failing test first:** <test file / test case / run reference>
-**Passing tests:** <test files / test cases / report>
-**Code reference:** <implementation files / symbols>
-**Status:** PROPOSED | READY | IN_PROGRESS | LOWER_VERIFIED | BLOCKED | DEFERRED
-```
-
-Rules:
-
-- A task must be small enough to complete with tests and trace links in one lower-loop cycle.
-- A task must link to a system requirement.
-- A product-facing task must link to an acceptance scenario.
-- A technical-enabler task must link to the epic or system requirement that justifies it.
-- A product-facing task must include the UI, API, service, or data work needed to make a visible behavior progress.
-- A task must follow TDD: failing test first, then implementation, then passing test evidence.
-- A task reaches `LOWER_VERIFIED` only when its lower-loop tests pass and its code and test references are linked.
-
-## Traceability Rules
-
-Use this trace chain:
-
-```text
-UR -> EPIC -> SCN -> SR -> TASK -> TEST -> CODE
-```
-
-Required links:
-
-- User requirement links to epic.
-- Epic links to BDD acceptance scenarios.
-- BDD acceptance scenario links to system requirements.
-- System requirement links to tasks/slices.
-- Task links to tests and code.
-- Test names or metadata reference the task or system requirement id.
-- Any completed status must include the code and test case or validation evidence that verifies the completion claim.
-- `UPPER_VALIDATED` requires a BDD/E2E/user-flow test reference and code reference.
-- `LOWER_VERIFIED` requires a lower-loop test reference and code reference.
-
-No silent work is allowed. If a lower-loop task discovers missing user behavior, add or update the epic acceptance scenarios before treating the task as complete.
-
-## Done Criteria
-
-An epic is done only when:
-
-1. Every linked user requirement is covered by at least one BDD acceptance scenario.
-2. Every BDD acceptance scenario has failing-then-passing upper-loop evidence.
-3. Every linked system requirement has red-first passing lower-loop evidence.
-4. Every linked task is `LOWER_VERIFIED`.
-5. Traceability is complete from user requirement to tests and code.
-6. Known gaps are recorded as blocked, deferred, or new work.
-7. Human approval is recorded in the parent epic.
-
-A task is `LOWER_VERIFIED` only when:
-
-1. Its system requirement is clear and linked.
-2. A failing lower-loop test was created before implementation.
-3. Its implementation is complete.
-4. Its unit/component/API/contract/integration tests pass.
-5. Tests and code are linked from the task record.
-
-A work-list row is `DONE` only when:
-
-1. The linked task is `LOWER_VERIFIED`.
-2. The linked acceptance scenario is `UPPER_VALIDATED`.
-3. The epic rollup has no unrecorded gap for that row.
-4. Human approval is recorded for the epic before epic-level `DONE`.
-
-An acceptance scenario is `UPPER_VALIDATED` only when:
-
-1. The BDD acceptance scenario is clear and linked to its epic.
-2. A failing BDD/E2E/user-flow test was created before the scenario was complete.
-3. The scenario passes through E2E/user-flow/validation evidence.
-4. The test and code references are linked from the epic and work-list records.
-
-## Example
-
-```text
-UR-AUTH-001
-The system shall allow a registered user to reset their password securely.
-
-EPIC-AUTH-001
-Password reset.
-
-SCN-AUTH-001
-Request reset email for a registered account.
-
-SR-AUTH-001
-The system shall create a single-use password reset token for a registered user.
-
-TASK-AUTH-001
-Implement reset-token creation through API, domain service, persistence, and tests.
-```
-
-Evidence:
-
-| Level | Evidence |
+| Discovery | Route |
 |---|---|
-| SCN-AUTH-001 | E2E password-reset request scenario |
-| SR-AUTH-001 | API test, domain unit test, persistence integration test |
-| TASK-AUTH-001 | linked tests and code implementing the slice |
+| clear requirement with owner | `PROPOSED` user/system requirement |
+| missing human decision or ambiguity | open question/decision gate; `BLOCKED` if needed |
+| known future work | `DEFERRED` with reason, owner, and target |
+| capability/spec gap | gap record linked to affected traces |
+| unclear owner/cross-cutting | triage backlog |
+| contradicted or removed behavior | conflict or `OBSOLETE` with replacement |
 
-This structure keeps epics and tasks usable as work items while preserving the V-model distinction between user requirements, system requirements, acceptance validation, and lower-level verification.
+At session start, after a slice, and after product-doc changes:
+
+1. sweep the backlog;
+2. reconcile product sources, requirements, and active epics;
+3. reprioritize/promote only with sourced criteria;
+4. update release/scope and record the planning event;
+5. sync the resulting state.
+
+## Definition of Done
+
+A task/SR is `LOWER_VERIFIED` only when:
+
+- source and trace links exist;
+- the expected lower test failed first for the expected reason;
+- the implementation is linked;
+- focused and required regression gates pass;
+- evidence is current for the code revision.
+
+A scenario is `UPPER_VALIDATED` only when:
+
+- its sourced observable behavior and trace links exist;
+- the upper test failed before implementation satisfied it;
+- the user-flow evidence now passes;
+- runtime/browser evidence required by the behavior is inspected and linked;
+- evidence is current for the code revision.
+
+An epic is `DONE` only when:
+
+1. specification approval preceded implementation;
+2. every SCN is `UPPER_VALIDATED`;
+3. every linked SR/TASK is `LOWER_VERIFIED`;
+4. relevant architecture, lint, contract, integration, build, and smoke gates
+   pass;
+5. known gaps are recorded and no undisclosed scope remains;
+6. human completion approval is recorded with actor, scope, and source;
+7. code is merged in the authoritative implementation repository;
+8. local records, generated views, release membership, and Delivery System
+   state agree;
+9. evidence is pinned to the delivered revision and has not decayed.
+
+A user requirement is `VALIDATED` only when its scenarios and linked epics meet
+the same evidence bar and the human accepts the user outcome.
+
+## Session ritual
+
+Start:
+
+1. read project and shared instructions;
+2. converge Delivery System and local state;
+3. inspect active scope, gates, evidence drift, and next `READY` trace;
+4. read the relevant sources before editing.
+
+End:
+
+1. run proportional tests and inspect required runtime/browser evidence;
+2. update the complete trace and six completion facts;
+3. capture discoveries/deferrals/conflicts;
+4. validate local projections and sync/report evidence;
+5. state exactly what is complete, awaiting review, blocked, or unsynced.
