@@ -102,6 +102,75 @@ the epic's evidence map or the ledger's backlog. `PROGRESS.md`, dashboards,
 counts, digest views, and boards are projections and must agree with their
 underlying records.
 
+## ModernPath reference projection model
+
+ModernPath projects the state axes above through existing `modernpath-core`
+entities. This is an implementation adapter, not a second lifecycle or a
+replacement for the repository authority matrix. The Ecto schemas under
+`modernpath-core/apps/storage/lib/storage/schema/` remain authoritative for
+field-level detail.
+
+Do not collapse these concerns into one global `loop_state` field:
+
+| State concern | Existing model | Projection rule |
+|---|---|---|
+| Requirement lifecycle | `compliance_user_requirements` and `compliance_system_requirements`: `external_id`, `work_status`, `stage`, `context`, `source_citations` | Project the repository requirement lifecycle through `work_status`. Keep the separate `draft`/`approved` content-approval `status` independent. |
+| Epic progress and completion approval | `initiatives`: `code`, `upper_loop_status`, `lower_loop_status`, `approved_by_id`, `approved_at`, `approval_basis`, `approval_source_tag` | Project upper acceptance and lower verification independently. Use the attributed approval fields only for the approval scope they record. |
+| Scenarios and criteria | `acceptance_criteria`: addressable Given/When/Then or statement, owner, sources, and verification references | Treat `active`/`superseded`/`retired` as criterion-content lifecycle. Derive passing, failing, or stale verification from evidence instead of storing it in this status. |
+| Specification lifecycle | `planning_artifacts`: `status`, `version`, approval fields, `synced_content_sha`, `sync_conflict_sha` | Project versioned specification state and synchronization conflicts. A deployment must explicitly define how `draft`/`review`/`approved` maps to `SPEC-DRAFT`/`SPEC-READY`/`SPEC-APPROVED`; do not infer the mapping silently. |
+| Human gates and application echo | `decision_gates`: `state`, answer attribution, `source_tag`, `applied_state`, `applied_job_ref`; `gate_holds`: held external ids and entity types | Keep the human answer lifecycle (`open`, `answered`, and terminal alternatives) separate from whether the repository has applied the answer (`pending`, `applied`, or `failed`). Holds define the typed blast radius. |
+| Verification evidence | `evidence_runs` and `evidence_results`: run kind/status, branch/SHA, runner, totals, per-target result | Derive the latest `claimed`/`passing`/`failing`/`stale` target state from the newest complete result plus later drift events. Never copy the derived state into requirement status. |
+| Trace state | `compliance_traces` plus initiative-to-user/system-requirement links | Use typed `implements`, `verifies`, `derives`, and `relates` links to connect requirements, criteria, tests, code, and epics. A stale trace is an evidence concern, not a work-status transition by itself. |
+| Synchronization state | `sync_shadows`: entity identity, origin, content hash, last synchronization time, `state`, conflict note | Keep `synced`/`pending_apply`/`conflict` transport bookkeeping outside domain entities. A successful transport state is not completion evidence. |
+| Active loop execution | `factory_sessions` and `factory_jobs`: workspace/branch/current reference, heartbeat, capabilities, job kind/status/result | Show agent-loop liveness and dispatched apply/verify work. Operational activity does not imply requirement, task, or epic completion. |
+| Timeline and projections | append-only `work_events`: attributed, sourced, subject-addressed events with dedupe keys | Build Mission Control activity and historical projections from events. Events explain transitions but do not replace the current repository record. |
+| Release scope | `releases`: stable `slug`, user-curated `status`, controlled `bundle_state`, snapshots and verdicts; release links on delivery entities | Scope Mission Control views without mixing active-release and base/closed-release work. Keep delivery lifecycle separate from validation-bundle freeze/reopen state. |
+
+Implementation sources, relative to the consuming ModernPath workspace:
+
+- requirements, epics, criteria, specifications:
+  `CODE:modernpath-core/apps/storage/lib/storage/schema/compliance/user_requirement.ex:Storage.Schema.Compliance.UserRequirement`,
+  `CODE:modernpath-core/apps/storage/lib/storage/schema/compliance/system_requirement.ex:Storage.Schema.Compliance.SystemRequirement`,
+  `CODE:modernpath-core/apps/storage/lib/storage/schema/initiative.ex:Storage.Schema.Initiative`,
+  `CODE:modernpath-core/apps/storage/lib/storage/schema/acceptance_criterion.ex:Storage.Schema.AcceptanceCriterion`,
+  `CODE:modernpath-core/apps/storage/lib/storage/schema/planning_artifact.ex:Storage.Schema.PlanningArtifact`;
+- gates, evidence, and trace:
+  `CODE:modernpath-core/apps/storage/lib/storage/schema/decision_gate.ex:Storage.Schema.DecisionGate`,
+  `CODE:modernpath-core/apps/storage/lib/storage/schema/gate_hold.ex:Storage.Schema.GateHold`,
+  `CODE:modernpath-core/apps/storage/lib/storage/schema/evidence_run.ex:Storage.Schema.EvidenceRun`,
+  `CODE:modernpath-core/apps/storage/lib/storage/schema/evidence_result.ex:Storage.Schema.EvidenceResult`,
+  `CODE:modernpath-core/apps/storage/lib/storage/schema/compliance/trace.ex:Storage.Schema.Compliance.Trace`;
+- sync, execution, history, and release:
+  `CODE:modernpath-core/apps/storage/lib/storage/schema/sync_shadow.ex:Storage.Schema.SyncShadow`,
+  `CODE:modernpath-core/apps/storage/lib/storage/schema/factory_session.ex:Storage.Schema.FactorySession`,
+  `CODE:modernpath-core/apps/storage/lib/storage/schema/factory_job.ex:Storage.Schema.FactoryJob`,
+  `CODE:modernpath-core/apps/storage/lib/storage/schema/work_event.ex:Storage.Schema.WorkEvent`,
+  `CODE:modernpath-core/apps/storage/lib/storage/schema/release.ex:Storage.Schema.Release`;
+- projection guards: `CODE:modernpath-core/apps/core/lib/core/sync.ex:upsert_epic/2`
+  and `CODE:modernpath-core/apps/core/lib/core/evidence.ex:latest_state/2`.
+
+The resulting Mission Control read model composes, rather than conflates:
+
+```text
+requirement work_status
++ epic upper_loop_status and lower_loop_status
++ specification status
++ gate state and applied_state
++ derived evidence state
++ synchronization state
++ factory session/job liveness
++ release scope
+```
+
+`initiatives.status` and the `task_*` status fields are planning-board axes.
+Workspace synchronization must not move an initiative card to simulate V-model
+progress. The existing `task_items` model can represent planner-local work, but
+it does not currently provide the stable workspace-sync identity and direct
+SR/evidence linkage required to become the canonical repository task/slice
+record. Until that contract is deliberately extended, task/slice state remains
+in the repository epic/task records and appears in Mission Control only through
+the synchronized trace and rollups.
+
 ## Local checks
 
 Run the consuming project's deterministic checks after state changes. A
