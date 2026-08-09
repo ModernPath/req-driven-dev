@@ -15,8 +15,8 @@
 |---|---|
 | «docs path» | «canonical product/domain source» |
 | «contracts path» | «canonical boundary schema» |
-| «requirements path» | «versioned Delivery System projection» |
-| «epics path» | «versioned epic/spec/task projection» |
+| «requirements path» | «bounded-context requirement ledgers» |
+| «epics path» | «epic/spec/task records» |
 
 ## Repository topology
 

@@ -1,8 +1,7 @@
 # Progress projection template
 
-Generated from the consuming project's requirement projections. Do not
-hand-edit. The ModernPath Delivery System owns loop state; this summary must
-match it after sync.
+Generated from the consuming project's requirement ledgers. Do not hand-edit;
+see `req-driven-dev/state-tracking.md`.
 
 Plan requirements with Prompt 1 (`prompts.md`); build them with Prompt 3.
 

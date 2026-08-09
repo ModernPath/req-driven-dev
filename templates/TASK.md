@@ -26,7 +26,7 @@
 - **Failing result:** —
 - **Passing result:** —
 - **Code/commit/PR:** —
-- **Delivery System evidence id:** —
+- **Evidence run id:** «optional connected-workspace id»
 - **Status:** READY
 
 ## Discoveries / handoff

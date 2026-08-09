@@ -2,7 +2,7 @@
 
 Copy into a consuming repository if it needs a versioned triage inbox.
 Discoveries without a clear home are swept through `V-model-loop.md`
-"Planning and discoveries" and synchronized to the Delivery System.
+"Planning and discoveries" and routed according to `state-tracking.md`.
 
 > **Inbox status:** EMPTY (initialized)
 

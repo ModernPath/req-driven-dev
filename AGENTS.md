@@ -1,152 +1,108 @@
 # Requirement-driven delivery — agent instructions
 
-This repository defines the reusable delivery process for ModernPath projects.
-It is process guidance, not a product workspace and not a second place to keep
-live project state.
+This repository is the canonical home of the reusable V-model delivery
+process. It contains process guidance and templates, never a consuming
+project's live work state.
 
 ## Instruction ownership
 
-- This file is the canonical agent entry point for the delivery process.
 - [`V-model-loop.md`](V-model-loop.md) defines lifecycle, traceability, gates,
-  statuses, TDD, and completion.
-- [`delivery-system.md`](delivery-system.md) defines state ownership and the
-  Mission Control/CLI sync flow.
+  statuses, red-first evidence, and completion.
+- [`state-tracking.md`](state-tracking.md) defines the repository working
+  records, status axes, local checks, automatic synchronization, Mission
+  Control, and state convergence.
 - [`interview-flows.md`](interview-flows.md) defines human-input and review
   flows.
-- A consuming repository's root `AGENTS.md` owns only project-specific rules:
-  architecture, repository topology, commands, test gates, and local safety.
-- A consuming repository may specialize paths and commands, but it must not
-  copy or redefine this process. Change shared process here first.
-- `CLAUDE.md` files are compatibility pointers. They do not override
-  `AGENTS.md`.
+- [`prompts.md`](prompts.md) contains reusable execution prompts.
+- A consuming repository owns only project-specific rules such as architecture,
+  repository topology, commands, environments, and test gates. It points here
+  instead of copying or redefining the process.
+- `CLAUDE.md` files are compatibility pointers; they do not override these
+  instructions.
 
-If project instructions conflict with a shared loop invariant, stop the
-affected transition and record the conflict. Do not choose an interpretation
-silently.
+If project instructions conflict with a shared process rule, stop the affected
+transition and report the conflict. Change shared process here rather than
+creating a local variant.
 
-## Required reading order
+## Required reading
 
 Before planning, changing, reviewing, or delivering product work:
 
-1. read the consuming repository's root `AGENTS.md`;
-2. read this file and `V-model-loop.md`;
-3. read `delivery-system.md` when the workspace is connected to ModernPath;
-4. inspect current loop state in the ModernPath Delivery System through
-   Mission Control or the `modernpath` CLI;
-5. read the relevant product sources, requirement, epic/specs, and task;
-6. read `interview-flows.md` when human input or a gate is involved.
+1. read the consuming project's root `AGENTS.md` for project-specific rules;
+2. read this file, `V-model-loop.md`, and `state-tracking.md`;
+3. read the relevant product sources, requirement ledger, epic/specs, and
+   active work-list row;
+4. read `interview-flows.md` when human input or a gate is involved.
 
 ## Non-negotiable rules
 
 1. Every change traces through `UR -> EPIC -> SCN -> SR -> TASK -> TEST ->
-   CODE`. A repository may use a stable `REQ-*` id as its requirement or task
-   adapter, but the user/system meaning must remain explicit.
-2. Product, scope, architecture, acceptance, priority, and workflow decisions
-   are made by humans. Record the real actor and a `USER:<date>:<summary>`
-   source. An agent may propose options; it may not select one by assumption.
-3. Facts and normative claims cite `USER:`, `DOC:`, `CODE:`, `TEST:`, `RUN:`,
-   or `EPIC:` sources. Missing support becomes an open question; conflicting
-   support becomes a conflict.
-4. Both V-model arms are red-first:
-   - upper loop: failing BDD/E2E/user-flow evidence before implementation can
-     satisfy the scenario;
-   - lower loop: failing unit/component/API/contract/integration evidence
-     before the implementation that makes it pass.
-5. Implementation begins only after the work is visible in the Delivery
-   System and has passed the applicable specification gate.
+   CODE`. A project may retain stable `REQ-*` ids, but their user/system/task
+   meaning and links must remain explicit.
+2. Humans decide product, scope, architecture, acceptance, priority, and
+   workflow. Record the real actor with a `USER:<date>:<summary>` source. An
+   agent may propose options but may not select one by assumption.
+3. Normative claims cite `USER:`, `DOC:`, `CODE:`, `TEST:`, `RUN:`, or `EPIC:`
+   sources. Missing support becomes an open question; conflicting support
+   remains a conflict.
+4. Both V-model arms are red-first: BDD/E2E/user-flow evidence above and
+   focused unit/component/API/contract/integration evidence below.
+5. Epic-path implementation starts only after the specification gate is
+   approved. Fast-lane work must satisfy every fast-lane condition.
 6. `LOWER_VERIFIED`, `UPPER_VALIDATED`, `IN_REVIEW`, `DONE`, and `VALIDATED`
-   require linked evidence. A status label, checked box, or passing unrelated
-   suite is not proof.
-7. Human approval is required for specification approval and for epic/user-
-   requirement completion. Test results cannot grant human approval.
-8. Deferrals and discoveries are explicit. Record a reason, owner, source, and
-   affected trace; do not hide them in prose or TODO comments.
+   require linked direct evidence. A label, checkbox, or unrelated green suite
+   is not proof.
+7. Humans approve epic specifications and epic/user-requirement completion.
+   Tests cannot grant human approval.
+8. Deferrals, discoveries, blockers, and deviations are explicit, sourced, and
+   routed. Do not hide them in prose or TODO comments.
 9. Boundary contracts are canonical. Derive boundary types from schemas where
    the project provides them.
 10. Prefer thin vertical slices and the smallest implementation that makes the
     specified failing evidence pass.
 
-## State ownership
-
-The ModernPath Delivery System is the system of record for loop state:
-requirements, epics, scenarios, system requirements, tasks, gates, evidence,
-human input, trace links, releases, events, sessions, and statuses.
-
-Mission Control and the `modernpath` CLI are control surfaces over that state.
-Mission Control is suited to human review and decisions; the CLI is suited to
-agents, local workflows, and automation. Neither is a separate source of truth.
-
-Workspace Markdown is the versioned, reviewable local representation used for
-agent context and deterministic sync. Keep it coherent with server state:
-
-- pull and apply server-originated decisions before planning from stale files;
-- edit the requirement/epic/task records together with the implementation;
-- sync after material changes and before handoff;
-- stop on a sync conflict; never overwrite a winning human answer or fabricate
-  identity to make records converge.
-
-See `delivery-system.md` for the authority matrix and command flow.
-
 ## Working loop
 
-1. **Orient** — inspect Delivery System state, repository status, active
-   release, next `READY` item, blockers, and evidence drift.
+1. **Orient** — inspect repository and process state according to
+   `state-tracking.md`; select the next eligible trace.
 2. **Specify** — derive sourced URs and SCNs, then testable SRs and thin tasks.
-   Use an epic for spec-worthy work; use the fast lane only when all fast-lane
-   criteria hold.
 3. **Approve specification** — present a decision brief and record the human
-   gate before writing RED tests for epic-path work.
-4. **Upper RED** — write/identify the BDD or user-flow test and observe the
-   intended behavior fail for the expected reason.
-5. **Lower RED/GREEN** — per task, write the focused failing test, implement
-   the smallest slice, and run focused plus proportional regression gates.
-6. **Lower verify** — link command/result, test, code, commit/PR, and trace ids.
-7. **Upper validate** — run the live user path or equivalent acceptance test;
-   UI work also needs a real-browser run and an inspected screenshot.
-8. **Review** — move verified work to `IN_REVIEW`, present the evidence and
-   gaps, and record the actual human completion decision.
-9. **Deliver and reconcile** — merge in the code's source repository, integrate
-   workspace snapshots where applicable, update local records, sync the
-   Delivery System, and confirm every projection agrees.
-10. **Continue** — capture discoveries, select the next incomplete item, and
-    repeat.
+   gate before epic-path RED tests.
+4. **Upper RED** — observe the acceptance/user-flow test fail for the expected
+   reason.
+5. **Lower RED/GREEN** — write the focused failing test, implement the smallest
+   slice, and pass proportional regression gates.
+6. **Verify and validate** — link lower and upper evidence to the exact trace
+   and revision. UI work also needs a live-browser run and inspected screenshot.
+7. **Review** — audit criteria, evidence, gaps, and deferrals; record the real
+   human completion decision.
+8. **Deliver and reconcile** — land code in its source repository and reconcile
+   every working record and projection according to `state-tracking.md`.
+9. **Continue** — capture discoveries and take the next incomplete trace.
 
-## Gate rules
+## Human gates
 
-Every human gate carries a short decision brief:
+Every human gate carries a short product-language brief:
 
 ```markdown
 **Brief:**
 - What: <decision in product language>
-- Why now: <trigger and what is waiting>
+- Why now: <trigger and what waits on it>
 - Changes if approved: <visible outcome>
 - Risk if wrong: <downside and reversibility>
 - Recommendation: <option and rationale>
 - Image: <optional supporting image>
 ```
 
-Do not click mutating controls on real data merely to verify a UI. Render and
-inspect the control; prove its mutation path with isolated automated tests.
-
-## Record synchronization
-
-When state changes, update the full affected trace in one logical change:
-
-- requirement status and acceptance criteria;
-- epic/specification, SCN, SR, TASK, evidence, decision, and approval records;
-- local work-list/rollup if the project keeps one;
-- generated projections required by the project;
-- Delivery System state through sync/evidence commands.
-
-If any two representations disagree, reconcile before starting the next item
-or claiming completion. Only one writer should mutate shared process records at
-a time.
+Do not click mutating controls on real data merely to verify a UI. Inspect the
+rendered control and prove its mutation path with isolated automated tests.
 
 ## Completion
 
-Before claiming completion, perform an evidence audit against every explicit
-requirement and acceptance scenario. Verify current files, test results,
-runtime/browser behavior, Delivery System state, approval, source-repository
-delivery, and sync status. Missing or indirect evidence means incomplete work.
+Before claiming completion, audit every explicit requirement and scenario
+against current sources: files, test/runtime/browser evidence, attributable
+approval, implementation-repository delivery, and the state records defined in
+`state-tracking.md`. Missing, stale, or indirect evidence means incomplete
+work.
 
-Use the detailed Definition of Done in `V-model-loop.md`.
+The detailed Definition of Done is in `V-model-loop.md`.

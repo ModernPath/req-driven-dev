@@ -5,7 +5,7 @@ This file specializes the shared process; it does not redefine it.
 - **Shared process:** `req-driven-dev/AGENTS.md`
 - **Domain source:** `docs/«NN»-«domain-name».md`
 - **Contracts:** «schema/API/event paths»
-- **Requirements:** «ledger or Delivery System query»
+- **Requirements:** «ledger path»
 - **Epics/tasks:** `epics/`
 - **Primary code:** «paths/repositories»
 
@@ -31,7 +31,7 @@ This file specializes the shared process; it does not redefine it.
 ## Local verification
 
 - «runtime/browser/smoke requirement»
-- «generated projection or sync validation command»
+- «state/process validation command»
 
-Start from the next `READY` Delivery System trace and follow
-`req-driven-dev/V-model-loop.md`.
+Start from the next eligible trace recorded according to
+`req-driven-dev/state-tracking.md` and follow `req-driven-dev/V-model-loop.md`.

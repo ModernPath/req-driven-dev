@@ -8,9 +8,8 @@ delivered software. It combines three loops:
 - **V-model evidence loops** — upper-loop acceptance of user behavior and
   lower-loop verification of system behavior.
 
-The ModernPath Delivery System holds their state. Mission Control and the
-`modernpath` CLI expose it; repository artifacts provide the versioned local
-representation. See [`delivery-system.md`](delivery-system.md).
+State recording and Mission Control integration are deliberately specified
+separately in [`state-tracking.md`](state-tracking.md).
 
 ## The model
 
@@ -47,9 +46,8 @@ representation. See [`delivery-system.md`](delivery-system.md).
 
   Canonical trace: UR -> EPIC -> SCN -> SR -> TASK -> TEST -> CODE
 
-                  MODERNPATH DELIVERY SYSTEM
-  requirements | epics | specs | tasks | gates | evidence | traces
-  statuses | releases | actors | audit events | sessions/jobs
+                         STATE TRACKING
+  ledgers | epics | work-list | checks | sync | gates | evidence
 ```
 
 The left side states what must be true. The right side proves it. Code in the
@@ -77,7 +75,7 @@ and route work into an epic or the fast lane.
 Run both V-model arms red-first. Lower-loop tasks make system behavior correct;
 upper-loop scenarios prove the intended user workflow. Record evidence and
 human approval, deliver in the implementation's source repository, and
-reconcile every state projection.
+reconcile state according to `state-tracking.md`.
 
 Planning and building are iterative. Discoveries feed the planning loop without
 silently expanding the current implementation slice.
@@ -219,7 +217,8 @@ Before implementation, an epic must have:
 5. testable SRs and thin tasks linked to those scenarios;
 6. upper-RED and lower-RED test strategy;
 7. recorded gaps and deferrals with owner/reason;
-8. visibility in the Delivery System and local projection;
+8. visibility in the repository working records defined by
+   `state-tracking.md`;
 9. a plain-language decision brief;
 10. explicit human specification approval.
 
@@ -245,18 +244,19 @@ The fast lane is for a single spec-light requirement/task. All must hold:
 - one task, expected within one working day;
 - no new product/architecture/acceptance decision;
 - the row has Given/When/Then criteria, expected RED test, owner, and release;
-- it is visible in the Delivery System before implementation;
+- it is visible in the repository work-list before implementation;
 - the project defines the human review path for fast-lane completion.
 
 The fast lane removes epic ceremony, not TDD, traceability, evidence, review,
-or sync.
+or state reconciliation.
 
 ## Development loop
 
 ### 0. Orient
 
 - inspect repository state and preserve unrelated work;
-- converge local/server state per `delivery-system.md`;
+- reconcile working records and pending human intents per
+  `state-tracking.md`;
 - confirm active release and current item;
 - inspect blockers, open gates, evidence drift, and next `READY` trace;
 - read the relevant product, code, test, epic/spec, and task sources.
@@ -316,10 +316,9 @@ or sync.
 
 - merge code in its source-of-truth repository;
 - integrate any workspace snapshot according to project rules;
-- update requirement, epic, task, evidence, and local rollups atomically;
-- sync and report evidence to the Delivery System;
-- confirm server state, local state, release, PR/commit, and generated views
-  agree before `DONE`/`VALIDATED`.
+- update requirement, epic, task, evidence, and rollups atomically;
+- reconcile ledger, epic, work-list, release, PR/commit, evidence, and any
+  connected Mission Control projection before `DONE`/`VALIDATED`.
 
 ### 9. Capture and continue
 
@@ -394,24 +393,11 @@ Evidence waypoints:
 
 A lower or upper waypoint does not independently make top-level work `DONE`.
 
-## Requirement ledgers and local projections
+## State records
 
-A project may keep requirement ledgers, epic folders, a work-list, backlog,
-and generated progress views for versioned collaboration. Project instructions
-define their exact paths and parser-safe formats.
-
-Minimum ledger content:
-
-- stable id and kind (user/system/task adapter);
-- statement, source, owner, release/scope, and status;
-- Given/When/Then acceptance criteria;
-- linked epic/SCN/SR/TASK;
-- test/evidence and code/PR references;
-- deferral/blocker/supersession metadata.
-
-If a status is duplicated in a dashboard, detail block, totals line, or
-generated projection, update all copies in one logical change and validate the
-counts. The Delivery System remains authoritative for loop state.
+Repository ledgers, epic folders, the work-list, backlog, generated progress
+views, Mission Control projection, and their status axes are defined in
+`state-tracking.md`. Keep state mechanics out of this lifecycle document.
 
 ## Planning and discoveries
 
@@ -432,7 +418,7 @@ At session start, after a slice, and after product-doc changes:
 2. reconcile product sources, requirements, and active epics;
 3. reprioritize/promote only with sourced criteria;
 4. update release/scope and record the planning event;
-5. sync the resulting state.
+5. reconcile the resulting working records per `state-tracking.md`.
 
 ## Definition of Done
 
@@ -462,8 +448,7 @@ An epic is `DONE` only when:
 5. known gaps are recorded and no undisclosed scope remains;
 6. human completion approval is recorded with actor, scope, and source;
 7. code is merged in the authoritative implementation repository;
-8. local records, generated views, release membership, and Delivery System
-   state agree;
+8. state records and projections required by `state-tracking.md` agree;
 9. evidence is pinned to the delivered revision and has not decayed.
 
 A user requirement is `VALIDATED` only when its scenarios and linked epics meet
@@ -474,7 +459,8 @@ the same evidence bar and the human accepts the user outcome.
 Start:
 
 1. read project and shared instructions;
-2. converge Delivery System and local state;
+2. reconcile working records and pending human intents per
+   `state-tracking.md`;
 3. inspect active scope, gates, evidence drift, and next `READY` trace;
 4. read the relevant sources before editing.
 
@@ -483,5 +469,5 @@ End:
 1. run proportional tests and inspect required runtime/browser evidence;
 2. update the complete trace and six completion facts;
 3. capture discoveries/deferrals/conflicts;
-4. validate local projections and sync/report evidence;
+4. validate and reconcile state according to `state-tracking.md`;
 5. state exactly what is complete, awaiting review, blocked, or unsynced.

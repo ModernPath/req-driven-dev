@@ -2,11 +2,11 @@
 
 Use these flows when work needs human intent, a product decision,
 specification approval, or completion approval. They materialize answers into
-the trace model in [`V-model-loop.md`](V-model-loop.md) and the ModernPath
-Delivery System.
+the trace model in [`V-model-loop.md`](V-model-loop.md); record convergence is
+defined in [`state-tracking.md`](state-tracking.md).
 
 Do not interview for facts that can be read safely from product docs, code,
-tests, or Delivery System state. Ask only for decisions that require human
+tests, or current working records. Ask only for decisions that require human
 authority.
 
 ## Common rules
@@ -18,15 +18,15 @@ authority.
 - An unanswered or ambiguous question keeps affected work `BLOCKED`.
 - An answer changes intent only. Apply it to specs/requirements/tasks/code in a
   separate, traceable step.
-- Mission Control and the CLI answer the same Delivery System gates. The
-  server's first accepted answer wins; pull/apply before proceeding.
+- Reconcile gate answers according to `state-tracking.md`; the first accepted
+  server answer wins in connected workspaces.
 - Every opened gate includes the brief defined in `AGENTS.md`.
 
 ## 1. Session intake
 
 Inspect rather than ask:
 
-1. current repository and Delivery System state;
+1. current repository records and connected projections;
 2. active release and selected epic/task;
 3. open gates, blockers, deferrals, and conflicts;
 4. evidence drift and items awaiting review;
@@ -57,7 +57,8 @@ Use when the user wants new product behavior.
 6. Determine whether the epic or fast lane applies using the canonical tests.
 7. If epic-path, create its record/spec set and continue through scenario and
    system-decomposition flows.
-8. Publish the proposal to Delivery System state without marking it approved.
+8. Record the proposal according to `state-tracking.md` without marking it
+   approved.
 
 Ask concisely:
 
@@ -77,7 +78,7 @@ workflow decisions.
 2. State the recommendation separately from the decision.
 3. Ask the authorized human to choose, revise, defer, or reject.
 4. Record actor, role, option/free text, source tag, timestamp, and scope.
-5. Pull/apply or sync the answer according to its origin.
+5. Reconcile the answer according to `state-tracking.md`.
 6. Update all affected specifications and trace items; record consequences.
 7. Re-run the specification gate if acceptance or scope changed.
 
@@ -123,7 +124,7 @@ For each system behavior:
 5. name the expected lower-RED test and implementation path;
 6. cite product/code/contract sources;
 7. record blockers and technical enablers explicitly;
-8. publish trace links to the Delivery System.
+8. update the trace records defined in `state-tracking.md`.
 
 Questions:
 
@@ -155,7 +156,8 @@ Ask the authorized human for one result:
 - defer;
 - reject.
 
-Record the result in the Delivery System and the epic's specification status.
+Record the result and epic specification status according to
+`state-tracking.md`.
 Only approval unlocks upper/lower RED work.
 
 ## 7. Evidence review
@@ -171,7 +173,7 @@ Audit each trace, not just status labels:
 5. upper E2E/user-flow evidence now passes;
 6. UI runtime/screenshot evidence was actually inspected where required;
 7. evidence is pinned to the current code and has no drift;
-8. implementation delivery and local/server synchronization are current;
+8. implementation delivery and state reconciliation are current;
 9. gaps and deferrals are disclosed.
 
 Classify every item:
@@ -215,7 +217,7 @@ When a claim is unsourced, contradicted, or intentionally postponed:
 2. record source/trigger and affected traces;
 3. classify as open question, conflict, blocker, deferral, or discovery;
 4. name decision/owner and next point of review;
-5. open a Delivery System gate if human authority is needed;
+5. open a human gate according to `state-tracking.md` if authority is needed;
 6. keep work at the strongest status current evidence supports.
 
 Deferral record:
@@ -249,7 +251,7 @@ Evidence sequence:
 2. run lower RED/GREEN for <TASK> using <test command>;
 3. run proportional regression gates;
 4. run upper validation and required browser/runtime check;
-5. update local trace records, sync, and report evidence;
+5. update trace records and reconcile/report evidence per `state-tracking.md`;
 6. stop at IN_REVIEW for human completion approval.
 ```
 
@@ -263,7 +265,7 @@ Report:
 - files/code changed;
 - RED and GREEN evidence with commands/results;
 - decisions/approvals with source and actor;
-- Delivery System sync/evidence status;
+- repository and connected Mission Control reconciliation/evidence status;
 - discoveries, deferrals, conflicts, and blockers;
 - exact next `READY` item.
 

@@ -1,7 +1,7 @@
-# «CTX» — «Context Name» — Requirements projection
+# «CTX» — «Context Name» — Requirements ledger
 
-The ModernPath Delivery System owns loop state. This file is the versioned
-repository representation synchronized with it.
+This is the bounded-context backlog and requirement work record described in
+`req-driven-dev/state-tracking.md`.
 
 ## Dashboard — «CTX» («Context Name»)
 
@@ -31,34 +31,11 @@ repository representation synchronized with it.
 - **Trace:** `UR -> EPIC -> SCN -> SR/TASK`
 - **Evidence:** —
 - **Code:** —
-- **Delivery System:** «workspace/system/entity reference»
+- **Mission Control reference:** «optional workspace/system/entity reference»
 - **Deferred / notes:** —
 ```
 
 ---
 
-## Status Reference
-
-| Status | Meaning |
-|---|---|
-| `PROPOSED` | Identified; acceptance criteria not yet written |
-| `READY` | Sourced acceptance and entry gate complete |
-| `IN_PROGRESS` | Tests written (red) and/or implementation underway |
-| `IN_REVIEW` | Green + traced; awaiting human sign-off |
-| `DONE` | Evidence, approval, source delivery, and state reconciliation complete |
-| `VALIDATED` | User requirement accepted after all linked epics are DONE |
-| `DEFERRED` | Not now — **must** carry reason, owner, and target |
-| `BLOCKED` | Cannot proceed — **must** carry the blocking OQ id |
-| `OBSOLETE` | Superseded — **must** carry the superseding ref |
-
----
-
-## Status Hygiene Reminder
-
-When changing status, update ALL THREE:
-1. Dashboard table row
-2. Detail block `Status:` line
-3. Dashboard `Totals:` line
-
-Then validate the projection and synchronize the Delivery System. If the two
-disagree, reconcile before starting more work or claiming completion.
+Status vocabulary and the three-place hygiene rule are defined once in
+`req-driven-dev/state-tracking.md`.
