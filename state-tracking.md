@@ -247,4 +247,3 @@ End:
    `DONE`; they are different claims;
 4. report any unavailable binding, stale tool, failed sync, or unconfirmed
    server state explicitly.
-
