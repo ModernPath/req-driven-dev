@@ -76,7 +76,6 @@ Do not keep live product epics or work state in this process package.
 | `AGENTS.md` | shared agent policy and canonical entry point |
 | `CLAUDE.md` | root compatibility entry required for Claude discovery |
 | `process/` | lifecycle, state contract, human-input flows, and execution prompts |
-| `compat/` | non-authoritative pointers for former process/platform names |
 | `templates/agents/` | project and bounded-context agent entry templates |
 | `templates/work/` | backlog, requirement, epic, task, work-list, and progress templates |
 | `templates/docs/` | product/domain, bounded-context, data-model, event, gap, and question templates |
