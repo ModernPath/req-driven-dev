@@ -2,12 +2,12 @@
 
 ## Operating mode
 
-- Read and follow `req-driven-dev/AGENTS.md` for the delivery process.
+- Read and follow `.claude/rdd/AGENTS.md` for the delivery process.
 - This file contains only project-specific repository, architecture, command,
   and safety rules.
 - `CLAUDE.md` is a compatibility pointer and cannot override these files.
 - If a project rule appears to change a shared lifecycle/gate/status invariant,
-  stop and update `req-driven-dev` first.
+  stop and update the `req-driven-dev` source repository first.
 
 ## Product sources
 

@@ -2,7 +2,7 @@
 
 This file specializes the shared process; it does not redefine it.
 
-- **Shared process:** `req-driven-dev/AGENTS.md`
+- **Shared process:** `.claude/rdd/AGENTS.md`
 - **Domain source:** `docs/«NN»-«domain-name».md`
 - **Contracts:** «schema/API/event paths»
 - **Requirements:** «ledger path»
@@ -34,4 +34,4 @@ This file specializes the shared process; it does not redefine it.
 - «state/process validation command»
 
 Start from the next eligible trace recorded according to
-`req-driven-dev/state-tracking.md` and follow `req-driven-dev/V-model-loop.md`.
+`.claude/rdd/state-tracking.md` and follow `.claude/rdd/V-model-loop.md`.

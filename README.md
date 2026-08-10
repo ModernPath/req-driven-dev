@@ -44,19 +44,25 @@ answers, evidence runs, sessions, and events.
   approval, and state reconciliation.
 - Discoveries, conflicts, and deferrals are explicit and sourced.
 
-## Adopting in a project
+## Distribution and adoption
 
-Import or vendor this repository at a stable path such as `req-driven-dev/`.
+This repository is the authoring source. A released `modernpath` CLI embeds a
+byte-identical snapshot of its Markdown instruction and template files, and
+`modernpath install` writes that snapshot under `.claude/rdd/` in the consuming
+repository. Consuming repositories do not vendor this repository.
+
 The consuming repository should:
 
-1. make its root `AGENTS.md` point to `req-driven-dev/AGENTS.md` for the shared
-   process and retain only project-specific architecture/repository rules;
-2. configure its requirement, epic/spec/task, backlog, and generated-projection
+1. run `modernpath install` and commit the installed process snapshot and agent
+   entry-point adapters;
+2. retain only project-specific architecture/repository rules outside the
+   installer's managed blocks in root `AGENTS.md`;
+3. configure its requirement, epic/spec/task, backlog, and generated-projection
    paths;
-3. optionally bind the workspace to its ModernPath workspace/system/release;
-4. provide deterministic checks and, when connected, extraction/sync;
-5. copy only the needed templates from [`templates/`](templates/);
-6. keep any `CLAUDE.md` as a compatibility pointer, not a second manual.
+4. optionally bind the workspace to its ModernPath workspace/system/release;
+5. provide deterministic checks and, when connected, extraction/sync;
+6. copy only the needed templates from `.claude/rdd/templates/`;
+7. keep any `CLAUDE.md` as a compatibility pointer, not a second manual.
 
 Do not keep live product epics or work state in this instruction repository.
 
@@ -75,7 +81,9 @@ Do not keep live product epics or work state in this instruction repository.
 
 Changes to lifecycle, status meanings, gate requirements, evidence rules, or
 state ownership belong in this repository. Validate internal links and search
-for competing authority statements before release. Consuming repositories then
-import the accepted version and remove any duplicated process text.
+for competing authority statements before release. Then refresh the CLI asset
+snapshot from the accepted source revision, verify byte alignment, and ship a
+new CLI build. Consuming repositories receive the version through
+`modernpath install` and remove any duplicated process text.
 
 License: MIT.

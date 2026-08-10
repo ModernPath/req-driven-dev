@@ -2,7 +2,7 @@
 
 Copy this file into a consuming project when a versioned work-list is needed.
 Use the ownership, status, and reconciliation rules in
-`req-driven-dev/state-tracking.md`.
+`.claude/rdd/state-tracking.md`.
 
 Detailed epic contents live in the consuming repository's `epics/`. This file
 is only the active queue and cross-epic rollup; it does not replace the parent
@@ -26,5 +26,5 @@ epic or requirement ledger.
 |---|---|---|---|---|
 | - | - | - | - | - |
 
-Completion semantics come from `req-driven-dev/V-model-loop.md`; record
-reconciliation comes from `req-driven-dev/state-tracking.md`.
+Completion semantics come from `.claude/rdd/V-model-loop.md`; record
+reconciliation comes from `.claude/rdd/state-tracking.md`.
