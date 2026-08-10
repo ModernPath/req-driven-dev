@@ -13,8 +13,6 @@ project's live work state.
 - [`process/state-tracking.md`](process/state-tracking.md) defines the
   repository working records, status axes, local checks, automatic
   synchronization, Mission Control, and state convergence.
-- [`process/interview-flows.md`](process/interview-flows.md) defines human-input
-  and review flows.
 - [`process/prompts.md`](process/prompts.md) contains reusable execution prompts.
 - A consuming repository owns only project-specific rules such as architecture,
   repository topology, commands, environments, and test gates. Its agent entry
@@ -36,8 +34,7 @@ Before planning, changing, reviewing, or delivering product work:
 2. read this file, `process/V-model-loop.md`, and
    `process/state-tracking.md`;
 3. read the relevant product sources, requirement ledger, epic/specs, and
-   active work-list row;
-4. read `process/interview-flows.md` when human input or a gate is involved.
+   active work-list row.
 
 ## Non-negotiable rules
 
@@ -46,7 +43,9 @@ Before planning, changing, reviewing, or delivering product work:
    meaning and links must remain explicit.
 2. Humans decide product, scope, architecture, acceptance, priority, and
    workflow. Record the real actor with a `USER:<date>:<summary>` source. An
-   agent may propose options but may not select one by assumption.
+   agent may propose options but may not select one by assumption. Do not ask
+   for facts that can be established safely from product docs, code, tests, or
+   current working records; ask only for decisions requiring human authority.
 3. Normative claims cite `USER:`, `DOC:`, `CODE:`, `TEST:`, `RUN:`, or `EPIC:`
    sources. Missing support becomes an open question; conflicting support
    remains a conflict.
