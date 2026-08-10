@@ -1,10 +1,10 @@
 # Requirement-driven delivery — agent instructions
 
-This repository is the canonical authoring home of the reusable V-model
-delivery process. Released instructions and templates are embedded in the
-`modernpath` CLI and installed into consuming repositories under
-`.claude/rdd/`; this repository never contains a consuming project's live work
-state.
+The `ModernPath/req-driven-dev` repository is the canonical authoring home of
+the reusable V-model delivery process. Released instructions and templates are
+embedded in the `modernpath` CLI and installed into consuming repositories
+under `.claude/rdd/`; this process package never contains a consuming
+project's live work state.
 
 ## Instruction ownership
 
@@ -24,8 +24,9 @@ state.
   instructions.
 
 If project instructions conflict with a shared process rule, stop the affected
-transition and report the conflict. Change the source in this repository and
-publish it through a new CLI build rather than creating a local variant.
+transition and report the conflict. Change the source in the canonical
+`ModernPath/req-driven-dev` repository and publish it through a new CLI build
+rather than creating a local variant.
 
 ## Required reading
 

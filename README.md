@@ -46,10 +46,11 @@ answers, evidence runs, sessions, and events.
 
 ## Distribution and adoption
 
-This repository is the authoring source. A released `modernpath` CLI embeds a
-byte-identical snapshot of its Markdown instruction and template files, and
-`modernpath install` writes that snapshot under `.claude/rdd/` in the consuming
-repository. Consuming repositories do not vendor this repository.
+The `ModernPath/req-driven-dev` repository is the authoring source. A released
+`modernpath` CLI embeds a byte-identical snapshot of its Markdown instruction
+and template files, and `modernpath install` writes that snapshot under
+`.claude/rdd/` in the consuming repository. Consuming repositories do not
+vendor the source repository.
 
 The consuming repository should:
 
@@ -64,7 +65,7 @@ The consuming repository should:
 6. copy only the needed templates from `.claude/rdd/templates/`;
 7. keep any `CLAUDE.md` as a compatibility pointer, not a second manual.
 
-Do not keep live product epics or work state in this instruction repository.
+Do not keep live product epics or work state in this process package.
 
 ## Repository contents
 
@@ -81,10 +82,11 @@ Do not keep live product epics or work state in this instruction repository.
 ## Process maintenance
 
 Changes to lifecycle, status meanings, gate requirements, evidence rules, or
-state ownership belong in this repository. Validate internal links and search
-for competing authority statements before release. Then refresh the CLI asset
-snapshot from the accepted source revision, verify byte alignment, and ship a
-new CLI build. Consuming repositories receive the version through
-`modernpath install` and remove any duplicated process text.
+state ownership belong in the canonical `ModernPath/req-driven-dev` source
+repository. Validate internal links and search for competing authority
+statements before release. Then refresh the CLI asset snapshot from the
+accepted source revision, verify byte alignment, and ship a new CLI build.
+Consuming repositories receive the version through `modernpath install` and
+remove any duplicated process text.
 
 License: MIT.
