@@ -34,4 +34,4 @@ This file specializes the shared process; it does not redefine it.
 - «state/process validation command»
 
 Start from the next eligible trace recorded according to
-`.modernpath/rdd/state-tracking.md` and follow `.modernpath/rdd/V-model-loop.md`.
+`.modernpath/rdd/process/state-tracking.md` and follow `.modernpath/rdd/process/V-model-loop.md`.

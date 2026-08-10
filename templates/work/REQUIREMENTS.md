@@ -1,7 +1,7 @@
 # «CTX» — «Context Name» — Requirements ledger
 
 This is the bounded-context backlog and requirement work record described in
-`.modernpath/rdd/state-tracking.md`.
+`.modernpath/rdd/process/state-tracking.md`.
 
 ## Dashboard — «CTX» («Context Name»)
 
@@ -38,4 +38,4 @@ This is the bounded-context backlog and requirement work record described in
 ---
 
 Status vocabulary and the three-place hygiene rule are defined once in
-`.modernpath/rdd/state-tracking.md`.
+`.modernpath/rdd/process/state-tracking.md`.

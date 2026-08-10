@@ -1,8 +1,9 @@
 # Backlog projection template
 
 Copy into a consuming repository if it needs a versioned triage inbox.
-Discoveries without a clear home are swept through `V-model-loop.md`
-"Planning and discoveries" and routed according to `state-tracking.md`.
+Discoveries without a clear home are swept through
+`.modernpath/rdd/process/V-model-loop.md` "Planning and discoveries" and
+routed according to `.modernpath/rdd/process/state-tracking.md`.
 
 > **Inbox status:** EMPTY (initialized)
 

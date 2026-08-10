@@ -8,14 +8,14 @@ project's live work state.
 
 ## Instruction ownership
 
-- [`V-model-loop.md`](V-model-loop.md) defines lifecycle, traceability, gates,
-  statuses, red-first evidence, and completion.
-- [`state-tracking.md`](state-tracking.md) defines the repository working
-  records, status axes, local checks, automatic synchronization, Mission
-  Control, and state convergence.
-- [`interview-flows.md`](interview-flows.md) defines human-input and review
-  flows.
-- [`prompts.md`](prompts.md) contains reusable execution prompts.
+- [`process/V-model-loop.md`](process/V-model-loop.md) defines lifecycle,
+  traceability, gates, statuses, red-first evidence, and completion.
+- [`process/state-tracking.md`](process/state-tracking.md) defines the
+  repository working records, status axes, local checks, automatic
+  synchronization, Mission Control, and state convergence.
+- [`process/interview-flows.md`](process/interview-flows.md) defines human-input
+  and review flows.
+- [`process/prompts.md`](process/prompts.md) contains reusable execution prompts.
 - A consuming repository owns only project-specific rules such as architecture,
   repository topology, commands, environments, and test gates. Its agent entry
   points reference the installed `.modernpath/rdd/` release snapshot instead of
@@ -33,10 +33,11 @@ rather than creating a local variant.
 Before planning, changing, reviewing, or delivering product work:
 
 1. read the consuming project's root `AGENTS.md` for project-specific rules;
-2. read this file, `V-model-loop.md`, and `state-tracking.md`;
+2. read this file, `process/V-model-loop.md`, and
+   `process/state-tracking.md`;
 3. read the relevant product sources, requirement ledger, epic/specs, and
    active work-list row;
-4. read `interview-flows.md` when human input or a gate is involved.
+4. read `process/interview-flows.md` when human input or a gate is involved.
 
 ## Non-negotiable rules
 
@@ -68,7 +69,7 @@ Before planning, changing, reviewing, or delivering product work:
 ## Working loop
 
 1. **Orient** — inspect repository and process state according to
-   `state-tracking.md`; select the next eligible trace.
+   `process/state-tracking.md`; select the next eligible trace.
 2. **Specify** — derive sourced URs and SCNs, then testable SRs and thin tasks.
 3. **Approve specification** — present a decision brief and record the human
    gate before epic-path RED tests.
@@ -81,7 +82,8 @@ Before planning, changing, reviewing, or delivering product work:
 7. **Review** — audit criteria, evidence, gaps, and deferrals; record the real
    human completion decision.
 8. **Deliver and reconcile** — land code in its source repository and reconcile
-   every working record and projection according to `state-tracking.md`.
+   every working record and projection according to
+   `process/state-tracking.md`.
 9. **Continue** — capture discoveries and take the next incomplete trace.
 
 ## Human gates
@@ -106,7 +108,7 @@ rendered control and prove its mutation path with isolated automated tests.
 Before claiming completion, audit every explicit requirement and scenario
 against current sources: files, test/runtime/browser evidence, attributable
 approval, implementation-repository delivery, and the state records defined in
-`state-tracking.md`. Missing, stale, or indirect evidence means incomplete
-work.
+`process/state-tracking.md`. Missing, stale, or indirect evidence means
+incomplete work.
 
-The detailed Definition of Done is in `V-model-loop.md`.
+The detailed Definition of Done is in `process/V-model-loop.md`.

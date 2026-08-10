@@ -1,9 +1,10 @@
 # Progress projection template
 
 Generated from the consuming project's requirement ledgers. Do not hand-edit;
-see `.modernpath/rdd/state-tracking.md`.
+see `.modernpath/rdd/process/state-tracking.md`.
 
-Plan requirements with Prompt 1 (`prompts.md`); build them with Prompt 3.
+Plan requirements with Prompt 1 (`.modernpath/rdd/process/prompts.md`); build
+them with Prompt 3.
 
 | Context | DONE | IN_REVIEW | IN_PROGRESS | READY | PROPOSED | DEFERRED | BLOCKED | Total |
 |---|---|---|---|---|---|---|---|---|

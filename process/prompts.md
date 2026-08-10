@@ -26,7 +26,7 @@ and candidate user outcomes.
 
 ```text
 Read the project AGENTS.md, .modernpath/rdd/AGENTS.md,
-.modernpath/rdd/V-model-loop.md, and .modernpath/rdd/state-tracking.md. Reconcile
+.modernpath/rdd/process/V-model-loop.md, and .modernpath/rdd/process/state-tracking.md. Reconcile
 working records and pending human intents first.
 
 Outcome/source: <reference>
@@ -49,7 +49,7 @@ tests or implementation before specification approval.
 
 ```text
 Read the project AGENTS.md, .modernpath/rdd/AGENTS.md,
-.modernpath/rdd/V-model-loop.md, .modernpath/rdd/state-tracking.md, the epic and all
+.modernpath/rdd/process/V-model-loop.md, .modernpath/rdd/process/state-tracking.md, the epic and all
 specs, current human gates, and relevant product sources.
 
 Audit every specification-gate condition. Lead with contradictions, missing
@@ -66,7 +66,7 @@ an implementation kickoff.
 
 ```text
 Read the project AGENTS.md, .modernpath/rdd/AGENTS.md,
-.modernpath/rdd/V-model-loop.md, .modernpath/rdd/state-tracking.md, the active
+.modernpath/rdd/process/V-model-loop.md, .modernpath/rdd/process/state-tracking.md, the active
 epic/spec/task, and relevant product/code/test sources. Converge state and
 confirm specification approval.
 
@@ -92,8 +92,8 @@ reconciliation, gaps, and the next READY item.
 
 ```text
 Read the project AGENTS.md, .modernpath/rdd/AGENTS.md,
-.modernpath/rdd/V-model-loop.md, backlog, active release, requirements, epics, open
-gates, and .modernpath/rdd/state-tracking.md.
+.modernpath/rdd/process/V-model-loop.md, backlog, active release, requirements, epics, open
+gates, and .modernpath/rdd/process/state-tracking.md.
 This is planning work; do not implement product code.
 
 For every backlog/discovery item:
@@ -113,7 +113,7 @@ decisions, and next READY traces.
 
 ```text
 Read the project AGENTS.md, .modernpath/rdd/AGENTS.md,
-.modernpath/rdd/V-model-loop.md, .modernpath/rdd/state-tracking.md, active
+.modernpath/rdd/process/V-model-loop.md, .modernpath/rdd/process/state-tracking.md, active
 epic/spec/tasks, current code/tests/PR, and current working records/projections.
 
 Treat completion as unproven. For every explicit UR, SCN, SR, TASK, gate, and

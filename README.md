@@ -25,13 +25,14 @@ answers, evidence runs, sessions, and events.
 ## Read first
 
 1. [`AGENTS.md`](AGENTS.md) — binding agent rules.
-2. [`V-model-loop.md`](V-model-loop.md) — lifecycle, V-model, TDD, gates,
-   status, and Definition of Done.
-3. [`state-tracking.md`](state-tracking.md) — repository records, status axes,
-   checks, automatic sync, Mission Control, evidence, and conflicts.
-4. [`interview-flows.md`](interview-flows.md) — human decision and approval
-   flows.
-5. [`prompts.md`](prompts.md) — reusable execution prompts.
+2. [`process/V-model-loop.md`](process/V-model-loop.md) — lifecycle, V-model,
+   TDD, gates, status, and Definition of Done.
+3. [`process/state-tracking.md`](process/state-tracking.md) — repository
+   records, status axes, checks, automatic sync, Mission Control, evidence, and
+   conflicts.
+4. [`process/interview-flows.md`](process/interview-flows.md) — human decision
+   and approval flows.
+5. [`process/prompts.md`](process/prompts.md) — reusable execution prompts.
 
 ## Core invariants
 
@@ -62,7 +63,8 @@ The consuming repository should:
    paths;
 4. optionally bind the workspace to its ModernPath workspace/system/release;
 5. provide deterministic checks and, when connected, extraction/sync;
-6. copy only the needed templates from `.modernpath/rdd/templates/`;
+6. copy only the needed agent, work-record, and documentation templates from
+   `.modernpath/rdd/templates/`;
 7. keep any `CLAUDE.md` as a compatibility pointer, not a second manual.
 
 Do not keep live product epics or work state in this process package.
@@ -71,13 +73,13 @@ Do not keep live product epics or work state in this process package.
 
 | Path | Purpose |
 |---|---|
-| `AGENTS.md` | shared agent policy |
-| `V-model-loop.md` | canonical process manual |
-| `state-tracking.md` | current repository/Mission Control state contract |
-| `interview-flows.md` | human-input/gate workflows |
-| `prompts.md` | phase and execution prompts |
-| `templates/` | copyable project, product-doc, epic/task, and projection artifacts |
-| `PROCESS.md`, `platform.md` | compatibility pointers for legacy installed paths |
+| `AGENTS.md` | shared agent policy and canonical entry point |
+| `CLAUDE.md` | root compatibility entry required for Claude discovery |
+| `process/` | lifecycle, state contract, human-input flows, and execution prompts |
+| `compat/` | non-authoritative pointers for former process/platform names |
+| `templates/agents/` | project and bounded-context agent entry templates |
+| `templates/work/` | backlog, requirement, epic, task, work-list, and progress templates |
+| `templates/docs/` | product/domain, bounded-context, data-model, event, gap, and question templates |
 
 ## Process maintenance
 
