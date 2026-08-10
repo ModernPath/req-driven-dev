@@ -76,6 +76,7 @@ Do not keep live product epics or work state in this instruction repository.
 | `interview-flows.md` | human-input/gate workflows |
 | `prompts.md` | phase and execution prompts |
 | `templates/` | copyable project, product-doc, epic/task, and projection artifacts |
+| `PROCESS.md`, `platform.md` | compatibility pointers for legacy installed paths |
 
 ## Process maintenance
 
