@@ -6,7 +6,7 @@ placeholders; do not paste process rules into project prompts.
 ## 0. Discover product intent
 
 ```text
-Read the project AGENTS.md and .claude/rdd/AGENTS.md.
+Read the project AGENTS.md and .modernpath/rdd/AGENTS.md.
 
 Input: <user/customer/regulatory/incident sources>
 Target product/context: <name>
@@ -25,8 +25,8 @@ and candidate user outcomes.
 ## 1. Plan a user outcome
 
 ```text
-Read the project AGENTS.md, .claude/rdd/AGENTS.md,
-.claude/rdd/V-model-loop.md, and .claude/rdd/state-tracking.md. Reconcile
+Read the project AGENTS.md, .modernpath/rdd/AGENTS.md,
+.modernpath/rdd/V-model-loop.md, and .modernpath/rdd/state-tracking.md. Reconcile
 working records and pending human intents first.
 
 Outcome/source: <reference>
@@ -48,8 +48,8 @@ tests or implementation before specification approval.
 ## 2. Review and approve a specification
 
 ```text
-Read the project AGENTS.md, .claude/rdd/AGENTS.md,
-.claude/rdd/V-model-loop.md, .claude/rdd/state-tracking.md, the epic and all
+Read the project AGENTS.md, .modernpath/rdd/AGENTS.md,
+.modernpath/rdd/V-model-loop.md, .modernpath/rdd/state-tracking.md, the epic and all
 specs, current human gates, and relevant product sources.
 
 Audit every specification-gate condition. Lead with contradictions, missing
@@ -65,8 +65,8 @@ an implementation kickoff.
 ## 3. Execute one development-loop slice
 
 ```text
-Read the project AGENTS.md, .claude/rdd/AGENTS.md,
-.claude/rdd/V-model-loop.md, .claude/rdd/state-tracking.md, the active
+Read the project AGENTS.md, .modernpath/rdd/AGENTS.md,
+.modernpath/rdd/V-model-loop.md, .modernpath/rdd/state-tracking.md, the active
 epic/spec/task, and relevant product/code/test sources. Converge state and
 confirm specification approval.
 
@@ -91,9 +91,9 @@ reconciliation, gaps, and the next READY item.
 ## 4. Triage and replan
 
 ```text
-Read the project AGENTS.md, .claude/rdd/AGENTS.md,
-.claude/rdd/V-model-loop.md, backlog, active release, requirements, epics, open
-gates, and .claude/rdd/state-tracking.md.
+Read the project AGENTS.md, .modernpath/rdd/AGENTS.md,
+.modernpath/rdd/V-model-loop.md, backlog, active release, requirements, epics, open
+gates, and .modernpath/rdd/state-tracking.md.
 This is planning work; do not implement product code.
 
 For every backlog/discovery item:
@@ -112,8 +112,8 @@ decisions, and next READY traces.
 ## 5. Evidence and completion review
 
 ```text
-Read the project AGENTS.md, .claude/rdd/AGENTS.md,
-.claude/rdd/V-model-loop.md, .claude/rdd/state-tracking.md, active
+Read the project AGENTS.md, .modernpath/rdd/AGENTS.md,
+.modernpath/rdd/V-model-loop.md, .modernpath/rdd/state-tracking.md, active
 epic/spec/tasks, current code/tests/PR, and current working records/projections.
 
 Treat completion as unproven. For every explicit UR, SCN, SR, TASK, gate, and

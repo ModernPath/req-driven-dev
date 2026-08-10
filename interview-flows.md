@@ -237,7 +237,7 @@ Start `<EPIC-ID>` in `<repository>`.
 
 Read:
 - project `AGENTS.md`
-- `.claude/rdd/AGENTS.md`
+- `.modernpath/rdd/AGENTS.md`
 - `<epic>/EPIC.md` and specs
 - active task records
 

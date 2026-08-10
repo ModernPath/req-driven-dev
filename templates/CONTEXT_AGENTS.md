@@ -2,7 +2,7 @@
 
 This file specializes the shared process; it does not redefine it.
 
-- **Shared process:** `.claude/rdd/AGENTS.md`
+- **Shared process:** `.modernpath/rdd/AGENTS.md`
 - **Domain source:** `docs/«NN»-«domain-name».md`
 - **Contracts:** «schema/API/event paths»
 - **Requirements:** «ledger path»
@@ -34,4 +34,4 @@ This file specializes the shared process; it does not redefine it.
 - «state/process validation command»
 
 Start from the next eligible trace recorded according to
-`.claude/rdd/state-tracking.md` and follow `.claude/rdd/V-model-loop.md`.
+`.modernpath/rdd/state-tracking.md` and follow `.modernpath/rdd/V-model-loop.md`.

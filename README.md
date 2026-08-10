@@ -48,9 +48,9 @@ answers, evidence runs, sessions, and events.
 
 The `ModernPath/req-driven-dev` repository is the authoring source. A released
 `modernpath` CLI embeds a byte-identical snapshot of its Markdown instruction
-and template files, and `modernpath install` writes that snapshot under
-`.claude/rdd/` in the consuming repository. Consuming repositories do not
-vendor the source repository.
+and template files, and `modernpath install` writes that snapshot under the
+tool-neutral `.modernpath/rdd/` path in the consuming repository. Consuming
+repositories do not vendor the source repository.
 
 The consuming repository should:
 
@@ -62,7 +62,7 @@ The consuming repository should:
    paths;
 4. optionally bind the workspace to its ModernPath workspace/system/release;
 5. provide deterministic checks and, when connected, extraction/sync;
-6. copy only the needed templates from `.claude/rdd/templates/`;
+6. copy only the needed templates from `.modernpath/rdd/templates/`;
 7. keep any `CLAUDE.md` as a compatibility pointer, not a second manual.
 
 Do not keep live product epics or work state in this process package.

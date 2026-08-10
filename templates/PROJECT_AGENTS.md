@@ -2,7 +2,7 @@
 
 ## Operating mode
 
-- Read and follow `.claude/rdd/AGENTS.md` for the delivery process.
+- Read and follow `.modernpath/rdd/AGENTS.md` for the delivery process.
 - This file contains only project-specific repository, architecture, command,
   and safety rules.
 - `CLAUDE.md` is a compatibility pointer and cannot override these files.

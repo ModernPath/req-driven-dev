@@ -3,7 +3,7 @@
 The `ModernPath/req-driven-dev` repository is the canonical authoring home of
 the reusable V-model delivery process. Released instructions and templates are
 embedded in the `modernpath` CLI and installed into consuming repositories
-under `.claude/rdd/`; this process package never contains a consuming
+under `.modernpath/rdd/`; this process package never contains a consuming
 project's live work state.
 
 ## Instruction ownership
@@ -18,7 +18,7 @@ project's live work state.
 - [`prompts.md`](prompts.md) contains reusable execution prompts.
 - A consuming repository owns only project-specific rules such as architecture,
   repository topology, commands, environments, and test gates. Its agent entry
-  points reference the installed `.claude/rdd/` release snapshot instead of
+  points reference the installed `.modernpath/rdd/` release snapshot instead of
   copying or redefining the process.
 - `CLAUDE.md` files are compatibility pointers; they do not override these
   instructions.
