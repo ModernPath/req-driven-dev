@@ -1,6 +1,9 @@
-# BACKLOG — Triage Inbox
+# Backlog projection template
 
-Discoveries without a clear home yet (CLAUDE.md §6A). Sweep during a planning pass (Prompt 3): route each to a context's `REQUIREMENTS.md`, `docs/open-questions.md`, `docs/gap-register.md`, or drop with a reason.
+Copy into a consuming repository if it needs a versioned triage inbox.
+Discoveries without a clear home are swept through
+`.modernpath/rdd/process/V-model-loop.md` "Planning and discoveries" and
+routed according to `.modernpath/rdd/process/state-tracking.md`.
 
 > **Inbox status:** EMPTY (initialized)
 

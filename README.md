@@ -1,121 +1,89 @@
-# Requirement-Driven Development Framework
+# Requirement-driven delivery
 
-A methodology for building software using AI agents with full traceability from customer requirements through design docs to tested code.
+Reusable agent instructions for delivering software through human gates,
+user/system requirements, red-first TDD, and V-model traceability.
 
-## What is this?
+The process connects:
 
-This framework provides a structured, multi-loop approach to software development where:
-
-1. **Customer requirements** are transformed into **design documentation**
-2. **Design docs** are decomposed into **traceable requirements**
-3. **Requirements** drive **test-first implementation**
-4. **Everything is linked**: code ↔ tests ↔ requirements ↔ design docs
-
-The process is designed for AI-assisted development where agents can autonomously build features while maintaining full traceability and quality.
-
-## The Three Phases
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│  PHASE 1: DISCOVERY                                              │
-│  Customer requirements + tech stack → Design docs                │
-│  Prompt: 0A                                                      │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  PHASE 2: PLANNING                                               │
-│  Design docs → Requirements ledgers                              │
-│  Prompt: 1                                                       │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  PHASE 3: BUILD (iterative)                                      │
-│  Requirements → Tests → Code                                     │
-│  Prompt: 2 (build) + Prompt 3 (triage) — run repeatedly          │
-└─────────────────────────────────────────────────────────────────┘
+```text
+human intent
+  -> user requirement
+  -> epic + acceptance scenario
+  -> system requirement + thin task
+  -> failing tests
+  -> implementation
+  -> passing lower and upper evidence
+  -> human approval
+  -> delivered, synchronized state
 ```
 
-## Quick Start
+Product repositories hold the versioned working records, specifications, code,
+and tests. In a connected workspace, automatic sync turns those records into a
+live Mission Control view; Mission Control also records attributable human gate
+answers, evidence runs, sessions, and events.
 
-1. **Copy the framework files** to your project root
-2. **Run Prompt 0A** with your customer requirements to generate design docs
-3. **Run Prompt 0B** to bootstrap your development harness
-4. **Run Prompt 1** for each bounded context to seed requirements
-5. **Run Prompt 2** repeatedly to build requirements
-6. **Run Prompt 3** periodically to triage discoveries and replan
+## Read first
 
-## File Structure
+1. [`AGENTS.md`](AGENTS.md) — binding agent rules.
+2. [`process/V-model-loop.md`](process/V-model-loop.md) — lifecycle, V-model,
+   TDD, gates, status, and Definition of Done.
+3. [`process/state-tracking.md`](process/state-tracking.md) — repository
+   records, status axes, checks, automatic sync, Mission Control, evidence, and
+   conflicts.
+4. [`process/prompts.md`](process/prompts.md) — reusable execution prompts.
 
-```
-/CLAUDE.md           ← The process manual (read this first)
-/prompts.md          ← Copy-paste prompts that drive the process
-/BACKLOG.md          ← Triage inbox for discoveries
-/PROGRESS.md         ← Auto-generated status rollup
-/docs/
-   00-overview.md    ← System overview and glossary
-   01-bounded-contexts.md ← Context map
-   10-«domain».md    ← Domain specifications (one per domain)
-   data/40-data-model.md  ← Database schema
-   data/41-event-catalog.md ← Event definitions
-   open-questions.md ← Design ambiguities
-   gap-register.md   ← Known capability gaps
-/libs/«ctx»/
-   CLAUDE.md         ← Context-specific build guide
-   REQUIREMENTS.md   ← Requirements ledger
-   LOG.md            ← Build history
-   src/              ← Code
-   tests/            ← Tests
-/templates/          ← Templates for new files
-```
+## Core invariants
 
-## Key Principles
+- One trace: `UR -> EPIC -> SCN -> SR -> TASK -> TEST -> CODE`.
+- Both arms are red-first: BDD/E2E above, focused verification below.
+- Humans own product decisions and specification/completion gates.
+- Repository ledgers, epics, and the work-list are the working process record;
+  Mission Control is their synchronized operational projection.
+- No completion claim without current code, test/runtime evidence, delivery,
+  approval, and state reconciliation.
+- Discoveries, conflicts, and deferrals are explicit and sourced.
 
-1. **Nothing is "done" without all three: requirement, tests, code — cross-linked**
-2. **Deferral is explicit, never silent** — every "not now" is tracked
-3. **Contracts are canonical** — schemas are the source of truth
-4. **Thin vertical slices** — end-to-end features, not horizontal layers
-5. **The log tells the truth** — decisions and deferrals are recorded
-6. **Discoveries are captured, not carried** — new requirements go to the backlog immediately
+## Distribution and adoption
 
-## The Build Loop
+The `ModernPath/req-driven-dev` repository is the authoring source. A released
+`modernpath` CLI embeds a byte-identical snapshot of its Markdown instruction
+and template files, and `modernpath install` writes that snapshot under the
+tool-neutral `.modernpath/rdd/` path in the consuming repository. Consuming
+repositories do not vendor the source repository.
 
-The core development cycle (Prompt 2):
+The consuming repository should:
 
-```
-ORIENT → SPECIFY → RED → GREEN → GATE → TRACE → REVIEW → COMMIT → CAPTURE & LOG
-   ↑                                                                      │
-   └──────────────────────────────────────────────────────────────────────┘
-```
+1. run `modernpath install` and commit the installed process snapshot and agent
+   entry-point adapters;
+2. retain only project-specific architecture/repository rules outside the
+   installer's managed blocks in root `AGENTS.md`;
+3. configure its requirement, epic/spec/task, backlog, and generated-projection
+   paths;
+4. optionally bind the workspace to its ModernPath workspace/system/release;
+5. provide deterministic checks and, when connected, extraction/sync;
+6. use the required work-record templates from
+   `.modernpath/rdd/templates/work/`;
+7. keep any `CLAUDE.md` as a compatibility pointer, not a second manual.
 
-- **Red before green, always** — failing tests prove the requirement is real
-- **One requirement at a time** — finish before starting the next
-- **Discoveries don't derail** — capture them, don't chase them
+Do not keep live product epics or work state in this process package.
 
-## Requirements Status Flow
+## Repository contents
 
-```
-PROPOSED → READY → IN_PROGRESS → IN_REVIEW → DONE
-                        ↓
-                    BLOCKED (waiting on OQ)
-                        ↓
-                    DEFERRED (conscious postponement)
-```
+| Path | Purpose |
+|---|---|
+| `AGENTS.md` | shared agent policy and canonical entry point |
+| `CLAUDE.md` | root compatibility entry required for Claude discovery |
+| `process/` | lifecycle, state contract, and execution prompts |
+| `templates/work/` | backlog, requirement, epic, task, work-list, and progress templates |
 
-## Traceability
+## Process maintenance
 
-Every piece is linked:
+Changes to lifecycle, status meanings, gate requirements, evidence rules, or
+state ownership belong in the canonical `ModernPath/req-driven-dev` source
+repository. Validate internal links and search for competing authority
+statements before release. Then refresh the CLI asset snapshot from the
+accepted source revision, verify byte alignment, and ship a new CLI build.
+Consuming repositories receive the version through `modernpath install` and
+remove any duplicated process text.
 
-- **Tests** reference requirement IDs: `describe('REQ-USR-001: ...', ...)`
-- **Code** references rule IDs: `// INV-USR-001`
-- **Ledger** links to tests and code files
-- **PRs** titled with requirement IDs
-
-## License
-
-MIT
-
-## Contributing
-
-This framework is battle-tested on 300k+ LOC projects. Contributions welcome — please follow the framework's own principles when contributing!
+License: MIT.
