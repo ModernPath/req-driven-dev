@@ -73,10 +73,17 @@ Recommended status vocabulary:
 | `READY` | sourced criteria are ready for implementation entry |
 | `IN_PROGRESS` | one or both evidence loops are underway |
 | `IN_REVIEW` | lower verification and upper validation are complete; approval or delivery remains |
+| `PENDING_VERIFICATION` | derived from shipped code: described and accepted as accurate, but not yet proven by a test |
 | `DONE` | evidence, approval, source delivery, and reconciliation are complete |
 | `BLOCKED` | cannot proceed; blocker or gate is linked |
 | `DEFERRED` | consciously postponed; reason and tracking target are recorded |
 | `OBSOLETE` | superseded; replacement source is linked |
+
+`PENDING_VERIFICATION` belongs only to rows reverse-engineered from code that
+already ships. Work this process built red-first reaches `IN_REVIEW` instead,
+because its evidence existed before its implementation. Keeping the two apart is
+what lets a human accept a derived backlog as an accurate description without
+that acceptance claiming the behavior is tested.
 
 ### Epic record
 
