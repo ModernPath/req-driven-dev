@@ -85,6 +85,11 @@ because its evidence existed before its implementation. Keeping the two apart is
 what lets a human accept a derived backlog as an accurate description without
 that acceptance claiming the behavior is tested.
 
+Direct verification moves a derived system requirement to `LOWER_VERIFIED`, or
+to a consuming repository's mapped `IN_REVIEW` state when it uses one combined
+work-status column. Test evidence never moves it directly to `DONE`; approval,
+authoritative-source delivery, and state reconciliation remain separate gates.
+
 ### Epic record
 
 The epic owns detailed internal completion: `UR`, `SCN`, `SR`, `TASK`, spec

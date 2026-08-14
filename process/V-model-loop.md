@@ -293,7 +293,11 @@ or state reconciliation.
 
 - run the focused test, then proportional regression/architecture/contract
   gates;
+- inspect the exact assertions clause by clause; every behavioral clause needs
+  a named assertion that would fail if that clause regressed;
 - link test result, code, command, branch/SHA, and task/SR;
+- identify tests by stable path and test name; treat line numbers only as
+  optional navigation hints;
 - move TASK/SR to `LOWER_VERIFIED` only when all linked lower work passes.
 
 ### 6. Upper validate
@@ -426,6 +430,8 @@ A task/SR is `LOWER_VERIFIED` only when:
 
 - source and trace links exist;
 - the expected lower test failed first for the expected reason;
+- every behavioral clause maps to a named assertion that would fail on
+  regression;
 - the implementation is linked;
 - focused and required regression gates pass;
 - evidence is current for the code revision.
