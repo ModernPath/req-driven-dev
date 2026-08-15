@@ -26,6 +26,28 @@ SPEC-DRAFT — «scope of the specs set»
 - **Models/events:** «models/events + sources»
 - **Contracts:** «schemas/interfaces + sources»
 
+## Technical reconnaissance
+
+- **Artifact:** `specs/technical-reconnaissance.md`
+- **Inspected revision:** «repository + branch/SHA»
+- **Context pack:** «optional generated locator/report; verify against sources»
+- **Affected surface:** «entry points/callers/writers/readers + CODE: sources»
+- **Control/data-flow impact:** «trigger → changed hops → persistence/side effects → output»
+- **Patterns to reuse:** «implementation/test patterns + CODE:/TEST: sources»
+- **Contracts/data/compatibility:** «boundaries and constraints + sources»
+- **Risks and failure modes:** «applicable risks + sources»
+- **Freshness:** CURRENT | STALE — «reason/revision»
+
+## Cold technical review
+
+- **Review context:** «separate reviewer/session»
+- **Reviewed revision:** «spec + repository revision»
+- **Verdict:** PENDING | CHANGES_REQUIRED | PASS
+
+| Finding | Severity | Statement/source | Disposition | Owner/evidence |
+|---|---|---|---|---|
+| CTR-«AREA»-«NNN» | material/non-material | «finding + DOC:/CODE:/TEST:» | OPEN/RESOLVED/DEFERRED/REJECTED | «owner + evidence» |
+
 ## Decisions and open questions
 
 | ID | Kind | Statement | Source/trigger | Consequence/status |
@@ -46,9 +68,9 @@ SPEC-DRAFT — «scope of the specs set»
 
 ## Tasks
 
-| TASK | SR/SCN | Scope | Lower RED | Passing evidence | Code | Status |
-|---|---|---|---|---|---|---|
-| TASK-«AREA»-«NNN» | SR-«AREA»-«NNN» / SCN-«AREA»-«NNN» | «vertical slice» | — | — | — | PROPOSED |
+| TASK | SR/SCN | Scope | Technical context | Lower RED | Passing evidence | Code | Status |
+|---|---|---|---|---|---|---|---|
+| TASK-«AREA»-«NNN» | SR-«AREA»-«NNN» / SCN-«AREA»-«NNN» | «vertical slice» | «recon section/task link» | — | — | — | PROPOSED |
 
 ## Evidence map
 
@@ -60,7 +82,7 @@ SPEC-DRAFT — «scope of the specs set»
 
 | Gate | Approver | Role | Source | Decision | Conditions |
 |---|---|---|---|---|---|
-| SPEC-APPROVE-EPIC-«AREA»-«NNN» | — | — | — | pending | — |
+| SPEC-APPROVE-EPIC-«AREA»-«NNN» | — | — | — | pending | «cold technical review PASS required» |
 
 ## Completion approval
 

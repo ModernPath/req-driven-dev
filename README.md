@@ -10,8 +10,10 @@ human intent
   -> user requirement
   -> epic + acceptance scenario
   -> system requirement + thin task
+  -> technical reconnaissance + cold review
   -> failing tests
   -> implementation
+  -> requirement-scoped cleanup
   -> passing lower and upper evidence
   -> human approval
   -> delivered, synchronized state
@@ -36,6 +38,10 @@ answers, evidence runs, sessions, and events.
 
 - One trace: `UR -> EPIC -> SCN -> SR -> TASK -> TEST -> CODE`.
 - Both arms are red-first: BDD/E2E above, focused verification below.
+- Sourced technical reconnaissance enriches task context before implementation,
+  and a cold technical review resolves material findings before approval.
+- Boy-scout cleanup is behavior-preserving, limited to the current requirement,
+  and followed by final evidence runs.
 - Humans own product decisions and specification/completion gates.
 - Repository ledgers, epics, and the work-list are the working process record;
   Mission Control is their synchronized operational projection.
@@ -75,7 +81,7 @@ Do not keep live product epics or work state in this process package.
 | `CLAUDE.md` | root compatibility entry required for Claude discovery |
 | `process/` | lifecycle, state contract, and execution prompts |
 | `skills/` | reusable, tool-neutral procedures for specialized process passes |
-| `templates/work/` | backlog, requirement, epic, task, work-list, and progress templates |
+| `templates/work/` | backlog, requirement, epic, technical-reconnaissance, task, work-list, and progress templates |
 
 ## Process maintenance
 

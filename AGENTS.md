@@ -66,26 +66,45 @@ Before planning, changing, reviewing, or delivering product work:
    the project provides them.
 10. Prefer thin vertical slices and the smallest implementation that makes the
     specified failing evidence pass.
+11. Technical reconnaissance is sourced at a named revision and enriches every
+    task with the affected surface, control/data-flow impact, reuse targets,
+    dependencies, risks, test path, gates, and explicit change boundary.
+    Generated context helps navigate; it does not replace verified sources.
+12. A cold technical review runs from a separate context before human
+    specification approval. Material findings open or deferred in scope block
+    implementation entry; the review cannot grant human approval.
+13. Boy-scout cleanup is behavior-preserving and tightly scoped to the current
+    requirement, touched code, and directly adjacent code. Broader debt becomes
+    a discovery, and final evidence runs after cleanup.
 
 ## Working loop
 
 1. **Orient** — inspect repository and process state according to
    `process/state-tracking.md`; select the next eligible trace.
-2. **Specify** — derive sourced URs and SCNs, then testable SRs and thin tasks.
-3. **Approve specification** — present a decision brief and record the human
+2. **Specify and perform technical reconnaissance** — derive sourced URs and
+   SCNs, then testable SRs and thin tasks; inspect the repository at a named
+   revision and enrich each task with its relevant technical context.
+3. **Cold technical review** — audit the trace, technical surface, failure
+   behavior, feasibility, task boundaries, and test strategy from a separate
+   context; resolve material findings.
+4. **Approve specification** — present a decision brief and record the human
    gate before epic-path RED tests.
-4. **Upper RED** — observe the acceptance/user-flow test fail for the expected
+5. **Upper RED** — observe the acceptance/user-flow test fail for the expected
    reason.
-5. **Lower RED/GREEN** — write the focused failing test, implement the smallest
-   slice, and pass proportional regression gates.
-6. **Verify and validate** — link lower and upper evidence to the exact trace
+6. **Lower RED/GREEN** — write the focused failing test and implement the
+   smallest slice.
+7. **Boy-scout cleanup** — after GREEN, improve only touched or directly
+   adjacent code within the requirement without changing behavior, contracts,
+   or architecture; a no-op is valid.
+8. **Verify and validate** — rerun proportional gates on the final cleanup diff
+   and link lower and upper evidence to the exact trace
    and revision. UI work also needs a live-browser run and inspected screenshot.
-7. **Review** — audit criteria, evidence, gaps, and deferrals; record the real
+9. **Review** — audit criteria, evidence, gaps, and deferrals; record the real
    human completion decision.
-8. **Deliver and reconcile** — land code in its source repository and reconcile
+10. **Deliver and reconcile** — land code in its source repository and reconcile
    every working record and projection according to
    `process/state-tracking.md`.
-9. **Continue** — capture discoveries and take the next incomplete trace.
+11. **Continue** — capture discoveries and take the next incomplete trace.
 
 ## Human gates
 
