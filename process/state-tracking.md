@@ -72,7 +72,7 @@ Recommended status vocabulary:
 | `PROPOSED` | identified but not ready |
 | `READY` | sourced criteria are ready for implementation entry |
 | `IN_PROGRESS` | one or both evidence loops are underway |
-| `IN_REVIEW` | lower verification and upper validation are complete; approval or delivery remains |
+| `IN_REVIEW` | lower verification is complete, and upper validation is complete or the row owes none; approval or delivery remains |
 | `PENDING_VERIFICATION` | derived from shipped code: described and accepted as accurate, but not yet proven by a test |
 | `DONE` | evidence, approval, source delivery, and reconciliation are complete |
 | `BLOCKED` | cannot proceed; blocker or gate is linked |
@@ -85,9 +85,21 @@ because its evidence existed before its implementation. Keeping the two apart is
 what lets a human accept a derived backlog as an accurate description without
 that acceptance claiming the behavior is tested.
 
-Direct verification moves a derived system requirement to `LOWER_VERIFIED`, or
-to a consuming repository's mapped `IN_REVIEW` state when it uses one combined
-work-status column. Test evidence never moves it directly to `DONE`; approval,
+Direct verification moves a derived system requirement to `LOWER_VERIFIED`.
+
+A ledger with one combined work-status column may record that as `IN_REVIEW`
+**only when the row carries no upper-loop obligation** — that is, no scenario
+exists or is owed for it, so upper validation is not outstanding but absent. The
+row states that fact; it is not inferred from the ledger's shape. A derived row
+that does own a scenario stays `IN_PROGRESS` until upper validation, exactly like
+built work.
+
+The distinction matters because the column count is a property of the ledger and
+the obligation is a property of the requirement. Mapping on the former lets a
+schema decide what "reviewed" means, which is how `IN_REVIEW` comes to describe
+two different amounts of evidence in one corpus.
+
+Test evidence never moves a row directly to `DONE`; approval,
 authoritative-source delivery, and state reconciliation remain separate gates.
 
 ### Epic record

@@ -17,15 +17,35 @@ repository. The installed process owns status meanings and completion.
 This skill verifies system behavior. It does not grant human approval or prove
 delivery.
 
-- Move a verified task or system requirement to `LOWER_VERIFIED`, or to the
-  consuming repository's mapped `IN_REVIEW` state when it uses one combined
-  work-status column.
+- Move a verified task or system requirement to `LOWER_VERIFIED`. A ledger with
+  one combined work-status column may record that as `IN_REVIEW` **only when the
+  row owes no upper-loop obligation** — no scenario exists or is owed for it — and
+  the row says so. If a scenario is owed, the row stays `IN_PROGRESS` until upper
+  validation, exactly like built work. The column count is a property of the
+  ledger; the obligation is a property of the requirement, and only the second one
+  may decide what "reviewed" means.
 - Never move an item to `DONE` from test evidence alone. `DONE` also requires
   the binding approval, authoritative-source delivery, and reconciliation
   conditions.
 - If the implementation contradicts the row, record the discovery and route a
   separate red-first change. Do not silently change behavior during a
   verification pass.
+
+## Enter through the same gate as any other change
+
+A `PENDING_VERIFICATION` row is a description someone accepted. It is not an
+entry permit, and this skill adds tests — which is implementation.
+
+Before changing any test, satisfy one of:
+
+- **Epic path** — the owning epic is `SPEC-APPROVED`, and this verification is
+  within its approved scope; or
+- **Fast lane** — the row is visible in the work-list with sharpened criteria,
+  and the repository's fast-lane conditions hold.
+
+If neither holds, stop and route the entry first. Verification that arrives
+outside the work-list is invisible to everyone planning against it, and a test
+written before the gate cannot be traced to an approved intent.
 
 ## Establish the evidence bar
 
@@ -36,17 +56,21 @@ For each row, require all of the following:
 3. Name an assertion that would fail if each clause regressed.
 4. Confirm the test exercises the real subject rather than a mock that returns
    the expected answer.
-5. Open and read the exact test and its assertions.
-6. Run the exact test and confirm from verbose output or runner enumeration
+5. Confirm the material inputs can **reach** that subject in production — that
+   the caller, parser, contract or serializer actually produces the shape the
+   test passes in. A real subject invoked with a shape no production path can
+   construct verifies a function, not a behavior.
+6. Open and read the exact test and its assertions.
+7. Run the exact test and confirm from verbose output or runner enumeration
    that it executed.
-7. Observe the expected failure before the passing result. For already-shipped
+8. Observe the expected failure before the passing result. For already-shipped
    behavior, use a safe local mutation or equivalent targeted failure, restore
    it immediately, and inspect the diff before continuing.
-8. Run proportional regression gates and record evidence against the current
+9. Run proportional regression gates and record evidence against the current
    revision.
-9. Cite evidence by stable test path and name, for example
-   `TEST:path/to/file:TestName/Subtest`, plus the observed `RUN:` command and
-   result. Treat line numbers as optional, unstable navigation hints.
+10. Cite evidence by stable test path and name, for example
+    `TEST:path/to/file:TestName/Subtest`, plus the observed `RUN:` command and
+    result. Treat line numbers as optional, unstable navigation hints.
 
 A green suite is not evidence for every clause in a sentence. Underline every
 verb and every "and"; a clause without a corresponding failure-producing
@@ -76,6 +100,10 @@ assertion remains unverified.
   and inspect what collaborators received before blaming the implementation.
 - **The test mocks the subject.** A stubbed service can verify the fixture while
   bypassing the behavior named by the row. Leave the row unverified.
+- **The subject is real and the input is not.** A hand-built struct, a
+  pre-decoded payload, or a field combination the parser cannot emit tests a
+  function the production path never calls that way. Trace one material input
+  back to its real producer; if nothing constructs it, the clause is unverified.
 - **An assertion is satisfied by surrounding UI or fixture data.** Ask what
   production regression would make the assertion fail. If none would, replace
   it.

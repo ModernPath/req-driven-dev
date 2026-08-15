@@ -312,8 +312,10 @@ or state reconciliation.
 
 - audit every criterion against direct evidence;
 - present the brief, visible behavior, risks, gaps, deferrals, and test results;
-- set requirement/epic `IN_REVIEW` only after lower verification and upper
-  validation are complete;
+- set requirement/epic `IN_REVIEW` only after lower verification is complete and
+  upper validation is complete or the row demonstrably owes none — a derived row
+  with no scenario is the only routine case, and it records that rather than
+  inferring it (see `state-tracking.md`);
 - record the human completion decision with actual actor and scope.
 
 ### 8. Deliver and reconcile
@@ -382,7 +384,7 @@ Top-level work status:
 | `PROPOSED` | identified, not ready |
 | `READY` | sourced acceptance and entry gate complete |
 | `IN_PROGRESS` | either evidence loop is underway |
-| `IN_REVIEW` | lower verified + upper validated; completion approval/delivery pending |
+| `IN_REVIEW` | lower verified, and upper validated or no scenario owed; completion approval/delivery pending |
 | `DONE` | evidence, human approval, source delivery, and reconciliation complete |
 | `BLOCKED` | cannot proceed; blocker/gate linked |
 | `DEFERRED` | explicitly postponed; reason, owner, and target recorded |
