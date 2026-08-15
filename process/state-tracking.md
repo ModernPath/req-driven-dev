@@ -15,7 +15,7 @@ history, and activity, but it does not replace the versioned working records.
 |---|---|
 | Product intent, domain rules, architecture, contracts | Versioned product documents and schemas |
 | Requirement backlog and work status | Requirement ledger, normally `tasks/<CTX>-REQUIREMENTS.md` |
-| Epic trace, scenarios, system requirements, tasks, decisions, evidence map, approval | Epic record under `epics/` |
+| Epic trace, scenarios, system requirements, tasks, technical reconnaissance, cold-review findings, decisions, evidence map, approval | Epic record under `epics/` |
 | Active queue and cross-epic rollup | `WORKLIST.md` |
 | Unrouted discoveries | `BACKLOG.md` |
 | Generated aggregate counts | `PROGRESS.md` or the consuming project's equivalent; regenerate rather than hand-author |
@@ -88,8 +88,9 @@ that acceptance claiming the behavior is tested.
 ### Epic record
 
 The epic owns detailed internal completion: `UR`, `SCN`, `SR`, `TASK`, spec
-status, decisions, gaps, evidence, and approval. Its upper and lower loop
-statuses are separate from the requirement work status.
+status, technical reconnaissance, cold-review findings and dispositions,
+decisions, gaps, evidence, and approval. Its upper and lower loop statuses are
+separate from the requirement work status.
 
 Use these axes independently:
 
@@ -298,6 +299,10 @@ Server evidence is pinned to a branch and commit when available and derives
 `passing`, `failing`, or `stale` state per target. It supplements rather than
 replaces the repository evidence map. A broad suite proves only the trace ids
 it actually exercises, and evidence becomes stale when traced code changes.
+Technical reconnaissance records its inspected source revision; material drift
+stales the reconnaissance and its cold review until the affected surface and
+findings are refreshed. Boy-scout cleanup changes precede final evidence, so
+only post-cleanup runs support `LOWER_VERIFIED` or `UPPER_VALIDATED`.
 
 ## Release state
 
