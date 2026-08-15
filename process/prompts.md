@@ -38,10 +38,12 @@ Derive or update:
 - stories/journeys and Given/When/Then SCNs;
 - testable SRs and the first thin TASKs;
 - sourced technical reconnaissance at a named repository revision, covering the
-  affected surface, boundaries, existing patterns, test infrastructure,
-  applicable failure modes, risks, and unknowns;
-- enriched TASK context with expected files/symbols, callers, reuse targets,
-  dependencies, test paths, gates, and explicit change boundaries;
+  affected surface, end-to-end control/data path, changed flow hops, boundaries,
+  existing patterns, test infrastructure, applicable failure modes, risks, and
+  unknowns;
+- enriched TASK context with expected files/symbols, callers, owned flow
+  segment and impact, reuse targets, dependencies, test paths, gates, and
+  explicit change boundaries;
 - upper-RED and lower-RED strategy;
 - decisions, blockers, conflicts, gaps, and deferrals.
 
@@ -65,6 +67,8 @@ Do not edit implementation or grant approval. Audit:
 - trace and requirement-scope alignment;
 - completeness of files, symbols, entry points, callers, writers, readers,
   contracts, data flows, and compatibility concerns;
+- completeness of the path from trigger through calls, transformations,
+  persistence/integrations, side effects, failure propagation, and output;
 - reuse of established implementation and test patterns;
 - failure behavior, feasibility, dependency ordering, and task boundaries;
 - testability, expected RED reasons, and adequacy of proportional gates;

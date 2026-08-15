@@ -32,6 +32,7 @@ SPEC-DRAFT — «scope of the specs set»
 - **Inspected revision:** «repository + branch/SHA»
 - **Context pack:** «optional generated locator/report; verify against sources»
 - **Affected surface:** «entry points/callers/writers/readers + CODE: sources»
+- **Control/data-flow impact:** «trigger → changed hops → persistence/side effects → output»
 - **Patterns to reuse:** «implementation/test patterns + CODE:/TEST: sources»
 - **Contracts/data/compatibility:** «boundaries and constraints + sources»
 - **Risks and failure modes:** «applicable risks + sources»

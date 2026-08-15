@@ -18,6 +18,18 @@
 |---|---|---|---|
 | entry point/caller/writer/reader | «path:symbol» | «relationship to trace» | CODE:/DOC:/TEST: |
 
+## Control and data flow impacts
+
+Trace only the path relevant to this requirement. Show how control and data
+move today and identify every hop the proposed work adds, removes, or changes.
+
+- **Current flow:** «trigger → calls/queues → transformations → stores/integrations → side effects → observable output»
+- **Intended flow:** «trigger → calls/queues → transformations → stores/integrations → side effects → observable output»
+
+| Hop | Trigger/from | Handler/to | Data or state transition | Side effects/failure propagation | Impact | Source |
+|---|---|---|---|---|---|---|
+| «N» | «source» | «destination» | «input → output/state» | «effect/error path» | unchanged/added/removed/changed | CODE:/DOC:/TEST: |
+
 ## Contracts, data, and compatibility
 
 | Boundary | Current contract/flow | Constraint or compatibility concern | Source |
@@ -48,9 +60,9 @@ inventing work.
 
 ## Task context enrichment
 
-| TASK | Expected files/symbols | Callers/boundaries | Reuse target | Dependencies/order | Risks/tests/gates | Change boundary |
-|---|---|---|---|---|---|---|
-| TASK-«AREA»-«NNN» | «surface» | «paths» | «pattern» | «sequence» | «relevant proof» | «in/out» |
+| TASK | Expected files/symbols | Callers/boundaries | Flow segment/impact | Reuse target | Dependencies/order | Risks/tests/gates | Change boundary |
+|---|---|---|---|---|---|---|---|
+| TASK-«AREA»-«NNN» | «surface» | «paths» | «owned hops/change» | «pattern» | «sequence» | «relevant proof» | «in/out» |
 
 ## Unknowns and discoveries
 

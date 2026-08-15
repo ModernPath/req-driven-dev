@@ -65,9 +65,9 @@ Before planning, changing, reviewing, or delivering product work:
 10. Prefer thin vertical slices and the smallest implementation that makes the
     specified failing evidence pass.
 11. Technical reconnaissance is sourced at a named revision and enriches every
-    task with the affected surface, reuse targets, dependencies, risks, test
-    path, gates, and explicit change boundary. Generated context helps navigate;
-    it does not replace verified sources.
+    task with the affected surface, control/data-flow impact, reuse targets,
+    dependencies, risks, test path, gates, and explicit change boundary.
+    Generated context helps navigate; it does not replace verified sources.
 12. A cold technical review runs from a separate context before human
     specification approval. Material findings open or deferred in scope block
     implementation entry; the review cannot grant human approval.

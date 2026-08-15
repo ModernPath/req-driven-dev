@@ -20,6 +20,7 @@
 - **Inspected revision:** «repository + branch/SHA»
 - **Expected files/symbols:** «specific implementation surface»
 - **Entry points/callers:** «directly affected paths»
+- **Control/data-flow impact:** «owned segment, upstream trigger, downstream effects»
 - **Contracts/data:** «relevant boundary and compatibility constraints»
 - **Pattern/reuse target:** «existing code/test pattern»
 - **Dependencies/order:** «preconditions and sequence»

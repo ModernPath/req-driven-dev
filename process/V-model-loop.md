@@ -215,6 +215,9 @@ task. The reconnaissance must identify:
 
 - affected repositories, files, symbols, entry points, callers, writers, and
   readers;
+- the relevant control and data flow from trigger through calls, transformations,
+  persistence or integrations, side effects, failure propagation, and observable
+  output, including which hops change;
 - current boundary contracts, schemas, data flows, and compatibility concerns;
 - existing implementation and test patterns that should be reused;
 - relevant test infrastructure and proportional project gates;
@@ -229,9 +232,10 @@ but the reconnaissance cites and verifies the actual `DOC:`, `CODE:`, and
 evidence.
 
 Use the reconnaissance to enrich every initial task with its expected files and
-symbols, relevant callers and boundaries, reuse target, dependencies, risks,
-test path, gates, and explicit change boundary. Recheck that context when the
-source revision changes or implementation discovers a material omission.
+symbols, relevant callers and boundaries, owned control-flow segment and impact,
+reuse target, dependencies, risks, test path, gates, and explicit change
+boundary. Recheck that context when the source revision changes or
+implementation discovers a material omission.
 
 After reconnaissance and task enrichment, run a cold technical review in a
 separate context from specification authoring. The reviewer receives the
@@ -241,6 +245,7 @@ reasoning. The review audits:
 
 - trace and scope alignment;
 - completeness of the affected technical surface;
+- completeness of the end-to-end control/data path and every changed hop;
 - contract, data, compatibility, and failure behavior;
 - feasibility, dependency ordering, and task boundaries;
 - testability, RED strategy, and adequacy of proposed gates;
@@ -349,7 +354,7 @@ or state reconciliation.
 - inspect the actual product, code, contract, data, and test surfaces at a
   named revision;
 - record the affected surface, current patterns, test infrastructure, risks,
-  failure modes, and unknowns with direct sources;
+  control/data-flow impact, failure modes, and unknowns with direct sources;
 - generate or refresh a context pack when useful, then verify its references
   against the repository;
 - enrich each task with the technical context needed to execute its thin slice;
