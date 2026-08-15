@@ -293,7 +293,11 @@ or state reconciliation.
 
 - run the focused test, then proportional regression/architecture/contract
   gates;
+- inspect the exact assertions clause by clause; every behavioral clause needs
+  a named assertion that would fail if that clause regressed;
 - link test result, code, command, branch/SHA, and task/SR;
+- identify tests by stable path and test name; treat line numbers only as
+  optional navigation hints;
 - move TASK/SR to `LOWER_VERIFIED` only when all linked lower work passes.
 
 ### 6. Upper validate
@@ -308,8 +312,10 @@ or state reconciliation.
 
 - audit every criterion against direct evidence;
 - present the brief, visible behavior, risks, gaps, deferrals, and test results;
-- set requirement/epic `IN_REVIEW` only after lower verification and upper
-  validation are complete;
+- set requirement/epic `IN_REVIEW` only after lower verification is complete and
+  upper validation is complete or the row demonstrably owes none — a derived row
+  with no scenario is the only routine case, and it records that rather than
+  inferring it (see `state-tracking.md`);
 - record the human completion decision with actual actor and scope.
 
 ### 8. Deliver and reconcile
@@ -378,7 +384,7 @@ Top-level work status:
 | `PROPOSED` | identified, not ready |
 | `READY` | sourced acceptance and entry gate complete |
 | `IN_PROGRESS` | either evidence loop is underway |
-| `IN_REVIEW` | lower verified + upper validated; completion approval/delivery pending |
+| `IN_REVIEW` | lower verified, and upper validated or no scenario owed; completion approval/delivery pending |
 | `DONE` | evidence, human approval, source delivery, and reconciliation complete |
 | `BLOCKED` | cannot proceed; blocker/gate linked |
 | `DEFERRED` | explicitly postponed; reason, owner, and target recorded |
@@ -426,6 +432,8 @@ A task/SR is `LOWER_VERIFIED` only when:
 
 - source and trace links exist;
 - the expected lower test failed first for the expected reason;
+- every behavioral clause maps to a named assertion that would fail on
+  regression;
 - the implementation is linked;
 - focused and required regression gates pass;
 - evidence is current for the code revision.
