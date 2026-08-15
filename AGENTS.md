@@ -33,7 +33,9 @@ Before planning, changing, reviewing, or delivering product work:
 1. read the consuming project's root `AGENTS.md` for project-specific rules;
 2. read this file, `process/V-model-loop.md`, and
    `process/state-tracking.md`;
-3. read the relevant product sources, requirement ledger, epic/specs, and
+3. when verifying reverse-engineered `PENDING_VERIFICATION` rows, read
+   `skills/rdd-verify/SKILL.md`;
+4. read the relevant product sources, requirement ledger, epic/specs, and
    active work-list row.
 
 ## Non-negotiable rules

@@ -1,0 +1,4 @@
+interface:
+  display_name: "RDD Verify"
+  short_description: "Verify derived requirements clause by clause"
+  default_prompt: "Use $rdd-verify to turn derived requirements into current, direct verification evidence."
