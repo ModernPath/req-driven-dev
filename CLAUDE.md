@@ -1,8 +1,6 @@
-# Claude compatibility pointer
+# CLAUDE.md
 
-The canonical instructions for all agents are in [`AGENTS.md`](AGENTS.md).
+**All guidance for this subtree is in [AGENTS.md](AGENTS.md).**
 
-Read `AGENTS.md` in full before planning, changing, reviewing, or delivering
-work. The subordinate process documents are organized under `process/`.
-
-This file contains no independent or overriding instructions.
+This subtree is process material (the V-model loop definition), not runtime
+code — read its AGENTS.md before editing any loop/interview documents.
