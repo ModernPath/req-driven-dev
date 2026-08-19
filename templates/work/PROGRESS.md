@@ -6,7 +6,7 @@ see `.modernpath/rdd/process/state-tracking.md`.
 Plan requirements with Prompt 1 (`.modernpath/rdd/process/prompts.md`); build
 them with Prompt 3.
 
-| Context | VALIDATED | IN_REVIEW | IN_PROGRESS | READY | PROPOSED | PENDING_VERIFICATION | DERIVED | DEFERRED | BLOCKED | Total |
+| Context | DONE | IN_REVIEW | IN_PROGRESS | TODO | PROPOSED | PENDING_VERIFICATION | DERIVED | DEFERRED | BLOCKED | Total |
 |---|---|---|---|---|---|---|---|---|---|---|
 | *No contexts seeded yet* | — | — | — | — | — | — | — | — | — | — |
 | **All** | **0** | **0** | **0** | **0** | **0** | **0** | **0** | **0** | **0** | **0** |

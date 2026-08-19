@@ -29,7 +29,7 @@ Record every triage pass here with the date and what was routed where.
 - Item description → docs/open-questions.md OQ-NNN
 - Item description → DROPPED (reason)
 
-**Promoted PROPOSED → READY:**
+**Promoted PROPOSED → TODO:**
 - REQ-XXX-NNN (entry packet fulfilled + attributable human gate/source)
 
 **Human-confirmed DERIVED:**

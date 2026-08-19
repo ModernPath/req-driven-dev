@@ -16,9 +16,9 @@ may be prepared earlier, but it is not a human move until it is eligible.
 implementation work rows until confirmation and normal planning make them
 authoritative.
 
-| Entity scope | Transition | Fulfilled trace/evidence | Gate | Human move |
+| Entity scope | Transition | Prerequisite trace gate (`PASS`) | Human gate (`OPEN`) | Human move |
 |---|---|---|---|---|
-| - | DERIVED→PROPOSED / PROPOSED→READY / IN_REVIEW→VALIDATED / IN_REVIEW→DONE | - | - | - |
+| - | DERIVED→PROPOSED / PROPOSED→TODO / IN_REVIEW→DONE | - | - | - |
 
 ## Epic Rollup
 
@@ -28,7 +28,7 @@ authoritative.
 
 ## Work Rows
 
-| SR / slice | Epic | Epic record | User requirement / acceptance content | Scope / implementation context | Status | Entry approval | Lower test evidence | Upper BDD/E2E evidence | Code/delivery reference | Completion approval | Notes |
+| SR / slice | Epic | Epic record | User requirement / acceptance content | Scope / implementation context | Status | Entry approval | Code/delivery reference | Lower test case/result | Upper test case/result | Completion approval | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | - | - | - | - | - | - | - | - | - | - | - | - |
 

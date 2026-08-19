@@ -18,7 +18,7 @@ human intent
   -> passing lower and upper evidence
   -> delivered, synchronized trace
   -> human completion acceptance
-  -> validated requirements + done epic
+  -> done requirements + epic
 ```
 
 Product repositories hold the versioned working records, specifications, code,
@@ -38,7 +38,8 @@ answers, evidence runs, sessions, and events.
 
 ## Core invariants
 
-- One trace: `EPIC -> UR -> SR -> TEST -> CODE`; acceptance scenarios
+- One trace: `EPIC -> UR -> SR -> CODE -> TEST_CASE -> TEST_RESULT`;
+  acceptance scenarios
   are content within the UR.
 - Inferred requirements stay `DERIVED`; their links remain candidate context
   and all downstream work waits for attributable human confirmation.

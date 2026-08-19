@@ -47,7 +47,7 @@ SPEC-DRAFT — «scope of the specs set»
 
 - **Review context:** «separate reviewer/session»
 - **Reviewed revision:** «spec + repository revision»
-- **Verdict:** PENDING | CHANGES_REQUIRED | PASS
+- **Verdict:** PENDING | FAIL | PASS
 
 | Finding | Severity | Statement/source | Disposition | Owner/evidence |
 |---|---|---|---|---|
@@ -61,7 +61,7 @@ SPEC-DRAFT — «scope of the specs set»
 
 ## UR journeys and acceptance content
 
-| UR / scenario heading | Journey | Given/When/Then | Upper RED | Passing evidence | Code |
+| UR / scenario heading | Journey | Given/When/Then | Code | Test case | RED/GREEN test results |
 |---|---|---|---|---|---|
 | UR-«AREA»-«NNN» / «heading» | «journey» | «G/W/T or link» | — | — | — |
 
@@ -73,35 +73,52 @@ SPEC-DRAFT — «scope of the specs set»
 
 ## SR implementation and evidence
 
-| SR | Recon/revision | Technical context | Change boundary | Lower RED | Passing evidence/gates | Code |
+| SR | Recon/revision | Technical context | Change boundary | Code | Test case | RED/GREEN test results/gates |
 |---|---|---|---|---|---|---|
 | SR-«AREA»-«NNN» | «artifact + SHA» | «surface/flow/reuse/dependencies/risks» | «in/out» | — | — | — |
 
 ## Evidence map
 
-| Trace | Failing evidence | Passing evidence | Revision/report | Verdict |
-|---|---|---|---|---|
-| UR acceptance/SR | — | — | — | incomplete |
+| Trace | Code | Test case | Failing result | Passing result | Validity/revision |
+|---|---|---|---|---|---|
+| EPIC → UR → SR → CODE → TEST_CASE → TEST_RESULT | — | — | — | — | INCOMPLETE |
 
-## Entry approval — `PROPOSED -> READY`
+## Loop trace gates
+
+| Gate | Transition/waypoint | Exact scope | Input fingerprint | Evidence | State/evaluator |
+|---|---|---|---|---|---|
+| CHECK-START-«AREA»-«NNN» | TODO → IN_PROGRESS | «EPIC/UR/SR ids» | «revision + content hash» | «expected RED result» | PENDING |
+| CHECK-LOWER-«AREA»-«NNN» | LOWER_VERIFIED / SR IN_REVIEW | «SR ids» | «revision + content hash» | «CODE/TEST/RUN refs» | PENDING |
+| CHECK-UPPER-«AREA»-«NNN» | UPPER_VALIDATED / UR IN_REVIEW | «UR/scenario ids» | «revision + content hash» | «TEST/RUN refs» | PENDING |
+| CHECK-REVIEW-«AREA»-«NNN» | Epic IN_REVIEW | «EPIC/UR/SR ids» | «revision + content hash» | «passed lower/upper trace gates» | PENDING |
+
+## Entry approval — `PROPOSED -> TODO`
 
 Do not solicit this gate until the scoped epic/requirement trace, specification
 or fast-lane packet, reconnaissance, cold review, test strategy, and routed
 decisions are fulfilled.
 
-| Gate | Exact epic/requirement scope | Eligibility evidence | Approver | Role | Source | Decision/application revision |
-|---|---|---|---|---|---|---|
-| APPROVE-ENTRY-EPIC-«AREA»-«NNN» | «EPIC/UR/SR ids» | «fulfilled trace + review refs» | — | — | — | pending |
+| Trace gate | Exact epic/requirement scope | Input fingerprint | Evidence | State/evaluator |
+|---|---|---|---|---|
+| CHECK-ENTRY-EPIC-«AREA»-«NNN» | «EPIC/UR/SR ids» | «revision + content hash» | «fulfilled trace + review refs» | PENDING |
 
-## Completion approval — `IN_REVIEW -> VALIDATED/DONE`
+| Human gate | Prerequisite trace gate | State/application | Approver/role | Source | Decision/application revision |
+|---|---|---|---|---|---|
+| APPROVE-ENTRY-EPIC-«AREA»-«NNN» | CHECK-ENTRY-EPIC-«AREA»-«NNN» PASS | DRAFT / NOT_APPLICABLE | — | — | pending |
+
+## Completion approval — `IN_REVIEW -> DONE`
 
 Do not solicit this gate until the exact trace is delivered, its evidence is
 current at the delivered revision, all records/projections are reconciled, and
 the completion brief discloses gaps and deferrals.
 
-| Gate | Exact epic/requirement scope | Delivered trace/evidence | Approver | Role | Source | Decision/application revision |
-|---|---|---|---|---|---|---|
-| APPROVE-COMPLETION-EPIC-«AREA»-«NNN» | «EPIC/UR/SR ids» | «merge/SHA + evidence + reconciliation» | — | — | — | pending |
+| Trace gate | Exact epic/requirement scope | Input fingerprint | Delivered trace/evidence | State/evaluator |
+|---|---|---|---|---|
+| CHECK-COMPLETION-EPIC-«AREA»-«NNN» | «EPIC/UR/SR ids» | «delivered revision + content hash» | «CODE/TEST/RUN + reconciliation» | PENDING |
+
+| Human gate | Prerequisite trace gate | State/application | Approver/role | Source | Decision/application revision |
+|---|---|---|---|---|---|
+| APPROVE-COMPLETION-EPIC-«AREA»-«NNN» | CHECK-COMPLETION-EPIC-«AREA»-«NNN» PASS | DRAFT / NOT_APPLICABLE | — | — | pending |
 
 ## Blocked / deferred / discovered
 

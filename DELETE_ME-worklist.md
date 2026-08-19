@@ -1,13 +1,17 @@
 # DELETE ME — Combined process-review worklist
 
 ```text
-EPIC -> UR -> SR -> TEST -> CODE
+EPIC -> UR -> SR -> CODE -> TEST_CASE -> TEST_RESULT
 
-EPIC: PROPOSED -[HUMAN]-> READY -> IN_PROGRESS -> IN_REVIEW -[HUMAN]-> DONE
+EPIC: PROPOSED -[HUMAN]-> TODO -> IN_PROGRESS -> IN_REVIEW -[HUMAN]-> DONE
 
-UR:   DERIVED -[HUMAN]-> PROPOSED -[HUMAN]-> READY -> IN_PROGRESS -> IN_REVIEW -[HUMAN]-> VALIDATED
+UR:   DERIVED -[HUMAN]-> PROPOSED -[HUMAN]-> TODO -> IN_PROGRESS -> IN_REVIEW -[HUMAN]-> DONE
 
-SR:   DERIVED -[HUMAN]-> PROPOSED -[HUMAN]-> READY -> IN_PROGRESS -> IN_REVIEW -[HUMAN]-> VALIDATED
+SR:   DERIVED -[HUMAN]-> PROPOSED -[HUMAN]-> TODO -> IN_PROGRESS -> IN_REVIEW -[HUMAN]-> DONE
+
+TRACE GATE: PENDING -> PASS | FAIL; PASS | FAIL -> STALE -> PASS | FAIL
+
+HUMAN GATE: DRAFT -> OPEN -> ANSWERED -> CLOSED | DRAFT/OPEN/ANSWERED -> SUPERSEDED
 ```
 
 ## Item ownership
@@ -16,9 +20,10 @@ SR:   DERIVED -[HUMAN]-> PROPOSED -[HUMAN]-> READY -> IN_PROGRESS -> IN_REVIEW -
 |---|---|
 | EPIC | Capability goal, delivery scope and lifecycle, UR/SR membership, cross-cutting specifications and decisions, human gates, aggregate evidence, and completion record |
 | UR | Actor, context, user outcome, source, inline acceptance scenarios, requirement lifecycle, and upper-loop evidence |
-| SR | The smallest independently implementable and verifiable system behavior, source UR/scenario links, boundary and contracts, owner/release, technical reconnaissance, implementation context, change boundary, requirement lifecycle, lower-loop evidence, tests, and code links |
-| TEST | Stable test identity, the targeted UR scenario or SR clause, RED/GREEN result, and tested revision |
+| SR | The smallest independently implementable and verifiable system behavior, source UR/scenario links, boundary and contracts, owner/release, technical reconnaissance, implementation context, change boundary, requirement lifecycle, lower-loop evidence, test-case/result links, and code links |
 | CODE | Files, symbols, commits, and PRs that implement the SR |
+| TEST_CASE | Stable test identity and the targeted UR scenario or SR clause |
+| TEST_RESULT | Observed PASS/FAIL/SKIP outcome and RED/GREEN role, command/report, validity, and tested branch/revision |
 
 `TASK` has no distinct canonical ownership. Its former scope, context, test,
 evidence, and code fields belong to the SR. If a proposed SR needs multiple
@@ -30,11 +35,11 @@ independent implementation units, split it into multiple SRs.
 |---|---|
 | Product | `EPIC -> UR -> acceptance scenarios` |
 | System | `UR acceptance scenario -> SR` |
-| Delivery | `EPIC -> active/validated URs and SRs` |
-| Upper evidence | `UR acceptance scenario -> TEST -> result/revision` |
-| Lower evidence | `SR -> TEST -> result/revision` |
-| Implementation | `SR -> TEST -> CODE` |
-| Reverse trace | `CODE -> TEST -> SR -> UR -> EPIC` |
+| Delivery | `EPIC -> active/done URs and SRs` |
+| Implementation | `SR -> CODE` |
+| Upper evidence | `UR acceptance scenario -> TEST_CASE -> TEST_RESULT` |
+| Lower evidence | `SR -> CODE -> TEST_CASE -> TEST_RESULT` |
+| Reverse trace | `TEST_RESULT -> TEST_CASE -> CODE -> SR -> UR -> EPIC` |
 
 An SR has one owning epic and may support multiple UR scenario clauses within
 that epic. A test may cover multiple clauses only when every target and
@@ -60,19 +65,22 @@ the repository's permanent tracking system.
 | DM-03 | HIGH | RESOLVED | Epic is the trace root and fast-lane work retains the complete trace |
 | DM-04 | HIGH | RESOLVED | Strict human gates run only after their transition traces are fulfilled |
 | DM-05 | HIGH | RESOLVED | Epic owns delivery; scenarios are UR content; SR owns the executable slice |
-| DM-06 | MEDIUM | OPEN | Invalidated evidence has no defined status consequence |
-| DM-07 | MEDIUM | OPEN | Gate lifecycle and answer channel are underspecified |
+| DM-06 | MEDIUM | RESOLVED | Invalidated evidence has no defined status consequence |
+| DM-07 | MEDIUM | RESOLVED | Gate lifecycle and answer channel are underspecified |
 | DM-08 | MEDIUM | OPEN | The connected-workspace preflight is not an executable sequence |
 | DM-09 | MEDIUM | OPEN | Commit-at-every-waypoint conflicts with no-op waypoints |
 
-- Resolved in this repository: `DM-01`, `DM-02`, `DM-03`, `DM-04`, `DM-05`
-- Next unresolved item: `DM-06`
+- Resolved in this repository: `DM-01`, `DM-02`, `DM-03`, `DM-04`, `DM-05`,
+  `DM-06`, `DM-07`
+- Next unresolved item: `DM-08`
 - Resolution commits:
   - `d477bf5` (`Hold DERIVED requirements for human confirmation`) — DM-01,
     DM-02
   - the commit containing this worklist update — DM-03
   - the commit containing the DM-04 resolution — DM-04
   - the commit containing the DM-05 resolution — DM-05
+  - the commit containing the DM-06/DM-07 resolution and lifecycle/trace
+    vocabulary update — DM-06, DM-07
 
 ### External implementation follow-up
 
@@ -92,11 +100,18 @@ content must project from the owning SR. Those external implementations are
 not changed in this repository.
 
 The DM-04 contract additionally requires checks and projections to distinguish
-entry approval from completion acceptance, prevent `READY`, `VALIDATED`, or
-`DONE` without their scoped attributable decision, and withhold human action
+entry approval from completion acceptance, prevent `TODO` or `DONE` without
+their scoped attributable decision, and withhold human action
 until the corresponding transition facts are fulfilled. Those external
-implementations are not changed in this repository. The exact server gate
-states, answer channel, and repo-borne representation remain DM-07.
+implementations are not changed in this repository.
+
+The DM-06/DM-07 contract additionally requires full
+`CODE -> TEST_CASE -> TEST_RESULT` projection, trace-gate evaluation and
+fingerprints, human-gate `DRAFT/OPEN/ANSWERED/CLOSED/SUPERSEDED` projection,
+application state, hold release only after application, queue removal,
+evidence-validity states, and automatic status demotion. The current connected
+schema may need adapter or schema work to represent those fields. That
+implementation is outside this repository.
 
 ## DM-01 — Hold derived requirements before loop entry
 
@@ -140,10 +155,10 @@ states, answer channel, and repo-borne representation remain DM-07.
 - Decision: `USER:2026-08-19:Epic is the top-level item that holds UR; update
   the binding rule throughout the instructions and its loops`.
 - Resolution: the canonical trace is now
-  `EPIC -> UR -> SR -> TEST -> CODE`. Every full or fast-lane trace has
-  an owning epic. Acceptance scenarios are content within a UR, not separate
-  trace or lifecycle entities. The fast lane is a lightweight entry route
-  within that epic: it may skip preparing and approving a new full epic
+  `EPIC -> UR -> SR -> CODE -> TEST_CASE -> TEST_RESULT`. Every full or
+  fast-lane trace has an owning epic. Acceptance scenarios are content within a
+  UR, not separate trace or lifecycle entities. The fast lane is a lightweight
+  entry route within that epic: it may skip preparing and approving a new full epic
   specification set only when all fast-lane conditions hold, but it retains
   every trace level and both red-first evidence arms.
 - References: `AGENTS.md#Non-negotiable rules`, `README.md#Core invariants`,
@@ -168,29 +183,29 @@ states, answer channel, and repo-borne representation remain DM-07.
   `process/V-model-loop.md#Development loop`,
   `process/prompts.md#5. Deliver, reconcile, and review completion`.
 - Decision: `USER:2026-08-19:strict human gates are requirement
-  DERIVED-to-PROPOSED, epic/requirement PROPOSED-to-READY, requirement
-  IN_REVIEW-to-VALIDATED, and epic IN_REVIEW-to-DONE; do not request human
-  input until the traces for the transition are fulfilled`.
+  DERIVED-to-PROPOSED, epic/requirement PROPOSED-to-TODO, and
+  epic/requirement IN_REVIEW-to-DONE; do not request human input until the
+  traces for the transition are fulfilled`.
 - Resolution: a strict gate now contributes only the human decision after every
   non-human prerequisite for its target state is recorded. Evidence moves the
   epic and requirements to `IN_REVIEW`; they remain there through authoritative
   delivery, delivered-revision evidence, and state reconciliation. Only then is
   the completion brief solicited. An accepted scoped answer moves the named
-  requirements to `VALIDATED`, then their epic to `DONE`. Completion acceptance
+  requirements and their epic to `DONE`. Completion acceptance
   therefore accepts an already-delivered result and never authorizes delivery.
   Entry and derived-confirmation gates follow the same fulfilled-before-asking
   rule. One scoped answer may cover explicitly named entities, but each entity
   transition and `USER:` source is recorded.
 - Resolution boundary: this defines gate placement, eligibility, and transition
-  ordering. DM-07 still owns the server/repo gate state machine and answer
+  ordering. DM-07 defines the server/repo gate state machine and answer
   channel.
 - Resolution record: commit containing this resolution on `review/prs-5-9`.
 
 ## DM-05 — Define status vocabularies per entity
 
 - Status: `RESOLVED`
-- Finding: a UR permits `VALIDATED` but not `DONE`; the ledger permits `DONE`
-  but not `VALIDATED`; and the lifecycle assigns `IN_REVIEW` to an epic even
+- Finding: the former model let UR, SR, ledger, and epic lifecycle vocabularies
+  disagree about their final state, and assigned `IN_REVIEW` to an epic even
   though the projection model gives epics separate upper/lower axes and reserves
   initiative status for board state.
 - References: `process/V-model-loop.md#Trace hierarchy`,
@@ -205,20 +220,24 @@ states, answer channel, and repo-borne representation remain DM-07.
   content for a UR`.
 - Decision: `USER:2026-08-19:Task has no distinct purpose beyond collecting SR,
   test, and code; remove it and put its execution content on SR`.
+- Decision: `USER:2026-08-19:extend the trace from CODE through TEST_CASE and
+  TEST_RESULT; rename the entity entry state to TODO and the requirement final
+  state to DONE`.
 - Resolution: EPIC owns repository `delivery_status` through
-  `PROPOSED -> READY -> IN_PROGRESS -> IN_REVIEW -> DONE`; UR and SR share the
+  `PROPOSED -> TODO -> IN_PROGRESS -> IN_REVIEW -> DONE`; UR and SR share the
   requirement work lifecycle; acceptance scenarios are UR content with upper
   evidence but no independent status; and SR is the smallest independently
   implementable and verifiable slice. SR absorbs the former TASK scope,
   technical context, change boundary, lower RED, evidence, tests, and code
-  links. The canonical trace is `EPIC -> UR -> SR -> TEST -> CODE`. Epic
+  links. The canonical trace is
+  `EPIC -> UR -> SR -> CODE -> TEST_CASE -> TEST_RESULT`. Epic
   delivery status remains separate from `initiatives.status`, which is a board
   axis.
 - Resolution record: commit containing this resolution on `review/prs-5-9`.
 
 ## DM-06 — Define consequences of invalidated evidence
 
-- Status: `OPEN`
+- Status: `RESOLVED`
 - Finding: evidence on an unreachable revision becomes invalid, but trace
   staleness is not an automatic work-status transition and no explicit demotion
   or propagation rule is defined. A row can therefore retain a status that
@@ -226,15 +245,24 @@ states, answer channel, and repo-borne representation remain DM-07.
 - References: `AGENTS.md#Non-negotiable rules`,
   `process/state-tracking.md#ModernPath reference projection model`,
   `process/state-tracking.md#Evidence state`.
-- Decision needed: define which evidence and work statuses change after a
-  revert, abandoned branch, closed unmerged PR, or other reachability loss.
-- Resolution target: demotion, cascading effects, re-verification, and the
-  concrete inherited-evidence marker are explicit and enforceable.
-- Resolution record: _pending_
+- Decision: `USER:2026-08-19:non-human gates for independent AI in the V-loop
+  rely on checking the traces`.
+- Resolution: test result outcome (`PASS | FAIL | SKIP`) is separate from
+  validity (`CURRENT | STALE | INVALID | INHERITED_UNVERIFIED`). Only a
+  `CURRENT` result on the exact `CODE -> TEST_CASE -> TEST_RESULT` trace counts.
+  Invalidation stales and re-evaluates dependent trace gates, supersedes
+  unclosed human gates, rolls back affected evidence axes, and demotes affected
+  SRs, URs, and epics from `IN_REVIEW` or `DONE` to `IN_PROGRESS`. A new current
+  result can return the item to `IN_REVIEW`, but `DONE` requires a successor
+  human completion gate for the new fingerprint. Supplemental evidence causes
+  no demotion, and invalidation alone does not imply `BLOCKED`.
+- References: `process/state-tracking.md#Evidence state`,
+  `process/state-tracking.md#Gate records and state machines`.
+- Resolution record: commit containing this resolution on `review/prs-5-9`.
 
 ## DM-07 — Complete the gate state machine
 
-- Status: `OPEN`
+- Status: `RESOLVED`
 - Finding: the server lifecycle defines `open -> answered` plus applied state,
   but the connected flow says a later sync “closes” the gate without defining a
   closed state. The approval prompt also does not specify whether connected
@@ -242,13 +270,24 @@ states, answer channel, and repo-borne representation remain DM-07.
   human channel. A repo-borne gate has no defined record shape.
 - References: `process/state-tracking.md#Epic record`,
   `process/state-tracking.md#Mission Control and gates`,
-  `process/prompts.md#2. Review and approve a specification`.
-- Decision needed: define gate states, applied states, answer authority and
-  channel, repo-borne representation, and what makes a gate disappear from the
-  action queue.
-- Resolution target: connected and disconnected approval flows are complete,
-  attributable, first-wins where applicable, and mechanically distinguishable.
-- Resolution record: _pending_
+  `process/prompts.md#2. Review and approve entry`.
+- Decision: `USER:2026-08-19:humans require interaction; gates for independent
+  AI in the V-loop rely on checking the traces`.
+- Resolution: `TRACE` gates use `PENDING -> PASS | FAIL`, become `STALE` when
+  their input fingerprint changes, and never enter the human queue. `HUMAN`
+  gates use `DRAFT -> OPEN -> ANSWERED -> CLOSED`, with `SUPERSEDED` for a
+  replaced snapshot and `NOT_APPLICABLE/PENDING/APPLIED/FAILED` as the separate
+  application axis. A human gate opens only after prerequisite trace gates
+  pass. Connected answers are authoritative only when the real human answers
+  the exact open server gate; disconnected answers are recorded against the
+  exact repo-borne gate with identical attribution. `CLOSED` requires applied
+  state plus successful checks, sync, and readback; closed and superseded gates
+  leave the action queue but remain audit history.
+- References: `process/V-model-loop.md#Gate kinds`,
+  `process/state-tracking.md#Gate records and state machines`,
+  `process/state-tracking.md#Mission Control and gates`,
+  `templates/work/EPIC.md`, `templates/work/REQUIREMENTS.md`.
+- Resolution record: commit containing this resolution on `review/prs-5-9`.
 
 ## DM-08 — Specify the session-start preflight
 

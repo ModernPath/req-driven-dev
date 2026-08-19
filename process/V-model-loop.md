@@ -15,13 +15,13 @@ separately in [`state-tracking.md`](state-tracking.md).
 
 ```text
                          HUMAN LOOP
-    fulfilled proposed trace -> entry gate -> READY
-    fulfilled delivered trace -> completion gate -> DONE/VALIDATED
+    proposed trace -> TRACE PASS -> HUMAN entry gate -> TODO
+    delivered trace -> TRACE PASS -> HUMAN completion gate -> DONE
 
                        DEVELOPMENT LOOP
-  ORIENT -> SPECIFY -> RECON -> COLD REVIEW -> ENTRY GATE -> RED -> GREEN
-     ^                                                               |
-     +-- CAPTURE <- COMPLETION GATE <- DELIVER/RECONCILE <- REVIEW <- VERIFY <- CLEAN --+
+  ORIENT -> SPECIFY -> RECON -> COLD REVIEW -> ENTRY TRACE -> HUMAN -> RED -> GREEN
+     ^                                                                        |
+     +-- CAPTURE <- HUMAN <- COMPLETION TRACE <- DELIVER/RECONCILE <- REVIEW <- VERIFY <- CLEAN --+
 
                            V-MODEL
 
@@ -44,7 +44,7 @@ separately in [`state-tracking.md`](state-tracking.md).
        |                                                       ^
        +---------------------- focused verification -----------+
 
-  Canonical trace: EPIC -> UR -> SR -> TEST -> CODE
+  Canonical trace: EPIC -> UR -> SR -> CODE -> TEST_CASE -> TEST_RESULT
 
                          STATE TRACKING
   ledgers | epics | work-list | checks | sync | gates | evidence
@@ -87,7 +87,7 @@ intended behavior is green, run a requirement-scoped boy-scout cleanup before
 recording final evidence. Move the fulfilled trace to `IN_REVIEW`, deliver it
 in the implementation's source repository, and reconcile state according to
 `state-tracking.md`. Only then solicit human completion acceptance and apply
-the final `VALIDATED` and `DONE` transitions.
+the final `DONE` transitions.
 
 Planning and building are iterative. Discoveries feed the planning loop without
 silently expanding the current implementation slice.
@@ -148,7 +148,7 @@ Minimum fields:
 - Acceptance scenarios: <embedded Given/When/Then content>
 - Upper RED: <acceptance test path/name/command and expected failure>
 - Upper evidence: <passing user-flow/runtime evidence and revision>
-- Status: DERIVED | PENDING_VERIFICATION | PROPOSED | READY | IN_PROGRESS | IN_REVIEW | VALIDATED | BLOCKED | DEFERRED | OBSOLETE
+- Status: DERIVED | PENDING_VERIFICATION | PROPOSED | TODO | IN_PROGRESS | IN_REVIEW | DONE | BLOCKED | DEFERRED | OBSOLETE
 ```
 
 ### Acceptance scenarios (UR content)
@@ -190,13 +190,33 @@ coherent slice.
 - Regression gates: <commands>
 - Evidence: <failing/passing runs and revision>
 - Code: <files/symbols/commit/PR>
-- Status: DERIVED | PENDING_VERIFICATION | PROPOSED | READY | IN_PROGRESS | IN_REVIEW | VALIDATED | BLOCKED | DEFERRED | OBSOLETE
+- Status: DERIVED | PENDING_VERIFICATION | PROPOSED | TODO | IN_PROGRESS | IN_REVIEW | DONE | BLOCKED | DEFERRED | OBSOLETE
 ```
 
 When migrating existing `TASK-*` records, fold their normative scope,
 implementation context, evidence, and code links into the owning SR, then
 retire them as standalone lifecycle records. External planning boards may keep
 task-shaped projections, but those projections own no process state.
+
+### Code (`CODE:`)
+
+A code trace reference names the files, symbols, commit, branch, or PR that
+implements an SR. Code owns no requirement intent or lifecycle. A revision is
+not verified merely because the reference exists.
+
+### Test case (`TEST_CASE`, cited as `TEST:`)
+
+A test case is a stable test definition identified by path and test name. It
+links to the exact UR acceptance scenario or SR clauses it exercises and names
+the expected observation. One case may cover multiple clauses only when every
+target and failure-producing assertion is explicit.
+
+### Test result (`TEST_RESULT`, cited as `RUN:`)
+
+A test result is an observed execution of a test case. It records the command
+or report, `PASS/FAIL/SKIP` outcome and RED/GREEN role, branch/revision,
+environment when relevant, and evidence validity. Results are immutable
+observations; rerunning creates a new result rather than rewriting the old one.
 
 ## Trace lenses
 
@@ -207,16 +227,20 @@ authoritative links without creating a second source of truth:
 |---|---|
 | Product | `EPIC -> UR -> acceptance scenarios` |
 | System | `UR acceptance scenario -> SR` |
-| Delivery | `EPIC -> active/validated URs and SRs` |
-| Upper evidence | `UR acceptance scenario -> TEST -> result/revision` |
-| Lower evidence | `SR -> TEST -> result/revision` |
-| Implementation | `SR -> TEST -> CODE` |
-| Reverse trace | `CODE -> TEST -> SR -> UR -> EPIC` |
+| Delivery | `EPIC -> active/done URs and SRs` |
+| Implementation | `SR -> CODE` |
+| Upper evidence | `UR acceptance scenario -> TEST_CASE -> TEST_RESULT` |
+| Lower evidence | `SR -> CODE -> TEST_CASE -> TEST_RESULT` |
+| Reverse trace | `TEST_RESULT -> TEST_CASE -> CODE -> SR -> UR -> EPIC` |
 
 An SR has one owning epic and may support multiple acceptance scenarios within
-that epic. Tests may prove multiple clauses when each target and assertion is
-explicit. Code references identify the files, symbols, commits, and PRs that
-implement the SR; code does not define requirement intent.
+that epic. A `TEST_CASE` is the stable test definition identified by `TEST:`;
+a `TEST_RESULT` is an observed execution identified by `RUN:` and pinned to a
+revision. Test cases may prove multiple clauses when each target and assertion
+is explicit. Code references identify the files, symbols, commits, and PRs
+that implement the SR; code does not define requirement intent. This graph is
+relationship order, not execution order: red-first still observes the test
+case fail before the code satisfies it.
 
 ## Strict human transitions
 
@@ -228,22 +252,64 @@ state is recorded and current.
 | Transition | Must be fulfilled before soliciting the human | Human decision |
 |---|---|---|
 | Requirement `DERIVED -> PROPOSED` | candidate requirement statement, inference sources, proposed ancestry and downstream links, conflicts, consequences, and confirmation brief | confirm that the requirement exists, correct it, or reject it |
-| Requirement `PROPOSED -> READY` | confirmed requirement; authoritative ancestry; sourced statement and acceptance content or system behavior; scope, owner, and release; required reconnaissance and cold review; test strategy; resolved or routed decisions | approve the named requirement for implementation entry |
-| Epic `PROPOSED -> READY` | complete in-scope proposed trace; every selected requirement entry-ready; full specification or fast-lane packet; current reconnaissance; passing cold review; resolved or routed decisions | approve the named epic scope for implementation entry |
-| Requirement `IN_REVIEW -> VALIDATED` | complete `EPIC -> UR -> SR -> TEST -> CODE` trace; required lower/upper evidence; authoritative delivery; current delivered-revision evidence; reconciled records and projections; disclosed gaps and deferrals | accept the delivered requirement |
+| Requirement `PROPOSED -> TODO` | confirmed requirement; authoritative ancestry; sourced statement and acceptance content or system behavior; scope, owner, and release; required reconnaissance and cold review; test strategy; resolved or routed decisions | approve the named requirement for implementation entry |
+| Epic `PROPOSED -> TODO` | complete in-scope proposed trace; every selected requirement entry trace passing; full specification or fast-lane packet; current reconnaissance; passing cold review; resolved or routed decisions | approve the named epic scope for implementation entry |
+| Requirement `IN_REVIEW -> DONE` | complete `EPIC -> UR -> SR -> CODE -> TEST_CASE -> TEST_RESULT` trace; required lower/upper evidence; authoritative delivery; current delivered-revision evidence; reconciled records and projections; disclosed gaps and deferrals | accept the delivered requirement |
 | Epic `IN_REVIEW -> DONE` | every in-scope requirement is completion-eligible, the complete epic trace is delivered and reconciled, and the completion brief names the exact scope | accept the delivered epic |
 
 An entry or completion gate may cover an explicit epic and set of requirements
 in one brief. The answer still records each entity transition and its
 `USER:<date>:<summary>` source. When applying a scoped completion answer, move
-the named requirements to `VALIDATED` before moving their epic to `DONE` in the
-same reconciliation change.
+the named requirements to `DONE` before moving their epic to `DONE` in the same
+reconciliation change.
 
 `PENDING_VERIFICATION` is a special as-built route and does not bypass these
 gates. It follows human confirmation of existence and must receive the same
 requirement entry approval before a test is changed. A gate marker may be
 prepared before it is eligible, but it must not be presented in a human action
 queue or otherwise solicited until the corresponding row above is fulfilled.
+
+## Gate kinds
+
+Every strict lifecycle transition composes two different gates:
+
+```text
+authoritative trace -> TRACE gate PASS -> HUMAN gate OPEN
+-> attributable human answer -> transition applied
+```
+
+- A `TRACE` gate checks non-human facts against the canonical trace at an exact
+  input revision or fingerprint. An independent agent or deterministic check
+  may evaluate it as `PASS` or `FAIL`; changed inputs make the result `STALE`.
+  A trace gate cannot make a product decision or grant human approval.
+- A `HUMAN` gate records a decision that requires interaction with an
+  authorized human. An agent may prepare and publish it only after its
+  prerequisite trace gate passes. An agent or automated check may never answer
+  it for the human.
+
+Cold technical review, entry-readiness checks, lower/upper evidence checks,
+delivery checks, and reconciliation checks are trace gates. Requirement
+confirmation, entry approval, completion acceptance, and any product, scope,
+architecture, acceptance, priority, or workflow choice are human gates. When a
+trace check encounters one of those choices, it fails or remains pending and
+routes the choice to a human gate instead of assuming an answer.
+
+Trace gates also drive the non-human lifecycle transitions:
+
+| Transition or waypoint | Required trace-gate proof |
+|---|---|
+| SR `TODO -> IN_PROGRESS` | approved entry fingerprint is current and the first expected lower or linked upper RED `TEST_RESULT` is recorded against its `TEST_CASE` |
+| UR `TODO -> IN_PROGRESS` | its upper RED is recorded or one of its linked SRs is `IN_PROGRESS` |
+| Epic `TODO -> IN_PROGRESS` | one of its in-scope URs or SRs is `IN_PROGRESS` |
+| SR `IN_PROGRESS -> IN_REVIEW` | current red-first `SR -> CODE -> TEST_CASE -> TEST_RESULT` lower trace passes every required clause and post-cleanup gate |
+| UR `IN_PROGRESS -> IN_REVIEW` | every required linked SR is `IN_REVIEW` and current red-first upper test results pass its acceptance content |
+| Epic `IN_PROGRESS -> IN_REVIEW` | every in-scope UR and SR is `IN_REVIEW`, with required upper and lower trace gates passing |
+| lower/upper evidence waypoint | the exact current results support `LOWER_VERIFIED` or `UPPER_VALIDATED` for the named trace and revision |
+
+An agent or check may apply those forward transitions only from a current
+`PASS`. It may apply the automatic demotions in `state-tracking.md` when a
+previously supporting trace becomes stale or fails. Neither direction creates
+or substitutes for a human answer.
 
 ## Sources and decisions
 
@@ -254,8 +320,8 @@ Use stable source tags:
 | `USER:<date>:<summary>` | attributable human fact, decision, or approval |
 | `DOC:<path>#<section>` | product/domain/architecture source |
 | `CODE:<path>:<symbol>` | observed existing behavior |
-| `TEST:<path>:<name>` | test definition or result target |
-| `RUN:<command-or-report>` | observed command/runtime evidence |
+| `TEST:<path>:<name>` | stable `TEST_CASE` definition or target |
+| `RUN:<command-or-report>` | observed `TEST_RESULT` or runtime evidence |
 | `EPIC:<path>#<section>` | trace to an existing epic record |
 
 Rules:
@@ -300,7 +366,7 @@ Record a confirmation or correction with its real actor and
 `USER:<date>:<summary>` source. Confirmation establishes that the requirement
 exists; it does not automatically approve a specification, validate candidate
 links, prove current behavior, select a release, or make the requirement
-`READY`. Re-evaluate every candidate link through the normal planning flow. A
+`TODO`. Re-evaluate every candidate link through the normal planning flow. A
 confirmed as-built description may take the `PENDING_VERIFICATION` route after
 the confirmation has established `PROPOSED`, but only when the human decision
 explicitly accepts both the requirement and the description of the behavior
@@ -417,11 +483,11 @@ and a cold-review `PASS` with no material finding open or deferred in scope.
 Only then may the entry decision be solicited. `SPEC-APPROVED` adds the
 attributable human decision; the same scoped answer records each named
 requirement's entry transition and, when the epic is still `PROPOSED`, its
-`PROPOSED -> READY` transition. The technical review cannot make any of those
+`PROPOSED -> TODO` transition. The technical review cannot make any of those
 transitions.
 
 No epic-path RED test is written before `SPEC-APPROVED` and every selected
-entity is `READY`. Writing the test is implementation-loop work, not
+entity is `TODO`. Writing the test is implementation-loop work, not
 specification work.
 
 ## Fast lane
@@ -453,7 +519,7 @@ The fast lane avoids preparing and approving a new full epic specification set.
 It does not remove epic ownership, any trace level, upper or lower red-first
 evidence, the strict entity entry and completion gates, review, delivery, or
 state reconciliation. Criteria alone never move an epic or requirement to
-`READY`.
+`TODO`.
 
 ## Development loop
 
@@ -481,7 +547,7 @@ is committed:
   answered gate before selecting work and never select a held candidate trace;
 - confirm active release and current item;
 - inspect blockers, gate eligibility, open gates, evidence drift, and next
-  `READY` trace;
+  `TODO` trace;
 - read the relevant product, code, test, epic/spec, and SR sources.
 
 ### 1. Specify
@@ -517,11 +583,12 @@ is committed:
 
 ### 1c. Entry approval
 
-- verify every non-human prerequisite for each proposed `READY` transition;
-- publish or activate the scoped entry gate only after that verification;
+- evaluate the entry trace gate for each proposed `TODO` transition and require
+  a current `PASS`;
+- only then publish or activate the scoped human entry gate;
 - present the brief and solicit the authorized human decision;
 - apply the attributable answer to each named requirement and the epic;
-- do not start RED until every selected entity is `READY`.
+- do not start RED until every selected entity is `TODO`.
 
 ### 2. Upper RED
 
@@ -599,16 +666,17 @@ is committed:
 - update requirement, epic, evidence, and rollups atomically;
 - reconcile ledger, epic, work-list, release, PR/commit, evidence, and any
   connected Mission Control projection;
-- re-run or confirm evidence against the delivered revision and verify that
-  the complete trace is fulfilled before opening the completion gate.
+- re-run or confirm evidence against the delivered revision, evaluate the
+  completion trace gate, and require a current `PASS` before opening the human
+  completion gate.
 
 ### 10. Completion acceptance
 
 - only now present the completion brief and solicit the authorized human;
 - record the real actor, exact epic/requirement scope, decision, and
   `USER:<date>:<summary>` source;
-- if accepted, move the named requirements from `IN_REVIEW` to `VALIDATED`,
-  then move the epic from `IN_REVIEW` to `DONE` in the same reconciled change;
+- if accepted, move the named requirements and epic from `IN_REVIEW` to `DONE`
+  in the same reconciled change;
 - if rejected or changed, keep the strongest honest non-final state and route
   the requested change through planning.
 
@@ -666,15 +734,15 @@ SR -> failing focused test -> smallest implementation
 Primary lifecycles and their strict human transitions:
 
 ```text
-EPIC: PROPOSED -[HUMAN]-> READY -> IN_PROGRESS -> IN_REVIEW -[HUMAN]-> DONE
+EPIC: PROPOSED -[HUMAN]-> TODO -> IN_PROGRESS -> IN_REVIEW -[HUMAN]-> DONE
 
-UR:   DERIVED -[HUMAN]-> PROPOSED -[HUMAN]-> READY -> IN_PROGRESS -> IN_REVIEW -[HUMAN]-> VALIDATED
+UR:   DERIVED -[HUMAN]-> PROPOSED -[HUMAN]-> TODO -> IN_PROGRESS -> IN_REVIEW -[HUMAN]-> DONE
 
-SR:   DERIVED -[HUMAN]-> PROPOSED -[HUMAN]-> READY -> IN_PROGRESS -> IN_REVIEW -[HUMAN]-> VALIDATED
+SR:   DERIVED -[HUMAN]-> PROPOSED -[HUMAN]-> TODO -> IN_PROGRESS -> IN_REVIEW -[HUMAN]-> DONE
 ```
 
 `PENDING_VERIFICATION` is the special confirmed-as-built route described below;
-it still joins `READY` through the human entry gate.
+it still joins `TODO` through the human entry gate.
 
 Requirement work status for both UR and SR:
 
@@ -683,10 +751,10 @@ Requirement work status for both UR and SR:
 | `DERIVED` | inferred requirement whose fulfilled candidate packet awaits attributable human confirmation; candidate links are non-authoritative and downstream work is held |
 | `PENDING_VERIFICATION` | special route for a confirmed as-built description awaiting the same human entry approval and direct current evidence |
 | `PROPOSED` | confirmed or directly sourced requirement whose entry trace is being fulfilled; not approved for implementation |
-| `READY` | every non-human entry prerequisite is fulfilled and the attributable human entry approval is applied |
+| `TODO` | every non-human entry prerequisite is fulfilled and the attributable human entry approval is applied; the requirement may be selected for implementation |
 | `IN_PROGRESS` | either evidence loop is underway |
 | `IN_REVIEW` | required evidence is complete; the requirement stays here through delivery and reconciliation until completion acceptance |
-| `VALIDATED` | the full delivered trace was fulfilled before the attributable human completion acceptance was applied |
+| `DONE` | the full delivered trace was fulfilled before the attributable human completion acceptance was applied |
 | `BLOCKED` | cannot proceed; blocker/gate linked |
 | `DEFERRED` | explicitly postponed; reason, owner, and target recorded |
 | `OBSOLETE` | rejected or superseded; human decision or replacement source linked |
@@ -696,7 +764,7 @@ Epic `delivery_status`:
 | Status | Meaning |
 |---|---|
 | `PROPOSED` | epic scope exists and its entry trace is being fulfilled; it is not approved for implementation |
-| `READY` | every non-human entry prerequisite is fulfilled and the attributable human entry approval is applied |
+| `TODO` | every non-human entry prerequisite is fulfilled and the attributable human entry approval is applied; the epic may be selected for implementation |
 | `IN_PROGRESS` | one or more contained traces are in an evidence loop |
 | `IN_REVIEW` | every in-scope requirement has its required evidence; the epic stays here through delivery and reconciliation until completion acceptance |
 | `DONE` | the full delivered epic trace was fulfilled before the attributable human completion acceptance was applied |
@@ -711,16 +779,19 @@ upper_loop_status: PROPOSED -> IN_PROGRESS -> UPPER_VALIDATED
 lower_loop_status: PROPOSED -> IN_PROGRESS -> LOWER_VERIFIED
 ```
 
-Acceptance scenarios are UR content and have no lifecycle status.
+Acceptance scenarios are UR content and have no lifecycle status. Test cases
+have stable identity but no work lifecycle; test results carry outcome and
+validity rather than requirement status.
 
 Evidence waypoints:
 
 - `LOWER_VERIFIED` belongs to SR lower evidence;
 - `UPPER_VALIDATED` belongs to UR acceptance content and epic upper evidence;
-- `VALIDATED` belongs to UR/SR requirement work status, not to an evidence axis.
+- `DONE` belongs to both requirement and epic work status, not to an evidence
+  axis.
 
 A lower or upper waypoint does not independently make a requirement
-`VALIDATED` or an epic `DONE`.
+`DONE`.
 
 ## State records
 
@@ -799,7 +870,7 @@ authorization to deliver it.
 
 After the completion answer is applied, an epic is `DONE` only when:
 
-1. every linked UR and SR is `VALIDATED`, no item is `DERIVED`, and no candidate
+1. every linked UR and SR is `DONE`, no item is `DERIVED`, and no candidate
    trace link is counted as authoritative;
 2. current technical reconnaissance enriched its SRs;
 3. cold technical review preceded specification approval and no material
@@ -815,9 +886,9 @@ After the completion answer is applied, an epic is `DONE` only when:
 11. state records and projections required by `state-tracking.md` agree;
 12. evidence is pinned to the delivered revision and has not decayed.
 
-A UR is `VALIDATED` only when its acceptance content and linked lower trace meet
+A UR is `DONE` only when its acceptance content and linked lower trace meet
 the evidence bar, the trace was delivered and reconciled, and the human then
-accepted the user outcome. An SR is `VALIDATED` only when its lower evidence
+accepted the user outcome. An SR is `DONE` only when its lower evidence
 meets the same bar, its approved parent trace was delivered and reconciled, and
 the human then accepted the requirement in the scoped completion decision.
 
@@ -829,7 +900,7 @@ Start:
 2. reconcile working records and pending human intents per
    `state-tracking.md`;
 3. inspect `DERIVED` confirmation holds, active scope, gates, evidence drift,
-   and the next confirmed `READY` trace;
+   and the next confirmed `TODO` trace;
 4. inspect technical-reconnaissance and cold-review freshness;
 5. read the relevant sources before editing.
 

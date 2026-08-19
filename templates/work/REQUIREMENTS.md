@@ -5,7 +5,7 @@ This is the bounded-context backlog and requirement work record described in
 
 ## Dashboard — «CTX» («Context Name»)
 
-> Totals: 0 VALIDATED · 0 IN_REVIEW · 0 IN_PROGRESS · 0 READY · 0 PROPOSED · 0 PENDING_VERIFICATION · 0 DERIVED · 0 DEFERRED · 0 BLOCKED
+> Totals: 0 DONE · 0 IN_REVIEW · 0 IN_PROGRESS · 0 TODO · 0 PROPOSED · 0 PENDING_VERIFICATION · 0 DERIVED · 0 DEFERRED · 0 BLOCKED
 
 | ID | Kind | Title | Release/stage | Status | Source | Trace | Evidence | Code |
 |----|------|-------|---------------|--------|--------|-------|----------|------|
@@ -25,27 +25,29 @@ This is the bounded-context backlog and requirement work record described in
 - **Raised-by:** derived from `DOC:docs/«NN»#<section>`
 - **Source:** `DOC:docs/«NN»#<section>` / `USER:<date>:<summary>`
 - **Statement:** «One or two sentences describing what the requirement ensures»
-- **Confirmation gate:** — / `CONFIRM-REQ-«CTX»-NNN` OPEN|ANSWERED
-- **Confirmation facts:** NOT_FULFILLED | FULFILLED — «candidate packet refs»
-- **Entry gate:** `APPROVE-ENTRY-REQ-«CTX»-NNN`
-- **Entry facts:** NOT_FULFILLED | FULFILLED — «evidence»
-- **Completion gate:** `APPROVE-COMPLETION-REQ-«CTX»-NNN`
-- **Completion facts:** NOT_FULFILLED | FULFILLED — «evidence»
-- **Gate records:** «gate id, exact scope, human actor/role, USER source, answer, application revision»
+- **Confirmation trace gate:** `CHECK-CONFIRM-REQ-«CTX»-NNN` PENDING|PASS|FAIL|STALE — «fingerprint + candidate packet refs + evaluator»
+- **Confirmation human gate:** `CONFIRM-REQ-«CTX»-NNN` DRAFT|OPEN|ANSWERED|CLOSED|SUPERSEDED — «application state»
+- **Entry trace gate:** `CHECK-ENTRY-REQ-«CTX»-NNN` PENDING|PASS|FAIL|STALE — «fingerprint + evidence + evaluator»
+- **Entry human gate:** `APPROVE-ENTRY-REQ-«CTX»-NNN` DRAFT|OPEN|ANSWERED|CLOSED|SUPERSEDED — «application state»
+- **Completion trace gate:** `CHECK-COMPLETION-REQ-«CTX»-NNN` PENDING|PASS|FAIL|STALE — «fingerprint + evidence + evaluator»
+- **Completion human gate:** `APPROVE-COMPLETION-REQ-«CTX»-NNN` DRAFT|OPEN|ANSWERED|CLOSED|SUPERSEDED — «application state»
+- **Gate records:** «gate ids, exact scope, prerequisites, fingerprint, evaluator or human actor/role, sources, verdict/answer, application revision, predecessor/successor»
+- **Loop trace gates:** «TODO→IN_PROGRESS and IN_PROGRESS→IN_REVIEW gate ids, fingerprints, evidence, states, evaluators»
 - **Acceptance criteria:**
   - GIVEN «precondition» WHEN «action» THEN «expected outcome».
   - GIVEN «another precondition» WHEN «action» THEN «expected outcome».
   - GIVEN «failure case» WHEN «action» THEN «rejection with error code».
-- **Trace:** `EPIC-«CTX»-NNN -> UR-«CTX»-NNN -> SR-«CTX»-NNN`
+- **Trace:** `EPIC-«CTX»-NNN -> UR-«CTX»-NNN -> SR-«CTX»-NNN -> CODE:<path>:<symbol> -> TEST:<path>:<name> -> RUN:<command-or-report>`
 - **UR acceptance links:** «scenario/criterion headings required for a system requirement»
 - **Trace authority:** CONFIRMED | CANDIDATE (`CANDIDATE` is required while status is `DERIVED`)
 - **Boundary:** «required for a system requirement»
 - **Technical reconnaissance:** «artifact + inspected revision; required for a system requirement»
 - **Implementation context:** «files/symbols, callers, flow impact, contracts, reuse, dependencies, risks»
 - **Change boundary / non-goals:** «explicit in/out»
-- **Lower RED / gates:** «test path/name/command, expected failure, regression commands»
-- **Evidence:** —
 - **Code:** —
+- **Test cases:** «stable TEST: references; lower and upper»
+- **Test results:** «RED/GREEN RUN: references, outcome, validity, branch/SHA»
+- **Regression gates:** «commands»
 - **Delivery / reconciliation:** —
 - **Mission Control reference:** «optional workspace/system/entity reference»
 - **Deferred / notes:** —
@@ -65,10 +67,10 @@ Use `DERIVED` rather than `PROPOSED` when no human has confirmed that the
 requirement exists. A derived row must carry the confirmation gate and candidate
 trace markers above; it is not eligible for the active implementation work-list.
 
-Do not mark entry facts `FULFILLED` until the confirmed authoritative trace,
+Do not mark the entry trace gate `PASS` until the confirmed authoritative trace,
 sourced content, scope, reconnaissance/review where required, and test strategy
-are complete. Do not mark completion facts `FULFILLED` until the complete trace
-is delivered, evidenced at that revision, and reconciled.
+are complete. Do not mark the completion trace gate `PASS` until the complete
+trace is delivered, evidenced at that revision, and reconciled.
 
 ---
 

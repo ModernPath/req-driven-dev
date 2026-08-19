@@ -21,9 +21,9 @@ claim. Do not create implementation work or resolve ambiguity by assumption.
 When code, existing SRs, documents, or analysis suggest a requirement that no
 human has confirmed, record it as DERIVED. Record proposed links only as
 candidate context. Fulfill its candidate statement, sources, ancestry/links,
-consequences, and product-language confirmation brief before publishing or
-soliciting its gate. Stop downstream planning until the attributed answer is
-applied.
+consequences, and product-language confirmation brief, then record a `PASS` on
+the confirmation trace gate before opening or soliciting the human gate. Stop
+downstream planning until the attributed answer is applied.
 
 Report changed sources, derived facts, human decisions still needed, conflicts,
 and candidate user outcomes.
@@ -40,9 +40,10 @@ Outcome/source: <reference>
 Release/system: <scope>
 
 Before planning, prove the outcome is confirmed. If it or any ancestor is
-DERIVED, complete and report its candidate packet and held links, then ensure
-its confirmation gate exists and is eligible before soliciting it. Stop without
-making candidate epic membership authoritative or creating or advancing UR
+DERIVED, complete and report its candidate packet and held links, pass its
+confirmation trace gate, then ensure its human gate is `OPEN` before soliciting
+it. Stop without making candidate epic membership authoritative or creating or
+advancing UR
 acceptance content, an SR, test, release commitment, or implementation record.
 
 Derive or update:
@@ -65,9 +66,9 @@ Verify generated context against actual DOC:/CODE:/TEST: sources. Publish
 proposed state without granting approval. Choose the full specification path or
 prove every fast-lane criterion within the owning epic. For the full path,
 prepare the specification brief and stop for a cold technical review before the
-human entry gate. For either path, solicit entry approval only after every
-non-human prerequisite is fulfilled, and do not write tests or implementation
-until the selected epic and requirements are `READY`.
+human entry gate. For either path, evaluate the entry trace gate and require
+`PASS` before opening or soliciting the human entry gate. Do not write tests or
+implementation until the selected epic and requirements are `TODO`.
 ```
 
 ## 1a. Run a cold technical review
@@ -95,9 +96,9 @@ source, owner, and disposition evidence. Treat open correctness, security,
 data-loss, contract, trace, or testability findings as material blockers. A
 material finding may pass only when resolved, rejected with direct evidence, or
 removed from current scope by an attributable human decision and routed.
-Return a PASS only when no material finding remains open or deferred in scope;
-otherwise return CHANGES_REQUIRED. The author or owning agent resolves findings
-and requests a new cold review before the human entry gate.
+Return a trace-gate `PASS` only when no material finding remains open or
+deferred in scope; otherwise return `FAIL`. The author or owning agent resolves
+findings and requests a new cold review before the human entry gate.
 ```
 
 ## 2. Review and approve entry
@@ -107,7 +108,7 @@ Read the project AGENTS.md, .modernpath/rdd/AGENTS.md,
 .modernpath/rdd/process/V-model-loop.md, .modernpath/rdd/process/state-tracking.md, the epic and all
 specs, current human gates, and relevant product sources.
 
-Audit every epic and requirement entry-gate condition. Lead with
+Audit every epic and requirement entry trace-gate condition. Lead with
 contradictions, missing sources, ambiguous acceptance behavior, trace gaps,
 untestable SRs, stale technical reconnaissance, missing SR implementation
 context, and cold-review findings.
@@ -115,14 +116,14 @@ Reject specification entry when any linked requirement is DERIVED or any trace
 link is still candidate context.
 Confirm the cold review passed with no material finding open or deferred in
 scope and every selected entity satisfies the non-human prerequisites for
-`READY`. Only then confirm the scoped entry gate exists and is eligible: in a
-connected workspace the record is committed, synced, and present in the server
-gate list; otherwise the gate is repo-borne. Present the plain-language brief,
-the exact epic/requirement scope, and recommendation.
+`TODO`. Record the entry trace gate `PASS`; only then confirm the scoped human
+entry gate is `OPEN`: in a connected workspace the record is committed, synced,
+and present in the server gate list; otherwise the gate is repo-borne. Present
+the plain-language brief, exact epic/requirement scope, and recommendation.
 
 If the authorized human approves, record their actual identity, role, scope,
 and USER:<date>:<summary>; move each named `PROPOSED` or
-`PENDING_VERIFICATION` requirement and any proposed epic to READY, then
+`PENDING_VERIFICATION` requirement and any proposed epic to TODO, then
 reconcile the answer according to state-tracking.md. Otherwise record requested
 changes/blocker and do not issue an implementation kickoff.
 ```
@@ -133,7 +134,7 @@ changes/blocker and do not issue an implementation kickoff.
 Read the project AGENTS.md, .modernpath/rdd/AGENTS.md,
 .modernpath/rdd/process/V-model-loop.md, .modernpath/rdd/process/state-tracking.md, the active
 epic/spec/SR, and relevant product/code/test sources. Converge state and
-confirm every selected epic and requirement is READY from attributable human
+confirm every selected epic and requirement is TODO from attributable human
 entry approval. Full-path work also requires specification approval; fast-lane
 work requires every fast-lane criterion but cannot substitute those criteria
 for entry approval. Refresh the SR context from the reconnaissance and current
@@ -144,8 +145,10 @@ Confirm every requirement in the trace is human-confirmed. If any item is
 DERIVED or any link is candidate-only, stop at its confirmation gate; do not
 write or run the RED test for that trace.
 
-Select exactly one READY trace:
+Select exactly one TODO requirement path:
 EPIC -> UR -> SR.
+Maintain its full trace as work proceeds:
+EPIC -> UR -> SR -> CODE -> TEST_CASE -> TEST_RESULT.
 
 0. Work on a feature branch, never on the default branch's working tree.
    Commit at the loop's waypoints — specification, observed RED, GREEN,
@@ -176,7 +179,7 @@ EPIC -> UR -> SR.
 
 Report reconnaissance/context revision, cold-review verdict, RED and GREEN
 commands/results, cleanup change or no-op, post-cleanup gates, code/test refs,
-status changes, state reconciliation, gaps, and the next READY item.
+status changes, state reconciliation, gaps, and the next TODO item.
 ```
 
 ## 4. Triage and replan
@@ -197,9 +200,9 @@ For every backlog/discovery item:
 - mark removed behavior OBSOLETE with replacement.
 
 Reconcile product docs, requirement state, epics, release scope, and generated
-rollups. Promote to READY only when the entry gate is proven. Reconcile state
+rollups. Promote to TODO only when the entry gate is proven. Reconcile state
 per state-tracking.md and report routed items, changes, remaining human
-decisions, and next READY traces.
+decisions, and next TODO traces.
 ```
 
 ## 5. Deliver, reconcile, and review completion
@@ -227,12 +230,13 @@ If the pre-delivery audit passes, deliver through the project's normal
 authorized integration path while keeping the epic and requirements IN_REVIEW.
 Reconcile all repository records and projections, verify evidence against the
 delivered revision, and audit the complete trace again. Only when every
-non-human completion prerequisite is fulfilled may the completion gate become
-eligible and the brief be presented.
+non-human completion prerequisite is fulfilled, record the completion trace
+gate `PASS`. Only then may the completion human gate become `OPEN` and the brief
+be presented.
 
 If the authorized human accepts the delivered result, record their actual
 identity, role, exact epic/requirement scope, and USER:<date>:<summary>. Move
-the named requirements to VALIDATED, then their epic to DONE in the same
+the named requirements and their epic to DONE in the same
 reconciliation change. Otherwise leave the strongest honest non-final status
 and list the exact missing evidence or requested change.
 ```

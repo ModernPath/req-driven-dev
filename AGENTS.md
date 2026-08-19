@@ -40,7 +40,8 @@ Before planning, changing, reviewing, or delivering product work:
 
 ## Non-negotiable rules
 
-1. Every change traces through `EPIC -> UR -> SR -> TEST -> CODE`.
+1. Every change traces through
+   `EPIC -> UR -> SR -> CODE -> TEST_CASE -> TEST_RESULT`.
    Acceptance scenarios are content within a UR, not separate trace entities.
    A project may retain stable `REQ-*` ids, but their user/system meaning and
    links must remain explicit.
@@ -64,14 +65,14 @@ Before planning, changing, reviewing, or delivering product work:
    epic and selected requirements have received their human entry approval.
    Fast-lane work stays inside an owning epic and may reduce specification
    artifacts, but it does not bypass an entity's entry gate.
-7. `LOWER_VERIFIED`, `UPPER_VALIDATED`, `IN_REVIEW`, `DONE`, and `VALIDATED`
+7. `LOWER_VERIFIED`, `UPPER_VALIDATED`, `IN_REVIEW`, and `DONE`
    require linked direct evidence. A label, checkbox, or unrelated green suite
    is not proof.
 8. Strict human gates control requirement `DERIVED -> PROPOSED`, epic and
-   requirement `PROPOSED -> READY`, requirement `IN_REVIEW -> VALIDATED`, and
-   epic `IN_REVIEW -> DONE`. Do not solicit the human decision until every
-   non-human trace fact required by the target state is fulfilled. Tests cannot
-   grant human approval.
+   requirement `PROPOSED -> TODO`, and epic/requirement `IN_REVIEW -> DONE`.
+   Open or solicit one only after its prerequisite `TRACE` gate passes. An
+   independent agent or deterministic check may evaluate trace facts, but
+   tests and trace gates cannot grant human approval.
 9. Deferrals, discoveries, blockers, and deviations are explicit, sourced, and
    routed. Do not hide them in prose or TODO comments.
 10. Boundary contracts are canonical. Derive boundary types from schemas where
@@ -105,7 +106,7 @@ Before planning, changing, reviewing, or delivering product work:
 4. **Approve entry** — after the proposed trace, specification or fast-lane
    packet, reconnaissance, and cold review are complete, present the decision
    brief and record the human gate that moves the scoped epic and requirements
-   to `READY`.
+   to `TODO`.
 5. **Upper RED** — observe the acceptance/user-flow test fail for the expected
    reason.
 6. **Lower RED/GREEN** — write the focused failing test and implement the
@@ -122,8 +123,7 @@ Before planning, changing, reviewing, or delivering product work:
    according to `process/state-tracking.md`.
 10. **Accept completion** — only after the delivered trace and its evidence are
     fulfilled and reconciled, present the completion brief and record the real
-    human decision that moves requirements to `VALIDATED` and the epic to
-    `DONE`.
+    human decision that moves requirements and the epic to `DONE`.
 11. **Continue** — capture discoveries and take the next incomplete trace.
 
 ## Human gates
