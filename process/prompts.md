@@ -118,6 +118,10 @@ implementation.
 Select exactly one READY trace:
 UR -> EPIC -> SCN -> SR -> TASK.
 
+0. Work on a feature branch, never on the default branch's working tree.
+   Commit at the loop's waypoints — specification, observed RED, GREEN,
+   cleanup, reconciliation — running the project's process checks before each
+   commit.
 1. Run or create the SCN's upper BDD/E2E test and record the expected RED.
 2. Create the TASK/SR focused lower test and record the expected RED.
 3. Implement the smallest vertical change that makes the lower test pass.

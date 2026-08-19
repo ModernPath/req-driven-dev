@@ -333,6 +333,21 @@ or state reconciliation.
 
 ## Development loop
 
+### Source control
+
+The loop's record lives in version control, so the loop states where its work
+is committed:
+
+- specification and implementation work happens on a feature branch, never on
+  the default branch's working tree; the consuming project chooses branch
+  naming and integration mechanics;
+- commit at the loop's own waypoints — specification/record changes,
+  observed upper and lower RED, GREEN with its focused evidence, boy-scout
+  cleanup, and state reconciliation. Committing the failing evidence before
+  the change that satisfies it is what makes red-first auditable in history
+  instead of a claim in a report;
+- run the project's deterministic process checks before each commit.
+
 ### 0. Orient
 
 - inspect repository state and preserve unrelated work;
