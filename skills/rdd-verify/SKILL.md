@@ -1,21 +1,21 @@
 ---
 name: rdd-verify
-description: Verify human-confirmed PENDING_VERIFICATION requirements against real code and tests, add missing focused tests, and advance only evidence-backed state without bypassing approval or delivery. Use after an as-built requirement has been confirmed and needs direct current verification. Never use for DERIVED requirements or new behavior; run the confirmation gate or normal red-first build loop instead.
+description: Verify human-confirmed PENDING_VERIFICATION URs and SRs against real behavior, add missing tests, and advance only evidence-backed state. Use after an as-built requirement has been confirmed and needs current UR upper or SR lower evidence. Repeat verification inside the AI TDD loop without bypassing approval or delivery. Never use for DERIVED requirements or new behavior; run confirmation or the normal red-first build loop instead.
 ---
 
-# Verify confirmed as-built behavior
+# Verify confirmed as-built requirements
 
-Turn behavior that was described from shipped code into current, direct lower-loop evidence.
+Turn behavior described from shipped code into current direct UR upper or SR
+lower evidence.
 
-Read the repository `AGENTS.md`, `.modernpath/rdd/AGENTS.md`,
-`.modernpath/rdd/process/V-model-loop.md`, and
-`.modernpath/rdd/process/state-tracking.md` before changing a consuming
-repository. The installed process owns status meanings and completion.
+Read the repository `AGENTS.md` and canonical `PROCESS.md` before changing a
+project repository. `PROCESS.md` owns trace, status, gate, evidence, and
+completion meanings.
 
 ## Keep the transition honest
 
-This skill verifies system behavior. It does not grant human approval or prove
-delivery.
+This skill verifies confirmed as-built behavior. It does not grant human
+approval or prove delivery.
 
 - Never run this skill for a `DERIVED` requirement. `DERIVED` means no human has
   confirmed that the requirement exists; its proposed links are candidate
@@ -23,10 +23,9 @@ delivery.
 - `PENDING_VERIFICATION` means the requirement and as-built description were
   already confirmed, but current direct test evidence is missing. It still
   needs human entry approval and must become `TODO` before tests change.
-
-- Record `LOWER_VERIFIED` evidence for the system requirement. Move the SR
-  `work_status` to `IN_REVIEW` only when all of its required lower evidence is
-  complete.
+- For an SR, record `LOWER_VERIFIED` and move it to `IN_REVIEW` only when its
+  lower trace is current. For a UR, record `UPPER_VALIDATED` and move it to
+  `IN_REVIEW` only when its upper trace and required-SR conditions are current.
 - Never move a requirement to `DONE` from test evidence alone.
   `DONE` also requires the applicable approval, authoritative-source
   delivery, and reconciliation conditions.
@@ -39,29 +38,41 @@ delivery.
 A `PENDING_VERIFICATION` row is a description someone accepted. It is not an
 entry permit, and this skill adds tests — which is implementation.
 
-If the row or any requirement ancestor is `DERIVED`, or if its trace uses a
-candidate link, stop. Do not inspect tests as though the trace were real, and do
-not use existing SR evidence to imply that the inferred user outcome is valid.
+If the row is `DERIVED`, if a requirement it actually depends on is `DERIVED`,
+or if an applicable relation is candidate-only, stop. Do not inspect tests as
+though that trace were authoritative, and do not use existing SR evidence to
+imply that an inferred user outcome is valid.
 
-Before changing any test, require authoritative `EPIC -> UR -> SR` ancestry.
-Verification must complete the full
-`EPIC -> UR -> SR -> CODE -> TEST_CASE -> TEST_RESULT` trace. If the row has no
-owning epic or any parent is missing, stop and return it to normal planning.
-Fulfill one of the following entry packets:
+Before changing any test, require an authoritative requirement source and its
+applicable trace:
 
-- **Full specification path** — the owning epic is `SPEC-APPROVED`, and this
-  verification is within its approved scope; or
-- **Fast lane within the owning epic** — the complete trace is visible in the
-  work-list with sharpened criteria, and every repository fast-lane condition
-  holds.
+```text
+UR -> acceptance scenario -> TEST_CASE -> TEST_RESULT
+SR -> CODE -> TEST_CASE -> TEST_RESULT
+```
 
-Then obtain the strict human entry approval for the requirement. If its owning
-epic is not already `TODO`, obtain the epic entry approval in the same scope.
-Move the selected entities to `TODO` before changing a test. If neither packet
-holds or the entry answer is absent, stop and route the entry first.
-Verification that arrives outside the work-list is invisible to everyone
-planning against it, and a test written before the gate cannot be traced to an
-approved intent.
+Epic membership and UR links are optional. A standalone SR is valid and must
+not be sent back to planning merely because it has neither relation. When the
+SR is linked to UR acceptance content, record the declared relation; the UR's
+upper evidence remains part of the UR trace, not the SR lower trace. When an
+epic groups the SR or linked UR, verify that membership only if the selected
+scope depends on it.
+
+Use single-SR scope for one independently verifiable SR, whether standalone or
+linked to UR acceptance content. Use Epic scope when a UR or multiple
+requirements are selected. If establishing the evidence changes a user outcome
+or acceptance content, requires another independently implementable SR, or
+introduces a cross-cutting decision, return it to Epic-scoped planning. In
+either scope, fulfill the current planning, reconnaissance, cold-review,
+test-strategy, work-selection, and entry-brief facts.
+
+Then obtain strict human entry approval for every selected requirement and
+Epic. An already approved related entity does not return to `TODO` merely
+because another requirement starts. Move the selected requirement to `TODO`
+before changing a test. If the Entry packet is incomplete or the entry answer
+is absent, stop and route the entry first.
+Verification outside the authoritative work selection is invisible to planning,
+and a test written before the gate cannot be traced to approved intent.
 
 ## Establish the evidence bar
 
@@ -96,16 +107,23 @@ assertion remains unverified.
 
 1. Read the row, its acceptance criteria, and every cited source.
 2. Search for an existing test by behavior and assertion, not just filename.
-3. If a sufficient test exists, run it and demonstrate its relevant failure
-   mode. Otherwise, add the smallest focused regression test.
+3. Use an acceptance/E2E test for a UR scenario and the appropriate focused
+   boundary test for an SR clause. If a sufficient test exists, run it and
+   demonstrate its relevant failure mode. Otherwise, add the smallest test.
 4. Restore any temporary mutation, run the focused test green, then run the
    required regression gates.
-5. Update the ledger row, detail block, totals, linked epic evidence, and
-   work-list atomically.
-6. Advance only the evidence state justified by the run and leave the row
-   `IN_REVIEW`. Deliver and reconcile it before soliciting completion
-   acceptance; only the subsequent human gate may move it to `DONE`.
-7. Run the repository process check, commonly `modernpath check`.
+5. Update the authoritative requirement, optional related epic, evidence, and
+   work-selection records atomically; regenerate fallback snapshots afterwards.
+6. Advance only the evidence conclusion justified by the run. Move the selected
+   requirement to `IN_REVIEW` only if its applicable trace gates pass; otherwise
+   leave it at the strongest supported non-final state.
+7. Repeat for every approved scenario or clause lacking current evidence. Do
+   not request human input for an evidence failure within the approved
+   fingerprint. Route changed intent or scope through `rdd-triage`; record an
+   external impediment as a blocker.
+8. Run the project's deterministic process checks. Deliver and reconcile before
+   soliciting completion acceptance; only the subsequent human gate may move a
+   requirement to `DONE`.
 
 ## Detect verification traps
 
@@ -136,10 +154,11 @@ Do not weaken a test to promote a row.
 
 - If the row is only an inference that no human confirmed as a requirement,
   move it to `DERIVED`, record candidate links, and emit its confirmation gate.
-- If the code cannot satisfy the row, record the contradiction and create or
-  split an SR for the fix.
-- If verification needs unavailable infrastructure, record that exact blocker
-  and leave the row `PENDING_VERIFICATION`.
+- If the implementation cannot satisfy the row, record the contradiction and
+  route the required new or changed SR through planning.
+- If verification needs unavailable infrastructure, keep the row
+  `PENDING_VERIFICATION` before entry; after entry, use `BLOCKED` and record the
+  suspended `TODO` or `IN_PROGRESS` state.
 - If only a mocked path is available, record `test run, subject mocked` and
   leave the row unverified.
 
@@ -153,7 +172,9 @@ Report:
   observed before green;
 - focused and regression commands run;
 - contradictions, discoveries, pending approvals, delivery work, and record
-  reconciliation gaps.
+  reconciliation gaps; and
+- the exact next handoff: `rdd-completion-review`, `rdd-triage`, or the unmet
+  prerequisite.
 
 Exit only when every touched row has current direct evidence or an explicit
 reason it remains unverified, all temporary mutations are gone, and repository
