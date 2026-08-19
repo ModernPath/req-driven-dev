@@ -23,9 +23,9 @@ delivery.
 - `PENDING_VERIFICATION` means the requirement and as-built description were
   already confirmed, but current direct test evidence is missing.
 
-- Move a verified task to `LOWER_VERIFIED` and record `LOWER_VERIFIED` evidence
-  for the system requirement. Move the SR requirement `work_status` to
-  `IN_REVIEW` only when all of its required lower evidence is complete.
+- Record `LOWER_VERIFIED` evidence for the system requirement. Move the SR
+  `work_status` to `IN_REVIEW` only when all of its required lower evidence is
+  complete.
 - Never move a requirement to `VALIDATED` from test evidence alone.
   `VALIDATED` also requires the applicable approval, authoritative-source
   delivery, and reconciliation conditions.
@@ -43,8 +43,8 @@ candidate link, stop. Do not inspect tests as though the trace were real, and do
 not use existing SR evidence to imply that the inferred user outcome is valid.
 
 Before changing any test, require an authoritative
-`EPIC -> UR -> SR -> TASK` trace. If the row has no owning epic or any
-parent is missing, stop and return it to normal planning. Then satisfy one of:
+`EPIC -> UR -> SR` trace. If the row has no owning epic or any parent is
+missing, stop and return it to normal planning. Then satisfy one of:
 
 - **Full specification path** — the owning epic is `SPEC-APPROVED`, and this
   verification is within its approved scope; or
@@ -93,7 +93,7 @@ assertion remains unverified.
    mode. Otherwise, add the smallest focused regression test.
 4. Restore any temporary mutation, run the focused test green, then run the
    required regression gates.
-5. Update the ledger row, detail block, totals, linked epic/task evidence, and
+5. Update the ledger row, detail block, totals, linked epic evidence, and
    work-list atomically.
 6. Advance only the evidence state justified by the run. Leave approval and
    delivery pending until they actually occur.
@@ -128,8 +128,8 @@ Do not weaken a test to promote a row.
 
 - If the row is only an inference that no human confirmed as a requirement,
   move it to `DERIVED`, record candidate links, and emit its confirmation gate.
-- If the code cannot satisfy the row, record the contradiction and create a
-  separate requirement or task for the fix.
+- If the code cannot satisfy the row, record the contradiction and create or
+  split an SR for the fix.
 - If verification needs unavailable infrastructure, record that exact blocker
   and leave the row `PENDING_VERIFICATION`.
 - If only a mocked path is available, record `test run, subject mocked` and

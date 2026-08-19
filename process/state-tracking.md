@@ -14,9 +14,9 @@ history, and activity, but it does not replace the versioned working records.
 | Concern | Authoritative record |
 |---|---|
 | Product intent, domain rules, architecture, contracts | Versioned product documents and schemas |
-| Requirement backlog and work status | Requirement ledger, normally `tasks/<CTX>-REQUIREMENTS.md` |
+| Requirement backlog and work status | Requirement ledger, normally `requirements/<CTX>-REQUIREMENTS.md` |
 | Inferred requirement awaiting confirmation | `DERIVED` ledger row plus its confirmation gate; proposed links remain non-authoritative candidate context |
-| Epic trace, UR acceptance content, system requirements, tasks, technical reconnaissance, cold-review findings, decisions, evidence map, approval | Epic record under `epics/` |
+| Epic trace, UR acceptance content, thin system requirements with implementation context, technical reconnaissance, cold-review findings, decisions, evidence map, approval | Epic record under `epics/` |
 | Active queue and cross-epic rollup | `WORKLIST.md` |
 | Unrouted discoveries | `BACKLOG.md` |
 | Generated aggregate counts | `PROGRESS.md` or the consuming project's equivalent; regenerate rather than hand-author |
@@ -54,7 +54,7 @@ ledger <-> epic <-> WORKLIST ---- validate/check ----+
 ```
 
 A Mission Control answer records intent. It does not rewrite requirements,
-specifications, tasks, tests, or code. The applying agent must pull the intent,
+specifications, tests, or code. The applying agent must pull the intent,
 materialize its consequences through the affected trace, and let the next sync
 publish the resulting repository state.
 
@@ -127,9 +127,9 @@ authoritative-source delivery, and state reconciliation remain separate gates.
 ### Epic record
 
 The epic is the top-level delivery record. It owns detailed internal completion:
-`UR`, UR acceptance content, `SR`, `TASK`, spec status, technical
-reconnaissance, cold-review findings and dispositions, decisions, gaps,
-evidence, and approval.
+`UR`, UR acceptance content, thin `SR` slices and their implementation context,
+spec status, technical reconnaissance, cold-review findings and dispositions,
+decisions, gaps, evidence, and approval.
 
 Use these axes independently:
 
@@ -138,7 +138,7 @@ Use these axes independently:
   DONE`, with `BLOCKED`, `DEFERRED`, and `OBSOLETE` side states;
 - epic `upper_loop_status`: derived UR acceptance-content evidence progress,
   `PROPOSED -> IN_PROGRESS -> UPPER_VALIDATED`;
-- epic `lower_loop_status`: derived task/system verification progress,
+- epic `lower_loop_status`: derived SR verification progress,
   `PROPOSED -> IN_PROGRESS -> LOWER_VERIFIED`;
 - specification status: `SPEC-DRAFT -> SPEC-READY -> SPEC-APPROVED`;
 - gate state: server `open -> answered`, with a separate pending/applied intent
@@ -191,10 +191,10 @@ schema name.
 | `factory_jobs` | Tracks server-visible `apply_decision`, `plan_intake`, `verify`, and free-form jobs started and finished under a factory session, optionally linked to a gate. | Carries operational `running`/`done`/`error` state and result/log metadata; a completed job is not evidence unless an evidence run records its result. |
 | `work_events` | Receives deduplicated events from sync, gates, evidence/drift, factory sessions, releases, and source-control bridges; Mission Control’s Timeline reads this append-only stream. | Explains who changed what and when and supports historical projections; it does not replace the current repository record. |
 | `releases` | Represents both the product delivery target selected by synchronized workspace batches and the compliance Validation Bundle used for snapshot/freeze/reopen behavior. Mission Control uses the release link for active/base/all scoping. | Keeps user-curated delivery `status` separate from controlled `bundle_state`, snapshots, and verdicts. |
-| `task_plans` | Holds planner-derived or integration-created work hierarchies under an initiative or system and supplies aggregate planning/estimate fields to planning and board views. | Its status is planning/board state, not the repository V-model task lifecycle. |
+| `task_plans` | Holds planner-derived or integration-created work hierarchies under an initiative or system and supplies aggregate planning/estimate fields to planning and board views. | Its status is planning/board state, not an RDD lifecycle or trace level. |
 | `task_epics` | Represents Task cards inside a task plan, populated by task derivation, board creation, or integration flows and moved through board columns. | Its status and progress counters drive planning UI only; source-requirement arrays provide planning provenance rather than canonical sync identity. |
-| `task_stories` | Represents commit-sized tasks, bugs, or subtasks under a task epic and is rendered/moved on the board with acceptance and source-reference metadata. | Its status is a board column. It does not carry the repository task’s lower-loop evidence state. |
-| `task_items` | Represents the smallest nested implementation/subtask records, including checklist, affected files, branch, commits, and PR URL; board and initiative-task views read and update it. | It lacks the stable workspace-sync identity and direct SR/evidence linkage needed to become the canonical repository task/slice record. |
+| `task_stories` | Represents commit-sized tasks, bugs, or subtasks under a task epic and is rendered/moved on the board with acceptance and source-reference metadata. | Its status is a board column. It does not carry canonical SR lifecycle or lower evidence. |
+| `task_items` | Represents the smallest nested implementation/subtask records, including checklist, affected files, branch, commits, and PR URL; board and initiative-task views read and update it. | It is an optional planning artifact, not a canonical trace entity. Any relevant scope, context, evidence, or code link belongs to the owning SR. |
 
 Implementation sources, relative to the consuming ModernPath workspace:
 
@@ -248,13 +248,11 @@ requirement work_status
 ```
 
 `initiatives.status` and the `task_*` status fields are planning-board axes.
-Workspace synchronization must not move an initiative card to simulate V-model
-progress. The existing `task_items` model can represent planner-local work, but
-it does not currently provide the stable workspace-sync identity and direct
-SR/evidence linkage required to become the canonical repository task/slice
-record. Until that contract is deliberately extended, task/slice state remains
-in the repository epic/task records and appears in Mission Control only through
-the synchronized trace and rollups.
+Workspace synchronization must not move them to simulate V-model progress.
+The `task_*` models may hold optional planner-local decomposition, but they do
+not appear in the canonical trace and never own requirement scope, lifecycle,
+evidence, or code attribution. Those stay on the SR and appear in Mission
+Control through the synchronized requirement trace and rollups.
 
 ## Local checks
 
@@ -351,8 +349,8 @@ modernpath factory pull --apply
 
 After applying an answer:
 
-1. update the affected spec, requirement acceptance content, system requirement,
-   and tasks as required by the decision;
+1. update the affected spec, requirement acceptance content, and system
+   requirements as required by the decision;
 2. record the `USER:<date>:<summary>` source and consequence;
 3. run local process checks;
 4. let automatic sync publish the materialized state;

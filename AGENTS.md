@@ -40,16 +40,16 @@ Before planning, changing, reviewing, or delivering product work:
 
 ## Non-negotiable rules
 
-1. Every change traces through `EPIC -> UR -> SR -> TASK -> TEST -> CODE`.
+1. Every change traces through `EPIC -> UR -> SR -> TEST -> CODE`.
    Acceptance scenarios are content within a UR, not separate trace entities.
-   A project may retain stable `REQ-*` ids, but their user/system/task meaning
-   and links must remain explicit.
+   A project may retain stable `REQ-*` ids, but their user/system meaning and
+   links must remain explicit.
 2. `DERIVED` means a requirement was inferred but no human has yet confirmed
    that it exists. Its proposed links are candidate context, not authoritative
    trace. Emit a human confirmation gate and do not make its candidate epic
    membership authoritative or advance its acceptance content, system
-   requirements, tasks, tests, implementation, or delivery state until the
-   answer is applied.
+   requirements, tests, implementation, or delivery state until the answer is
+   applied.
 3. Humans decide product, scope, architecture, acceptance, priority, and
    workflow. Record the real actor with a `USER:<date>:<summary>` source. An
    agent may propose options but may not select one by assumption. Do not ask
@@ -72,10 +72,11 @@ Before planning, changing, reviewing, or delivering product work:
    routed. Do not hide them in prose or TODO comments.
 10. Boundary contracts are canonical. Derive boundary types from schemas where
    the project provides them.
-11. Prefer thin vertical slices and the smallest implementation that makes the
-    specified failing evidence pass.
+11. Each SR is a thin vertical slice: the smallest independently implementable
+    and verifiable system behavior. Split an SR instead of adding another
+    canonical execution layer.
 12. Technical reconnaissance is sourced at a named revision and enriches every
-    task with the affected surface, control/data-flow impact, reuse targets,
+    SR with the affected surface, control/data-flow impact, reuse targets,
     dependencies, risks, test path, gates, and explicit change boundary.
     Generated context helps navigate; it does not replace verified sources.
 13. A cold technical review runs from a separate context before human
@@ -92,10 +93,10 @@ Before planning, changing, reviewing, or delivering product work:
    then select the next eligible trace.
 2. **Specify and perform technical reconnaissance** — establish the owning
    epic, derive sourced URs with their acceptance-scenario content, then
-   testable SRs and thin tasks; inspect the repository at a named revision and
-   enrich each task with its relevant technical context.
+   testable thin SRs; inspect the repository at a named revision and enrich
+   each SR with its relevant technical context.
 3. **Cold technical review** — audit the trace, technical surface, failure
-   behavior, feasibility, task boundaries, and test strategy from a separate
+   behavior, feasibility, SR boundaries, and test strategy from a separate
    context; resolve material findings.
 4. **Approve specification** — present a decision brief and record the human
    gate before epic-path RED tests.

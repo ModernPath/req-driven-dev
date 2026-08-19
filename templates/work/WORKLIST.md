@@ -19,15 +19,15 @@ them or their candidate links in the epic rollup or implementation work rows.
 
 ## Epic Rollup
 
-| Epic | Epic record | User requirements | UR acceptance content | System requirements | Tasks | Upper status | Lower status | Delivery status | Human approval | Evidence / gaps |
-|---|---|---|---|---|---|---|---|---|---|---|
-| - | - | - | - | - | - | - | - | - | - | - |
+| Epic | Epic record | User requirements | UR acceptance content | System requirements | Upper status | Lower status | Delivery status | Human approval | Evidence / gaps |
+|---|---|---|---|---|---|---|---|---|---|
+| - | - | - | - | - | - | - | - | - | - |
 
 ## Work Rows
 
-| Task / slice | Epic | Epic record / task file | User requirement / acceptance content | System requirement | Scope | Status | Lower test evidence | Upper BDD/E2E evidence | Code reference | Notes |
-|---|---|---|---|---|---|---|---|---|---|---|
-| - | - | - | - | - | - | - | - | - | - | - |
+| SR / slice | Epic | Epic record | User requirement / acceptance content | Scope / implementation context | Status | Lower test evidence | Upper BDD/E2E evidence | Code reference | Notes |
+|---|---|---|---|---|---|---|---|---|---|
+| - | - | - | - | - | - | - | - | - | - |
 
 ## Blocked / Deferred
 

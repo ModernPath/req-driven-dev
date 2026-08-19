@@ -30,8 +30,14 @@ This is the bounded-context backlog and requirement work record described in
   - GIVEN «precondition» WHEN «action» THEN «expected outcome».
   - GIVEN «another precondition» WHEN «action» THEN «expected outcome».
   - GIVEN «failure case» WHEN «action» THEN «rejection with error code».
-- **Trace:** `EPIC -> UR -> SR -> TASK`
+- **Trace:** `EPIC-«CTX»-NNN -> UR-«CTX»-NNN -> SR-«CTX»-NNN`
+- **UR acceptance links:** «scenario/criterion headings required for a system requirement»
 - **Trace authority:** CONFIRMED | CANDIDATE (`CANDIDATE` is required while status is `DERIVED`)
+- **Boundary:** «required for a system requirement»
+- **Technical reconnaissance:** «artifact + inspected revision; required for a system requirement»
+- **Implementation context:** «files/symbols, callers, flow impact, contracts, reuse, dependencies, risks»
+- **Change boundary / non-goals:** «explicit in/out»
+- **Lower RED / gates:** «test path/name/command, expected failure, regression commands»
 - **Evidence:** —
 - **Code:** —
 - **Mission Control reference:** «optional workspace/system/entity reference»

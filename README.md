@@ -9,7 +9,7 @@ The process connects:
 human intent
   -> epic
   -> user requirement + acceptance scenario
-  -> system requirement + thin task
+  -> thin system requirement
   -> technical reconnaissance + cold review
   -> failing tests
   -> implementation
@@ -36,12 +36,12 @@ answers, evidence runs, sessions, and events.
 
 ## Core invariants
 
-- One trace: `EPIC -> UR -> SR -> TASK -> TEST -> CODE`; acceptance scenarios
+- One trace: `EPIC -> UR -> SR -> TEST -> CODE`; acceptance scenarios
   are content within the UR.
 - Inferred requirements stay `DERIVED`; their links remain candidate context
   and all downstream work waits for attributable human confirmation.
 - Both arms are red-first: BDD/E2E above, focused verification below.
-- Sourced technical reconnaissance enriches task context before implementation,
+- Sourced technical reconnaissance enriches SR context before implementation,
   and a cold technical review resolves material findings before approval.
 - Boy-scout cleanup is behavior-preserving, limited to the current requirement,
   and followed by final evidence runs.
@@ -66,7 +66,7 @@ The consuming repository should:
    entry-point adapters;
 2. retain only project-specific architecture/repository rules outside the
    installer's managed blocks in root `AGENTS.md`;
-3. configure its requirement, epic/spec/task, backlog, and generated-projection
+3. configure its requirement, epic/spec, backlog, and generated-projection
    paths;
 4. optionally bind the workspace to its ModernPath workspace/system/release;
 5. provide deterministic checks and, when connected, extraction/sync;
@@ -84,7 +84,7 @@ Do not keep live product epics or work state in this process package.
 | `CLAUDE.md` | root compatibility entry required for Claude discovery |
 | `process/` | lifecycle, state contract, and execution prompts |
 | `skills/` | reusable, tool-neutral procedures for specialized process passes |
-| `templates/work/` | backlog, requirement, epic, technical-reconnaissance, task, work-list, and progress templates |
+| `templates/work/` | backlog, requirement, epic, technical-reconnaissance, work-list, and progress templates |
 
 ## Process maintenance
 

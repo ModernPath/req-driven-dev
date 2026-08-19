@@ -1,9 +1,9 @@
-# Technical reconnaissance — «EPIC/TASK»
+# Technical reconnaissance — «EPIC/SR»
 
 Do not start this artifact for a `DERIVED` requirement. Human confirmation and
 normal planning must establish the requirement and authoritative trace first.
 
-- **Trace:** «EPIC/UR/SR/TASK ids»
+- **Trace:** «EPIC/UR/SR ids»
 - **Repository/revision:** «repository + branch/SHA»
 - **Prepared by:** «agent/person/session»
 - **Context pack:** «optional generated locator/report; never normative evidence»
@@ -43,7 +43,7 @@ move today and identify every hop the proposed work adds, removes, or changes.
 
 | Concern | Existing implementation/test pattern | Intended reuse | Source |
 |---|---|---|---|
-| «concern» | «path:symbol/test» | «how it informs the task» | CODE:/TEST: |
+| «concern» | «path:symbol/test» | «how it informs the SR» | CODE:/TEST: |
 
 ## Test infrastructure and gates
 
@@ -61,21 +61,21 @@ inventing work.
 |---|---|---|---|
 | partial failure/retry/idempotency/concurrency/security/operations | «behavior or N/A» | «test/observation» | DOC:/CODE:/TEST: |
 
-## Task context enrichment
+## SR implementation-context enrichment
 
-| TASK | Expected files/symbols | Callers/boundaries | Flow segment/impact | Reuse target | Dependencies/order | Risks/tests/gates | Change boundary |
+| SR | Expected files/symbols | Callers/boundaries | Flow segment/impact | Reuse target | Dependencies/order | Risks/tests/gates | Change boundary |
 |---|---|---|---|---|---|---|---|
-| TASK-«AREA»-«NNN» | «surface» | «paths» | «owned hops/change» | «pattern» | «sequence» | «relevant proof» | «in/out» |
+| SR-«AREA»-«NNN» | «surface» | «paths» | «owned hops/change» | «pattern» | «sequence» | «relevant proof» | «in/out» |
 
 ## Unknowns and discoveries
 
 | Item | Source/trigger | Consequence | Route/status |
 |---|---|---|---|
-| «unknown/discovery» | DOC:/CODE:/TEST: | «affected trace» | «gate/backlog/task/blocker» |
+| «unknown/discovery» | DOC:/CODE:/TEST: | «affected trace» | «gate/backlog/SR/blocker» |
 
 ## Freshness check
 
 - **Rechecked revision:** «repository + branch/SHA»
 - **Affected surface still complete:** yes/no — «evidence»
-- **Task context refreshed:** yes/no — «task refs»
+- **SR context refreshed:** yes/no — «SR refs»
 - **Cold review required/refreshed:** yes/no — «review ref»

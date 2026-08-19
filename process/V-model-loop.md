@@ -41,13 +41,12 @@ separately in [`state-tracking.md`](state-tracking.md).
        |
        | decomposes
        v
-  SYSTEM REQUIREMENT (SR) ---------------- focused verification
+  SYSTEM REQUIREMENT (SR) -> implementation -> unit/component/API/
+                                              contract/integration test
        |                                                       ^
-       v                                                       |
-  TASK / VERTICAL SLICE -> implementation -> unit/component/API/
-                                            contract/integration test
+       +---------------------- focused verification -----------+
 
-  Canonical trace: EPIC -> UR -> SR -> TASK -> TEST -> CODE
+  Canonical trace: EPIC -> UR -> SR -> TEST -> CODE
 
                          STATE TRACKING
   ledgers | epics | work-list | checks | sync | gates | evidence
@@ -75,18 +74,18 @@ Establish the owning epic, then derive user requirements and system
 requirements from the product sources. Write observable acceptance criteria,
 establish release scope, and choose the full specification path or the fast
 lane within that epic. Perform sourced technical reconnaissance, use it to
-enrich each task's implementation context, and run a cold technical review
+enrich each SR's implementation context, and run a cold technical review
 before the human specification gate. Planning starts only from confirmed
 requirements; a `DERIVED` requirement waits at its confirmation gate and is not
-eligible for authoritative epic membership, acceptance content, task, test, or
+eligible for authoritative epic membership, acceptance content, test, or
 implementation work.
 
 ### 3. Build and verify
 
-Run both V-model arms red-first. Lower-loop tasks make system behavior correct;
-upper-loop scenarios prove the intended user workflow. After the intended
-behavior is green, run a requirement-scoped boy-scout cleanup before recording
-final evidence. Record evidence and human approval, deliver in the
+Run both V-model arms red-first. Lower-loop SR slices make system behavior
+correct; upper-loop scenarios prove the intended user workflow. After the
+intended behavior is green, run a requirement-scoped boy-scout cleanup before
+recording final evidence. Record evidence and human approval, deliver in the
 implementation's source repository, and reconcile state according to
 `state-tracking.md`.
 
@@ -108,9 +107,9 @@ An epic owns:
 - actors, primary domain/bounded context, supporting contexts;
 - key models, events, interfaces, and constraints;
 - decisions and open questions;
-- sourced technical reconnaissance and task context;
+- sourced technical reconnaissance and SR implementation context;
 - cold technical review findings and dispositions;
-- UR acceptance-scenario content, SRs, and thin tasks;
+- UR acceptance-scenario content and thin SRs;
 - specifications and both human gates;
 - evidence map, gaps, discoveries, and completion record.
 
@@ -126,8 +125,6 @@ epics/EPIC-<AREA>-NNN-<slug>/
     api.md                  # as needed
     data.md                 # as needed
     testing.md              # as needed
-  tasks/
-    TASK-<AREA>-NNN-<slug>.md
 ```
 
 Seed the reconnaissance from
@@ -148,7 +145,9 @@ Minimum fields:
 - Statement: <actor can achieve/experience outcome>
 - Intended use: <context and value>
 - Source: USER:/DOC:/CODE: (`CODE:` alone implies `DERIVED` until confirmed)
-- Validation: <embedded acceptance scenarios and evidence path>
+- Acceptance scenarios: <embedded Given/When/Then content>
+- Upper RED: <acceptance test path/name/command and expected failure>
+- Upper evidence: <passing user-flow/runtime evidence and revision>
 - Status: DERIVED | PENDING_VERIFICATION | PROPOSED | READY | IN_PROGRESS | IN_REVIEW | VALIDATED | BLOCKED | DEFERRED | OBSOLETE
 ```
 
@@ -165,34 +164,59 @@ Scenario: <observable outcome>
   Then <observable result>
 ```
 
-Each scenario states the UR behavior that its linked SRs/tasks must make pass.
+Each scenario states the UR behavior that its linked SRs must make pass.
 
 ### System requirement (`SR-*`)
 
-A system requirement states testable system behavior, contract behavior, data
-behavior, or a quality constraint needed by UR acceptance content.
+A system requirement is the smallest independently implementable and verifiable
+vertical slice of system behavior needed by UR acceptance content. Split an SR
+when its behavior cannot be implemented, evidenced, owned, or delivered as one
+coherent slice.
 
 ```markdown
 ## SR-<AREA>-NNN — <behavior>
+- Owning epic: EPIC-<AREA>-NNN
 - Statement: The system shall <testable behavior>.
-- Source: <UR acceptance criterion/DOC/CODE source>
+- UR acceptance links: <UR id and scenario/criterion headings>
+- Source: <USER/DOC/CODE source for normative behavior>
 - Boundary: domain | API | UI | data | integration | operations
+- Owner/release: <owner and delivery scope>
+- Scope/change boundary: <included behavior and explicit non-goals>
+- Technical reconnaissance: <artifact and inspected revision>
+- Implementation context: <files/symbols, callers, flow impact, contracts,
+  reuse targets, dependencies, risks>
 - Verification method: unit | component | API | contract | integration
-- Linked tasks: TASK-...
+- Lower RED: <test path/name/command and expected failure>
+- Regression gates: <commands>
+- Evidence: <failing/passing runs and revision>
+- Code: <files/symbols/commit/PR>
 - Status: DERIVED | PENDING_VERIFICATION | PROPOSED | READY | IN_PROGRESS | IN_REVIEW | VALIDATED | BLOCKED | DEFERRED | OBSOLETE
 ```
 
-### Task or slice (`TASK-*`)
+When migrating existing `TASK-*` records, fold their normative scope,
+implementation context, evidence, and code links into the owning SR, then
+retire them as standalone lifecycle records. External planning boards may keep
+task-shaped projections, but those projections own no process state.
 
-A task is the smallest useful vertical increment that implements and verifies
-part of an SR. It records the expected failing test, passing test, code path,
-trace links, and the implementation context derived from technical
-reconnaissance.
+## Trace lenses
 
-A repository may retain an established `REQ-*` ledger id as the task/slice id.
-In that case record whether the row represents a user or system requirement and
-link it explicitly to the epic, UR, and SR. Do not create a parallel id merely
-to satisfy the diagram.
+The canonical trace is a relationship graph. Each lens projects the same
+authoritative links without creating a second source of truth:
+
+| Lens | Projection |
+|---|---|
+| Product | `EPIC -> UR -> acceptance scenarios` |
+| System | `UR acceptance scenario -> SR` |
+| Delivery | `EPIC -> active/validated URs and SRs` |
+| Upper evidence | `UR acceptance scenario -> TEST -> result/revision` |
+| Lower evidence | `SR -> TEST -> result/revision` |
+| Implementation | `SR -> TEST -> CODE` |
+| Reverse trace | `CODE -> TEST -> SR -> UR -> EPIC` |
+
+An SR has one owning epic and may support multiple acceptance scenarios within
+that epic. Tests may prove multiple clauses when each target and assertion is
+explicit. Code references identify the files, symbols, commits, and PRs that
+implement the SR; code does not define requirement intent.
 
 ## Sources and decisions
 
@@ -212,8 +236,8 @@ Rules:
 - normative claims need a source;
 - missing sources become open questions;
 - conflicting sources remain conflicts until a human resolves them;
-- record a decision's consequence on affected EPIC/UR/SR/TASK items and UR
-  acceptance content;
+- record a decision's consequence on affected EPIC/UR/SR items and UR acceptance
+  content;
 - an answer is not an implementation or a passing gate by itself.
 
 ## Derived requirement confirmation
@@ -235,7 +259,7 @@ While a requirement is `DERIVED`:
   readiness, release commitment, coverage, progress, and completion rollups;
 - do not make its candidate epic membership authoritative or create or advance
   its acceptance content, technical reconnaissance, system requirements,
-  tasks, tests, implementation, verification, or delivery work.
+  tests, implementation, verification, or delivery work.
 
 The human answer controls the transition:
 
@@ -266,7 +290,7 @@ an authority to select product behavior, architecture, or scope.
 
 For epic-path work, record `specs/technical-reconnaissance.md` at a named source
 revision. For fast-lane work, record the same information proportionally in the
-task. The reconnaissance must identify:
+SR. The reconnaissance must identify:
 
 - affected repositories, files, symbols, entry points, callers, writers, and
   readers;
@@ -286,15 +310,15 @@ but the reconnaissance cites and verifies the actual `DOC:`, `CODE:`, and
 `TEST:` sources. A generated context pack is navigation support, not normative
 evidence.
 
-Use the reconnaissance to enrich every initial task with its expected files and
+Use the reconnaissance to enrich every initial SR with its expected files and
 symbols, relevant callers and boundaries, owned control-flow segment and impact,
 reuse target, dependencies, risks, test path, gates, and explicit change
 boundary. Recheck that context when the source revision changes or
 implementation discovers a material omission.
 
-After reconnaissance and task enrichment, run a cold technical review in a
+After reconnaissance and SR enrichment, run a cold technical review in a
 separate context from specification authoring. The reviewer receives the
-versioned product sources, epic/specifications, tasks, reconnaissance, and
+versioned product sources, epic/specifications, SRs, reconnaissance, and
 repository state, but does not rely on the author's conversation or unstated
 reasoning. The review audits:
 
@@ -302,7 +326,7 @@ reasoning. The review audits:
 - completeness of the affected technical surface;
 - completeness of the end-to-end control/data path and every changed hop;
 - contract, data, compatibility, and failure behavior;
-- feasibility, dependency ordering, and task boundaries;
+- feasibility, dependency ordering, and SR boundaries;
 - testability, RED strategy, and adequacy of proposed gates;
 - unintended behavior or architecture choices not authorized by a source.
 
@@ -324,7 +348,7 @@ the fast lane, is required when any of these are true:
    acceptance criteria;
 2. a contract surface changes (API, schema, event, protocol, public component);
 3. the work spans bounded contexts or repositories;
-4. it needs more than one independently verified task or is expected to exceed
+4. it needs more than one independently verified SR or is expected to exceed
    one working day;
 5. it changes product-visible behavior.
 
@@ -340,8 +364,8 @@ Before full epic-path implementation, the epic must have:
    blocking open questions;
 4. each UR's user story/journey and Given/When/Then acceptance content covering
    the first slice;
-5. testable SRs and thin tasks linked to that acceptance content;
-6. task technical context enriched from the reconnaissance;
+5. thin, testable SRs linked to that acceptance content;
+6. SR implementation context enriched from the reconnaissance;
 7. upper-RED and lower-RED test strategy;
 8. a cold technical review `PASS` with no material finding open or deferred in
    the proposed scope;
@@ -360,7 +384,7 @@ SPEC-DRAFT -> SPEC-READY -> SPEC-APPROVED
                   +-- open specification gate
 ```
 
-`SPEC-READY` requires current technical reconnaissance, enriched initial tasks,
+`SPEC-READY` requires current technical reconnaissance, enriched initial SRs,
 and a cold-review `PASS` with no material finding open or deferred in scope.
 `SPEC-APPROVED` adds the attributable human decision; the technical review
 cannot make that transition.
@@ -371,20 +395,20 @@ implementation-loop work, not specification work.
 ## Fast lane
 
 The fast lane is a lightweight execution route inside an owning epic for a
-single spec-light requirement/task. It never creates an epicless or shortened
+single spec-light SR. It never creates an epicless or shortened
 trace. All must hold:
 
 - an owning epic exists and the complete
-  `EPIC -> UR -> SR -> TASK` trace is authoritative;
+  `EPIC -> UR -> SR` trace is authoritative;
 - the requirement is confirmed and is not `DERIVED`;
 - behavior is already unambiguous in a sourced requirement;
 - no contract or product-visible behavior changes;
 - one bounded context and source repository;
-- one task, expected within one working day;
+- one SR, expected within one working day;
 - no new product/architecture/acceptance decision;
 - the row has Given/When/Then criteria, expected upper and lower RED tests,
   owner, and release;
-- the task contains proportionate technical reconnaissance and enriched
+- the SR contains proportionate technical reconnaissance and enriched
   implementation context;
 - a proportionate cold technical review has no material finding open or
   deferred in scope;
@@ -421,17 +445,17 @@ is committed:
   answered gate before selecting work and never select a held candidate trace;
 - confirm active release and current item;
 - inspect blockers, open gates, evidence drift, and next `READY` trace;
-- read the relevant product, code, test, epic/spec, and task sources.
+- read the relevant product, code, test, epic/spec, and SR sources.
 
 ### 1. Specify
 
 - stop if any requirement in the proposed trace is `DERIVED`;
 - sharpen acceptance criteria without changing sourced intent;
-- create or update EPIC -> UR -> SR -> TASK links and the UR acceptance content;
+- create or update EPIC -> UR -> SR links and the UR acceptance content;
 - route ambiguity to an open question/gate;
 - pass the epic specification gate or prove every fast-lane criterion.
 
-### 1a. Technical reconnaissance and task enrichment
+### 1a. Technical reconnaissance and SR enrichment
 
 - inspect the actual product, code, contract, data, and test surfaces at a
   named revision;
@@ -439,13 +463,13 @@ is committed:
   control/data-flow impact, failure modes, and unknowns with direct sources;
 - generate or refresh a context pack when useful, then verify its references
   against the repository;
-- enrich each task with the technical context needed to execute its thin slice;
+- enrich each SR with the technical context needed to execute its thin slice;
 - stop for a human decision when reconnaissance exposes a new product,
   architecture, acceptance, or scope choice.
 
 ### 1b. Cold technical review
 
-- review the specification, reconnaissance, and enriched tasks from a separate
+- review the specification, reconnaissance, and enriched SRs from a separate
   context without relying on the author's conversation;
 - record sourced findings and explicit dispositions;
 - resolve or evidence-reject every material finding, or obtain an attributable
@@ -462,10 +486,10 @@ is committed:
 
 ### 3. Lower RED
 
-- select one thin task/SR;
+- select one thin SR;
 - write the smallest focused unit/component/API/contract/integration test;
 - run it and record the expected failure;
-- link test id/name to the task/SR.
+- link test id/name to the SR.
 
 ### 4. Green
 
@@ -477,15 +501,15 @@ is committed:
 
 ### 5. Requirement-scoped boy-scout cleanup
 
-- inspect the task diff after the intended behavior is green;
-- clean only code changed by the task or directly adjacent code required to
+- inspect the SR diff after the intended behavior is green;
+- clean only code changed by the SR or directly adjacent code required to
   express that behavior clearly;
 - allow behavior-preserving improvements such as clearer names, simpler local
-  structure, removed duplication, and dead code made obsolete by the task;
+  structure, removed duplication, and dead code made obsolete by the SR;
 - do not add behavior, widen acceptance, change public contracts or
   architecture, or perform speculative refactoring;
 - do not weaken tests or acceptance evidence to accommodate the cleanup;
-- route broader debt as a discovery instead of absorbing it into the task;
+- route broader debt as a discovery instead of absorbing it into the SR;
 - record either the bounded cleanup performed or an explicit no-op;
 - return to RED and update the trace if cleanup exposes a correctness change;
   do not disguise that change as cleanup.
@@ -496,11 +520,11 @@ is committed:
   gates against the final post-cleanup diff;
 - inspect the exact assertions clause by clause; every behavioral clause needs
   a named assertion that would fail if that clause regressed;
-- link test result, code, command, branch/SHA, and task/SR;
+- link test result, code, command, branch/SHA, and SR;
 - identify tests by stable path and test name; treat line numbers only as
   optional navigation hints;
-- move a TASK to `LOWER_VERIFIED` and record an SR's `LOWER_VERIFIED` evidence
-  only when all linked lower work passes;
+- record an SR's `LOWER_VERIFIED` evidence only when all linked lower work
+  passes;
 - move the SR requirement `work_status` to `IN_REVIEW` when all of its required
   lower evidence is complete.
 
@@ -525,7 +549,7 @@ is committed:
 
 - merge code in its source-of-truth repository;
 - integrate any workspace snapshot according to project rules;
-- update requirement, epic, task, evidence, and rollups atomically;
+- update requirement, epic, evidence, and rollups atomically;
 - reconcile ledger, epic, work-list, release, PR/commit, evidence, and any
   connected Mission Control projection before `DONE`/`VALIDATED`.
 
@@ -572,10 +596,10 @@ Choose evidence by boundary:
 - operational behavior: harness/smoke tests.
 
 ```text
-SR -> TASK -> failing focused test -> smallest implementation
-                                      |
-                                      v
-                         focused + regression tests -> LOWER_VERIFIED
+SR -> failing focused test -> smallest implementation
+                               |
+                               v
+                  focused + regression tests -> LOWER_VERIFIED
 ```
 
 ## Status model
@@ -615,18 +639,11 @@ upper_loop_status: PROPOSED -> IN_PROGRESS -> UPPER_VALIDATED
 lower_loop_status: PROPOSED -> IN_PROGRESS -> LOWER_VERIFIED
 ```
 
-Task status:
-
-```text
-PROPOSED -> READY -> IN_PROGRESS -> LOWER_VERIFIED
-```
-
-`BLOCKED`, `DEFERRED`, and `OBSOLETE` are available task side states.
 Acceptance scenarios are UR content and have no lifecycle status.
 
 Evidence waypoints:
 
-- `LOWER_VERIFIED` belongs to TASK status and SR lower evidence;
+- `LOWER_VERIFIED` belongs to SR lower evidence;
 - `UPPER_VALIDATED` belongs to UR acceptance content and epic upper evidence;
 - `VALIDATED` belongs to UR/SR requirement work status, not to an evidence axis.
 
@@ -663,20 +680,20 @@ At session start, after a slice, and after product-doc changes:
 
 ## Definition of Done
 
-A task is `LOWER_VERIFIED`, and an SR has `LOWER_VERIFIED` evidence, only when:
+An SR has `LOWER_VERIFIED` evidence only when:
 
 - its requirement ancestry is confirmed and contains no `DERIVED` item or
   candidate trace link;
 - source and trace links exist;
-- technical reconnaissance is current and the task carries its relevant
+- technical reconnaissance is current and the SR carries its relevant
   implementation context;
 - the cold technical review has no material finding open or deferred in the
-  task's scope;
+  SR's scope;
 - the expected lower test failed first for the expected reason;
 - every behavioral clause maps to a named assertion that would fail on
   regression;
 - the implementation is linked;
-- boy-scout cleanup remained within the task's requirement and change boundary,
+- boy-scout cleanup remained within the SR's requirement and change boundary,
   with a recorded change or no-op;
 - focused and required regression gates pass against the final post-cleanup
   diff;
@@ -696,13 +713,12 @@ An epic is `DONE` only when:
 
 1. every linked UR and SR is `VALIDATED`, no item is `DERIVED`, and no candidate
    trace link is counted as authoritative;
-2. current technical reconnaissance enriched its tasks;
+2. current technical reconnaissance enriched its SRs;
 3. cold technical review preceded specification approval and no material
    finding remains open or deferred in scope;
 4. specification approval preceded implementation;
 5. every UR acceptance scenario has `UPPER_VALIDATED` evidence;
-6. every linked SR has `LOWER_VERIFIED` evidence and every TASK is
-   `LOWER_VERIFIED`;
+6. every linked SR has `LOWER_VERIFIED` evidence;
 7. relevant architecture, lint, contract, integration, build, and smoke gates
    pass;
 8. known gaps are recorded and no undisclosed scope remains;

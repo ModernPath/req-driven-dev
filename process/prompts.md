@@ -16,7 +16,7 @@ state-tracking.md. Separate sourced facts, human decisions, conflicts, and open
 questions.
 Create/update product/domain documentation, ubiquitous language, rules,
 boundaries, contracts, and an open-question register. Cite every normative
-claim. Do not create implementation tasks or resolve ambiguity by assumption.
+claim. Do not create implementation work or resolve ambiguity by assumption.
 
 When code, existing SRs, documents, or analysis suggest a requirement that no
 human has confirmed, record it as DERIVED. Record proposed links only as
@@ -40,22 +40,22 @@ Release/system: <scope>
 Before planning, prove the outcome is confirmed. If it or any ancestor is
 DERIVED, ensure its confirmation gate exists and is answerable, report the
 candidate links it holds, and stop without making candidate epic membership
-authoritative or creating or advancing UR acceptance content, an SR, task,
-test, release commitment, or implementation record.
+authoritative or creating or advancing UR acceptance content, an SR, test,
+release commitment, or implementation record.
 
 Derive or update:
 - the owning epic as the top-level delivery item;
 - sourced URs held by that epic, with actor, intended use, and validation
   method;
 - stories/journeys and Given/When/Then acceptance content within each UR;
-- testable SRs and the first thin TASKs;
+- thin, testable SRs;
 - sourced technical reconnaissance at a named repository revision, covering the
   affected surface, end-to-end control/data path, changed flow hops, boundaries,
   existing patterns, test infrastructure, applicable failure modes, risks, and
   unknowns;
-- enriched TASK context with expected files/symbols, callers, owned flow
-  segment and impact, reuse targets, dependencies, test paths, gates, and
-  explicit change boundaries;
+- enriched SR implementation context with expected files/symbols, callers,
+  owned flow segment and impact, reuse targets, dependencies, test paths,
+  gates, and explicit change boundaries;
 - upper-RED and lower-RED strategy;
 - decisions, blockers, conflicts, gaps, and deferrals.
 
@@ -73,7 +73,7 @@ selected entry route is satisfied.
 Start from a separate context from the specification authoring conversation.
 Read the project AGENTS.md, .modernpath/rdd/AGENTS.md,
 .modernpath/rdd/process/V-model-loop.md, the product sources, epic and specs,
-technical reconnaissance, enriched tasks, and current repository state at the
+technical reconnaissance, enriched SRs, and current repository state at the
 recorded revision.
 
 Do not edit implementation or grant approval. Audit:
@@ -83,7 +83,7 @@ Do not edit implementation or grant approval. Audit:
 - completeness of the path from trigger through calls, transformations,
   persistence/integrations, side effects, failure propagation, and output;
 - reuse of established implementation and test patterns;
-- failure behavior, feasibility, dependency ordering, and task boundaries;
+- failure behavior, feasibility, dependency ordering, and SR boundaries;
 - testability, expected RED reasons, and adequacy of proportional gates;
 - unauthorized product, architecture, acceptance, or scope choices.
 
@@ -106,7 +106,8 @@ specs, current human gates, and relevant product sources.
 
 Audit every specification-gate condition. Lead with contradictions, missing
 sources, ambiguous acceptance behavior, trace gaps, untestable SRs, stale
-technical reconnaissance, missing task context, and cold-review findings.
+technical reconnaissance, missing SR implementation context, and cold-review
+findings.
 Reject specification entry when any linked requirement is DERIVED or any trace
 link is still candidate context.
 Confirm the cold review passed with no material finding open or deferred in
@@ -126,9 +127,9 @@ an implementation kickoff.
 ```text
 Read the project AGENTS.md, .modernpath/rdd/AGENTS.md,
 .modernpath/rdd/process/V-model-loop.md, .modernpath/rdd/process/state-tracking.md, the active
-epic/spec/task, and relevant product/code/test sources. Converge state and
+epic/spec/SR, and relevant product/code/test sources. Converge state and
 confirm current technical reconnaissance, a passing cold technical review, and
-specification approval or every fast-lane criterion. Refresh the task context
+specification approval or every fast-lane criterion. Refresh the SR context
 from the reconnaissance and current repository; if material drift changes the
 affected surface, stop and repeat reconnaissance and cold review before
 implementation.
@@ -138,7 +139,7 @@ DERIVED or any link is candidate-only, stop at its confirmation gate; do not
 write or run the RED test for that trace.
 
 Select exactly one READY trace:
-EPIC -> UR -> SR -> TASK.
+EPIC -> UR -> SR.
 
 0. Work on a feature branch, never on the default branch's working tree.
    Commit at the loop's waypoints — specification, observed RED, GREEN,
@@ -146,18 +147,18 @@ EPIC -> UR -> SR -> TASK.
    commit.
 1. Run or create the UR acceptance scenario's upper BDD/E2E test and record the
    expected RED.
-2. Create the TASK/SR focused lower test and record the expected RED.
+2. Create the SR's focused lower test and record the expected RED.
 3. Implement the smallest vertical change that makes the lower test pass.
 4. Run the focused test to establish GREEN.
-5. Inspect the task diff and perform behavior-preserving boy-scout cleanup only
+5. Inspect the SR diff and perform behavior-preserving boy-scout cleanup only
    in touched or directly adjacent code needed by this requirement. Do not add
    behavior, change contracts/architecture, or absorb broader debt. Record the
    bounded cleanup or an explicit no-op; route wider debt as a discovery.
    Do not weaken tests or acceptance evidence during cleanup.
 6. Run focused and proportional regression/contract/architecture gates against
    the final post-cleanup diff.
-7. Record lower evidence, move only proven TASKs to LOWER_VERIFIED, and move an
-   SR requirement to IN_REVIEW only when all of its lower evidence is complete.
+7. Record lower evidence and move an SR requirement to IN_REVIEW only when all
+   of its lower evidence is complete.
 8. Run upper validation; for UI work use the live stack and inspect a screenshot.
 9. Record passing upper evidence against the UR acceptance content and epic
    upper-loop status.
@@ -198,15 +199,15 @@ decisions, and next READY traces.
 ```text
 Read the project AGENTS.md, .modernpath/rdd/AGENTS.md,
 .modernpath/rdd/process/V-model-loop.md, .modernpath/rdd/process/state-tracking.md, active
-epic/spec/tasks, current code/tests/PR, and current working records/projections.
+epic/spec/SRs, current code/tests/PR, and current working records/projections.
 
 Treat completion as unproven. For every explicit EPIC, UR, UR acceptance
-scenario, SR, TASK, gate, and Definition-of-Done item, identify authoritative
+scenario, SR, gate, and Definition-of-Done item, identify authoritative
 evidence and inspect its current state. Classify each as proven, contradicted,
 incomplete, indirect, or missing.
 Treat a DERIVED requirement or candidate trace link as a hard stop: it cannot
 support readiness, verification, validation, completion, or delivery claims.
-Confirm technical-reconnaissance freshness, enriched task context, cold-review
+Confirm technical-reconnaissance freshness, enriched SR context, cold-review
 dispositions, RED-before-GREEN, requirement-scoped cleanup, post-cleanup gates,
 runtime/browser proof, evidence SHA/drift, human approval, source-repository
 delivery, release scope, and state reconciliation. Treat evidence carried
@@ -228,12 +229,12 @@ automatic implementation order:
 
 <feedback>
 
-Find affected EPIC/UR/SR/TASK traces, UR acceptance content, and current
+Find affected EPIC/UR/SR traces, UR acceptance content, and current
 behavior. Classify as defect, new outcome, change request, decision, or
 ambiguity. Record a sourced proposed change or gate, identify
 acceptance/evidence and technical-reconnaissance impact, and choose the full
 specification path or the fast lane within the owning epic. Mark affected cold
-review and task context stale when the technical surface changes. Do not
+review and SR context stale when the technical surface changes. Do not
 silently change approved scope. Reconcile the proposal according to
 state-tracking.md and report the human decision needed or next planning step.
 

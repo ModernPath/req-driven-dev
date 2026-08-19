@@ -64,21 +64,21 @@ SPEC-DRAFT — «scope of the specs set»
 
 ## System requirements
 
-| SR | Source UR/content | Boundary | Verification | Evidence | Code | Status |
+| SR | Source UR/content | System behavior / scope | Boundary | Status |
+|---|---|---|---|---|
+| SR-«AREA»-«NNN» | UR-«AREA»-«NNN» / «heading» | «smallest independently deliverable behavior» | «boundary» | PROPOSED |
+
+## SR implementation and evidence
+
+| SR | Recon/revision | Technical context | Change boundary | Lower RED | Passing evidence/gates | Code |
 |---|---|---|---|---|---|---|
-| SR-«AREA»-«NNN» | UR-«AREA»-«NNN» / «heading» | «boundary» | «test type» | — | — | PROPOSED |
-
-## Tasks
-
-| TASK | SR/UR content | Scope | Technical context | Lower RED | Passing evidence | Code | Status |
-|---|---|---|---|---|---|---|---|
-| TASK-«AREA»-«NNN» | SR-«AREA»-«NNN» / UR-«AREA»-«NNN» «heading» | «vertical slice» | «recon section/task link» | — | — | — | PROPOSED |
+| SR-«AREA»-«NNN» | «artifact + SHA» | «surface/flow/reuse/dependencies/risks» | «in/out» | — | — | — |
 
 ## Evidence map
 
 | Trace | Failing evidence | Passing evidence | Revision/report | Verdict |
 |---|---|---|---|---|
-| UR acceptance/SR/TASK | — | — | — | incomplete |
+| UR acceptance/SR | — | — | — | incomplete |
 
 ## Specification approval
 

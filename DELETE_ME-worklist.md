@@ -1,16 +1,45 @@
 # DELETE ME — Combined process-review worklist
 
 ```text
-EPIC -> UR -> SR -> TASK -> TEST -> CODE
+EPIC -> UR -> SR -> TEST -> CODE
 
 EPIC: PROPOSED -> READY -> IN_PROGRESS -> IN_REVIEW -> DONE
-
-TASK: PROPOSED -> READY -> IN_PROGRESS -> LOWER_VERIFIED
 
 UR:   DERIVED -> PROPOSED -> READY -> IN_PROGRESS -> IN_REVIEW -> VALIDATED
 
 SR:   DERIVED -> PROPOSED -> READY -> IN_PROGRESS -> IN_REVIEW -> VALIDATED
 ```
+
+## Item ownership
+
+| Item | Owns |
+|---|---|
+| EPIC | Capability goal, delivery scope and lifecycle, UR/SR membership, cross-cutting specifications and decisions, human gates, aggregate evidence, and completion record |
+| UR | Actor, context, user outcome, source, inline acceptance scenarios, requirement lifecycle, and upper-loop evidence |
+| SR | The smallest independently implementable and verifiable system behavior, source UR/scenario links, boundary and contracts, owner/release, technical reconnaissance, implementation context, change boundary, requirement lifecycle, lower-loop evidence, tests, and code links |
+| TEST | Stable test identity, the targeted UR scenario or SR clause, RED/GREEN result, and tested revision |
+| CODE | Files, symbols, commits, and PRs that implement the SR |
+
+`TASK` has no distinct canonical ownership. Its former scope, context, test,
+evidence, and code fields belong to the SR. If a proposed SR needs multiple
+independent implementation units, split it into multiple SRs.
+
+## Trace lenses
+
+| Lens | Projection |
+|---|---|
+| Product | `EPIC -> UR -> acceptance scenarios` |
+| System | `UR acceptance scenario -> SR` |
+| Delivery | `EPIC -> active/validated URs and SRs` |
+| Upper evidence | `UR acceptance scenario -> TEST -> result/revision` |
+| Lower evidence | `SR -> TEST -> result/revision` |
+| Implementation | `SR -> TEST -> CODE` |
+| Reverse trace | `CODE -> TEST -> SR -> UR -> EPIC` |
+
+An SR has one owning epic and may support multiple UR scenario clauses within
+that epic. A test may cover multiple clauses only when every target and
+assertion is explicit. Every lens projects the same links; none creates a
+second source of authority.
 
 Temporary worklist for the semantic review of PRs #5–#9 on
 `review/prs-5-9`. Delete this file after every item is resolved or moved into
@@ -30,7 +59,7 @@ the repository's permanent tracking system.
 | DM-02 | HIGH | RESOLVED | `DERIVED` is represented on the requirement work-state axis, not the specification axis |
 | DM-03 | HIGH | RESOLVED | Epic is the trace root and fast-lane work retains the complete trace |
 | DM-04 | HIGH | IN_PROGRESS | Completion approval ordering is circular |
-| DM-05 | HIGH | RESOLVED | Epic owns delivery lifecycle; scenarios are UR content |
+| DM-05 | HIGH | RESOLVED | Epic owns delivery; scenarios are UR content; SR owns the executable slice |
 | DM-06 | MEDIUM | OPEN | Invalidated evidence has no defined status consequence |
 | DM-07 | MEDIUM | OPEN | Gate lifecycle and answer channel are underspecified |
 | DM-08 | MEDIUM | OPEN | The connected-workspace preflight is not an executable sequence |
@@ -54,9 +83,12 @@ root/process review scope, but end-to-end platform support must not be claimed
 until the external implementations satisfy the contract.
 
 The DM-05 contract likewise requires extraction and projection to carry epic
-`delivery_status` separately from board status and to treat scenario rows as UR
-acceptance content without an independent delivery lifecycle. Those external
-implementations are not changed in this repository.
+`delivery_status` separately from board status, treat scenario rows as UR
+acceptance content without an independent delivery lifecycle, and stop
+requiring `TASK` as a canonical trace level. Existing external `task_*` board
+records may remain optional planning views, but their normative execution
+content must project from the owning SR. Those external implementations are
+not changed in this repository.
 
 ## DM-01 — Hold derived requirements before loop entry
 
@@ -67,7 +99,7 @@ implementations are not changed in this repository.
   hold all further action for human confirmation`.
 - Resolution: `DERIVED` is now a pre-lifecycle requirement state. It emits a
   confirmation gate, keeps proposed links candidate-only, and blocks epic,
-  acceptance content, SR, task, test, implementation, verification, release,
+  acceptance content, SR, test, implementation, verification, release,
   and delivery progression. Confirmation/correction enters the normal
   requirement lifecycle; rejection retires the candidate and its links.
 - References: `AGENTS.md#Non-negotiable rules`,
@@ -100,7 +132,7 @@ implementations are not changed in this repository.
 - Decision: `USER:2026-08-19:Epic is the top-level item that holds UR; update
   the binding rule throughout the instructions and its loops`.
 - Resolution: the canonical trace is now
-  `EPIC -> UR -> SR -> TASK -> TEST -> CODE`. Every full or fast-lane trace has
+  `EPIC -> UR -> SR -> TEST -> CODE`. Every full or fast-lane trace has
   an owning epic. Acceptance scenarios are content within a UR, not separate
   trace or lifecycle entities. The fast lane is a lightweight entry route
   within that epic: it may skip preparing and approving a new full epic
@@ -149,12 +181,17 @@ implementations are not changed in this repository.
   remains SR evidence rather than an SR work status.
 - Decision: `USER:2026-08-19:Epic should get the lifecycle and SCN is just
   content for a UR`.
+- Decision: `USER:2026-08-19:Task has no distinct purpose beyond collecting SR,
+  test, and code; remove it and put its execution content on SR`.
 - Resolution: EPIC owns repository `delivery_status` through
   `PROPOSED -> READY -> IN_PROGRESS -> IN_REVIEW -> DONE`; UR and SR share the
-  requirement work lifecycle; TASK ends at `LOWER_VERIFIED`; acceptance
-  scenarios are UR content with upper evidence but no independent status.
-  Epic delivery status remains separate from `initiatives.status`, which is a
-  board axis.
+  requirement work lifecycle; acceptance scenarios are UR content with upper
+  evidence but no independent status; and SR is the smallest independently
+  implementable and verifiable slice. SR absorbs the former TASK scope,
+  technical context, change boundary, lower RED, evidence, tests, and code
+  links. The canonical trace is `EPIC -> UR -> SR -> TEST -> CODE`. Epic
+  delivery status remains separate from `initiatives.status`, which is a board
+  axis.
 - Resolution record: commit containing this resolution on `review/prs-5-9`.
 
 ## DM-06 — Define consequences of invalidated evidence
