@@ -37,6 +37,8 @@ answers, evidence runs, sessions, and events.
 ## Core invariants
 
 - One trace: `UR -> EPIC -> SCN -> SR -> TASK -> TEST -> CODE`.
+- Inferred requirements stay `DERIVED`; their links remain candidate context
+  and all downstream work waits for attributable human confirmation.
 - Both arms are red-first: BDD/E2E above, focused verification below.
 - Sourced technical reconnaissance enriches task context before implementation,
   and a cold technical review resolves material findings before approval.

@@ -8,6 +8,15 @@ Detailed epic contents live in the consuming repository's `epics/`. This file
 is only the active queue and cross-epic rollup; it does not replace the parent
 epic or requirement ledger.
 
+## Derived Requirement Confirmation
+
+`DERIVED` requirements appear only in this human-action queue. Do not include
+them or their candidate links in the epic rollup or implementation work rows.
+
+| Requirement | Ledger record | Inference source | Candidate links held | Confirmation gate | Human move |
+|---|---|---|---|---|---|
+| - | - | - | - | - | - |
+
 ## Epic Rollup
 
 | Epic | Epic record | User requirements | Acceptance scenarios | System requirements | Tasks | Upper status | Lower status | Overall status | Human approval | Evidence / gaps |

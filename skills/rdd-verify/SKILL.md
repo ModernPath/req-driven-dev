@@ -1,9 +1,9 @@
 ---
 name: rdd-verify
-description: Verify reverse-engineered PENDING_VERIFICATION requirements against real code and tests, add missing focused tests, and advance only evidence-backed state without bypassing approval or delivery. Use after an RDD reverse-engineering pass or whenever a derived ledger row needs direct current verification. Do not use for new behavior; run the normal red-first build loop instead.
+description: Verify human-confirmed PENDING_VERIFICATION requirements against real code and tests, add missing focused tests, and advance only evidence-backed state without bypassing approval or delivery. Use after an as-built requirement has been confirmed and needs direct current verification. Never use for DERIVED requirements or new behavior; run the confirmation gate or normal red-first build loop instead.
 ---
 
-# Verify derived behavior
+# Verify confirmed as-built behavior
 
 Turn behavior that was described from shipped code into current, direct lower-loop evidence.
 
@@ -16,6 +16,12 @@ repository. The installed process owns status meanings and completion.
 
 This skill verifies system behavior. It does not grant human approval or prove
 delivery.
+
+- Never run this skill for a `DERIVED` requirement. `DERIVED` means no human has
+  confirmed that the requirement exists; its proposed links are candidate
+  context and all downstream work is held. Apply its confirmation gate first.
+- `PENDING_VERIFICATION` means the requirement and as-built description were
+  already confirmed, but current direct test evidence is missing.
 
 - Move a verified task or system requirement to `LOWER_VERIFIED`. A ledger with
   one combined work-status column may record that as `IN_REVIEW` **only when the
@@ -35,6 +41,10 @@ delivery.
 
 A `PENDING_VERIFICATION` row is a description someone accepted. It is not an
 entry permit, and this skill adds tests — which is implementation.
+
+If the row or any requirement ancestor is `DERIVED`, or if its trace uses a
+candidate link, stop. Do not inspect tests as though the trace were real, and do
+not use existing SR evidence to imply that the inferred user outcome is valid.
 
 Before changing any test, satisfy one of:
 
@@ -117,8 +127,8 @@ assertion remains unverified.
 
 Do not weaken a test to promote a row.
 
-- If the row is only a finding, keep or move it to `PROPOSED` and route the
-  product decision.
+- If the row is only an inference that no human confirmed as a requirement,
+  move it to `DERIVED`, record candidate links, and emit its confirmation gate.
 - If the code cannot satisfy the row, record the contradiction and create a
   separate requirement or task for the fix.
 - If verification needs unavailable infrastructure, record that exact blocker

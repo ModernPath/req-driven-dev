@@ -43,44 +43,50 @@ Before planning, changing, reviewing, or delivering product work:
 1. Every change traces through `UR -> EPIC -> SCN -> SR -> TASK -> TEST ->
    CODE`. A project may retain stable `REQ-*` ids, but their user/system/task
    meaning and links must remain explicit.
-2. Humans decide product, scope, architecture, acceptance, priority, and
+2. `DERIVED` means a requirement was inferred but no human has yet confirmed
+   that it exists. Its proposed links are candidate context, not authoritative
+   trace. Emit a human confirmation gate and do not advance its epic, scenarios,
+   system requirements, tasks, tests, implementation, or delivery state until
+   the answer is applied.
+3. Humans decide product, scope, architecture, acceptance, priority, and
    workflow. Record the real actor with a `USER:<date>:<summary>` source. An
    agent may propose options but may not select one by assumption. Do not ask
    for facts that can be established safely from product docs, code, tests, or
    current working records; ask only for decisions requiring human authority.
-3. Normative claims cite `USER:`, `DOC:`, `CODE:`, `TEST:`, `RUN:`, or `EPIC:`
+4. Normative claims cite `USER:`, `DOC:`, `CODE:`, `TEST:`, `RUN:`, or `EPIC:`
    sources. Missing support becomes an open question; conflicting support
    remains a conflict.
-4. Both V-model arms are red-first: BDD/E2E/user-flow evidence above and
+5. Both V-model arms are red-first: BDD/E2E/user-flow evidence above and
    focused unit/component/API/contract/integration evidence below.
-5. Epic-path implementation starts only after the specification gate is
+6. Epic-path implementation starts only after the specification gate is
    approved. Fast-lane work must satisfy every fast-lane condition.
-6. `LOWER_VERIFIED`, `UPPER_VALIDATED`, `IN_REVIEW`, `DONE`, and `VALIDATED`
+7. `LOWER_VERIFIED`, `UPPER_VALIDATED`, `IN_REVIEW`, `DONE`, and `VALIDATED`
    require linked direct evidence. A label, checkbox, or unrelated green suite
    is not proof.
-7. Humans approve epic specifications and epic/user-requirement completion.
+8. Humans approve epic specifications and epic/user-requirement completion.
    Tests cannot grant human approval.
-8. Deferrals, discoveries, blockers, and deviations are explicit, sourced, and
+9. Deferrals, discoveries, blockers, and deviations are explicit, sourced, and
    routed. Do not hide them in prose or TODO comments.
-9. Boundary contracts are canonical. Derive boundary types from schemas where
+10. Boundary contracts are canonical. Derive boundary types from schemas where
    the project provides them.
-10. Prefer thin vertical slices and the smallest implementation that makes the
+11. Prefer thin vertical slices and the smallest implementation that makes the
     specified failing evidence pass.
-11. Technical reconnaissance is sourced at a named revision and enriches every
+12. Technical reconnaissance is sourced at a named revision and enriches every
     task with the affected surface, control/data-flow impact, reuse targets,
     dependencies, risks, test path, gates, and explicit change boundary.
     Generated context helps navigate; it does not replace verified sources.
-12. A cold technical review runs from a separate context before human
+13. A cold technical review runs from a separate context before human
     specification approval. Material findings open or deferred in scope block
     implementation entry; the review cannot grant human approval.
-13. Boy-scout cleanup is behavior-preserving and tightly scoped to the current
+14. Boy-scout cleanup is behavior-preserving and tightly scoped to the current
     requirement, touched code, and directly adjacent code. Broader debt becomes
     a discovery, and final evidence runs after cleanup.
 
 ## Working loop
 
 1. **Orient** — inspect repository and process state according to
-   `process/state-tracking.md`; select the next eligible trace.
+   `process/state-tracking.md`; resolve or respect `DERIVED` confirmation holds,
+   then select the next eligible trace.
 2. **Specify and perform technical reconnaissance** — derive sourced URs and
    SCNs, then testable SRs and thin tasks; inspect the repository at a named
    revision and enrich each task with its relevant technical context.

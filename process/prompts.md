@@ -18,6 +18,11 @@ Create/update product/domain documentation, ubiquitous language, rules,
 boundaries, contracts, and an open-question register. Cite every normative
 claim. Do not create implementation tasks or resolve ambiguity by assumption.
 
+When code, existing SRs, documents, or analysis suggest a requirement that no
+human has confirmed, record it as DERIVED. Record proposed links only as
+candidate context, create its product-language confirmation brief and gate, and
+stop downstream planning until the attributed answer is applied.
+
 Report changed sources, derived facts, human decisions still needed, conflicts,
 and candidate user outcomes.
 ```
@@ -31,6 +36,11 @@ working records and pending human intents first.
 
 Outcome/source: <reference>
 Release/system: <scope>
+
+Before planning, prove the outcome is confirmed. If it or any ancestor is
+DERIVED, ensure its confirmation gate exists and is answerable, report the
+candidate links it holds, and stop without creating or advancing an epic,
+scenario, SR, task, test, release commitment, or implementation record.
 
 Derive or update:
 - a sourced UR with actor, intended use, and validation method;
@@ -94,6 +104,8 @@ specs, current human gates, and relevant product sources.
 Audit every specification-gate condition. Lead with contradictions, missing
 sources, ambiguous acceptance behavior, trace gaps, untestable SRs, stale
 technical reconnaissance, missing task context, and cold-review findings.
+Reject specification entry when any linked requirement is DERIVED or any trace
+link is still candidate context.
 Confirm the cold review passed with no material finding open or deferred in
 scope. Confirm the specification gate exists and is answerable before
 soliciting the decision: in a connected workspace the record is committed,
@@ -117,6 +129,10 @@ specification approval or every fast-lane criterion. Refresh the task context
 from the reconnaissance and current repository; if material drift changes the
 affected surface, stop and repeat reconnaissance and cold review before
 implementation.
+
+Confirm every requirement in the trace is human-confirmed. If any item is
+DERIVED or any link is candidate-only, stop at its confirmation gate; do not
+write or run the RED test for that trace.
 
 Select exactly one READY trace:
 UR -> EPIC -> SCN -> SR -> TASK.
@@ -157,7 +173,9 @@ gates, and .modernpath/rdd/process/state-tracking.md.
 This is planning work; do not implement product code.
 
 For every backlog/discovery item:
-- route clear behavior to a sourced PROPOSED UR/SR;
+- route a possible requirement inferred without human confirmation to DERIVED,
+  record candidate links, and emit its confirmation gate;
+- route clear behavior with an authoritative source to a sourced PROPOSED UR/SR;
 - route ambiguity or authority needs to a gate and BLOCKED trace;
 - route future work to DEFERRED with reason/owner/target;
 - route contradictions to a conflict;
@@ -179,6 +197,8 @@ epic/spec/tasks, current code/tests/PR, and current working records/projections.
 Treat completion as unproven. For every explicit UR, SCN, SR, TASK, gate, and
 Definition-of-Done item, identify authoritative evidence and inspect its current
 state. Classify each as proven, contradicted, incomplete, indirect, or missing.
+Treat a DERIVED requirement or candidate trace link as a hard stop: it cannot
+support readiness, verification, validation, completion, or delivery claims.
 Confirm technical-reconnaissance freshness, enriched task context, cold-review
 dispositions, RED-before-GREEN, requirement-scoped cleanup, post-cleanup gates,
 runtime/browser proof, evidence SHA/drift, human approval, source-repository
@@ -208,4 +228,10 @@ impact, and determine epic vs fast lane. Mark affected cold review and task
 context stale when the technical surface changes. Do not silently change
 approved scope. Reconcile the proposal according to state-tracking.md and
 report the human decision needed or next planning step.
+
+If the feedback confirms, corrects, or rejects a DERIVED requirement, treat it
+as the gate answer only through the connected or repo-borne answer path. Record
+the real USER source, apply the defined DERIVED transition, retire candidate
+links that were rejected or replaced, and re-plan the surviving links before
+they become authoritative.
 ```

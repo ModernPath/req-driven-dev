@@ -24,12 +24,16 @@ Record every triage pass here with the date and what was routed where.
 ```markdown
 ## YYYY-MM-DD — Triage pass N
 **Routed:**
+- Item inferred from code/SRs without human confirmation → CONTEXT REQ-XXX-NNN (DERIVED) + confirmation gate
 - Item description → CONTEXT REQ-XXX-NNN (PROPOSED)
 - Item description → docs/open-questions.md OQ-NNN
 - Item description → DROPPED (reason)
 
 **Promoted PROPOSED → READY:**
 - REQ-XXX-NNN (acceptance criteria sharpened)
+
+**Human-confirmed DERIVED:**
+- REQ-XXX-NNN → PROPOSED/PENDING_VERIFICATION (USER source; candidate links sent to planning)
 
 **Notes:** any observations about the backlog state
 ```

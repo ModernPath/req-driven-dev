@@ -4,6 +4,7 @@
 - **Overall status:** PROPOSED
 - **Upper status:** PROPOSED
 - **Lower status:** PROPOSED
+- **Requirement confirmation:** all linked requirements confirmed; no `DERIVED` or candidate link is eligible for active epic scope
 
 ## User outcome
 
@@ -15,9 +16,9 @@ SPEC-DRAFT — «scope of the specs set»
 
 ## Linked user requirements
 
-| UR | Actor | Statement | Source | Status |
-|---|---|---|---|---|
-| UR-«AREA»-«NNN» | «role» | «outcome» | USER:/DOC: | PROPOSED |
+| UR | Actor | Statement | Source | Trace authority | Status |
+|---|---|---|---|---|---|
+| UR-«AREA»-«NNN» | «role» | «outcome» | USER:/DOC: | CONFIRMED | PROPOSED |
 
 ## Domain and interfaces
 

@@ -5,6 +5,7 @@
 - **System requirement:** SR-«AREA»-«NNN»
 - **Owner:** «owner»
 - **Status:** READY
+- **Requirement confirmation:** CONFIRMED — no `DERIVED` ancestor or candidate trace link
 
 ## Goal and scope
 

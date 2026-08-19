@@ -62,7 +62,9 @@ behavior, and technical constraints.
 
 Output: sourced product/domain documentation, vocabulary, rules, architecture,
 contracts, and open questions. Do not turn ambiguity into a requirement by
-guessing.
+guessing. When existing code or documents suggest a requirement that no human
+has confirmed, record it as `DERIVED`, expose its proposed trace only as
+candidate context, emit a confirmation gate, and stop its downstream flow.
 
 ### 2. Plan
 
@@ -70,7 +72,9 @@ Derive user requirements and system requirements from the product sources.
 Write observable acceptance criteria, establish ownership and release scope,
 and route work into an epic or the fast lane. Perform sourced technical
 reconnaissance, use it to enrich each task's implementation context, and run a
-cold technical review before the human specification gate.
+cold technical review before the human specification gate. Planning starts only
+from confirmed requirements; a `DERIVED` requirement waits at its confirmation
+gate and is not eligible for epic, scenario, task, test, or implementation work.
 
 ### 3. Build and verify
 
@@ -99,9 +103,9 @@ Minimum fields:
 - Actor: <role>
 - Statement: <actor can achieve/experience outcome>
 - Intended use: <context and value>
-- Source: USER:/DOC:
+- Source: USER:/DOC:/CODE: (`CODE:` alone implies `DERIVED` until confirmed)
 - Validation: <linked SCN ids>
-- Status: PROPOSED | READY | IN_PROGRESS | IN_REVIEW | VALIDATED | BLOCKED | DEFERRED | OBSOLETE
+- Status: DERIVED | PROPOSED | READY | IN_PROGRESS | IN_REVIEW | VALIDATED | BLOCKED | DEFERRED | OBSOLETE
 ```
 
 ### Epic (`EPIC-*`)
@@ -167,7 +171,7 @@ behavior, or a quality constraint needed by a scenario.
 - Boundary: domain | API | UI | data | integration | operations
 - Verification method: unit | component | API | contract | integration
 - Linked tasks: TASK-...
-- Status: PROPOSED | READY | IN_PROGRESS | LOWER_VERIFIED | BLOCKED | DEFERRED | OBSOLETE
+- Status: DERIVED | PROPOSED | READY | IN_PROGRESS | LOWER_VERIFIED | BLOCKED | DEFERRED | OBSOLETE
 ```
 
 ### Task or slice (`TASK-*`)
@@ -202,6 +206,48 @@ Rules:
 - conflicting sources remain conflicts until a human resolves them;
 - record a decision's consequence on affected UR/SCN/SR/TASK items;
 - an answer is not an implementation or a passing gate by itself.
+
+## Derived requirement confirmation
+
+`DERIVED` is a pre-lifecycle requirement state. It means repository evidence,
+existing system requirements, or analysis suggests that a user or system
+requirement may exist, but an authorized human has not confirmed that it is a
+real requirement. Code can prove observed system behavior; it cannot prove the
+user intent attributed to that behavior.
+
+While a requirement is `DERIVED`:
+
+- record its statement, inference sources, and a product-language confirmation
+  brief;
+- emit a decision gate that holds the requirement and every proposed downstream
+  link;
+- label proposed UR/SCN/SR/epic relationships as candidate context only;
+- exclude the requirement and candidate links from authoritative trace closure,
+  readiness, release commitment, coverage, progress, and completion rollups;
+- do not create or advance its epic, scenarios, technical reconnaissance,
+  system requirements, tasks, tests, implementation, verification, or delivery
+  work.
+
+The human answer controls the transition:
+
+```text
+DERIVED -> confirmed as stated -----------> PROPOSED
+        -> corrected and confirmed -------> PROPOSED (replace candidate links)
+        -> rejected as a requirement -----> OBSOLETE (retire candidate links)
+```
+
+Record a confirmation or correction with its real actor and
+`USER:<date>:<summary>` source. Confirmation establishes that the requirement
+exists; it does not automatically approve a specification, validate candidate
+links, prove current behavior, select a release, or make the requirement
+`READY`. Re-evaluate every candidate link through the normal planning flow. A
+confirmed as-built description may enter `PENDING_VERIFICATION` instead of
+`PROPOSED` only when the human decision explicitly accepts both the requirement
+and the description of the behavior that already ships.
+
+`DERIVED` and `PENDING_VERIFICATION` are not synonyms: `DERIVED` lacks human
+confirmation that the requirement exists; `PENDING_VERIFICATION` has that
+confirmation but lacks direct current test evidence.
 
 ## Technical reconnaissance and cold review
 
@@ -297,29 +343,16 @@ Before implementation, an epic must have:
 Specification state:
 
 ```text
-SPEC-DRAFT -> SPEC-READY -> SPEC-APPROVED    (the lifecycle)
+SPEC-DRAFT -> SPEC-READY -> SPEC-APPROVED
                   |              |
                   |              +-- attributable human approval
                   +-- open specification gate
-
-SPEC-DERIVED                                 (declared off the lifecycle)
 ```
 
 `SPEC-READY` requires current technical reconnaissance, enriched initial tasks,
 and a cold-review `PASS` with no material finding open or deferred in scope.
 `SPEC-APPROVED` adds the attributable human decision; the technical review
 cannot make that transition.
-
-`SPEC-DERIVED` declares that the epic records behavior that already ships —
-reverse-engineered or otherwise as-built — so no specification gate applies.
-It is not a fourth position on the lifecycle; it is the specification-axis
-counterpart of the ledger's `PENDING_VERIFICATION`. A marker declared
-non-gating must never cause a specification-approval gate to be emitted or
-solicited: an approval over already-built work asks permission after the fact.
-New behavior under a `SPEC-DERIVED` epic re-enters the lifecycle through a
-normal specification. These four markers are the whole vocabulary; tooling
-that reads the marker treats anything else as unreadable and says so, rather
-than staying silent.
 
 No epic-path RED test is written before `SPEC-APPROVED`. Writing the test is
 implementation-loop work, not specification work.
@@ -328,6 +361,7 @@ implementation-loop work, not specification work.
 
 The fast lane is for a single spec-light requirement/task. All must hold:
 
+- the requirement is confirmed and is not `DERIVED`;
 - behavior is already unambiguous in a sourced requirement;
 - no contract or product-visible behavior changes;
 - one bounded context and source repository;
@@ -366,12 +400,15 @@ is committed:
 - inspect repository state and preserve unrelated work;
 - reconcile working records and pending human intents per
   `state-tracking.md`;
+- inspect `DERIVED` requirements and their confirmation gates; apply any
+  answered gate before selecting work and never select a held candidate trace;
 - confirm active release and current item;
 - inspect blockers, open gates, evidence drift, and next `READY` trace;
 - read the relevant product, code, test, epic/spec, and task sources.
 
 ### 1. Specify
 
+- stop if any requirement in the proposed trace is `DERIVED`;
 - sharpen acceptance criteria without changing sourced intent;
 - create or update UR -> EPIC -> SCN -> SR -> TASK links;
 - route ambiguity to an open question/gate;
@@ -460,9 +497,9 @@ is committed:
 - audit every criterion against direct evidence;
 - present the brief, visible behavior, risks, gaps, deferrals, and test results;
 - set requirement/epic `IN_REVIEW` only after lower verification is complete and
-  upper validation is complete or the row demonstrably owes none — a derived row
-  with no scenario is the only routine case, and it records that rather than
-  inferring it (see `state-tracking.md`);
+  upper validation is complete or the row demonstrably owes none — a confirmed
+  as-built row with no scenario is the only routine case, and it records that
+  rather than inferring it (see `state-tracking.md`);
 - record the human completion decision with actual actor and scope.
 
 ### 9. Deliver and reconcile
@@ -528,6 +565,7 @@ Top-level work status:
 
 | Status | Meaning |
 |---|---|
+| `DERIVED` | inferred requirement awaiting attributable human confirmation; candidate links are non-authoritative and downstream work is held |
 | `PROPOSED` | identified, not ready |
 | `READY` | sourced acceptance and entry gate complete |
 | `IN_PROGRESS` | either evidence loop is underway |
@@ -535,7 +573,7 @@ Top-level work status:
 | `DONE` | evidence, human approval, source delivery, and reconciliation complete |
 | `BLOCKED` | cannot proceed; blocker/gate linked |
 | `DEFERRED` | explicitly postponed; reason, owner, and target recorded |
-| `OBSOLETE` | superseded; replacement source linked |
+| `OBSOLETE` | rejected or superseded; human decision or replacement source linked |
 
 Evidence waypoints:
 
@@ -558,7 +596,8 @@ Capture first, triage separately:
 
 | Discovery | Route |
 |---|---|
-| clear requirement with owner | `PROPOSED` user/system requirement |
+| inferred possible requirement without human confirmation | `DERIVED` requirement plus confirmation gate; proposed links remain candidate only |
+| clear requirement with authoritative source and owner | `PROPOSED` user/system requirement |
 | missing human decision or ambiguity | open question/decision gate; `BLOCKED` if needed |
 | known future work | `DEFERRED` with reason, owner, and target |
 | capability/spec gap | gap record linked to affected traces |
@@ -577,6 +616,8 @@ At session start, after a slice, and after product-doc changes:
 
 A task/SR is `LOWER_VERIFIED` only when:
 
+- its requirement ancestry is confirmed and contains no `DERIVED` item or
+  candidate trace link;
 - source and trace links exist;
 - technical reconnaissance is current and the task carries its relevant
   implementation context;
@@ -594,6 +635,8 @@ A task/SR is `LOWER_VERIFIED` only when:
 
 A scenario is `UPPER_VALIDATED` only when:
 
+- its requirement ancestry is confirmed and contains no `DERIVED` item or
+  candidate trace link;
 - its sourced observable behavior and trace links exist;
 - the upper test failed before implementation satisfied it;
 - the user-flow evidence now passes;
@@ -602,19 +645,21 @@ A scenario is `UPPER_VALIDATED` only when:
 
 An epic is `DONE` only when:
 
-1. current technical reconnaissance enriched its tasks;
-2. cold technical review preceded specification approval and no material
+1. every linked requirement is confirmed, no item is `DERIVED`, and no
+   candidate trace link is counted as authoritative;
+2. current technical reconnaissance enriched its tasks;
+3. cold technical review preceded specification approval and no material
    finding remains open or deferred in scope;
-3. specification approval preceded implementation;
-4. every SCN is `UPPER_VALIDATED`;
-5. every linked SR/TASK is `LOWER_VERIFIED`;
-6. relevant architecture, lint, contract, integration, build, and smoke gates
+4. specification approval preceded implementation;
+5. every SCN is `UPPER_VALIDATED`;
+6. every linked SR/TASK is `LOWER_VERIFIED`;
+7. relevant architecture, lint, contract, integration, build, and smoke gates
    pass;
-7. known gaps are recorded and no undisclosed scope remains;
-8. human completion approval is recorded with actor, scope, and source;
-9. code is merged in the authoritative implementation repository;
-10. state records and projections required by `state-tracking.md` agree;
-11. evidence is pinned to the delivered revision and has not decayed.
+8. known gaps are recorded and no undisclosed scope remains;
+9. human completion approval is recorded with actor, scope, and source;
+10. code is merged in the authoritative implementation repository;
+11. state records and projections required by `state-tracking.md` agree;
+12. evidence is pinned to the delivered revision and has not decayed.
 
 A user requirement is `VALIDATED` only when its scenarios and linked epics meet
 the same evidence bar and the human accepts the user outcome.
@@ -626,7 +671,8 @@ Start:
 1. read project and shared instructions;
 2. reconcile working records and pending human intents per
    `state-tracking.md`;
-3. inspect active scope, gates, evidence drift, and next `READY` trace;
+3. inspect `DERIVED` confirmation holds, active scope, gates, evidence drift,
+   and the next confirmed `READY` trace;
 4. inspect technical-reconnaissance and cold-review freshness;
 5. read the relevant sources before editing.
 
