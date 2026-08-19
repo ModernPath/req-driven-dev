@@ -101,6 +101,38 @@ until the external implementations satisfy the contract.
 
 ## DM-04 — Establish completion-gate ordering
 
+```text
+EPIC
+  |
+  v
+UR
+  |
+  v
+SCN
+  |
+  v
+SR
+  |
+  v
+TASK
+  |
+  v
+TEST
+  |
+  v
+CODE
+```
+
+```text
+TASK: PROPOSED -> READY -> IN_PROGRESS -> LOWER_VERIFIED
+
+SCN:  PROPOSED -> READY -> IN_PROGRESS -> UPPER_VALIDATED
+
+UR:   DERIVED -> PROPOSED -> READY -> IN_PROGRESS -> IN_REVIEW -> VALIDATED
+
+SR:   DERIVED -> PROPOSED -> READY -> IN_PROGRESS -> LOWER_VERIFIED
+```
+
 - Status: `OPEN`
 - Finding: the lifecycle records the human completion decision before delivery,
   while the completion-review prompt requires human approval and source
