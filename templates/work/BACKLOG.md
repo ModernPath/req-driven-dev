@@ -25,7 +25,7 @@ Record every triage pass here with the date and what was routed where.
 ## YYYY-MM-DD — Triage pass N
 **Routed:**
 - Item inferred from code/SRs without human confirmation → CONTEXT REQ-XXX-NNN (DERIVED) + confirmation gate
-- Item description → CONTEXT REQ-XXX-NNN (PROPOSED)
+- Item description → owning EPIC + CONTEXT REQ-XXX-NNN (PROPOSED)
 - Item description → docs/open-questions.md OQ-NNN
 - Item description → DROPPED (reason)
 

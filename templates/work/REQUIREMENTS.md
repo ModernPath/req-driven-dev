@@ -21,6 +21,7 @@ This is the bounded-context backlog and requirement work record described in
 ### REQ-«CTX»-NNN — «One-line title»
 - **Status:** PROPOSED  ·  **Stage:** MVP  ·  **Priority:** must  ·  **Owner:** —
 - **Kind:** system  ·  **Release:** —
+- **Owning epic:** `EPIC-«CTX»-NNN`
 - **Raised-by:** derived from `DOC:docs/«NN»#<section>`
 - **Source:** `DOC:docs/«NN»#<section>` / `USER:<date>:<summary>`
 - **Statement:** «One or two sentences describing what the requirement ensures»
@@ -29,7 +30,7 @@ This is the bounded-context backlog and requirement work record described in
   - GIVEN «precondition» WHEN «action» THEN «expected outcome».
   - GIVEN «another precondition» WHEN «action» THEN «expected outcome».
   - GIVEN «failure case» WHEN «action» THEN «rejection with error code».
-- **Trace:** `UR -> EPIC -> SCN -> SR/TASK`
+- **Trace:** `EPIC -> UR -> SCN -> SR -> TASK`
 - **Trace authority:** CONFIRMED | CANDIDATE (`CANDIDATE` is required while status is `DERIVED`)
 - **Evidence:** —
 - **Code:** —
@@ -42,7 +43,7 @@ This is the bounded-context backlog and requirement work record described in
 - What: Confirm whether «inferred requirement» is a real requirement.
 - Why now: «source/code/SR inference and held candidate links»
 - Changes if approved: Move to `PROPOSED` (or explicitly accepted `PENDING_VERIFICATION`) and re-plan candidate links.
-- Risk if wrong: Invalid user intent would make «candidate UR/EPIC/SCN/SR links» misleading.
+- Risk if wrong: Invalid user intent would make «candidate EPIC/UR/SCN/SR links» misleading.
 - Recommendation: «option and sourced rationale without selecting for the human»
 - Image: «optional supporting image»
 ```

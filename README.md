@@ -7,8 +7,8 @@ The process connects:
 
 ```text
 human intent
-  -> user requirement
-  -> epic + acceptance scenario
+  -> epic
+  -> user requirement + acceptance scenario
   -> system requirement + thin task
   -> technical reconnaissance + cold review
   -> failing tests
@@ -36,7 +36,7 @@ answers, evidence runs, sessions, and events.
 
 ## Core invariants
 
-- One trace: `UR -> EPIC -> SCN -> SR -> TASK -> TEST -> CODE`.
+- One trace: `EPIC -> UR -> SCN -> SR -> TASK -> TEST -> CODE`.
 - Inferred requirements stay `DERIVED`; their links remain candidate context
   and all downstream work waits for attributable human confirmation.
 - Both arms are red-first: BDD/E2E above, focused verification below.

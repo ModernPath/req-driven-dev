@@ -74,7 +74,7 @@ Recommended status vocabulary:
 | `PROPOSED` | identified but not ready |
 | `READY` | sourced criteria are ready for implementation entry |
 | `IN_PROGRESS` | one or both evidence loops are underway |
-| `IN_REVIEW` | lower verification is complete, and upper validation is complete or the row owes none; approval or delivery remains |
+| `IN_REVIEW` | lower verification and upper validation are complete; approval or delivery remains |
 | `PENDING_VERIFICATION` | human-confirmed as-built requirement: described and accepted as accurate, but not yet proven by a test |
 | `DONE` | evidence, approval, source delivery, and reconciliation are complete |
 | `BLOCKED` | cannot proceed; blocker or gate is linked |
@@ -88,7 +88,7 @@ an open human confirmation gate. Until that answer is applied:
 
 - the row is not eligible for `PROPOSED`, `READY`, release commitment, work
   selection, specification, testing, implementation, or verification;
-- proposed UR/epic/SCN/SR relationships are candidate context in the row and
+- proposed EPIC/UR/SCN/SR relationships are candidate context in the row and
   gate brief, not authoritative links in epic scope, compliance traces, or
   rollups;
 - existing SRs and their evidence remain intact, but the derived UR must not be
@@ -114,27 +114,22 @@ behavior is tested.
 Direct verification moves a confirmed as-built system requirement to
 `LOWER_VERIFIED`.
 
-A ledger with one combined work-status column may record that as `IN_REVIEW`
-**only when the row carries no upper-loop obligation** — that is, no scenario
-exists or is owed for it, so upper validation is not outstanding but absent. The
-row states that fact; it is not inferred from the ledger's shape. A confirmed
-as-built row that does own a scenario stays `IN_PROGRESS` until upper
-validation, exactly like built work.
-
-The distinction matters because the column count is a property of the ledger and
-the obligation is a property of the requirement. Mapping on the former lets a
-schema decide what "reviewed" means, which is how `IN_REVIEW` comes to describe
-two different amounts of evidence in one corpus.
+Every ledger row selected for implementation or verification must first belong
+to an authoritative `EPIC -> UR -> SCN -> SR` ancestry. A confirmed as-built
+row without that ancestry remains `PENDING_VERIFICATION` and returns to normal
+planning before tests change. A ledger with one combined work-status column
+stays `IN_PROGRESS` after lower verification and reaches `IN_REVIEW` only after
+its SCN is also `UPPER_VALIDATED`.
 
 Test evidence never moves a row directly to `DONE`; approval,
 authoritative-source delivery, and state reconciliation remain separate gates.
 
 ### Epic record
 
-The epic owns detailed internal completion: `UR`, `SCN`, `SR`, `TASK`, spec
-status, technical reconnaissance, cold-review findings and dispositions,
-decisions, gaps, evidence, and approval. Its upper and lower loop statuses are
-separate from the requirement work status.
+The epic is the top-level delivery record. It owns detailed internal completion:
+`UR`, `SCN`, `SR`, `TASK`, spec status, technical reconnaissance, cold-review
+findings and dispositions, decisions, gaps, evidence, and approval. Its upper
+and lower loop statuses are separate from the requirement work status.
 
 Use these axes independently:
 

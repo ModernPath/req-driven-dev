@@ -31,10 +31,14 @@ separately in [`state-tracking.md`](state-tracking.md).
   user intent                                               evidence
        |                                                       ^
        v                                                       |
+  EPIC (top-level delivery item)                               |
+       |                                                       |
+       | holds                                                 |
+       v                                                       |
   USER REQUIREMENT (UR) ---------------------- BDD/E2E validation
        |                                                       ^
        v                                                       |
-  EPIC -> STORY/JOURNEY -> SCENARIO (SCN) ---------------------+
+  STORY/JOURNEY -> SCENARIO (SCN) -----------------------------+
        |
        | decomposes
        v
@@ -44,7 +48,7 @@ separately in [`state-tracking.md`](state-tracking.md).
   TASK / VERTICAL SLICE -> implementation -> unit/component/API/
                                             contract/integration test
 
-  Canonical trace: UR -> EPIC -> SCN -> SR -> TASK -> TEST -> CODE
+  Canonical trace: EPIC -> UR -> SCN -> SR -> TASK -> TEST -> CODE
 
                          STATE TRACKING
   ledgers | epics | work-list | checks | sync | gates | evidence
@@ -68,13 +72,15 @@ candidate context, emit a confirmation gate, and stop its downstream flow.
 
 ### 2. Plan
 
-Derive user requirements and system requirements from the product sources.
-Write observable acceptance criteria, establish ownership and release scope,
-and route work into an epic or the fast lane. Perform sourced technical
-reconnaissance, use it to enrich each task's implementation context, and run a
-cold technical review before the human specification gate. Planning starts only
-from confirmed requirements; a `DERIVED` requirement waits at its confirmation
-gate and is not eligible for epic, scenario, task, test, or implementation work.
+Establish the owning epic, then derive user requirements and system
+requirements from the product sources. Write observable acceptance criteria,
+establish release scope, and choose the full specification path or the fast
+lane within that epic. Perform sourced technical reconnaissance, use it to
+enrich each task's implementation context, and run a cold technical review
+before the human specification gate. Planning starts only from confirmed
+requirements; a `DERIVED` requirement waits at its confirmation gate and is not
+eligible for authoritative epic membership, scenario, task, test, or
+implementation work.
 
 ### 3. Build and verify
 
@@ -90,28 +96,12 @@ silently expanding the current implementation slice.
 
 ## Trace hierarchy
 
-### User requirement (`UR-*`)
-
-A user requirement states an outcome for a named actor in a real context. It
-contains no implementation choice unless the choice is itself a user or
-regulatory constraint.
-
-Minimum fields:
-
-```markdown
-## UR-<AREA>-NNN — <outcome>
-- Actor: <role>
-- Statement: <actor can achieve/experience outcome>
-- Intended use: <context and value>
-- Source: USER:/DOC:/CODE: (`CODE:` alone implies `DERIVED` until confirmed)
-- Validation: <linked SCN ids>
-- Status: DERIVED | PROPOSED | READY | IN_PROGRESS | IN_REVIEW | VALIDATED | BLOCKED | DEFERRED | OBSOLETE
-```
-
 ### Epic (`EPIC-*`)
 
-An epic groups one coherent user-visible capability. A technical-enabler epic
-must identify the user-visible epic or requirement it enables.
+An epic is the top-level delivery item. It groups one coherent user-visible
+capability and holds one or more user requirements with their complete delivery
+traces. A technical-enabler epic still holds URs that state the user or
+operational outcome it enables and links to the affected user-visible scope.
 
 An epic owns:
 
@@ -144,6 +134,25 @@ epics/EPIC-<AREA>-NNN-<slug>/
 Seed the reconnaissance from
 [`templates/work/TECHNICAL-RECONNAISSANCE.md`](../templates/work/TECHNICAL-RECONNAISSANCE.md).
 
+### User requirement (`UR-*`)
+
+A user requirement is held by an owning epic and states an outcome for a named
+actor in a real context. It contains no implementation choice unless the choice
+is itself a user or regulatory constraint.
+
+Minimum fields:
+
+```markdown
+## UR-<AREA>-NNN — <outcome>
+- Owning epic: EPIC-<AREA>-NNN
+- Actor: <role>
+- Statement: <actor can achieve/experience outcome>
+- Intended use: <context and value>
+- Source: USER:/DOC:/CODE: (`CODE:` alone implies `DERIVED` until confirmed)
+- Validation: <linked SCN ids>
+- Status: DERIVED | PROPOSED | READY | IN_PROGRESS | IN_REVIEW | VALIDATED | BLOCKED | DEFERRED | OBSOLETE
+```
+
 ### Acceptance scenario (`SCN-*`)
 
 A scenario is observable upper-loop behavior, normally Given/When/Then. It is
@@ -156,8 +165,8 @@ Scenario: <observable outcome>
   Then <observable result>
 ```
 
-Each scenario links upward to a UR/epic and downward to the SRs/tasks needed to
-make it pass.
+Each scenario links upward to a UR inside its owning epic and downward to the
+SRs/tasks needed to make it pass.
 
 ### System requirement (`SR-*`)
 
@@ -204,7 +213,7 @@ Rules:
 - normative claims need a source;
 - missing sources become open questions;
 - conflicting sources remain conflicts until a human resolves them;
-- record a decision's consequence on affected UR/SCN/SR/TASK items;
+- record a decision's consequence on affected EPIC/UR/SCN/SR/TASK items;
 - an answer is not an implementation or a passing gate by itself.
 
 ## Derived requirement confirmation
@@ -221,12 +230,12 @@ While a requirement is `DERIVED`:
   brief;
 - emit a decision gate that holds the requirement and every proposed downstream
   link;
-- label proposed UR/SCN/SR/epic relationships as candidate context only;
+- label proposed EPIC/UR/SCN/SR relationships as candidate context only;
 - exclude the requirement and candidate links from authoritative trace closure,
   readiness, release commitment, coverage, progress, and completion rollups;
-- do not create or advance its epic, scenarios, technical reconnaissance,
-  system requirements, tasks, tests, implementation, verification, or delivery
-  work.
+- do not make its candidate epic membership authoritative or create or advance
+  its scenarios, technical reconnaissance, system requirements, tasks, tests,
+  implementation, verification, or delivery work.
 
 The human answer controls the transition:
 
@@ -306,9 +315,10 @@ removed from the current scope by an attributable human decision and routed.
 Other deferrals require a sourced owner, reason, and target. The cold review is
 technical evidence; it never grants human specification approval.
 
-## Epic entry and specification gate
+## Epic ownership and specification gate
 
-An epic is required when any of these are true:
+Every trace has an owning epic. The full epic specification path, rather than
+the fast lane, is required when any of these are true:
 
 1. design or specification content is needed beyond one requirement's
    acceptance criteria;
@@ -318,10 +328,10 @@ An epic is required when any of these are true:
    one working day;
 5. it changes product-visible behavior.
 
-If one becomes true during a fast-lane change, stop and promote the work into
-an epic.
+If one becomes true during a fast-lane change, stop the fast lane and enter or
+refresh the full specification path for the owning epic.
 
-Before implementation, an epic must have:
+Before full epic-path implementation, the epic must have:
 
 1. an epic record, `specs/requirements.md`, and current
    `specs/technical-reconnaissance.md`;
@@ -359,15 +369,20 @@ implementation-loop work, not specification work.
 
 ## Fast lane
 
-The fast lane is for a single spec-light requirement/task. All must hold:
+The fast lane is a lightweight execution route inside an owning epic for a
+single spec-light requirement/task. It never creates an epicless or shortened
+trace. All must hold:
 
+- an owning epic exists and the complete
+  `EPIC -> UR -> SCN -> SR -> TASK` trace is authoritative;
 - the requirement is confirmed and is not `DERIVED`;
 - behavior is already unambiguous in a sourced requirement;
 - no contract or product-visible behavior changes;
 - one bounded context and source repository;
 - one task, expected within one working day;
 - no new product/architecture/acceptance decision;
-- the row has Given/When/Then criteria, expected RED test, owner, and release;
+- the row has Given/When/Then criteria, expected upper and lower RED tests,
+  owner, and release;
 - the task contains proportionate technical reconnaissance and enriched
   implementation context;
 - a proportionate cold technical review has no material finding open or
@@ -375,8 +390,9 @@ The fast lane is for a single spec-light requirement/task. All must hold:
 - it is visible in the repository work-list before implementation;
 - the project defines the human review path for fast-lane completion.
 
-The fast lane removes epic ceremony, not TDD, traceability, evidence, review,
-or state reconciliation.
+The fast lane avoids preparing and approving a new full epic specification set.
+It does not remove epic ownership, any trace level, upper or lower red-first
+evidence, review, or state reconciliation.
 
 ## Development loop
 
@@ -410,7 +426,7 @@ is committed:
 
 - stop if any requirement in the proposed trace is `DERIVED`;
 - sharpen acceptance criteria without changing sourced intent;
-- create or update UR -> EPIC -> SCN -> SR -> TASK links;
+- create or update EPIC -> UR -> SCN -> SR -> TASK links;
 - route ambiguity to an open question/gate;
 - pass the epic specification gate or prove every fast-lane criterion.
 
@@ -497,9 +513,7 @@ is committed:
 - audit every criterion against direct evidence;
 - present the brief, visible behavior, risks, gaps, deferrals, and test results;
 - set requirement/epic `IN_REVIEW` only after lower verification is complete and
-  upper validation is complete or the row demonstrably owes none — a confirmed
-  as-built row with no scenario is the only routine case, and it records that
-  rather than inferring it (see `state-tracking.md`);
+  upper validation is complete;
 - record the human completion decision with actual actor and scope.
 
 ### 9. Deliver and reconcile
@@ -529,7 +543,7 @@ Required evidence:
 - human acceptance at epic/UR completion.
 
 ```text
-UR -> EPIC -> SCN -> failing acceptance test
+EPIC -> UR -> SCN -> failing acceptance test
                          |
                          v
                    lower-loop slices
@@ -569,7 +583,7 @@ Top-level work status:
 | `PROPOSED` | identified, not ready |
 | `READY` | sourced acceptance and entry gate complete |
 | `IN_PROGRESS` | either evidence loop is underway |
-| `IN_REVIEW` | lower verified, and upper validated or no scenario owed; completion approval/delivery pending |
+| `IN_REVIEW` | lower verified and upper validated; completion approval/delivery pending |
 | `DONE` | evidence, human approval, source delivery, and reconciliation complete |
 | `BLOCKED` | cannot proceed; blocker/gate linked |
 | `DEFERRED` | explicitly postponed; reason, owner, and target recorded |
@@ -579,8 +593,8 @@ Evidence waypoints:
 
 - `LOWER_VERIFIED` belongs to TASK/SR evidence;
 - `UPPER_VALIDATED` belongs to SCN/epic upper evidence;
-- `VALIDATED` belongs to a user requirement after its linked epics are done
-  and the human acceptance is recorded.
+- `VALIDATED` belongs to a user requirement after its scenarios and lower trace
+  meet the evidence bar and human acceptance is recorded.
 
 A lower or upper waypoint does not independently make top-level work `DONE`.
 
@@ -645,7 +659,7 @@ A scenario is `UPPER_VALIDATED` only when:
 
 An epic is `DONE` only when:
 
-1. every linked requirement is confirmed, no item is `DERIVED`, and no
+1. every linked user requirement is confirmed, no item is `DERIVED`, and no
    candidate trace link is counted as authoritative;
 2. current technical reconnaissance enriched its tasks;
 3. cold technical review preceded specification approval and no material
@@ -661,8 +675,8 @@ An epic is `DONE` only when:
 11. state records and projections required by `state-tracking.md` agree;
 12. evidence is pinned to the delivered revision and has not decayed.
 
-A user requirement is `VALIDATED` only when its scenarios and linked epics meet
-the same evidence bar and the human accepts the user outcome.
+A user requirement is `VALIDATED` only when its scenarios and linked lower
+trace meet the same evidence bar and the human accepts the user outcome.
 
 ## Session ritual
 

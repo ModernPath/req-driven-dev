@@ -16,13 +16,29 @@ the repository's permanent tracking system.
 |---|---|---|---|
 | DM-01 | HIGH | RESOLVED | `DERIVED` requirements wait for human confirmation before loop entry |
 | DM-02 | HIGH | RESOLVED | `DERIVED` is represented on the requirement work-state axis, not the specification axis |
-| DM-03 | HIGH | OPEN | Fast-lane trace shape contradicts the canonical trace |
+| DM-03 | HIGH | RESOLVED | Epic is the trace root and fast-lane work retains the complete trace |
 | DM-04 | HIGH | OPEN | Completion approval ordering is circular |
 | DM-05 | HIGH | OPEN | Terminal statuses are inconsistent by entity |
 | DM-06 | MEDIUM | OPEN | Invalidated evidence has no defined status consequence |
 | DM-07 | MEDIUM | OPEN | Gate lifecycle and answer channel are underspecified |
 | DM-08 | MEDIUM | OPEN | The connected-workspace preflight is not an executable sequence |
 | DM-09 | MEDIUM | OPEN | Commit-at-every-waypoint conflicts with no-op waypoints |
+
+- Resolved in this repository: `DM-01`, `DM-02`, `DM-03`
+- Next open item: `DM-04`
+- Resolution commits:
+  - `d477bf5` (`Hold DERIVED requirements for human confirmation`) — DM-01,
+    DM-02
+  - the commit containing this worklist update — DM-03
+
+### External implementation follow-up
+
+The process contract now requires `DERIVED` support in requirement parsing,
+checks, synchronization, gate emission/holds, Mission Control projections, and
+rollups. Those implementations live outside this repository and were not
+changed by `d477bf5`. This does not reopen DM-01 or DM-02 within this worklist's
+root/process review scope, but end-to-end platform support must not be claimed
+until the external implementations satisfy the contract.
 
 ## DM-01 — Hold derived requirements before loop entry
 
@@ -39,8 +55,7 @@ the repository's permanent tracking system.
 - References: `AGENTS.md#Non-negotiable rules`,
   `process/V-model-loop.md#Derived requirement confirmation`,
   `process/state-tracking.md#Requirement ledger`.
-- Resolution record: completed on `review/prs-5-9`; commit recorded with this
-  worklist.
+- Resolution record: `d477bf5` on `review/prs-5-9`.
 
 ## DM-02 — Represent derived state on the requirement axis
 
@@ -56,25 +71,33 @@ the repository's permanent tracking system.
 - References: `process/state-tracking.md#Requirement ledger`,
   `process/state-tracking.md#ModernPath reference projection model`,
   `templates/work/REQUIREMENTS.md`, `skills/rdd-verify/SKILL.md`.
-- Resolution record: completed on `review/prs-5-9`; commit recorded with this
-  worklist.
+- Resolution record: `d477bf5` on `review/prs-5-9`.
 
 ## DM-03 — Define the fast-lane trace
 
-- Status: `OPEN`
-- Finding: the binding rules require every change to include
-  `UR -> EPIC -> SCN -> SR -> TASK`, while planning treats an epic and the fast
-  lane as alternatives and the execution prompt unconditionally requires an
-  epic and scenario.
+- Status: `RESOLVED`
+- Finding: the binding rules inverted ownership as `UR -> EPIC` and planning
+  treated an epic and the fast lane as alternatives, even though an epic is the
+  top-level delivery item that holds URs.
+- Decision: `USER:2026-08-19:Epic is the top-level item that holds UR; update
+  the binding rule throughout the instructions and its loops`.
+- Resolution: the canonical trace is now
+  `EPIC -> UR -> SCN -> SR -> TASK -> TEST -> CODE`. Every full or fast-lane
+  trace has an owning epic. The fast lane is a lightweight entry route within
+  that epic: it may skip preparing and approving a new full epic specification
+  set only when all fast-lane conditions hold, but it retains every trace level
+  and both red-first evidence arms. Rows without a SCN return to planning rather
+  than bypassing upper validation.
 - References: `AGENTS.md#Non-negotiable rules`, `README.md#Core invariants`,
+  `process/V-model-loop.md#Trace hierarchy`,
+  `process/V-model-loop.md#Epic ownership and specification gate`,
+  `process/V-model-loop.md#Fast lane`,
   `process/prompts.md#1. Plan a user outcome`,
   `process/prompts.md#3. Execute one development-loop slice`,
-  `process/V-model-loop.md#Fast lane`.
-- Decision needed: define whether fast-lane work requires EPIC, SCN, and upper
-  RED records or uses an explicitly shorter canonical trace.
-- Resolution target: planning, execution prompts, traceability rules, and state
-  reconciliation prescribe one unambiguous fast-lane shape.
-- Resolution record: _pending_
+  `process/state-tracking.md#Requirement ledger`,
+  `skills/rdd-verify/SKILL.md#Enter through the same gate as any other change`.
+- Resolution record: commit containing this worklist update on
+  `review/prs-5-9`.
 
 ## DM-04 — Establish completion-gate ordering
 

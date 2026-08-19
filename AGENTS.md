@@ -40,14 +40,14 @@ Before planning, changing, reviewing, or delivering product work:
 
 ## Non-negotiable rules
 
-1. Every change traces through `UR -> EPIC -> SCN -> SR -> TASK -> TEST ->
+1. Every change traces through `EPIC -> UR -> SCN -> SR -> TASK -> TEST ->
    CODE`. A project may retain stable `REQ-*` ids, but their user/system/task
    meaning and links must remain explicit.
 2. `DERIVED` means a requirement was inferred but no human has yet confirmed
    that it exists. Its proposed links are candidate context, not authoritative
-   trace. Emit a human confirmation gate and do not advance its epic, scenarios,
-   system requirements, tasks, tests, implementation, or delivery state until
-   the answer is applied.
+   trace. Emit a human confirmation gate and do not make its candidate epic
+   membership authoritative or advance its scenarios, system requirements,
+   tasks, tests, implementation, or delivery state until the answer is applied.
 3. Humans decide product, scope, architecture, acceptance, priority, and
    workflow. Record the real actor with a `USER:<date>:<summary>` source. An
    agent may propose options but may not select one by assumption. Do not ask
@@ -58,8 +58,9 @@ Before planning, changing, reviewing, or delivering product work:
    remains a conflict.
 5. Both V-model arms are red-first: BDD/E2E/user-flow evidence above and
    focused unit/component/API/contract/integration evidence below.
-6. Epic-path implementation starts only after the specification gate is
-   approved. Fast-lane work must satisfy every fast-lane condition.
+6. Every trace has an owning epic. Full epic-path implementation starts only
+   after the specification gate is approved. Fast-lane work stays inside an
+   owning epic and must satisfy every fast-lane condition.
 7. `LOWER_VERIFIED`, `UPPER_VALIDATED`, `IN_REVIEW`, `DONE`, and `VALIDATED`
    require linked direct evidence. A label, checkbox, or unrelated green suite
    is not proof.
@@ -87,9 +88,10 @@ Before planning, changing, reviewing, or delivering product work:
 1. **Orient** — inspect repository and process state according to
    `process/state-tracking.md`; resolve or respect `DERIVED` confirmation holds,
    then select the next eligible trace.
-2. **Specify and perform technical reconnaissance** — derive sourced URs and
-   SCNs, then testable SRs and thin tasks; inspect the repository at a named
-   revision and enrich each task with its relevant technical context.
+2. **Specify and perform technical reconnaissance** — establish the owning
+   epic, derive sourced URs and SCNs within it, then testable SRs and thin
+   tasks; inspect the repository at a named revision and enrich each task with
+   its relevant technical context.
 3. **Cold technical review** — audit the trace, technical surface, failure
    behavior, feasibility, task boundaries, and test strategy from a separate
    context; resolve material findings.

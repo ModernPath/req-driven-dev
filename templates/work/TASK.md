@@ -1,6 +1,7 @@
 # TASK-«AREA»-«NNN» — «Thin vertical slice»
 
 - **Epic:** EPIC-«AREA»-«NNN»
+- **User requirement:** UR-«AREA»-«NNN»
 - **Scenario:** SCN-«AREA»-«NNN»
 - **System requirement:** SR-«AREA»-«NNN»
 - **Owner:** «owner»

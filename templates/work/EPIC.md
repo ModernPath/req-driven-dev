@@ -1,5 +1,6 @@
 # EPIC-«AREA»-«NNN» — «Capability»
 
+- **Trace role:** top-level delivery item; holds the linked URs and their traces
 - **Release/system:** «scope»
 - **Overall status:** PROPOSED
 - **Upper status:** PROPOSED

@@ -39,12 +39,14 @@ Release/system: <scope>
 
 Before planning, prove the outcome is confirmed. If it or any ancestor is
 DERIVED, ensure its confirmation gate exists and is answerable, report the
-candidate links it holds, and stop without creating or advancing an epic,
-scenario, SR, task, test, release commitment, or implementation record.
+candidate links it holds, and stop without making candidate epic membership
+authoritative or creating or advancing a scenario, SR, task, test, release
+commitment, or implementation record.
 
 Derive or update:
-- a sourced UR with actor, intended use, and validation method;
-- the owning epic (or prove every fast-lane criterion);
+- the owning epic as the top-level delivery item;
+- sourced URs held by that epic, with actor, intended use, and validation
+  method;
 - stories/journeys and Given/When/Then SCNs;
 - testable SRs and the first thin TASKs;
 - sourced technical reconnaissance at a named repository revision, covering the
@@ -58,10 +60,11 @@ Derive or update:
 - decisions, blockers, conflicts, gaps, and deferrals.
 
 Verify generated context against actual DOC:/CODE:/TEST: sources. Publish
-proposed state without granting approval. If epic-path, prepare the
-specification brief and stop for a cold technical review before the human
-specification gate. Do not write tests or implementation before specification
-approval.
+proposed state without granting approval. Choose the full specification path or
+prove every fast-lane criterion within the owning epic. For the full path,
+prepare the specification brief and stop for a cold technical review before the
+human specification gate. Do not write tests or implementation before the
+selected entry route is satisfied.
 ```
 
 ## 1a. Run a cold technical review
@@ -135,7 +138,7 @@ DERIVED or any link is candidate-only, stop at its confirmation gate; do not
 write or run the RED test for that trace.
 
 Select exactly one READY trace:
-UR -> EPIC -> SCN -> SR -> TASK.
+EPIC -> UR -> SCN -> SR -> TASK.
 
 0. Work on a feature branch, never on the default branch's working tree.
    Commit at the loop's waypoints — specification, observed RED, GREEN,
@@ -194,7 +197,7 @@ Read the project AGENTS.md, .modernpath/rdd/AGENTS.md,
 .modernpath/rdd/process/V-model-loop.md, .modernpath/rdd/process/state-tracking.md, active
 epic/spec/tasks, current code/tests/PR, and current working records/projections.
 
-Treat completion as unproven. For every explicit UR, SCN, SR, TASK, gate, and
+Treat completion as unproven. For every explicit EPIC, UR, SCN, SR, TASK, gate, and
 Definition-of-Done item, identify authoritative evidence and inspect its current
 state. Classify each as proven, contradicted, incomplete, indirect, or missing.
 Treat a DERIVED requirement or candidate trace link as a hard stop: it cannot
@@ -221,13 +224,14 @@ automatic implementation order:
 
 <feedback>
 
-Find affected UR/SCN/SR/TASK traces and current behavior. Classify as defect,
-new outcome, change request, decision, or ambiguity. Record a sourced proposed
-change or gate, identify acceptance/evidence and technical-reconnaissance
-impact, and determine epic vs fast lane. Mark affected cold review and task
-context stale when the technical surface changes. Do not silently change
-approved scope. Reconcile the proposal according to state-tracking.md and
-report the human decision needed or next planning step.
+Find affected EPIC/UR/SCN/SR/TASK traces and current behavior. Classify as
+defect, new outcome, change request, decision, or ambiguity. Record a sourced
+proposed change or gate, identify acceptance/evidence and
+technical-reconnaissance impact, and choose the full specification path or the
+fast lane within the owning epic. Mark affected cold review and task context
+stale when the technical surface changes. Do not silently change approved
+scope. Reconcile the proposal according to state-tracking.md and report the
+human decision needed or next planning step.
 
 If the feedback confirms, corrects, or rejects a DERIVED requirement, treat it
 as the gate answer only through the connected or repo-borne answer path. Record

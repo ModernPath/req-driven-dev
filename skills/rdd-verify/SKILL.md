@@ -24,12 +24,8 @@ delivery.
   already confirmed, but current direct test evidence is missing.
 
 - Move a verified task or system requirement to `LOWER_VERIFIED`. A ledger with
-  one combined work-status column may record that as `IN_REVIEW` **only when the
-  row owes no upper-loop obligation** — no scenario exists or is owed for it — and
-  the row says so. If a scenario is owed, the row stays `IN_PROGRESS` until upper
-  validation, exactly like built work. The column count is a property of the
-  ledger; the obligation is a property of the requirement, and only the second one
-  may decide what "reviewed" means.
+  one combined work-status column stays `IN_PROGRESS` until its linked SCN is
+  also `UPPER_VALIDATED`; only then may it record `IN_REVIEW`.
 - Never move an item to `DONE` from test evidence alone. `DONE` also requires
   the binding approval, authoritative-source delivery, and reconciliation
   conditions.
@@ -46,12 +42,15 @@ If the row or any requirement ancestor is `DERIVED`, or if its trace uses a
 candidate link, stop. Do not inspect tests as though the trace were real, and do
 not use existing SR evidence to imply that the inferred user outcome is valid.
 
-Before changing any test, satisfy one of:
+Before changing any test, require an authoritative
+`EPIC -> UR -> SCN -> SR -> TASK` trace. If the row has no owning epic or any
+parent is missing, stop and return it to normal planning. Then satisfy one of:
 
-- **Epic path** — the owning epic is `SPEC-APPROVED`, and this verification is
-  within its approved scope; or
-- **Fast lane** — the row is visible in the work-list with sharpened criteria,
-  and the repository's fast-lane conditions hold.
+- **Full specification path** — the owning epic is `SPEC-APPROVED`, and this
+  verification is within its approved scope; or
+- **Fast lane within the owning epic** — the complete trace is visible in the
+  work-list with sharpened criteria, and every repository fast-lane condition
+  holds.
 
 If neither holds, stop and route the entry first. Verification that arrives
 outside the work-list is invisible to everyone planning against it, and a test
