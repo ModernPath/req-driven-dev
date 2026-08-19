@@ -152,8 +152,8 @@ Report:
 - tests added or reused and confirmation that each relevant failure mode was
   observed before green;
 - focused and regression commands run;
-- contradictions, discoveries, pending approvals, delivery work, and
-  synchronization gaps.
+- contradictions, discoveries, pending approvals, delivery work, and record
+  reconciliation gaps.
 
 Exit only when every touched row has current direct evidence or an explicit
 reason it remains unverified, all temporary mutations are gone, and repository

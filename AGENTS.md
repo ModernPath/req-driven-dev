@@ -11,8 +11,8 @@ project's live work state.
 - [`process/V-model-loop.md`](process/V-model-loop.md) defines lifecycle,
   traceability, gates, statuses, red-first evidence, and completion.
 - [`process/state-tracking.md`](process/state-tracking.md) defines the
-  repository working records, status axes, local checks, automatic
-  synchronization, Mission Control, and state convergence.
+  repository working records, status axes, gates, evidence validity, local
+  checks, and state reconciliation.
 - [`process/prompts.md`](process/prompts.md) contains reusable execution prompts.
 - A consuming repository owns only project-specific rules such as architecture,
   repository topology, commands, environments, and test gates. Its agent entry
@@ -119,7 +119,7 @@ Before planning, changing, reviewing, or delivering product work:
    fulfilled requirements and the epic to `IN_REVIEW`. UI work also needs a
    live-browser run and inspected screenshot.
 9. **Deliver and reconcile** — while the trace remains `IN_REVIEW`, land code
-   in its source repository and reconcile every working record and projection
+   in its source repository and reconcile every working record and derived view
    according to `process/state-tracking.md`.
 10. **Accept completion** — only after the delivered trace and its evidence are
     fulfilled and reconciled, present the completion brief and record the real

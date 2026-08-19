@@ -45,7 +45,7 @@ SPEC-DRAFT — «scope of the specs set»
 
 ## Cold technical review
 
-- **Review context:** «separate reviewer/session»
+- **Review context:** «separate reviewer/context»
 - **Reviewed revision:** «spec + repository revision»
 - **Verdict:** PENDING | FAIL | PASS
 
@@ -109,8 +109,8 @@ decisions are fulfilled.
 ## Completion approval — `IN_REVIEW -> DONE`
 
 Do not solicit this gate until the exact trace is delivered, its evidence is
-current at the delivered revision, all records/projections are reconciled, and
-the completion brief discloses gaps and deferrals.
+current at the delivered revision, all records and derived views are
+reconciled, and the completion brief discloses gaps and deferrals.
 
 | Trace gate | Exact epic/requirement scope | Input fingerprint | Delivered trace/evidence | State/evaluator |
 |---|---|---|---|---|

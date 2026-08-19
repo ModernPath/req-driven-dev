@@ -1,4 +1,4 @@
-# Work-list projection template
+# Work-list template
 
 Copy this file into a consuming project when a versioned work-list is needed.
 Use the ownership, status, and reconciliation rules in

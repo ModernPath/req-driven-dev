@@ -43,8 +43,8 @@ Before planning, prove the outcome is confirmed. If it or any ancestor is
 DERIVED, complete and report its candidate packet and held links, pass its
 confirmation trace gate, then ensure its human gate is `OPEN` before soliciting
 it. Stop without making candidate epic membership authoritative or creating or
-advancing UR
-acceptance content, an SR, test, release commitment, or implementation record.
+advancing UR acceptance content, an SR, test, release commitment, or
+implementation record.
 
 Derive or update:
 - the owning epic as the top-level delivery item;
@@ -62,7 +62,7 @@ Derive or update:
 - upper-RED and lower-RED strategy;
 - decisions, blockers, conflicts, gaps, and deferrals.
 
-Verify generated context against actual DOC:/CODE:/TEST: sources. Publish
+Verify generated context against actual DOC:/CODE:/TEST: sources. Record
 proposed state without granting approval. Choose the full specification path or
 prove every fast-lane criterion within the owning epic. For the full path,
 prepare the specification brief and stop for a cold technical review before the
@@ -117,9 +117,8 @@ link is still candidate context.
 Confirm the cold review passed with no material finding open or deferred in
 scope and every selected entity satisfies the non-human prerequisites for
 `TODO`. Record the entry trace gate `PASS`; only then confirm the scoped human
-entry gate is `OPEN`: in a connected workspace the record is committed, synced,
-and present in the server gate list; otherwise the gate is repo-borne. Present
-the plain-language brief, exact epic/requirement scope, and recommendation.
+entry gate exists as an `OPEN` versioned record. Present the plain-language
+brief, exact epic/requirement scope, and recommendation.
 
 If the authorized human approves, record their actual identity, role, scope,
 and USER:<date>:<summary>; move each named `PROPOSED` or
@@ -210,7 +209,8 @@ decisions, and next TODO traces.
 ```text
 Read the project AGENTS.md, .modernpath/rdd/AGENTS.md,
 .modernpath/rdd/process/V-model-loop.md, .modernpath/rdd/process/state-tracking.md, active
-epic/spec/SRs, current code/tests/PR, and current working records/projections.
+epic/spec/SRs, current code/tests/PR, and current working records and derived
+views.
 
 Treat completion as unproven. For every explicit EPIC, UR, UR acceptance
 scenario, SR, gate, and Definition-of-Done item, identify authoritative
@@ -228,7 +228,7 @@ inherited.
 
 If the pre-delivery audit passes, deliver through the project's normal
 authorized integration path while keeping the epic and requirements IN_REVIEW.
-Reconcile all repository records and projections, verify evidence against the
+Reconcile all repository records and derived views, verify evidence against the
 delivered revision, and audit the complete trace again. Only when every
 non-human completion prerequisite is fulfilled, record the completion trace
 gate `PASS`. Only then may the completion human gate become `OPEN` and the brief
@@ -259,8 +259,8 @@ silently change approved scope. Reconcile the proposal according to
 state-tracking.md and report the human decision needed or next planning step.
 
 If the feedback confirms, corrects, or rejects a DERIVED requirement, treat it
-as the gate answer only through the connected or repo-borne answer path. Record
-the real USER source, apply the defined DERIVED transition, retire candidate
-links that were rejected or replaced, and re-plan the surviving links before
-they become authoritative.
+as a gate answer only when the real human response is recorded against the
+exact `OPEN` human gate. Record the `USER:` source, apply the defined DERIVED
+transition, retire candidate links that were rejected or replaced, and re-plan
+the surviving links before they become authoritative.
 ```

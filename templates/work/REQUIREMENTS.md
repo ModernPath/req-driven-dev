@@ -49,7 +49,6 @@ This is the bounded-context backlog and requirement work record described in
 - **Test results:** «RED/GREEN RUN: references, outcome, validity, branch/SHA»
 - **Regression gates:** «commands»
 - **Delivery / reconciliation:** —
-- **Mission Control reference:** «optional workspace/system/entity reference»
 - **Deferred / notes:** —
 
 #### Derived confirmation brief (required only when status is `DERIVED`)

@@ -1,4 +1,4 @@
-# Backlog projection template
+# Backlog template
 
 Copy into a consuming repository if it needs a versioned triage inbox.
 Discoveries without a clear home are swept through

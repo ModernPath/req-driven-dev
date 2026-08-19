@@ -1,4 +1,4 @@
-# Progress projection template
+# Progress derived-view template
 
 Generated from the consuming project's requirement ledgers. Do not hand-edit;
 see `.modernpath/rdd/process/state-tracking.md`.

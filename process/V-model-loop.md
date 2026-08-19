@@ -8,8 +8,8 @@ delivered software. It combines three loops:
 - **V-model evidence loops** — upper-loop acceptance of user behavior and
   lower-loop verification of system behavior.
 
-State recording and Mission Control integration are deliberately specified
-separately in [`state-tracking.md`](state-tracking.md).
+Versioned state records, gate records, evidence validity, and reconciliation
+are specified separately in [`state-tracking.md`](state-tracking.md).
 
 ## The model
 
@@ -47,7 +47,7 @@ separately in [`state-tracking.md`](state-tracking.md).
   Canonical trace: EPIC -> UR -> SR -> CODE -> TEST_CASE -> TEST_RESULT
 
                          STATE TRACKING
-  ledgers | epics | work-list | checks | sync | gates | evidence
+  ledgers | epics | work-list | checks | gates | evidence | reconciliation
 ```
 
 The left side states what must be true. The right side proves it. Code in the
@@ -196,7 +196,7 @@ coherent slice.
 When migrating existing `TASK-*` records, fold their normative scope,
 implementation context, evidence, and code links into the owning SR, then
 retire them as standalone lifecycle records. External planning boards may keep
-task-shaped projections, but those projections own no process state.
+task-shaped views, but those views own no process state.
 
 ### Code (`CODE:`)
 
@@ -254,7 +254,7 @@ state is recorded and current.
 | Requirement `DERIVED -> PROPOSED` | candidate requirement statement, inference sources, proposed ancestry and downstream links, conflicts, consequences, and confirmation brief | confirm that the requirement exists, correct it, or reject it |
 | Requirement `PROPOSED -> TODO` | confirmed requirement; authoritative ancestry; sourced statement and acceptance content or system behavior; scope, owner, and release; required reconnaissance and cold review; test strategy; resolved or routed decisions | approve the named requirement for implementation entry |
 | Epic `PROPOSED -> TODO` | complete in-scope proposed trace; every selected requirement entry trace passing; full specification or fast-lane packet; current reconnaissance; passing cold review; resolved or routed decisions | approve the named epic scope for implementation entry |
-| Requirement `IN_REVIEW -> DONE` | complete `EPIC -> UR -> SR -> CODE -> TEST_CASE -> TEST_RESULT` trace; required lower/upper evidence; authoritative delivery; current delivered-revision evidence; reconciled records and projections; disclosed gaps and deferrals | accept the delivered requirement |
+| Requirement `IN_REVIEW -> DONE` | complete `EPIC -> UR -> SR -> CODE -> TEST_CASE -> TEST_RESULT` trace; required lower/upper evidence; authoritative delivery; current delivered-revision evidence; reconciled records and derived views; disclosed gaps and deferrals | accept the delivered requirement |
 | Epic `IN_REVIEW -> DONE` | every in-scope requirement is completion-eligible, the complete epic trace is delivered and reconciled, and the completion brief names the exact scope | accept the delivered epic |
 
 An entry or completion gate may cover an explicit epic and set of requirements
@@ -283,9 +283,9 @@ authoritative trace -> TRACE gate PASS -> HUMAN gate OPEN
   may evaluate it as `PASS` or `FAIL`; changed inputs make the result `STALE`.
   A trace gate cannot make a product decision or grant human approval.
 - A `HUMAN` gate records a decision that requires interaction with an
-  authorized human. An agent may prepare and publish it only after its
-  prerequisite trace gate passes. An agent or automated check may never answer
-  it for the human.
+  authorized human. An agent may prepare it in `DRAFT` and mark it `OPEN` only
+  after its prerequisite trace gate passes. An agent or automated check may
+  never answer it for the human.
 
 Cold technical review, entry-readiness checks, lower/upper evidence checks,
 delivery checks, and reconciliation checks are trace gates. Requirement
@@ -585,7 +585,7 @@ is committed:
 
 - evaluate the entry trace gate for each proposed `TODO` transition and require
   a current `PASS`;
-- only then publish or activate the scoped human entry gate;
+- only then mark the scoped human entry gate `OPEN`;
 - present the brief and solicit the authorized human decision;
 - apply the attributable answer to each named requirement and the epic;
 - do not start RED until every selected entity is `TODO`.
@@ -662,10 +662,9 @@ is committed:
 
 - keep the epic and requirements `IN_REVIEW`;
 - merge code in its source-of-truth repository;
-- integrate any workspace snapshot according to project rules;
 - update requirement, epic, evidence, and rollups atomically;
-- reconcile ledger, epic, work-list, release, PR/commit, evidence, and any
-  connected Mission Control projection;
+- reconcile ledger, epic, work-list, release, PR/commit, evidence, and derived
+  views;
 - re-run or confirm evidence against the delivered revision, evaluate the
   completion trace gate, and require a current `PASS` before opening the human
   completion gate.
@@ -796,7 +795,7 @@ A lower or upper waypoint does not independently make a requirement
 ## State records
 
 Repository ledgers, epic folders, the work-list, backlog, generated progress
-views, Mission Control projection, and their status axes are defined in
+views, gate records, evidence, and their status axes are defined in
 `state-tracking.md`. Keep state mechanics out of this lifecycle document.
 
 ## Planning and discoveries
@@ -813,7 +812,7 @@ Capture first, triage separately:
 | unclear owner/cross-cutting | triage backlog |
 | contradicted or removed behavior | conflict or `OBSOLETE` with replacement |
 
-At session start, after a slice, and after product-doc changes:
+Before selecting work, after a slice, and after product-doc changes:
 
 1. sweep the backlog;
 2. reconcile product sources, requirements, and active epics;
@@ -858,8 +857,8 @@ A completion gate becomes eligible for human input only when:
    lower and upper evidence complete;
 2. code is merged in the authoritative implementation repository;
 3. evidence is current and pinned to the delivered revision;
-4. ledger, epic, work-list, release, PR/commit, evidence, and connected
-   projections are reconciled;
+4. ledger, epic, work-list, release, PR/commit, evidence, and derived views are
+   reconciled;
 5. no `DERIVED` item or candidate trace link is counted as authoritative;
 6. gaps, deferrals, decisions, and the exact acceptance scope are disclosed in
    the completion brief.
@@ -883,7 +882,7 @@ After the completion answer is applied, an epic is `DONE` only when:
 8. known gaps are recorded and no undisclosed scope remains;
 9. human completion approval is recorded with actor, scope, and source;
 10. code is merged in the authoritative implementation repository;
-11. state records and projections required by `state-tracking.md` agree;
+11. state records and derived views required by `state-tracking.md` agree;
 12. evidence is pinned to the delivered revision and has not decayed.
 
 A UR is `DONE` only when its acceptance content and linked lower trace meet
@@ -892,9 +891,9 @@ accepted the user outcome. An SR is `DONE` only when its lower evidence
 meets the same bar, its approved parent trace was delivered and reconciled, and
 the human then accepted the requirement in the scoped completion decision.
 
-## Session ritual
+## Loop entry and handoff
 
-Start:
+Before selecting work:
 
 1. read project and shared instructions;
 2. reconcile working records and pending human intents per
@@ -904,7 +903,7 @@ Start:
 4. inspect technical-reconnaissance and cold-review freshness;
 5. read the relevant sources before editing.
 
-End:
+Before handoff:
 
 1. confirm boy-scout cleanup stayed within the requirement or was a no-op;
 2. run proportional tests against the final diff and inspect required
@@ -912,4 +911,4 @@ End:
 3. update the complete trace and six completion facts;
 4. capture discoveries/deferrals/conflicts;
 5. validate and reconcile state according to `state-tracking.md`;
-6. state exactly what is complete, awaiting review, blocked, or unsynced.
+6. state exactly what is complete, awaiting review, blocked, or unreconciled.

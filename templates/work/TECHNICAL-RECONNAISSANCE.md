@@ -5,7 +5,7 @@ normal planning must establish the requirement and authoritative trace first.
 
 - **Trace:** «EPIC/UR/SR ids»
 - **Repository/revision:** «repository + branch/SHA»
-- **Prepared by:** «agent/person/session»
+- **Prepared by:** «agent/person/review context»
 - **Context pack:** «optional generated locator/report; never normative evidence»
 - **Freshness:** CURRENT | STALE — «reason/revision»
 
