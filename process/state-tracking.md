@@ -114,7 +114,9 @@ Use these axes independently:
 - requirement `work_status`: the ledger lifecycle above;
 - epic `upper_loop_status`: scenario/acceptance progress;
 - epic `lower_loop_status`: task/system verification progress;
-- specification status: `SPEC-DRAFT -> SPEC-READY -> SPEC-APPROVED`;
+- specification status: `SPEC-DRAFT -> SPEC-READY -> SPEC-APPROVED`, or
+  `SPEC-DERIVED` for an as-built record declared off the lifecycle (no
+  specification gate applies or may be emitted; see `V-model-loop.md`);
 - gate state: server `open -> answered`, with a separate pending/applied intent
   state where the integration supports it;
 - board/card status: a product planning axis; workspace sync does not use it as
