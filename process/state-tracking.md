@@ -74,9 +74,9 @@ Recommended status vocabulary:
 | `PROPOSED` | identified but not ready |
 | `READY` | sourced criteria are ready for implementation entry |
 | `IN_PROGRESS` | one or both evidence loops are underway |
-| `IN_REVIEW` | lower verification and upper validation are complete; approval or delivery remains |
+| `IN_REVIEW` | evidence required by the requirement kind is complete; applicable approval or delivery remains |
 | `PENDING_VERIFICATION` | human-confirmed as-built requirement: described and accepted as accurate, but not yet proven by a test |
-| `DONE` | evidence, approval, source delivery, and reconciliation are complete |
+| `VALIDATED` | required evidence, applicable approval, source delivery, and reconciliation are complete |
 | `BLOCKED` | cannot proceed; blocker or gate is linked |
 | `DEFERRED` | consciously postponed; reason and tracking target are recorded |
 | `OBSOLETE` | rejected or superseded; human decision or replacement source is linked |
@@ -111,17 +111,17 @@ inferred user outcome from becoming authoritative merely because code exists,
 while still allowing a human to accept an as-built backlog without claiming the
 behavior is tested.
 
-Direct verification moves a confirmed as-built system requirement to
-`LOWER_VERIFIED`.
+Direct verification records `LOWER_VERIFIED` evidence for a confirmed as-built
+system requirement.
 
 Every ledger row selected for implementation or verification must first belong
 to an authoritative `EPIC -> UR -> SCN -> SR` ancestry. A confirmed as-built
 row without that ancestry remains `PENDING_VERIFICATION` and returns to normal
-planning before tests change. A ledger with one combined work-status column
-stays `IN_PROGRESS` after lower verification and reaches `IN_REVIEW` only after
-its SCN is also `UPPER_VALIDATED`.
+planning before tests change. An SR reaches `IN_REVIEW` when all of its required
+lower evidence is complete. A UR reaches `IN_REVIEW` only when its linked lower
+evidence and SCN upper validation are complete.
 
-Test evidence never moves a row directly to `DONE`; approval,
+Test evidence never moves a row directly to `VALIDATED`; applicable approval,
 authoritative-source delivery, and state reconciliation remain separate gates.
 
 ### Epic record

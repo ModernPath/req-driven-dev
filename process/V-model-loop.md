@@ -180,7 +180,7 @@ behavior, or a quality constraint needed by a scenario.
 - Boundary: domain | API | UI | data | integration | operations
 - Verification method: unit | component | API | contract | integration
 - Linked tasks: TASK-...
-- Status: DERIVED | PROPOSED | READY | IN_PROGRESS | LOWER_VERIFIED | BLOCKED | DEFERRED | OBSOLETE
+- Status: DERIVED | PROPOSED | READY | IN_PROGRESS | IN_REVIEW | VALIDATED | BLOCKED | DEFERRED | OBSOLETE
 ```
 
 ### Task or slice (`TASK-*`)
@@ -498,7 +498,10 @@ is committed:
 - link test result, code, command, branch/SHA, and task/SR;
 - identify tests by stable path and test name; treat line numbers only as
   optional navigation hints;
-- move TASK/SR to `LOWER_VERIFIED` only when all linked lower work passes.
+- move a TASK to `LOWER_VERIFIED` and record an SR's `LOWER_VERIFIED` evidence
+  only when all linked lower work passes;
+- move the SR requirement `work_status` to `IN_REVIEW` when all of its required
+  lower evidence is complete.
 
 ### 7. Upper validate
 
@@ -512,8 +515,9 @@ is committed:
 
 - audit every criterion against direct evidence;
 - present the brief, visible behavior, risks, gaps, deferrals, and test results;
-- set requirement/epic `IN_REVIEW` only after lower verification is complete and
-  upper validation is complete;
+- set an SR `IN_REVIEW` only after its lower verification is complete;
+- set a UR/epic `IN_REVIEW` only after lower verification and upper validation
+  are complete;
 - record the human completion decision with actual actor and scope.
 
 ### 9. Deliver and reconcile
@@ -575,7 +579,7 @@ SR -> TASK -> failing focused test -> smallest implementation
 
 ## Status model
 
-Top-level work status:
+Requirement work status for both UR and SR:
 
 | Status | Meaning |
 |---|---|
@@ -583,20 +587,20 @@ Top-level work status:
 | `PROPOSED` | identified, not ready |
 | `READY` | sourced acceptance and entry gate complete |
 | `IN_PROGRESS` | either evidence loop is underway |
-| `IN_REVIEW` | lower verified and upper validated; completion approval/delivery pending |
-| `DONE` | evidence, human approval, source delivery, and reconciliation complete |
+| `IN_REVIEW` | evidence required by the requirement kind is complete; applicable approval or delivery remains |
+| `VALIDATED` | required evidence, applicable human approval, source delivery, and reconciliation are complete |
 | `BLOCKED` | cannot proceed; blocker/gate linked |
 | `DEFERRED` | explicitly postponed; reason, owner, and target recorded |
 | `OBSOLETE` | rejected or superseded; human decision or replacement source linked |
 
 Evidence waypoints:
 
-- `LOWER_VERIFIED` belongs to TASK/SR evidence;
+- `LOWER_VERIFIED` belongs to TASK status and SR lower evidence;
 - `UPPER_VALIDATED` belongs to SCN/epic upper evidence;
-- `VALIDATED` belongs to a user requirement after its scenarios and lower trace
-  meet the evidence bar and human acceptance is recorded.
+- `VALIDATED` belongs to UR/SR requirement work status, not to an evidence axis.
 
-A lower or upper waypoint does not independently make top-level work `DONE`.
+A lower or upper waypoint does not independently make a requirement
+`VALIDATED` or an epic `DONE`.
 
 ## State records
 
@@ -628,7 +632,7 @@ At session start, after a slice, and after product-doc changes:
 
 ## Definition of Done
 
-A task/SR is `LOWER_VERIFIED` only when:
+A task is `LOWER_VERIFIED`, and an SR has `LOWER_VERIFIED` evidence, only when:
 
 - its requirement ancestry is confirmed and contains no `DERIVED` item or
   candidate trace link;
@@ -659,14 +663,15 @@ A scenario is `UPPER_VALIDATED` only when:
 
 An epic is `DONE` only when:
 
-1. every linked user requirement is confirmed, no item is `DERIVED`, and no
-   candidate trace link is counted as authoritative;
+1. every linked UR and SR is `VALIDATED`, no item is `DERIVED`, and no candidate
+   trace link is counted as authoritative;
 2. current technical reconnaissance enriched its tasks;
 3. cold technical review preceded specification approval and no material
    finding remains open or deferred in scope;
 4. specification approval preceded implementation;
 5. every SCN is `UPPER_VALIDATED`;
-6. every linked SR/TASK is `LOWER_VERIFIED`;
+6. every linked SR has `LOWER_VERIFIED` evidence and every TASK is
+   `LOWER_VERIFIED`;
 7. relevant architecture, lint, contract, integration, build, and smoke gates
    pass;
 8. known gaps are recorded and no undisclosed scope remains;
@@ -675,8 +680,10 @@ An epic is `DONE` only when:
 11. state records and projections required by `state-tracking.md` agree;
 12. evidence is pinned to the delivered revision and has not decayed.
 
-A user requirement is `VALIDATED` only when its scenarios and linked lower
-trace meet the same evidence bar and the human accepts the user outcome.
+A UR is `VALIDATED` only when its scenarios and linked lower trace meet the
+evidence bar, the human accepts the user outcome, and delivery and reconciliation
+are complete. An SR is `VALIDATED` only when its lower evidence meets the same
+bar and its approved parent trace is delivered and reconciled.
 
 ## Session ritual
 

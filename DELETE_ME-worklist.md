@@ -9,7 +9,7 @@ SCN:  PROPOSED -> READY -> IN_PROGRESS -> UPPER_VALIDATED
 
 UR:   DERIVED -> PROPOSED -> READY -> IN_PROGRESS -> IN_REVIEW -> VALIDATED
 
-SR:   DERIVED -> PROPOSED -> READY -> IN_PROGRESS -> LOWER_VERIFIED
+SR:   DERIVED -> PROPOSED -> READY -> IN_PROGRESS -> IN_REVIEW -> VALIDATED
 ```
 
 Temporary worklist for the semantic review of PRs #5–#9 on
@@ -29,8 +29,8 @@ the repository's permanent tracking system.
 | DM-01 | HIGH | RESOLVED | `DERIVED` requirements wait for human confirmation before loop entry |
 | DM-02 | HIGH | RESOLVED | `DERIVED` is represented on the requirement work-state axis, not the specification axis |
 | DM-03 | HIGH | RESOLVED | Epic is the trace root and fast-lane work retains the complete trace |
-| DM-04 | HIGH | OPEN | Completion approval ordering is circular |
-| DM-05 | HIGH | OPEN | Terminal statuses are inconsistent by entity |
+| DM-04 | HIGH | IN_PROGRESS | Completion approval ordering is circular |
+| DM-05 | HIGH | IN_PROGRESS | Terminal statuses are inconsistent by entity |
 | DM-06 | MEDIUM | OPEN | Invalidated evidence has no defined status consequence |
 | DM-07 | MEDIUM | OPEN | Gate lifecycle and answer channel are underspecified |
 | DM-08 | MEDIUM | OPEN | The connected-workspace preflight is not an executable sequence |
@@ -113,7 +113,7 @@ until the external implementations satisfy the contract.
 
 ## DM-04 — Establish completion-gate ordering
 
-- Status: `OPEN`
+- Status: `IN_PROGRESS`
 - Finding: the lifecycle records the human completion decision before delivery,
   while the completion-review prompt requires human approval and source
   delivery to be confirmed before requesting that approval.
@@ -128,7 +128,7 @@ until the external implementations satisfy the contract.
 
 ## DM-05 — Define status vocabularies per entity
 
-- Status: `OPEN`
+- Status: `IN_PROGRESS`
 - Finding: a UR permits `VALIDATED` but not `DONE`; the ledger permits `DONE`
   but not `VALIDATED`; and the lifecycle assigns `IN_REVIEW` to an epic even
   though the projection model gives epics separate upper/lower axes and reserves
@@ -138,8 +138,12 @@ until the external implementations satisfy the contract.
   `process/state-tracking.md#Requirement ledger`,
   `process/state-tracking.md#Epic record`,
   `process/state-tracking.md#ModernPath reference projection model`.
-- Decision needed: define the authoritative status field, allowed values, and
-  transitions for UR, EPIC, SCN, SR, and TASK separately.
+- Decision: `USER:2026-08-19:align the requirement lifecycles to match the UR`.
+  UR and SR use the same requirement work-status sequence; `LOWER_VERIFIED`
+  remains SR evidence rather than an SR work status.
+- Decision still needed: define the authoritative status field, allowed values,
+  and transitions for EPIC, SCN, and TASK, plus the remaining epic projection
+  mapping.
 - Resolution target: repository records and synchronized projections can map
   every lifecycle transition deterministically.
 - Resolution record: _pending_

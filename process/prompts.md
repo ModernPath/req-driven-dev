@@ -155,7 +155,8 @@ EPIC -> UR -> SCN -> SR -> TASK.
    Do not weaken tests or acceptance evidence during cleanup.
 6. Run focused and proportional regression/contract/architecture gates against
    the final post-cleanup diff.
-7. Record lower evidence and move only proven TASK/SR items to LOWER_VERIFIED.
+7. Record lower evidence, move only proven TASKs to LOWER_VERIFIED, and move an
+   SR requirement to IN_REVIEW only when all of its lower evidence is complete.
 8. Run upper validation; for UI work use the live stack and inspect a screenshot.
 9. Record passing upper evidence and move only proven SCNs to UPPER_VALIDATED.
 10. Capture discoveries/deferrals/conflicts without silently expanding scope.
@@ -211,8 +212,8 @@ unless it was re-verified at the current revision or is explicitly marked
 inherited.
 
 If all checks pass, present the completion brief and request/record authorized
-human approval. Mark DONE/VALIDATED only after delivery and state
-reconciliation.
+human approval. Mark the epic DONE and requirements VALIDATED only after
+delivery and state reconciliation.
 Otherwise leave the strongest honest status and list exact missing evidence.
 ```
 

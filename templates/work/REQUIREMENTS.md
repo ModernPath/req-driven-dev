@@ -5,7 +5,7 @@ This is the bounded-context backlog and requirement work record described in
 
 ## Dashboard — «CTX» («Context Name»)
 
-> Totals: 0 DONE · 0 IN_REVIEW · 0 IN_PROGRESS · 0 READY · 0 PROPOSED · 0 DERIVED · 0 DEFERRED · 0 BLOCKED
+> Totals: 0 VALIDATED · 0 IN_REVIEW · 0 IN_PROGRESS · 0 READY · 0 PROPOSED · 0 DERIVED · 0 DEFERRED · 0 BLOCKED
 
 | ID | Kind | Title | Release/stage | Status | Source | Trace | Evidence | Code |
 |----|------|-------|---------------|--------|--------|-------|----------|------|

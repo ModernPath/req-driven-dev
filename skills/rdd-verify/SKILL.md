@@ -23,12 +23,12 @@ delivery.
 - `PENDING_VERIFICATION` means the requirement and as-built description were
   already confirmed, but current direct test evidence is missing.
 
-- Move a verified task or system requirement to `LOWER_VERIFIED`. A ledger with
-  one combined work-status column stays `IN_PROGRESS` until its linked SCN is
-  also `UPPER_VALIDATED`; only then may it record `IN_REVIEW`.
-- Never move an item to `DONE` from test evidence alone. `DONE` also requires
-  the binding approval, authoritative-source delivery, and reconciliation
-  conditions.
+- Move a verified task to `LOWER_VERIFIED` and record `LOWER_VERIFIED` evidence
+  for the system requirement. Move the SR requirement `work_status` to
+  `IN_REVIEW` only when all of its required lower evidence is complete.
+- Never move a requirement to `VALIDATED` from test evidence alone.
+  `VALIDATED` also requires the applicable approval, authoritative-source
+  delivery, and reconciliation conditions.
 - If the implementation contradicts the row, record the discovery and route a
   separate red-first change. Do not silently change behavior during a
   verification pass.
