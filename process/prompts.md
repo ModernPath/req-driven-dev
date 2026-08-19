@@ -175,7 +175,10 @@ state. Classify each as proven, contradicted, incomplete, indirect, or missing.
 Confirm technical-reconnaissance freshness, enriched task context, cold-review
 dispositions, RED-before-GREEN, requirement-scoped cleanup, post-cleanup gates,
 runtime/browser proof, evidence SHA/drift, human approval, source-repository
-delivery, release scope, and state reconciliation.
+delivery, release scope, and state reconciliation. Treat evidence carried
+across a revert, an abandoned branch, or a closed unmerged PR as unverified
+unless it was re-verified at the current revision or is explicitly marked
+inherited.
 
 If all checks pass, present the completion brief and request/record authorized
 human approval. Mark DONE/VALIDATED only after delivery and state
