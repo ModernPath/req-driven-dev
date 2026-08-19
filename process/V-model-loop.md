@@ -297,16 +297,29 @@ Before implementation, an epic must have:
 Specification state:
 
 ```text
-SPEC-DRAFT -> SPEC-READY -> SPEC-APPROVED
+SPEC-DRAFT -> SPEC-READY -> SPEC-APPROVED    (the lifecycle)
                   |              |
                   |              +-- attributable human approval
                   +-- open specification gate
+
+SPEC-DERIVED                                 (declared off the lifecycle)
 ```
 
 `SPEC-READY` requires current technical reconnaissance, enriched initial tasks,
 and a cold-review `PASS` with no material finding open or deferred in scope.
 `SPEC-APPROVED` adds the attributable human decision; the technical review
 cannot make that transition.
+
+`SPEC-DERIVED` declares that the epic records behavior that already ships —
+reverse-engineered or otherwise as-built — so no specification gate applies.
+It is not a fourth position on the lifecycle; it is the specification-axis
+counterpart of the ledger's `PENDING_VERIFICATION`. A marker declared
+non-gating must never cause a specification-approval gate to be emitted or
+solicited: an approval over already-built work asks permission after the fact.
+New behavior under a `SPEC-DERIVED` epic re-enters the lifecycle through a
+normal specification. These four markers are the whole vocabulary; tooling
+that reads the marker treats anything else as unreadable and says so, rather
+than staying silent.
 
 No epic-path RED test is written before `SPEC-APPROVED`. Writing the test is
 implementation-loop work, not specification work.
