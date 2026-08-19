@@ -321,6 +321,15 @@ stales the reconnaissance and its cold review until the affected surface and
 findings are refreshed. Boy-scout cleanup changes precede final evidence, so
 only post-cleanup runs support `LOWER_VERIFIED` or `UPPER_VALIDATED`.
 
+A revert, an abandoned branch, or a closed unmerged PR is such a change:
+evidence pinned to a revision that no longer reaches the delivered line is
+invalidated with it. When a record carries that evidence forward, either
+re-verify it at the current revision or mark it explicitly as inherited and
+unverified at the current revision. A record may carry inherited evidence; it
+may not present it as fresh, and re-verifying part of an inherited set does not
+make the rest re-verified. Statuses that require linked direct evidence accept
+only the re-verified portion.
+
 ## Release state
 
 A project release registry contains exactly one active release. The local
