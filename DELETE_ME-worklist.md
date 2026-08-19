@@ -46,6 +46,20 @@ that epic. A test may cover multiple clauses only when every target and
 assertion is explicit. Every lens projects the same links; none creates a
 second source of authority.
 
+## Trace-gate examples
+
+| Trace gate | What `PASS` proves | Consequence |
+|---|---|---|
+| Requirement confirmation | The `DERIVED` candidate statement, inference sources, proposed ancestry/links, conflicts, consequences, and brief are complete for the current fingerprint | The human confirmation gate may become `OPEN`; the trace remains candidate-only until its answer is applied |
+| Entry | The confirmed ancestry, sourced requirement content, scope, reconnaissance, cold review, test strategy, and routed decisions are complete for the current fingerprint | The human entry gate may become `OPEN`; approval may move the named epic and requirements to `TODO` |
+| Start | The approved entry fingerprint is still current and the expected RED `TEST_RESULT` exists against the intended `TEST_CASE` for the expected reason | The affected requirement may move from `TODO` to `IN_PROGRESS` without another human interaction |
+| Lower/upper review | The current `CODE -> TEST_CASE -> TEST_RESULT` links prove the named SR clauses and UR acceptance content, including required RED-first and post-cleanup evidence | The evidence axes may reach `LOWER_VERIFIED`/`UPPER_VALIDATED`, and fulfilled SRs, URs, and their epic may move to `IN_REVIEW` |
+| Completion | The full trace is delivered, its required results are current at the delivered revision, records/projections are reconciled, and gaps/deferrals are disclosed | The human completion gate may become `OPEN`; acceptance may move the named requirements and epic to `DONE` |
+
+A trace-gate `PASS` means its own condition is proven; it does not mean every
+linked test result has outcome `PASS`. In particular, the start gate passes
+when the expected `FAIL` result establishes RED for the expected reason.
+
 Temporary worklist for the semantic review of PRs #5–#9 on
 `review/prs-5-9`. Delete this file after every item is resolved or moved into
 the repository's permanent tracking system.
