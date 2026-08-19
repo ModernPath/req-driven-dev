@@ -20,8 +20,10 @@ claim. Do not create implementation work or resolve ambiguity by assumption.
 
 When code, existing SRs, documents, or analysis suggest a requirement that no
 human has confirmed, record it as DERIVED. Record proposed links only as
-candidate context, create its product-language confirmation brief and gate, and
-stop downstream planning until the attributed answer is applied.
+candidate context. Fulfill its candidate statement, sources, ancestry/links,
+consequences, and product-language confirmation brief before publishing or
+soliciting its gate. Stop downstream planning until the attributed answer is
+applied.
 
 Report changed sources, derived facts, human decisions still needed, conflicts,
 and candidate user outcomes.
@@ -38,10 +40,10 @@ Outcome/source: <reference>
 Release/system: <scope>
 
 Before planning, prove the outcome is confirmed. If it or any ancestor is
-DERIVED, ensure its confirmation gate exists and is answerable, report the
-candidate links it holds, and stop without making candidate epic membership
-authoritative or creating or advancing UR acceptance content, an SR, test,
-release commitment, or implementation record.
+DERIVED, complete and report its candidate packet and held links, then ensure
+its confirmation gate exists and is eligible before soliciting it. Stop without
+making candidate epic membership authoritative or creating or advancing UR
+acceptance content, an SR, test, release commitment, or implementation record.
 
 Derive or update:
 - the owning epic as the top-level delivery item;
@@ -63,8 +65,9 @@ Verify generated context against actual DOC:/CODE:/TEST: sources. Publish
 proposed state without granting approval. Choose the full specification path or
 prove every fast-lane criterion within the owning epic. For the full path,
 prepare the specification brief and stop for a cold technical review before the
-human specification gate. Do not write tests or implementation before the
-selected entry route is satisfied.
+human entry gate. For either path, solicit entry approval only after every
+non-human prerequisite is fulfilled, and do not write tests or implementation
+until the selected epic and requirements are `READY`.
 ```
 
 ## 1a. Run a cold technical review
@@ -94,32 +97,34 @@ material finding may pass only when resolved, rejected with direct evidence, or
 removed from current scope by an attributable human decision and routed.
 Return a PASS only when no material finding remains open or deferred in scope;
 otherwise return CHANGES_REQUIRED. The author or owning agent resolves findings
-and requests a new cold review before the human specification gate.
+and requests a new cold review before the human entry gate.
 ```
 
-## 2. Review and approve a specification
+## 2. Review and approve entry
 
 ```text
 Read the project AGENTS.md, .modernpath/rdd/AGENTS.md,
 .modernpath/rdd/process/V-model-loop.md, .modernpath/rdd/process/state-tracking.md, the epic and all
 specs, current human gates, and relevant product sources.
 
-Audit every specification-gate condition. Lead with contradictions, missing
-sources, ambiguous acceptance behavior, trace gaps, untestable SRs, stale
-technical reconnaissance, missing SR implementation context, and cold-review
-findings.
+Audit every epic and requirement entry-gate condition. Lead with
+contradictions, missing sources, ambiguous acceptance behavior, trace gaps,
+untestable SRs, stale technical reconnaissance, missing SR implementation
+context, and cold-review findings.
 Reject specification entry when any linked requirement is DERIVED or any trace
 link is still candidate context.
 Confirm the cold review passed with no material finding open or deferred in
-scope. Confirm the specification gate exists and is answerable before
-soliciting the decision: in a connected workspace the record is committed,
-synced, and present in the server gate list; otherwise the gate is repo-borne.
-Present the plain-language brief and recommendation.
+scope and every selected entity satisfies the non-human prerequisites for
+`READY`. Only then confirm the scoped entry gate exists and is eligible: in a
+connected workspace the record is committed, synced, and present in the server
+gate list; otherwise the gate is repo-borne. Present the plain-language brief,
+the exact epic/requirement scope, and recommendation.
 
 If the authorized human approves, record their actual identity, role, scope,
-and USER:<date>:<summary>, then reconcile the answer according to
-state-tracking.md. Otherwise record requested changes/blocker and do not issue
-an implementation kickoff.
+and USER:<date>:<summary>; move each named `PROPOSED` or
+`PENDING_VERIFICATION` requirement and any proposed epic to READY, then
+reconcile the answer according to state-tracking.md. Otherwise record requested
+changes/blocker and do not issue an implementation kickoff.
 ```
 
 ## 3. Execute one development-loop slice
@@ -128,11 +133,12 @@ an implementation kickoff.
 Read the project AGENTS.md, .modernpath/rdd/AGENTS.md,
 .modernpath/rdd/process/V-model-loop.md, .modernpath/rdd/process/state-tracking.md, the active
 epic/spec/SR, and relevant product/code/test sources. Converge state and
-confirm current technical reconnaissance, a passing cold technical review, and
-specification approval or every fast-lane criterion. Refresh the SR context
-from the reconnaissance and current repository; if material drift changes the
-affected surface, stop and repeat reconnaissance and cold review before
-implementation.
+confirm every selected epic and requirement is READY from attributable human
+entry approval. Full-path work also requires specification approval; fast-lane
+work requires every fast-lane criterion but cannot substitute those criteria
+for entry approval. Refresh the SR context from the reconnaissance and current
+repository; if material drift changes the affected surface, stop and repeat
+reconnaissance, cold review, and entry approval before implementation.
 
 Confirm every requirement in the trace is human-confirmed. If any item is
 DERIVED or any link is candidate-only, stop at its confirmation gate; do not
@@ -163,8 +169,10 @@ EPIC -> UR -> SR.
 9. Record passing upper evidence against the UR acceptance content and epic
    upper-loop status.
 10. Capture discoveries/deferrals/conflicts without silently expanding scope.
-11. Update the full trace and reconcile state according to state-tracking.md.
-12. Stop at IN_REVIEW when completion approval is still pending.
+11. Update the full trace and reconcile its pre-delivery state according to
+    state-tracking.md.
+12. Stop at IN_REVIEW. Do not solicit completion approval before authoritative
+    delivery and final reconciliation.
 
 Report reconnaissance/context revision, cold-review verdict, RED and GREEN
 commands/results, cleanup change or no-op, post-cleanup gates, code/test refs,
@@ -194,7 +202,7 @@ per state-tracking.md and report routed items, changes, remaining human
 decisions, and next READY traces.
 ```
 
-## 5. Evidence and completion review
+## 5. Deliver, reconcile, and review completion
 
 ```text
 Read the project AGENTS.md, .modernpath/rdd/AGENTS.md,
@@ -209,16 +217,24 @@ Treat a DERIVED requirement or candidate trace link as a hard stop: it cannot
 support readiness, verification, validation, completion, or delivery claims.
 Confirm technical-reconnaissance freshness, enriched SR context, cold-review
 dispositions, RED-before-GREEN, requirement-scoped cleanup, post-cleanup gates,
-runtime/browser proof, evidence SHA/drift, human approval, source-repository
-delivery, release scope, and state reconciliation. Treat evidence carried
+runtime/browser proof, evidence SHA/drift, entry approval, release scope, and
+delivery readiness. Treat evidence carried
 across a revert, an abandoned branch, or a closed unmerged PR as unverified
 unless it was re-verified at the current revision or is explicitly marked
 inherited.
 
-If all checks pass, present the completion brief and request/record authorized
-human approval. Mark the epic DONE and requirements VALIDATED only after
-delivery and state reconciliation.
-Otherwise leave the strongest honest status and list exact missing evidence.
+If the pre-delivery audit passes, deliver through the project's normal
+authorized integration path while keeping the epic and requirements IN_REVIEW.
+Reconcile all repository records and projections, verify evidence against the
+delivered revision, and audit the complete trace again. Only when every
+non-human completion prerequisite is fulfilled may the completion gate become
+eligible and the brief be presented.
+
+If the authorized human accepts the delivered result, record their actual
+identity, role, exact epic/requirement scope, and USER:<date>:<summary>. Move
+the named requirements to VALIDATED, then their epic to DONE in the same
+reconciliation change. Otherwise leave the strongest honest non-final status
+and list the exact missing evidence or requested change.
 ```
 
 ## 6. Integrate user feedback

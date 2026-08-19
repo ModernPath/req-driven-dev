@@ -30,10 +30,10 @@ Record every triage pass here with the date and what was routed where.
 - Item description → DROPPED (reason)
 
 **Promoted PROPOSED → READY:**
-- REQ-XXX-NNN (acceptance criteria sharpened)
+- REQ-XXX-NNN (entry packet fulfilled + attributable human gate/source)
 
 **Human-confirmed DERIVED:**
-- REQ-XXX-NNN → PROPOSED/PENDING_VERIFICATION (USER source; candidate links sent to planning)
+- REQ-XXX-NNN → PROPOSED (USER source; accepted as-built rows may then take the PENDING_VERIFICATION route; candidate links sent to planning)
 
 **Notes:** any observations about the backlog state
 ```

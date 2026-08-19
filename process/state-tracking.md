@@ -70,21 +70,23 @@ Recommended status vocabulary:
 
 | Status | Meaning |
 |---|---|
-| `DERIVED` | inferred requirement awaiting attributable human confirmation that it exists; candidate links are held and non-authoritative |
-| `PROPOSED` | identified but not ready |
-| `READY` | sourced criteria are ready for implementation entry |
+| `DERIVED` | inferred requirement whose fulfilled candidate packet awaits attributable human confirmation that it exists; candidate links are held and non-authoritative |
+| `PROPOSED` | confirmed or directly sourced requirement whose entry trace is being fulfilled; not approved for implementation |
+| `READY` | non-human entry prerequisites are fulfilled and attributable human entry approval is applied |
 | `IN_PROGRESS` | one or both evidence loops are underway |
-| `IN_REVIEW` | evidence required by the requirement kind is complete; applicable approval or delivery remains |
-| `PENDING_VERIFICATION` | human-confirmed as-built requirement: described and accepted as accurate, but not yet proven by a test |
-| `VALIDATED` | required evidence, applicable approval, source delivery, and reconciliation are complete |
+| `IN_REVIEW` | evidence required by the requirement kind is complete; the row stays here through delivery and reconciliation until completion acceptance |
+| `PENDING_VERIFICATION` | special route for a human-confirmed as-built description awaiting the same entry approval and direct current evidence |
+| `VALIDATED` | the full delivered trace was fulfilled before attributable human completion acceptance was applied |
 | `BLOCKED` | cannot proceed; blocker or gate is linked |
 | `DEFERRED` | consciously postponed; reason and tracking target are recorded |
 | `OBSOLETE` | rejected or superseded; human decision or replacement source is linked |
 
 `DERIVED` is a pre-lifecycle hold, not a weaker spelling of `PROPOSED`. A
 derived row records an inference from `DOC:`, `CODE:`, existing requirements,
-or analysis without claiming that the inferred requirement is real. It carries
-an open human confirmation gate. Until that answer is applied:
+or analysis without claiming that the inferred requirement is real. First
+complete its candidate statement, sources, proposed ancestry/downstream links,
+conflicts, consequences, and confirmation brief; only then make its human
+confirmation gate solicitable. Until that answer is applied:
 
 - the row is not eligible for `PROPOSED`, `READY`, release commitment, work
   selection, specification, testing, implementation, or verification;
@@ -95,12 +97,12 @@ an open human confirmation gate. Until that answer is applied:
   presented as their validated user intent.
 
 An attributable confirmation or correction records its `USER:` source, moves
-the requirement into `PROPOSED`, and sends every candidate link through normal
-planning before it becomes authoritative. If the same decision explicitly
-accepts an as-built description of behavior that already ships, the row may
-enter `PENDING_VERIFICATION` instead. A rejection moves the row to `OBSOLETE`
-and retires its candidate links. None of these answers automatically makes a
-row `READY`.
+the requirement through `PROPOSED`, and sends every candidate link through
+normal planning before it becomes authoritative. If the same decision
+explicitly accepts an as-built description of behavior that already ships, the
+row may then take the `PENDING_VERIFICATION` route. A rejection moves the row
+to `OBSOLETE` and retires its candidate links. None of these answers
+automatically makes a row `READY`.
 
 `PENDING_VERIFICATION` belongs only to rows reverse-engineered from code that
 already ships **after** a human has confirmed that the requirement exists and
@@ -117,12 +119,14 @@ system requirement.
 Every ledger row selected for implementation or verification must first belong
 to an authoritative `EPIC -> UR -> SR` ancestry. A confirmed as-built
 row without that ancestry remains `PENDING_VERIFICATION` and returns to normal
-planning before tests change. An SR reaches `IN_REVIEW` when all of its required
-lower evidence is complete. A UR reaches `IN_REVIEW` only when its linked lower
-evidence and acceptance-content upper validation are complete.
+planning before tests change. It must receive human entry approval and become
+`READY` before verification starts. An SR reaches `IN_REVIEW` when all of its
+required lower evidence is complete. A UR reaches `IN_REVIEW` only when its
+linked lower evidence and acceptance-content upper validation are complete.
 
-Test evidence never moves a row directly to `VALIDATED`; applicable approval,
-authoritative-source delivery, and state reconciliation remain separate gates.
+Test evidence never moves a row directly to `VALIDATED`. The row remains
+`IN_REVIEW` through authoritative-source delivery and state reconciliation;
+only the subsequent human completion acceptance moves it to `VALIDATED`.
 
 ### Epic record
 
@@ -148,10 +152,34 @@ Use these axes independently:
 
 The repository epic and work-list own `delivery_status`. Connected projections
 carry it as a separate delivery field or derive the same value from the
-synchronized entry gate, loop evidence, completion approval, delivery, and
-reconciliation facts. Never map it onto `initiatives.status`; an adapter that
-cannot yet project it reports that limitation instead of substituting board
-state.
+synchronized entry gate, loop evidence, delivery, reconciliation, and
+completion-acceptance facts. Never map it onto `initiatives.status`; an adapter
+that cannot yet project it reports that limitation instead of substituting
+board state.
+
+### Strict transition records
+
+Repository records must make the human-gated lifecycle transitions auditable:
+
+| Entity transition | Required repository facts before the gate is solicitable |
+|---|---|
+| Requirement `DERIVED -> PROPOSED` | candidate statement, inference sources, candidate ancestry/links, consequences, confirmation brief, and gate scope |
+| Requirement `PROPOSED -> READY` or `PENDING_VERIFICATION -> READY` | authoritative ancestry, sourced and testable content, release/owner/scope, required reconnaissance and cold review, test strategy, and no unresolved in-scope decision |
+| Epic `PROPOSED -> READY` | complete scoped entry packet and every selected requirement entry-ready |
+| Requirement `IN_REVIEW -> VALIDATED` | full delivered trace, current delivered-revision evidence, reconciled records/projections, and disclosed gaps/deferrals |
+| Epic `IN_REVIEW -> DONE` | every named requirement completion-eligible and the delivered epic scope reconciled |
+
+Each applied transition records the gate id, exact entity scope, human actor,
+role, answer, `USER:<date>:<summary>` source, and application revision. One
+scoped answer may cover an epic and named requirements, but applying it records
+each requirement transition before the epic transition. An already-`READY`
+epic does not repeat its entry transition when a new requirement is added; the
+new requirement still needs its own entry approval.
+
+`IN_REVIEW` is deliberately stable across delivery and reconciliation. The
+completion gate is not solicitable until those operations and delivered-line
+evidence are complete. Therefore completion acceptance records acceptance of
+an already-delivered result; it never authorizes delivery.
 
 ### Work-list and generated views
 
@@ -263,11 +291,14 @@ ModernPath-enabled repository may provide:
 modernpath check
 ```
 
-The current check covers:
+Required project checks cover:
 
 - ledger status hygiene: dashboard counts agree with `Totals:`;
-- approval before `DONE`: a completed work-list epic links a record containing
-  an attributable `USER:` approval.
+- strict entry approval: no epic or requirement is `READY` without the scoped,
+  attributable human answer applied after its entry facts were fulfilled;
+- fulfilled trace before final approval: no requirement is `VALIDATED` and no
+  epic is `DONE` unless delivery, delivered-revision evidence, and
+  reconciliation preceded the attributable completion answer.
 
 Repositories adopting checks over existing records may keep a reviewed
 baseline for existing violations. A baseline suppresses only those exact
@@ -310,25 +341,28 @@ Mission Control has two kinds of surface:
 
 - **observe**: digest, current activity, whole scope, requirements, evidence,
   and timeline;
-- **act**: the “Your move” queue for decisions, specification approvals,
+- **act**: the “Your move” queue for decisions, entry/specification approvals,
   completion approvals, roadblocks, and triage.
 
 Gate content is normally extracted from requirement, epic, and open-question
-records and synced to the server. Every `DERIVED` requirement emits a
-confirmation gate whose holds identify the requirement and its candidate links.
+records and synced to the server. A strict transition gate becomes eligible
+only after the repository facts in “Strict transition records” are fulfilled.
+A `DERIVED` confirmation gate holds the requirement and its candidate links,
+but it is not solicitable until its candidate packet and brief are complete.
 Gate emission depends on parser-visible markers and work-list wording, so a
-record saying “awaiting confirmation” is not proof that a gate exists. Read the
-gate list back when a human action is expected.
+record saying “awaiting confirmation” is not proof that an eligible gate
+exists. Read the gate list back when a human action is expected.
 
-Do not solicit a human answer for a gate that does not exist yet; an answer
-collected outside an existing gate attaches to nothing. In a connected
-workspace, the path from record to applied answer is one sequence, and asking
-comes only after the second step:
+Do not solicit a human answer for a gate that does not exist or is not eligible;
+an answer collected outside an eligible gate attaches to no valid transition.
+In a connected workspace, the path from fulfilled facts to applied answer is
+one sequence, and asking comes only after the third step:
 
 ```text
-record emits the gate -> sync publishes it -> human answers (attributed,
-first-wins) -> factory pull --apply -> answer materialized into the record
-with its USER:<date> source -> next sync closes the gate
+transition facts fulfilled -> record emits eligible gate -> sync publishes it
+-> human answers (attributed, first-wins) -> factory pull --apply -> answer
+materialized into the record with its USER:<date> source -> next sync closes
+the gate
 ```
 
 Without a platform connection, the gate is repo-borne: the human decision is
@@ -351,7 +385,8 @@ After applying an answer:
 
 1. update the affected spec, requirement acceptance content, and system
    requirements as required by the decision;
-2. record the `USER:<date>:<summary>` source and consequence;
+2. record the gate id, exact entity transitions, application revision,
+   `USER:<date>:<summary>` source, and consequence;
 3. run local process checks;
 4. let automatic sync publish the materialized state;
 5. confirm the server intent is applied and the gate/projection agrees.
@@ -362,6 +397,12 @@ adds the `USER:` source and routes candidate links through planning; rejection
 marks the requirement `OBSOLETE` and retires the candidates. Do not convert
 candidate links into authoritative relationships merely because the gate was
 answered.
+
+For a completion answer, first prove that the delivered trace and projections
+still satisfy the gate snapshot. Apply accepted named requirements to
+`VALIDATED`, then their epic to `DONE`. If the trace changed after the gate
+became eligible, do not solicit or apply the stale decision; refresh the facts
+and gate brief first.
 
 ## Evidence state
 

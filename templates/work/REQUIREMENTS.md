@@ -26,6 +26,12 @@ This is the bounded-context backlog and requirement work record described in
 - **Source:** `DOC:docs/«NN»#<section>` / `USER:<date>:<summary>`
 - **Statement:** «One or two sentences describing what the requirement ensures»
 - **Confirmation gate:** — / `CONFIRM-REQ-«CTX»-NNN` OPEN|ANSWERED
+- **Confirmation facts:** NOT_FULFILLED | FULFILLED — «candidate packet refs»
+- **Entry gate:** `APPROVE-ENTRY-REQ-«CTX»-NNN`
+- **Entry facts:** NOT_FULFILLED | FULFILLED — «evidence»
+- **Completion gate:** `APPROVE-COMPLETION-REQ-«CTX»-NNN`
+- **Completion facts:** NOT_FULFILLED | FULFILLED — «evidence»
+- **Gate records:** «gate id, exact scope, human actor/role, USER source, answer, application revision»
 - **Acceptance criteria:**
   - GIVEN «precondition» WHEN «action» THEN «expected outcome».
   - GIVEN «another precondition» WHEN «action» THEN «expected outcome».
@@ -40,6 +46,7 @@ This is the bounded-context backlog and requirement work record described in
 - **Lower RED / gates:** «test path/name/command, expected failure, regression commands»
 - **Evidence:** —
 - **Code:** —
+- **Delivery / reconciliation:** —
 - **Mission Control reference:** «optional workspace/system/entity reference»
 - **Deferred / notes:** —
 
@@ -48,7 +55,7 @@ This is the bounded-context backlog and requirement work record described in
 **Brief:**
 - What: Confirm whether «inferred requirement» is a real requirement.
 - Why now: «source/code/SR inference and held candidate links»
-- Changes if approved: Move to `PROPOSED` (or explicitly accepted `PENDING_VERIFICATION`) and re-plan candidate links.
+- Changes if approved: Establish `PROPOSED`, optionally route an explicitly accepted as-built description through `PENDING_VERIFICATION`, and re-plan candidate links.
 - Risk if wrong: Invalid user intent would make «candidate EPIC/UR/SR links» misleading.
 - Recommendation: «option and sourced rationale without selecting for the human»
 - Image: «optional supporting image»
@@ -57,6 +64,11 @@ This is the bounded-context backlog and requirement work record described in
 Use `DERIVED` rather than `PROPOSED` when no human has confirmed that the
 requirement exists. A derived row must carry the confirmation gate and candidate
 trace markers above; it is not eligible for the active implementation work-list.
+
+Do not mark entry facts `FULFILLED` until the confirmed authoritative trace,
+sourced content, scope, reconnaissance/review where required, and test strategy
+are complete. Do not mark completion facts `FULFILLED` until the complete trace
+is delivered, evidenced at that revision, and reconciled.
 
 ---
 

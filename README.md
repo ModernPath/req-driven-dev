@@ -11,12 +11,14 @@ human intent
   -> user requirement + acceptance scenario
   -> thin system requirement
   -> technical reconnaissance + cold review
+  -> human entry approval
   -> failing tests
   -> implementation
   -> requirement-scoped cleanup
   -> passing lower and upper evidence
-  -> human approval
-  -> delivered, synchronized state
+  -> delivered, synchronized trace
+  -> human completion acceptance
+  -> validated requirements + done epic
 ```
 
 Product repositories hold the versioned working records, specifications, code,
@@ -45,11 +47,13 @@ answers, evidence runs, sessions, and events.
   and a cold technical review resolves material findings before approval.
 - Boy-scout cleanup is behavior-preserving, limited to the current requirement,
   and followed by final evidence runs.
-- Humans own product decisions and specification/completion gates.
+- Humans own product decisions and every strict lifecycle gate. A gate is
+  solicited only after the trace facts required for its target state are
+  fulfilled.
 - Repository ledgers, epics, and the work-list are the working process record;
   Mission Control is their synchronized operational projection.
-- No completion claim without current code, test/runtime evidence, delivery,
-  approval, and state reconciliation.
+- No completion claim without current code and test/runtime evidence, delivery
+  and state reconciliation, followed by human completion acceptance.
 - Discoveries, conflicts, and deferrals are explicit and sourced.
 
 ## Distribution and adoption

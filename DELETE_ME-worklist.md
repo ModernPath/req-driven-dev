@@ -3,11 +3,11 @@
 ```text
 EPIC -> UR -> SR -> TEST -> CODE
 
-EPIC: PROPOSED -> READY -> IN_PROGRESS -> IN_REVIEW -> DONE
+EPIC: PROPOSED -[HUMAN]-> READY -> IN_PROGRESS -> IN_REVIEW -[HUMAN]-> DONE
 
-UR:   DERIVED -> PROPOSED -> READY -> IN_PROGRESS -> IN_REVIEW -> VALIDATED
+UR:   DERIVED -[HUMAN]-> PROPOSED -[HUMAN]-> READY -> IN_PROGRESS -> IN_REVIEW -[HUMAN]-> VALIDATED
 
-SR:   DERIVED -> PROPOSED -> READY -> IN_PROGRESS -> IN_REVIEW -> VALIDATED
+SR:   DERIVED -[HUMAN]-> PROPOSED -[HUMAN]-> READY -> IN_PROGRESS -> IN_REVIEW -[HUMAN]-> VALIDATED
 ```
 
 ## Item ownership
@@ -58,19 +58,20 @@ the repository's permanent tracking system.
 | DM-01 | HIGH | RESOLVED | `DERIVED` requirements wait for human confirmation before loop entry |
 | DM-02 | HIGH | RESOLVED | `DERIVED` is represented on the requirement work-state axis, not the specification axis |
 | DM-03 | HIGH | RESOLVED | Epic is the trace root and fast-lane work retains the complete trace |
-| DM-04 | HIGH | IN_PROGRESS | Completion approval ordering is circular |
+| DM-04 | HIGH | RESOLVED | Strict human gates run only after their transition traces are fulfilled |
 | DM-05 | HIGH | RESOLVED | Epic owns delivery; scenarios are UR content; SR owns the executable slice |
 | DM-06 | MEDIUM | OPEN | Invalidated evidence has no defined status consequence |
 | DM-07 | MEDIUM | OPEN | Gate lifecycle and answer channel are underspecified |
 | DM-08 | MEDIUM | OPEN | The connected-workspace preflight is not an executable sequence |
 | DM-09 | MEDIUM | OPEN | Commit-at-every-waypoint conflicts with no-op waypoints |
 
-- Resolved in this repository: `DM-01`, `DM-02`, `DM-03`, `DM-05`
-- Next unresolved item: `DM-04`
+- Resolved in this repository: `DM-01`, `DM-02`, `DM-03`, `DM-04`, `DM-05`
+- Next unresolved item: `DM-06`
 - Resolution commits:
   - `d477bf5` (`Hold DERIVED requirements for human confirmation`) — DM-01,
     DM-02
   - the commit containing this worklist update — DM-03
+  - the commit containing the DM-04 resolution — DM-04
   - the commit containing the DM-05 resolution — DM-05
 
 ### External implementation follow-up
@@ -89,6 +90,13 @@ requiring `TASK` as a canonical trace level. Existing external `task_*` board
 records may remain optional planning views, but their normative execution
 content must project from the owning SR. Those external implementations are
 not changed in this repository.
+
+The DM-04 contract additionally requires checks and projections to distinguish
+entry approval from completion acceptance, prevent `READY`, `VALIDATED`, or
+`DONE` without their scoped attributable decision, and withhold human action
+until the corresponding transition facts are fulfilled. Those external
+implementations are not changed in this repository. The exact server gate
+states, answer channel, and repo-borne representation remain DM-07.
 
 ## DM-01 — Hold derived requirements before loop entry
 
@@ -151,18 +159,32 @@ not changed in this repository.
 
 ## DM-04 — Establish completion-gate ordering
 
-- Status: `IN_PROGRESS`
+- Status: `RESOLVED`
 - Finding: the lifecycle records the human completion decision before delivery,
   while the completion-review prompt requires human approval and source
   delivery to be confirmed before requesting that approval.
 - References: `AGENTS.md#Working loop`,
+  `process/V-model-loop.md#Strict human transitions`,
   `process/V-model-loop.md#Development loop`,
-  `process/prompts.md#5. Evidence and completion review`.
-- Decision needed: decide whether the human completion gate authorizes delivery
-  or accepts an already-delivered result.
-- Resolution target: the lifecycle, Definition of Done, human brief, and
-  completion prompt use one non-circular sequence.
-- Resolution record: _pending_
+  `process/prompts.md#5. Deliver, reconcile, and review completion`.
+- Decision: `USER:2026-08-19:strict human gates are requirement
+  DERIVED-to-PROPOSED, epic/requirement PROPOSED-to-READY, requirement
+  IN_REVIEW-to-VALIDATED, and epic IN_REVIEW-to-DONE; do not request human
+  input until the traces for the transition are fulfilled`.
+- Resolution: a strict gate now contributes only the human decision after every
+  non-human prerequisite for its target state is recorded. Evidence moves the
+  epic and requirements to `IN_REVIEW`; they remain there through authoritative
+  delivery, delivered-revision evidence, and state reconciliation. Only then is
+  the completion brief solicited. An accepted scoped answer moves the named
+  requirements to `VALIDATED`, then their epic to `DONE`. Completion acceptance
+  therefore accepts an already-delivered result and never authorizes delivery.
+  Entry and derived-confirmation gates follow the same fulfilled-before-asking
+  rule. One scoped answer may cover explicitly named entities, but each entity
+  transition and `USER:` source is recorded.
+- Resolution boundary: this defines gate placement, eligibility, and transition
+  ordering. DM-07 still owns the server/repo gate state machine and answer
+  channel.
+- Resolution record: commit containing this resolution on `review/prs-5-9`.
 
 ## DM-05 — Define status vocabularies per entity
 

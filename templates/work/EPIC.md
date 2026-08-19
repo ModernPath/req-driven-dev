@@ -5,6 +5,9 @@
 - **Delivery status:** PROPOSED
 - **Upper status:** PROPOSED
 - **Lower status:** PROPOSED
+- **Entry approval:** —
+- **Completion approval:** —
+- **Authoritative delivery / reconciliation:** —
 - **Requirement confirmation:** all linked requirements confirmed; no `DERIVED` or candidate link is eligible for active epic scope
 
 ## User outcome
@@ -80,17 +83,25 @@ SPEC-DRAFT — «scope of the specs set»
 |---|---|---|---|---|
 | UR acceptance/SR | — | — | — | incomplete |
 
-## Specification approval
+## Entry approval — `PROPOSED -> READY`
 
-| Gate | Approver | Role | Source | Decision | Conditions |
-|---|---|---|---|---|---|
-| SPEC-APPROVE-EPIC-«AREA»-«NNN» | — | — | — | pending | «cold technical review PASS required» |
+Do not solicit this gate until the scoped epic/requirement trace, specification
+or fast-lane packet, reconnaissance, cold review, test strategy, and routed
+decisions are fulfilled.
 
-## Completion approval
+| Gate | Exact epic/requirement scope | Eligibility evidence | Approver | Role | Source | Decision/application revision |
+|---|---|---|---|---|---|---|
+| APPROVE-ENTRY-EPIC-«AREA»-«NNN» | «EPIC/UR/SR ids» | «fulfilled trace + review refs» | — | — | — | pending |
 
-| Gate | Approver | Role | Source | Decision | Conditions |
-|---|---|---|---|---|---|
-| APPROVE-EPIC-«AREA»-«NNN» | — | — | — | pending | — |
+## Completion approval — `IN_REVIEW -> VALIDATED/DONE`
+
+Do not solicit this gate until the exact trace is delivered, its evidence is
+current at the delivered revision, all records/projections are reconciled, and
+the completion brief discloses gaps and deferrals.
+
+| Gate | Exact epic/requirement scope | Delivered trace/evidence | Approver | Role | Source | Decision/application revision |
+|---|---|---|---|---|---|---|
+| APPROVE-COMPLETION-EPIC-«AREA»-«NNN» | «EPIC/UR/SR ids» | «merge/SHA + evidence + reconciliation» | — | — | — | pending |
 
 ## Blocked / deferred / discovered
 

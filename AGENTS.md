@@ -60,14 +60,18 @@ Before planning, changing, reviewing, or delivering product work:
    remains a conflict.
 5. Both V-model arms are red-first: BDD/E2E/user-flow evidence above and
    focused unit/component/API/contract/integration evidence below.
-6. Every trace has an owning epic. Full epic-path implementation starts only
-   after the specification gate is approved. Fast-lane work stays inside an
-   owning epic and must satisfy every fast-lane condition.
+6. Every trace has an owning epic. Implementation starts only after the owning
+   epic and selected requirements have received their human entry approval.
+   Fast-lane work stays inside an owning epic and may reduce specification
+   artifacts, but it does not bypass an entity's entry gate.
 7. `LOWER_VERIFIED`, `UPPER_VALIDATED`, `IN_REVIEW`, `DONE`, and `VALIDATED`
    require linked direct evidence. A label, checkbox, or unrelated green suite
    is not proof.
-8. Humans approve epic specifications and epic/user-requirement completion.
-   Tests cannot grant human approval.
+8. Strict human gates control requirement `DERIVED -> PROPOSED`, epic and
+   requirement `PROPOSED -> READY`, requirement `IN_REVIEW -> VALIDATED`, and
+   epic `IN_REVIEW -> DONE`. Do not solicit the human decision until every
+   non-human trace fact required by the target state is fulfilled. Tests cannot
+   grant human approval.
 9. Deferrals, discoveries, blockers, and deviations are explicit, sourced, and
    routed. Do not hide them in prose or TODO comments.
 10. Boundary contracts are canonical. Derive boundary types from schemas where
@@ -79,9 +83,9 @@ Before planning, changing, reviewing, or delivering product work:
     SR with the affected surface, control/data-flow impact, reuse targets,
     dependencies, risks, test path, gates, and explicit change boundary.
     Generated context helps navigate; it does not replace verified sources.
-13. A cold technical review runs from a separate context before human
-    specification approval. Material findings open or deferred in scope block
-    implementation entry; the review cannot grant human approval.
+13. A cold technical review runs from a separate context before human entry
+    approval. Material findings open or deferred in scope block implementation
+    entry; the review cannot grant human approval.
 14. Boy-scout cleanup is behavior-preserving and tightly scoped to the current
     requirement, touched code, and directly adjacent code. Broader debt becomes
     a discovery, and final evidence runs after cleanup.
@@ -98,8 +102,10 @@ Before planning, changing, reviewing, or delivering product work:
 3. **Cold technical review** — audit the trace, technical surface, failure
    behavior, feasibility, SR boundaries, and test strategy from a separate
    context; resolve material findings.
-4. **Approve specification** — present a decision brief and record the human
-   gate before epic-path RED tests.
+4. **Approve entry** — after the proposed trace, specification or fast-lane
+   packet, reconnaissance, and cold review are complete, present the decision
+   brief and record the human gate that moves the scoped epic and requirements
+   to `READY`.
 5. **Upper RED** — observe the acceptance/user-flow test fail for the expected
    reason.
 6. **Lower RED/GREEN** — write the focused failing test and implement the
@@ -107,14 +113,17 @@ Before planning, changing, reviewing, or delivering product work:
 7. **Boy-scout cleanup** — after GREEN, improve only touched or directly
    adjacent code within the requirement without changing behavior, contracts,
    or architecture; a no-op is valid.
-8. **Verify and validate** — rerun proportional gates on the final cleanup diff
-   and link lower and upper evidence to the exact trace
-   and revision. UI work also needs a live-browser run and inspected screenshot.
-9. **Review** — audit criteria, evidence, gaps, and deferrals; record the real
-   human completion decision.
-10. **Deliver and reconcile** — land code in its source repository and reconcile
-   every working record and projection according to
-   `process/state-tracking.md`.
+8. **Verify and review** — rerun proportional gates on the final cleanup diff,
+   link lower and upper evidence to the exact trace and revision, and move
+   fulfilled requirements and the epic to `IN_REVIEW`. UI work also needs a
+   live-browser run and inspected screenshot.
+9. **Deliver and reconcile** — while the trace remains `IN_REVIEW`, land code
+   in its source repository and reconcile every working record and projection
+   according to `process/state-tracking.md`.
+10. **Accept completion** — only after the delivered trace and its evidence are
+    fulfilled and reconciled, present the completion brief and record the real
+    human decision that moves requirements to `VALIDATED` and the epic to
+    `DONE`.
 11. **Continue** — capture discoveries and take the next incomplete trace.
 
 ## Human gates
@@ -136,10 +145,11 @@ rendered control and prove its mutation path with isolated automated tests.
 
 ## Completion
 
-Before claiming completion, audit every explicit requirement and acceptance
-scenario against current sources: files, test/runtime/browser evidence,
-attributable approval, implementation-repository delivery, and the state
-records defined in `process/state-tracking.md`. Missing, stale, or indirect
-evidence means incomplete work.
+Before requesting completion acceptance or claiming completion, audit every
+explicit requirement and acceptance scenario against current sources: files,
+test/runtime/browser evidence, implementation-repository delivery, and the
+state records defined in `process/state-tracking.md`. Request the attributable
+human completion decision only after those facts are fulfilled. Missing,
+stale, or indirect evidence means incomplete work.
 
 The detailed Definition of Done is in `process/V-model-loop.md`.

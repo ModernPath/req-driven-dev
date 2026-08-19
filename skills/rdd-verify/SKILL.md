@@ -21,7 +21,8 @@ delivery.
   confirmed that the requirement exists; its proposed links are candidate
   context and all downstream work is held. Apply its confirmation gate first.
 - `PENDING_VERIFICATION` means the requirement and as-built description were
-  already confirmed, but current direct test evidence is missing.
+  already confirmed, but current direct test evidence is missing. It still
+  needs human entry approval and must become `READY` before tests change.
 
 - Record `LOWER_VERIFIED` evidence for the system requirement. Move the SR
   `work_status` to `IN_REVIEW` only when all of its required lower evidence is
@@ -44,7 +45,8 @@ not use existing SR evidence to imply that the inferred user outcome is valid.
 
 Before changing any test, require an authoritative
 `EPIC -> UR -> SR` trace. If the row has no owning epic or any parent is
-missing, stop and return it to normal planning. Then satisfy one of:
+missing, stop and return it to normal planning. Fulfill one of the following
+entry packets:
 
 - **Full specification path** — the owning epic is `SPEC-APPROVED`, and this
   verification is within its approved scope; or
@@ -52,9 +54,13 @@ missing, stop and return it to normal planning. Then satisfy one of:
   work-list with sharpened criteria, and every repository fast-lane condition
   holds.
 
-If neither holds, stop and route the entry first. Verification that arrives
-outside the work-list is invisible to everyone planning against it, and a test
-written before the gate cannot be traced to an approved intent.
+Then obtain the strict human entry approval for the requirement. If its owning
+epic is not already `READY`, obtain the epic entry approval in the same scope.
+Move the selected entities to `READY` before changing a test. If neither packet
+holds or the entry answer is absent, stop and route the entry first.
+Verification that arrives outside the work-list is invisible to everyone
+planning against it, and a test written before the gate cannot be traced to an
+approved intent.
 
 ## Establish the evidence bar
 
@@ -95,8 +101,9 @@ assertion remains unverified.
    required regression gates.
 5. Update the ledger row, detail block, totals, linked epic evidence, and
    work-list atomically.
-6. Advance only the evidence state justified by the run. Leave approval and
-   delivery pending until they actually occur.
+6. Advance only the evidence state justified by the run and leave the row
+   `IN_REVIEW`. Deliver and reconcile it before soliciting completion
+   acceptance; only the subsequent human gate may move it to `VALIDATED`.
 7. Run the repository process check, commonly `modernpath check`.
 
 ## Detect verification traps
