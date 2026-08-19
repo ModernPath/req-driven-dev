@@ -351,8 +351,11 @@ Start:
 
 1. inspect `git status` and preserve unrelated changes;
 2. read `WORKLIST.md`, the target ledger, and the active epic;
-3. in connected workspaces, inspect pending gates/intents and apply any answer
-   that holds the selected work;
+3. in connected workspaces, run the platform preflight before selecting work:
+   `modernpath factory status`; open gates and pending intents, applying any
+   answer that holds the selected work; and the local release binding checked
+   against the registry's single active release. Report binding drift and
+   unsynced state instead of carrying them silently;
 4. reconcile contradictory repository records before selecting the next item.
 
 After a transition:
