@@ -1,5 +1,17 @@
 # DELETE ME — Combined process-review worklist
 
+```text
+EPIC -> UR -> SCN -> SR -> TASK -> TEST -> CODE
+
+TASK: PROPOSED -> READY -> IN_PROGRESS -> LOWER_VERIFIED
+
+SCN:  PROPOSED -> READY -> IN_PROGRESS -> UPPER_VALIDATED
+
+UR:   DERIVED -> PROPOSED -> READY -> IN_PROGRESS -> IN_REVIEW -> VALIDATED
+
+SR:   DERIVED -> PROPOSED -> READY -> IN_PROGRESS -> LOWER_VERIFIED
+```
+
 Temporary worklist for the semantic review of PRs #5–#9 on
 `review/prs-5-9`. Delete this file after every item is resolved or moved into
 the repository's permanent tracking system.
@@ -100,38 +112,6 @@ until the external implementations satisfy the contract.
   `review/prs-5-9`.
 
 ## DM-04 — Establish completion-gate ordering
-
-```text
-EPIC
-  |
-  v
-UR
-  |
-  v
-SCN
-  |
-  v
-SR
-  |
-  v
-TASK
-  |
-  v
-TEST
-  |
-  v
-CODE
-```
-
-```text
-TASK: PROPOSED -> READY -> IN_PROGRESS -> LOWER_VERIFIED
-
-SCN:  PROPOSED -> READY -> IN_PROGRESS -> UPPER_VALIDATED
-
-UR:   DERIVED -> PROPOSED -> READY -> IN_PROGRESS -> IN_REVIEW -> VALIDATED
-
-SR:   DERIVED -> PROPOSED -> READY -> IN_PROGRESS -> LOWER_VERIFIED
-```
 
 - Status: `OPEN`
 - Finding: the lifecycle records the human completion decision before delivery,
