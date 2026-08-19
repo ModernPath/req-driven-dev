@@ -279,6 +279,21 @@ to the server. Gate emission currently depends on parser-visible markers and
 work-list wording, so a record saying “awaiting approval” is not proof that a
 gate exists. Read the gate list back when a human action is expected.
 
+Do not solicit a human answer for a gate that does not exist yet; an answer
+collected outside an existing gate attaches to nothing. In a connected
+workspace, the path from record to applied answer is one sequence, and asking
+comes only after the second step:
+
+```text
+record emits the gate -> sync publishes it -> human answers (attributed,
+first-wins) -> factory pull --apply -> answer materialized into the record
+with its USER:<date> source -> next sync closes the gate
+```
+
+Without a platform connection, the gate is repo-borne: the human decision is
+recorded directly in the record it approves, with the same `USER:<date>`
+attribution. Either way the gate exists before the question is asked.
+
 Server gate answers are first-wins. Once answered, later repository sync may
 update descriptive gate content but must not overwrite the answer. Preserve
 the actual human actor; never attribute a human decision to an agent or a

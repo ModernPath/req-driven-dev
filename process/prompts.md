@@ -95,7 +95,10 @@ Audit every specification-gate condition. Lead with contradictions, missing
 sources, ambiguous acceptance behavior, trace gaps, untestable SRs, stale
 technical reconnaissance, missing task context, and cold-review findings.
 Confirm the cold review passed with no material finding open or deferred in
-scope. Present the plain-language brief and recommendation.
+scope. Confirm the specification gate exists and is answerable before
+soliciting the decision: in a connected workspace the record is committed,
+synced, and present in the server gate list; otherwise the gate is repo-borne.
+Present the plain-language brief and recommendation.
 
 If the authorized human approves, record their actual identity, role, scope,
 and USER:<date>:<summary>, then reconcile the answer according to
