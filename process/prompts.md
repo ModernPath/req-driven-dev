@@ -40,14 +40,14 @@ Release/system: <scope>
 Before planning, prove the outcome is confirmed. If it or any ancestor is
 DERIVED, ensure its confirmation gate exists and is answerable, report the
 candidate links it holds, and stop without making candidate epic membership
-authoritative or creating or advancing a scenario, SR, task, test, release
-commitment, or implementation record.
+authoritative or creating or advancing UR acceptance content, an SR, task,
+test, release commitment, or implementation record.
 
 Derive or update:
 - the owning epic as the top-level delivery item;
 - sourced URs held by that epic, with actor, intended use, and validation
   method;
-- stories/journeys and Given/When/Then SCNs;
+- stories/journeys and Given/When/Then acceptance content within each UR;
 - testable SRs and the first thin TASKs;
 - sourced technical reconnaissance at a named repository revision, covering the
   affected surface, end-to-end control/data path, changed flow hops, boundaries,
@@ -138,13 +138,14 @@ DERIVED or any link is candidate-only, stop at its confirmation gate; do not
 write or run the RED test for that trace.
 
 Select exactly one READY trace:
-EPIC -> UR -> SCN -> SR -> TASK.
+EPIC -> UR -> SR -> TASK.
 
 0. Work on a feature branch, never on the default branch's working tree.
    Commit at the loop's waypoints — specification, observed RED, GREEN,
    cleanup, reconciliation — running the project's process checks before each
    commit.
-1. Run or create the SCN's upper BDD/E2E test and record the expected RED.
+1. Run or create the UR acceptance scenario's upper BDD/E2E test and record the
+   expected RED.
 2. Create the TASK/SR focused lower test and record the expected RED.
 3. Implement the smallest vertical change that makes the lower test pass.
 4. Run the focused test to establish GREEN.
@@ -158,7 +159,8 @@ EPIC -> UR -> SCN -> SR -> TASK.
 7. Record lower evidence, move only proven TASKs to LOWER_VERIFIED, and move an
    SR requirement to IN_REVIEW only when all of its lower evidence is complete.
 8. Run upper validation; for UI work use the live stack and inspect a screenshot.
-9. Record passing upper evidence and move only proven SCNs to UPPER_VALIDATED.
+9. Record passing upper evidence against the UR acceptance content and epic
+   upper-loop status.
 10. Capture discoveries/deferrals/conflicts without silently expanding scope.
 11. Update the full trace and reconcile state according to state-tracking.md.
 12. Stop at IN_REVIEW when completion approval is still pending.
@@ -198,9 +200,10 @@ Read the project AGENTS.md, .modernpath/rdd/AGENTS.md,
 .modernpath/rdd/process/V-model-loop.md, .modernpath/rdd/process/state-tracking.md, active
 epic/spec/tasks, current code/tests/PR, and current working records/projections.
 
-Treat completion as unproven. For every explicit EPIC, UR, SCN, SR, TASK, gate, and
-Definition-of-Done item, identify authoritative evidence and inspect its current
-state. Classify each as proven, contradicted, incomplete, indirect, or missing.
+Treat completion as unproven. For every explicit EPIC, UR, UR acceptance
+scenario, SR, TASK, gate, and Definition-of-Done item, identify authoritative
+evidence and inspect its current state. Classify each as proven, contradicted,
+incomplete, indirect, or missing.
 Treat a DERIVED requirement or candidate trace link as a hard stop: it cannot
 support readiness, verification, validation, completion, or delivery claims.
 Confirm technical-reconnaissance freshness, enriched task context, cold-review
@@ -225,14 +228,14 @@ automatic implementation order:
 
 <feedback>
 
-Find affected EPIC/UR/SCN/SR/TASK traces and current behavior. Classify as
-defect, new outcome, change request, decision, or ambiguity. Record a sourced
-proposed change or gate, identify acceptance/evidence and
-technical-reconnaissance impact, and choose the full specification path or the
-fast lane within the owning epic. Mark affected cold review and task context
-stale when the technical surface changes. Do not silently change approved
-scope. Reconcile the proposal according to state-tracking.md and report the
-human decision needed or next planning step.
+Find affected EPIC/UR/SR/TASK traces, UR acceptance content, and current
+behavior. Classify as defect, new outcome, change request, decision, or
+ambiguity. Record a sourced proposed change or gate, identify
+acceptance/evidence and technical-reconnaissance impact, and choose the full
+specification path or the fast lane within the owning epic. Mark affected cold
+review and task context stale when the technical surface changes. Do not
+silently change approved scope. Reconcile the proposal according to
+state-tracking.md and report the human decision needed or next planning step.
 
 If the feedback confirms, corrects, or rejects a DERIVED requirement, treat it
 as the gate answer only through the connected or repo-borne answer path. Record

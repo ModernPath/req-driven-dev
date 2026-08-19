@@ -16,7 +16,7 @@ history, and activity, but it does not replace the versioned working records.
 | Product intent, domain rules, architecture, contracts | Versioned product documents and schemas |
 | Requirement backlog and work status | Requirement ledger, normally `tasks/<CTX>-REQUIREMENTS.md` |
 | Inferred requirement awaiting confirmation | `DERIVED` ledger row plus its confirmation gate; proposed links remain non-authoritative candidate context |
-| Epic trace, scenarios, system requirements, tasks, technical reconnaissance, cold-review findings, decisions, evidence map, approval | Epic record under `epics/` |
+| Epic trace, UR acceptance content, system requirements, tasks, technical reconnaissance, cold-review findings, decisions, evidence map, approval | Epic record under `epics/` |
 | Active queue and cross-epic rollup | `WORKLIST.md` |
 | Unrouted discoveries | `BACKLOG.md` |
 | Generated aggregate counts | `PROGRESS.md` or the consuming project's equivalent; regenerate rather than hand-author |
@@ -88,7 +88,7 @@ an open human confirmation gate. Until that answer is applied:
 
 - the row is not eligible for `PROPOSED`, `READY`, release commitment, work
   selection, specification, testing, implementation, or verification;
-- proposed EPIC/UR/SCN/SR relationships are candidate context in the row and
+- proposed EPIC/UR/SR relationships are candidate context in the row and
   gate brief, not authoritative links in epic scope, compliance traces, or
   rollups;
 - existing SRs and their evidence remain intact, but the derived UR must not be
@@ -115,11 +115,11 @@ Direct verification records `LOWER_VERIFIED` evidence for a confirmed as-built
 system requirement.
 
 Every ledger row selected for implementation or verification must first belong
-to an authoritative `EPIC -> UR -> SCN -> SR` ancestry. A confirmed as-built
+to an authoritative `EPIC -> UR -> SR` ancestry. A confirmed as-built
 row without that ancestry remains `PENDING_VERIFICATION` and returns to normal
 planning before tests change. An SR reaches `IN_REVIEW` when all of its required
 lower evidence is complete. A UR reaches `IN_REVIEW` only when its linked lower
-evidence and SCN upper validation are complete.
+evidence and acceptance-content upper validation are complete.
 
 Test evidence never moves a row directly to `VALIDATED`; applicable approval,
 authoritative-source delivery, and state reconciliation remain separate gates.
@@ -127,20 +127,31 @@ authoritative-source delivery, and state reconciliation remain separate gates.
 ### Epic record
 
 The epic is the top-level delivery record. It owns detailed internal completion:
-`UR`, `SCN`, `SR`, `TASK`, spec status, technical reconnaissance, cold-review
-findings and dispositions, decisions, gaps, evidence, and approval. Its upper
-and lower loop statuses are separate from the requirement work status.
+`UR`, UR acceptance content, `SR`, `TASK`, spec status, technical
+reconnaissance, cold-review findings and dispositions, decisions, gaps,
+evidence, and approval.
 
 Use these axes independently:
 
 - requirement `work_status`: the ledger lifecycle above;
-- epic `upper_loop_status`: scenario/acceptance progress;
-- epic `lower_loop_status`: task/system verification progress;
+- epic `delivery_status`: `PROPOSED -> READY -> IN_PROGRESS -> IN_REVIEW ->
+  DONE`, with `BLOCKED`, `DEFERRED`, and `OBSOLETE` side states;
+- epic `upper_loop_status`: derived UR acceptance-content evidence progress,
+  `PROPOSED -> IN_PROGRESS -> UPPER_VALIDATED`;
+- epic `lower_loop_status`: derived task/system verification progress,
+  `PROPOSED -> IN_PROGRESS -> LOWER_VERIFIED`;
 - specification status: `SPEC-DRAFT -> SPEC-READY -> SPEC-APPROVED`;
 - gate state: server `open -> answered`, with a separate pending/applied intent
   state where the integration supports it;
 - board/card status: a product planning axis; workspace sync does not use it as
   the V-model lifecycle or move it to simulate loop progress.
+
+The repository epic and work-list own `delivery_status`. Connected projections
+carry it as a separate delivery field or derive the same value from the
+synchronized entry gate, loop evidence, completion approval, delivery, and
+reconciliation facts. Never map it onto `initiatives.status`; an adapter that
+cannot yet project it reports that limitation instead of substituting board
+state.
 
 ### Work-list and generated views
 
@@ -165,8 +176,8 @@ schema name.
 |---|---|---|
 | `compliance_user_requirements` | Stores governed user-level needs created through compliance and planning/import flows; workspace sync can address it when an operation declares user-requirement kind, but the Mission Control Requirements face does not currently read it. | Carries stable external identity, repository `work_status` including `DERIVED`, source citations, and a separate `draft`/`approved` content-approval status. A derived row is visible to confirmation workflows but excluded from authoritative trace and delivery rollups. |
 | `compliance_system_requirements` | Receives the repository requirement-ledger rows through `Core.Sync.upsert_requirement/2`; the Mission Control Requirements face reads these rows directly and computes its rollup from the same result set. | Carries the authoritative synchronized `work_status` including `DERIVED`, context, stage, sources, and release membership while keeping content approval separate. Rollups count `DERIVED` separately and never treat it as active or confirmed scope. |
-| `initiatives` | Serves both as the product Epic/board-card entity and as the synchronized epic record returned to Mission Control with loop statuses, approval, scenarios, specifications, requirement links, and release. | Carries `upper_loop_status` and `lower_loop_status` plus attributed completion approval. Its open-set `status` remains the board column and is never sync-written to simulate loop progress. |
-| `acceptance_criteria` | Stores requirement criteria and epic scenarios as addressable rows. Sync applies replace-set semantics, superseding removed rows; Mission Control reads non-superseded rows for requirement and epic detail. | Its `active`/`superseded`/`retired` status describes criterion-content lifecycle. Passing, failing, and stale verification are derived from evidence. |
+| `initiatives` | Serves both as the product Epic/board-card entity and as the synchronized epic record returned to Mission Control with loop statuses, approval, acceptance content, specifications, requirement links, and release. | Carries `upper_loop_status` and `lower_loop_status` plus attributed completion approval. Repository `delivery_status` is a separate projected/derived delivery value; its open-set `status` remains the board column and is never sync-written to simulate lifecycle progress. |
+| `acceptance_criteria` | Stores UR criteria and scenario content as addressable content rows. Sync applies replace-set semantics, superseding removed rows; Mission Control reads non-superseded rows for requirement and epic detail. | Its `active`/`superseded`/`retired` status describes content lifecycle, not a delivery lifecycle. Passing, failing, and stale upper evidence are derived from evidence runs. |
 | `planning_artifacts` | Stores planner-generated artifacts and repository-synchronized epic specification files; the Mission Control epic read exposes only non-archived, external-id-bearing synchronized specifications. | Carries specification content status, version, approval, last synchronized content hash, and refused-conflict hash. The mapping from `draft`/`review`/`approved` to `SPEC-DRAFT`/`SPEC-READY`/`SPEC-APPROVED` must be explicit. |
 | `decision_gates` | Backs synchronized questions, decisions, roadblocks, completion/specification approvals, and triage in Mission Control’s action queue. Server answers are attributed and first-wins. | Separates the human-answer lifecycle (`state`) from repository application (`applied_state`) and records the apply job reference. |
 | `gate_holds` | Stores the external ids and types released by answering a gate; Mission Control uses them to show the number and identity of affected items. | Defines a gate’s typed blast radius without changing the held entities’ own work status. A derived-requirement gate holds the requirement and identifies every candidate link whose use is prohibited until confirmation. |
@@ -226,6 +237,7 @@ The resulting Mission Control read model composes, rather than conflates:
 ```text
 requirement work_status
 + derived-requirement confirmation gate and candidate context
++ epic delivery_status
 + epic upper_loop_status and lower_loop_status
 + specification status
 + gate state and applied_state
@@ -339,8 +351,8 @@ modernpath factory pull --apply
 
 After applying an answer:
 
-1. update the affected spec, requirement, scenario, system requirement, and
-   tasks as required by the decision;
+1. update the affected spec, requirement acceptance content, system requirement,
+   and tasks as required by the decision;
 2. record the `USER:<date>:<summary>` source and consequence;
 3. run local process checks;
 4. let automatic sync publish the materialized state;

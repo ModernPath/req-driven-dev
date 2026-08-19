@@ -1,11 +1,11 @@
 # DELETE ME — Combined process-review worklist
 
 ```text
-EPIC -> UR -> SCN -> SR -> TASK -> TEST -> CODE
+EPIC -> UR -> SR -> TASK -> TEST -> CODE
+
+EPIC: PROPOSED -> READY -> IN_PROGRESS -> IN_REVIEW -> DONE
 
 TASK: PROPOSED -> READY -> IN_PROGRESS -> LOWER_VERIFIED
-
-SCN:  PROPOSED -> READY -> IN_PROGRESS -> UPPER_VALIDATED
 
 UR:   DERIVED -> PROPOSED -> READY -> IN_PROGRESS -> IN_REVIEW -> VALIDATED
 
@@ -30,18 +30,19 @@ the repository's permanent tracking system.
 | DM-02 | HIGH | RESOLVED | `DERIVED` is represented on the requirement work-state axis, not the specification axis |
 | DM-03 | HIGH | RESOLVED | Epic is the trace root and fast-lane work retains the complete trace |
 | DM-04 | HIGH | IN_PROGRESS | Completion approval ordering is circular |
-| DM-05 | HIGH | IN_PROGRESS | Terminal statuses are inconsistent by entity |
+| DM-05 | HIGH | RESOLVED | Epic owns delivery lifecycle; scenarios are UR content |
 | DM-06 | MEDIUM | OPEN | Invalidated evidence has no defined status consequence |
 | DM-07 | MEDIUM | OPEN | Gate lifecycle and answer channel are underspecified |
 | DM-08 | MEDIUM | OPEN | The connected-workspace preflight is not an executable sequence |
 | DM-09 | MEDIUM | OPEN | Commit-at-every-waypoint conflicts with no-op waypoints |
 
-- Resolved in this repository: `DM-01`, `DM-02`, `DM-03`
-- Next open item: `DM-04`
+- Resolved in this repository: `DM-01`, `DM-02`, `DM-03`, `DM-05`
+- Next unresolved item: `DM-04`
 - Resolution commits:
   - `d477bf5` (`Hold DERIVED requirements for human confirmation`) — DM-01,
     DM-02
   - the commit containing this worklist update — DM-03
+  - the commit containing the DM-05 resolution — DM-05
 
 ### External implementation follow-up
 
@@ -52,6 +53,11 @@ changed by `d477bf5`. This does not reopen DM-01 or DM-02 within this worklist's
 root/process review scope, but end-to-end platform support must not be claimed
 until the external implementations satisfy the contract.
 
+The DM-05 contract likewise requires extraction and projection to carry epic
+`delivery_status` separately from board status and to treat scenario rows as UR
+acceptance content without an independent delivery lifecycle. Those external
+implementations are not changed in this repository.
+
 ## DM-01 — Hold derived requirements before loop entry
 
 - Status: `RESOLVED`
@@ -61,9 +67,9 @@ until the external implementations satisfy the contract.
   hold all further action for human confirmation`.
 - Resolution: `DERIVED` is now a pre-lifecycle requirement state. It emits a
   confirmation gate, keeps proposed links candidate-only, and blocks epic,
-  scenario, SR, task, test, implementation, verification, release, and delivery
-  progression. Confirmation/correction enters the normal requirement lifecycle;
-  rejection retires the candidate and its links.
+  acceptance content, SR, task, test, implementation, verification, release,
+  and delivery progression. Confirmation/correction enters the normal
+  requirement lifecycle; rejection retires the candidate and its links.
 - References: `AGENTS.md#Non-negotiable rules`,
   `process/V-model-loop.md#Derived requirement confirmation`,
   `process/state-tracking.md#Requirement ledger`.
@@ -94,12 +100,12 @@ until the external implementations satisfy the contract.
 - Decision: `USER:2026-08-19:Epic is the top-level item that holds UR; update
   the binding rule throughout the instructions and its loops`.
 - Resolution: the canonical trace is now
-  `EPIC -> UR -> SCN -> SR -> TASK -> TEST -> CODE`. Every full or fast-lane
-  trace has an owning epic. The fast lane is a lightweight entry route within
-  that epic: it may skip preparing and approving a new full epic specification
-  set only when all fast-lane conditions hold, but it retains every trace level
-  and both red-first evidence arms. Rows without a SCN return to planning rather
-  than bypassing upper validation.
+  `EPIC -> UR -> SR -> TASK -> TEST -> CODE`. Every full or fast-lane trace has
+  an owning epic. Acceptance scenarios are content within a UR, not separate
+  trace or lifecycle entities. The fast lane is a lightweight entry route
+  within that epic: it may skip preparing and approving a new full epic
+  specification set only when all fast-lane conditions hold, but it retains
+  every trace level and both red-first evidence arms.
 - References: `AGENTS.md#Non-negotiable rules`, `README.md#Core invariants`,
   `process/V-model-loop.md#Trace hierarchy`,
   `process/V-model-loop.md#Epic ownership and specification gate`,
@@ -128,7 +134,7 @@ until the external implementations satisfy the contract.
 
 ## DM-05 — Define status vocabularies per entity
 
-- Status: `IN_PROGRESS`
+- Status: `RESOLVED`
 - Finding: a UR permits `VALIDATED` but not `DONE`; the ledger permits `DONE`
   but not `VALIDATED`; and the lifecycle assigns `IN_REVIEW` to an epic even
   though the projection model gives epics separate upper/lower axes and reserves
@@ -141,12 +147,15 @@ until the external implementations satisfy the contract.
 - Decision: `USER:2026-08-19:align the requirement lifecycles to match the UR`.
   UR and SR use the same requirement work-status sequence; `LOWER_VERIFIED`
   remains SR evidence rather than an SR work status.
-- Decision still needed: define the authoritative status field, allowed values,
-  and transitions for EPIC, SCN, and TASK, plus the remaining epic projection
-  mapping.
-- Resolution target: repository records and synchronized projections can map
-  every lifecycle transition deterministically.
-- Resolution record: _pending_
+- Decision: `USER:2026-08-19:Epic should get the lifecycle and SCN is just
+  content for a UR`.
+- Resolution: EPIC owns repository `delivery_status` through
+  `PROPOSED -> READY -> IN_PROGRESS -> IN_REVIEW -> DONE`; UR and SR share the
+  requirement work lifecycle; TASK ends at `LOWER_VERIFIED`; acceptance
+  scenarios are UR content with upper evidence but no independent status.
+  Epic delivery status remains separate from `initiatives.status`, which is a
+  board axis.
+- Resolution record: commit containing this resolution on `review/prs-5-9`.
 
 ## DM-06 — Define consequences of invalidated evidence
 

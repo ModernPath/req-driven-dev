@@ -43,7 +43,7 @@ candidate link, stop. Do not inspect tests as though the trace were real, and do
 not use existing SR evidence to imply that the inferred user outcome is valid.
 
 Before changing any test, require an authoritative
-`EPIC -> UR -> SCN -> SR -> TASK` trace. If the row has no owning epic or any
+`EPIC -> UR -> SR -> TASK` trace. If the row has no owning epic or any
 parent is missing, stop and return it to normal planning. Then satisfy one of:
 
 - **Full specification path** — the owning epic is `SPEC-APPROVED`, and this

@@ -40,14 +40,16 @@ Before planning, changing, reviewing, or delivering product work:
 
 ## Non-negotiable rules
 
-1. Every change traces through `EPIC -> UR -> SCN -> SR -> TASK -> TEST ->
-   CODE`. A project may retain stable `REQ-*` ids, but their user/system/task
-   meaning and links must remain explicit.
+1. Every change traces through `EPIC -> UR -> SR -> TASK -> TEST -> CODE`.
+   Acceptance scenarios are content within a UR, not separate trace entities.
+   A project may retain stable `REQ-*` ids, but their user/system/task meaning
+   and links must remain explicit.
 2. `DERIVED` means a requirement was inferred but no human has yet confirmed
    that it exists. Its proposed links are candidate context, not authoritative
    trace. Emit a human confirmation gate and do not make its candidate epic
-   membership authoritative or advance its scenarios, system requirements,
-   tasks, tests, implementation, or delivery state until the answer is applied.
+   membership authoritative or advance its acceptance content, system
+   requirements, tasks, tests, implementation, or delivery state until the
+   answer is applied.
 3. Humans decide product, scope, architecture, acceptance, priority, and
    workflow. Record the real actor with a `USER:<date>:<summary>` source. An
    agent may propose options but may not select one by assumption. Do not ask
@@ -89,9 +91,9 @@ Before planning, changing, reviewing, or delivering product work:
    `process/state-tracking.md`; resolve or respect `DERIVED` confirmation holds,
    then select the next eligible trace.
 2. **Specify and perform technical reconnaissance** — establish the owning
-   epic, derive sourced URs and SCNs within it, then testable SRs and thin
-   tasks; inspect the repository at a named revision and enrich each task with
-   its relevant technical context.
+   epic, derive sourced URs with their acceptance-scenario content, then
+   testable SRs and thin tasks; inspect the repository at a named revision and
+   enrich each task with its relevant technical context.
 3. **Cold technical review** — audit the trace, technical surface, failure
    behavior, feasibility, task boundaries, and test strategy from a separate
    context; resolve material findings.
@@ -133,10 +135,10 @@ rendered control and prove its mutation path with isolated automated tests.
 
 ## Completion
 
-Before claiming completion, audit every explicit requirement and scenario
-against current sources: files, test/runtime/browser evidence, attributable
-approval, implementation-repository delivery, and the state records defined in
-`process/state-tracking.md`. Missing, stale, or indirect evidence means
-incomplete work.
+Before claiming completion, audit every explicit requirement and acceptance
+scenario against current sources: files, test/runtime/browser evidence,
+attributable approval, implementation-repository delivery, and the state
+records defined in `process/state-tracking.md`. Missing, stale, or indirect
+evidence means incomplete work.
 
 The detailed Definition of Done is in `process/V-model-loop.md`.

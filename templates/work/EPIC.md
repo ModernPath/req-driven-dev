@@ -2,7 +2,7 @@
 
 - **Trace role:** top-level delivery item; holds the linked URs and their traces
 - **Release/system:** «scope»
-- **Overall status:** PROPOSED
+- **Delivery status:** PROPOSED
 - **Upper status:** PROPOSED
 - **Lower status:** PROPOSED
 - **Requirement confirmation:** all linked requirements confirmed; no `DERIVED` or candidate link is eligible for active epic scope
@@ -56,29 +56,29 @@ SPEC-DRAFT — «scope of the specs set»
 |---|---|---|---|---|
 | «DEC/OQ»-«AREA»-«NNN» | decision/question | «text» | USER:/DOC:/CODE: | «affects» |
 
-## Journeys and acceptance scenarios
+## UR journeys and acceptance content
 
-| SCN | UR/journey | Given/When/Then | Upper RED | Passing evidence | Code | Status |
-|---|---|---|---|---|---|---|
-| SCN-«AREA»-«NNN» | UR-«AREA»-«NNN» | «G/W/T or link» | — | — | — | PROPOSED |
+| UR / scenario heading | Journey | Given/When/Then | Upper RED | Passing evidence | Code |
+|---|---|---|---|---|---|
+| UR-«AREA»-«NNN» / «heading» | «journey» | «G/W/T or link» | — | — | — |
 
 ## System requirements
 
-| SR | Source SCN | Boundary | Verification | Evidence | Code | Status |
+| SR | Source UR/content | Boundary | Verification | Evidence | Code | Status |
 |---|---|---|---|---|---|---|
-| SR-«AREA»-«NNN» | SCN-«AREA»-«NNN» | «boundary» | «test type» | — | — | PROPOSED |
+| SR-«AREA»-«NNN» | UR-«AREA»-«NNN» / «heading» | «boundary» | «test type» | — | — | PROPOSED |
 
 ## Tasks
 
-| TASK | SR/SCN | Scope | Technical context | Lower RED | Passing evidence | Code | Status |
+| TASK | SR/UR content | Scope | Technical context | Lower RED | Passing evidence | Code | Status |
 |---|---|---|---|---|---|---|---|
-| TASK-«AREA»-«NNN» | SR-«AREA»-«NNN» / SCN-«AREA»-«NNN» | «vertical slice» | «recon section/task link» | — | — | — | PROPOSED |
+| TASK-«AREA»-«NNN» | SR-«AREA»-«NNN» / UR-«AREA»-«NNN» «heading» | «vertical slice» | «recon section/task link» | — | — | — | PROPOSED |
 
 ## Evidence map
 
 | Trace | Failing evidence | Passing evidence | Revision/report | Verdict |
 |---|---|---|---|---|
-| SCN/SR/TASK | — | — | — | incomplete |
+| UR acceptance/SR/TASK | — | — | — | incomplete |
 
 ## Specification approval
 

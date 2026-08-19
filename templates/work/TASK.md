@@ -2,7 +2,7 @@
 
 - **Epic:** EPIC-«AREA»-«NNN»
 - **User requirement:** UR-«AREA»-«NNN»
-- **Scenario:** SCN-«AREA»-«NNN»
+- **UR acceptance content:** «criterion/scenario heading»
 - **System requirement:** SR-«AREA»-«NNN»
 - **Owner:** «owner»
 - **Status:** READY
@@ -35,7 +35,7 @@
 - **Lower RED test:** «file/test/command and expected failure»
 - **Implementation path:** «files/symbols/boundaries derived from reconnaissance»
 - **Regression gates:** «commands»
-- **Upper scenario supported:** «SCN + acceptance command»
+- **Upper scenario supported:** «UR criterion/scenario + acceptance command»
 
 ## Requirement-scoped boy-scout cleanup
 

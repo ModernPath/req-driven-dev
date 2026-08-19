@@ -3,7 +3,7 @@
 Do not start this artifact for a `DERIVED` requirement. Human confirmation and
 normal planning must establish the requirement and authoritative trace first.
 
-- **Trace:** «EPIC/UR/SCN/SR/TASK ids»
+- **Trace:** «EPIC/UR/SR/TASK ids»
 - **Repository/revision:** «repository + branch/SHA»
 - **Prepared by:** «agent/person/session»
 - **Context pack:** «optional generated locator/report; never normative evidence»
@@ -47,7 +47,7 @@ move today and identify every hop the proposed work adds, removes, or changes.
 
 ## Test infrastructure and gates
 
-- **Upper path:** «SCN test/runtime path and expected RED»
+- **Upper path:** «UR acceptance scenario test/runtime path and expected RED»
 - **Focused lower path:** «test location/type and expected RED»
 - **Project gates:** «proportional test/lint/type/contract/architecture commands»
 - **Runtime/browser needs:** «environment and observation, or not applicable»
