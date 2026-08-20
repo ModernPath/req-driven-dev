@@ -5,7 +5,8 @@ description: Classify and route backlog discoveries, implementation findings, an
 
 # Triage and replan
 
-Read the project `AGENTS.md`, canonical `PROCESS.md`, backlog, requirement
+Read the project `AGENTS.md`, canonical `PROCESS.md`
+(`.modernpath/rdd/PROCESS.md` in a consuming repository), backlog, requirement
 records, optional epics, current release, gates, evidence, and affected product
 sources. Treat user feedback as a source, not an automatic implementation
 order.

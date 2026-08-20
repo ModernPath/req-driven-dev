@@ -46,6 +46,25 @@ apply that model; `file-state/` serializes its records without redefining it.
 | `skills/` | full-loop orchestration plus focused procedures for discovery, planning, review, building, triage, completion, and as-built verification |
 | `file-state/` | canonical serialization shapes for Epic, requirement, gate, work-selection, and backlog/gap records |
 
+## Distribution
+
+Consuming repositories do not vendor this repository. A distribution tool —
+for ModernPath workspaces, the `modernpath` CLI — embeds a byte-identical
+snapshot of these files and installs it under `.modernpath/rdd/`, so in a
+consuming repository the canonical process resolves at
+`.modernpath/rdd/PROCESS.md` with every `skills/rdd-*/SKILL.md` beside it.
+The installer also registers the skills and hooks with each agentic platform
+in use (for example `.claude/skills/`) and writes managed instruction blocks
+pointing agents at the installed paths.
+
+In a store-backed consuming repository the tooling additionally materializes
+two uncommitted projections (for ModernPath workspaces,
+`.modernpath/working-set/` and `.modernpath/your-move/`): the session working
+set — shape files pulled on demand, each stamped with its source-store
+revision — and the pending human-decision queue, which lists only `OPEN`
+human gates with current passing prerequisites. Neither is an authority; see
+`PROCESS.md` "State records and reconciliation".
+
 ## Process maintenance
 
 Changes to lifecycle, status meanings, trace relationships, gate requirements,

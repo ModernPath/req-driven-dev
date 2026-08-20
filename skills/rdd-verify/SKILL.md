@@ -8,7 +8,8 @@ description: Verify human-confirmed PENDING_VERIFICATION URs and SRs against rea
 Turn behavior described from shipped code into current direct UR upper or SR
 lower evidence.
 
-Read the repository `AGENTS.md` and canonical `PROCESS.md` before changing a
+Read the repository `AGENTS.md` and canonical `PROCESS.md`
+(`.modernpath/rdd/PROCESS.md` in a consuming repository) before changing a
 project repository. `PROCESS.md` owns trace, status, gate, evidence, and
 completion meanings.
 

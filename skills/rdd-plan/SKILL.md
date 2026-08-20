@@ -5,9 +5,10 @@ description: Prepare an epic-scoped or single-SR planning packet for controlled 
 
 # Plan a requirement trace
 
-Read the project `AGENTS.md`, canonical `PROCESS.md`, relevant product sources,
-requirement records, code, tests, and optional epic. Apply the Work scope,
-Item ownership, and Planning and readiness sections of `PROCESS.md`.
+Read the project `AGENTS.md`, canonical `PROCESS.md`
+(`.modernpath/rdd/PROCESS.md` in a consuming repository), relevant product
+sources, requirement records, code, tests, and optional epic. Apply the Work
+scope, Item ownership, and Planning and readiness sections of `PROCESS.md`.
 
 ## Procedure
 
