@@ -27,7 +27,9 @@ Before planning, changing, reviewing, or delivering product work:
 
 1. read the project's root `AGENTS.md` for project-specific rules;
 2. read this file and `PROCESS.md`;
-3. use `skills/rdd-deliver/SKILL.md` for end-to-end delivery, or the applicable
+3. enter the session with `skills/rdd-start/SKILL.md` — it verifies the store
+   binding and active release before any selection; then use
+   `skills/rdd-deliver/SKILL.md` for end-to-end delivery, or the applicable
    focused `skills/rdd-*/SKILL.md` when the request explicitly ends at one
    process pass; use `skills/rdd-verify/SKILL.md` for reverse-engineered
    `PENDING_VERIFICATION` rows;

@@ -218,6 +218,9 @@ items repeat entry approval only when their approved scope changes.
 Planning consists of packet authoring, independent cold review, and entry
 review, in that order. A changed fingerprint or failed result returns work to
 the earliest affected pass; a downstream pass cannot repair an upstream gap.
+Packet depth is proportional to the selected scope — a single-SR packet may
+satisfy an item in a sentence where an Epic needs pages — but no packet item
+may be omitted.
 
 ### Entry packet
 
@@ -262,11 +265,12 @@ SOURCE -> PLAN -> COLD REVIEW -> HUMAN ENTRY -> AI TDD LOOP -> COMPLETE -> DONE
             +--------------- TRIAGE / REPLAN <----------+
 ```
 
-Use `rdd-deliver` for end-to-end work. Use a focused skill alone only when the
-requested scope explicitly ends at that pass.
+Enter a session with `rdd-start`. Use `rdd-deliver` for end-to-end work. Use a
+focused skill alone only when the requested scope explicitly ends at that pass.
 
 | Phase | Skill | Required exit |
 |---|---|---|
+| Enter session | `rdd-start` | Store binding and single active release verified from the store; answered gates reconciled; frozen scope routed to its earliest unmet phase |
 | Source/classify | `rdd-discover` | Authoritative input or an exact confirmation gate; no unconfirmed requirement proceeds |
 | Plan/reconnaissance | `rdd-plan` | Entry-packet items 1–6 and the human brief at a named revision |
 | Cold review | `rdd-cold-review` | Current cold-review trace verdict and finding dispositions |
@@ -468,7 +472,9 @@ human decisions.
 | Unclear ownership/cross-cutting concern | Triage backlog |
 | Contradicted or removed behavior | Conflict or `OBSOLETE` with replacement |
 
-Release selection requires a `USER:` source. `DERIVED` items are not release
-commitments. Preserve competing authoritative sources and request a human
-decision; never resolve intent by timestamp or weaken a trace to make records
-agree.
+A project's release registry holds exactly one active release, and release
+selection requires a `USER:` source. Drift between repository records and the
+store binding is a defect to report, not a variance to work around. `DERIVED`
+items are not release commitments. Preserve competing authoritative sources
+and request a human decision; never resolve intent by timestamp or weaken a
+trace to make records agree.
