@@ -195,12 +195,15 @@ An agent or deterministic check may apply these only from a current trace-gate
 | SR `TODO -> IN_PROGRESS` | Approved entry fingerprint and expected lower RED |
 | UR `TODO -> IN_PROGRESS` | Expected upper RED or a required SR is `IN_PROGRESS` |
 | Epic `TODO -> IN_PROGRESS` | An in-scope member is `IN_PROGRESS` |
-| SR `IN_PROGRESS -> IN_REVIEW` | Its lower trace is current |
+| SR `IN_PROGRESS -> IN_REVIEW` | Its lower trace is current and passes |
 | UR `IN_PROGRESS -> IN_REVIEW` | Required SRs are `IN_REVIEW/DONE`; current upper evidence passes |
 | Epic `IN_PROGRESS -> IN_REVIEW` | Members are `IN_REVIEW/DONE`; applicable trace gates pass |
 
-Agents may also apply evidence-invalidation demotions. No automated transition
-creates or substitutes for a human answer.
+Agents may also apply evidence-invalidation demotions, and may apply `BLOCKED`
+from an established impediment and release it when the impediment is gone.
+Applying `DEFERRED` records a postponement decision and requires an
+attributable human source. No automated transition creates or substitutes for
+a human answer.
 
 ## Work scope
 
