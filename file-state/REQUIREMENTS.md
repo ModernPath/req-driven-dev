@@ -1,8 +1,9 @@
 # Requirement flat-file state
 
-> Fallback/export for the authoritative process store. `PROCESS.md` defines
-> item content, lifecycles, gates, and traces. Generate this file from the
-> database when one exists; do not maintain both as authorities.
+> Canonical requirement serialization for the authoritative process store.
+> `PROCESS.md` defines item content, lifecycles, gates, and traces. A
+> store-backed repository materializes this file from the store; a file-backed
+> repository versions it as the store. Never both.
 
 - **Snapshot at:** «timestamp»
 - **Source store/revision:** «database revision or repository SHA»
@@ -21,16 +22,19 @@
 
 ### Trace references
 
-| Evidence class | Target | Code | Test case | RED result | Passing result | Validity/revision |
-|---|---|---|---|---|---|---|
-| UR upper | «UR scenario or N/A» | «code refs» | TEST: | RUN: | RUN: | CURRENT / STALE / INVALID / INHERITED_UNVERIFIED + revision |
-| SR lower | «SR clause or N/A» | CODE: | TEST: | RUN: | RUN: | CURRENT / STALE / INVALID / INHERITED_UNVERIFIED + revision |
+| Evidence class | Target | Code | Test case | RED result | Passing result | Outcome | Environment | Fingerprint | Validity/revision |
+|---|---|---|---|---|---|---|---|---|---|
+| UR upper | «UR scenario or N/A» | «code refs» | TEST: | RUN: | RUN: | PASS / FAIL / SKIP | «when relevant» | «content/code fingerprint» | CURRENT / STALE / INVALID / INHERITED_UNVERIFIED + revision |
+| SR lower | «SR clause or N/A» | CODE: | TEST: | RUN: | RUN: | PASS / FAIL / SKIP | «when relevant» | «content/code fingerprint» | CURRENT / STALE / INVALID / INHERITED_UNVERIFIED + revision |
+
+The RED/Passing split carries each result's role; `Outcome`, `Environment`,
+and `Fingerprint` carry the remaining mandated evidence-record fields.
 
 ### Gates and delivery
 
-- **Confirmation gates:** «trace/human refs or N/A»
-- **Entry gates:** «trace/human refs»
-- **Start/review gates:** «refs»
-- **Completion gates:** «trace/human refs»
+- **Confirmation gates:** «GATES.md gate ids, or N/A»
+- **Entry gates:** «GATES.md gate ids»
+- **Start/review gates:** «GATES.md gate ids»
+- **Completion gates:** «GATES.md gate ids»
 - **Delivered revision:** «repository + revision or not delivered»
 - **Gaps / deferrals / blockers / notes:** «refs or none»

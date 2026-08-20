@@ -1,7 +1,7 @@
 # Requirement-driven delivery process
 
 This document is the sole process authority. Skills execute it; `file-state/`
-is its flat-file fallback. Neither may redefine it.
+is its flat-file serialization. Neither may redefine it.
 
 Runtime sessions, user interfaces, queues, and tool transports are outside the
 process model.
@@ -390,19 +390,36 @@ independently satisfies its predicate and is named in the human gate.
 
 ## State records and reconciliation
 
-Exactly one process store is authoritative. Use a database or the versioned
-`file-state/` fallback, never both. Database-backed Markdown is a generated
-snapshot containing its source-store revision; it never overwrites newer state.
+Exactly one process store is authoritative per repository, and the
+`file-state/` shapes are the canonical serialization of its records in either
+case:
+
+- **Store-backed.** A database or platform owns the records. Tooling
+  materializes shape files locally as working-set snapshots and projections;
+  a materialized file records the store revision it came from, is never
+  committed, is never an authority, and never overwrites newer store state.
+  Conflicting syncs are surfaced for a decision, never resolved silently.
+- **File-backed.** The versioned `file-state/` records are the store.
+
+A repository is one or the other, never both at once. Every serialized file
+carries its snapshot header — `Snapshot at` and `Source store/revision` — so
+currency is checkable per file.
 
 ```text
 file-state/
   EPICS.md
   REQUIREMENTS.md
+  GATES.md
+  WORK-SELECTION.md
+  BACKLOG.md
 ```
 
 `EPICS.md` stores optional grouping records. `REQUIREMENTS.md` stores URs, SRs,
-declared relations, gates, and trace references. Derived queues and progress
-views are regenerated, not backed up separately.
+declared relations, and trace references. `GATES.md` stores every trace and
+human gate record. `WORK-SELECTION.md` stores the frozen scope, suspended
+selections, and selection history. `BACKLOG.md` stores unrouted triage items
+and gap records. Derived queues and progress views — including the pending
+human-decision projection — are regenerated, not backed up separately.
 
 | Concern | Authority |
 |---|---|

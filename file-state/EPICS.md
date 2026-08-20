@@ -1,7 +1,8 @@
 # Epic flat-file state
 
-> Fallback/export for the authoritative process store. Generate this file from
-> the database when one exists; do not maintain both as authorities.
+> Canonical Epic serialization for the authoritative process store. A
+> store-backed repository materializes this file from the store; a file-backed
+> repository versions it as the store. Never both.
 
 - **Snapshot at:** «timestamp»
 - **Source store/revision:** «database revision or repository SHA»
@@ -14,8 +15,8 @@
 - **Owner / release:** «owner and release»
 - **Members:** «UR/SR ids with CONFIRMED membership; candidate ids labelled CANDIDATE»
 - **Shared context:** «cross-cutting decision, specification, reconnaissance, and cold-review refs»
-- **Entry gates:** «trace and human gate refs»
-- **Completion gates:** «trace and human gate refs»
+- **Entry gates:** «GATES.md gate ids»
+- **Completion gates:** «GATES.md gate ids»
 - **Delivered revision:** «repository + revision or not delivered»
 - **Gaps / deferrals / blockers:** «refs or none»
 - **Completion facts:** «Done; Decisions; Deferred; Discovered; Follow-ups; Gate result»
