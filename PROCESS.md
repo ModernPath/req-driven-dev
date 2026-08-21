@@ -55,6 +55,13 @@ until a human resolves it. Code proves existing behavior, not intended behavior.
 Here, **material** means capable of changing correctness, security, data
 integrity, a public contract, trace completeness, acceptance, or testability.
 
+Session working notes — review write-ups, test plans, scratch alignment
+records — are not authoritative sources and may be discarded at any time. A
+durable record restates their content rather than pointing at them, and
+identifiers internal to one (finding numbers, plan step ids, review round
+labels) are never citable from records, code, or instructions. Provenance
+for an applied change belongs to the change itself and its gate records.
+
 ## Item ownership
 
 | Item | Owns |
