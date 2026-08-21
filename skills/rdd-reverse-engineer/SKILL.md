@@ -239,7 +239,15 @@ under-coverage is the failure mode this contract exists to prevent.
 ## Phase D — the recovered design documents, once per system
 
 Phase C says what the system does; none of it says what the system *is*.
-These are system-wide, written once — no per-context fan-out:
+
+Read `docs/guides/` — every human-written guide — before phase A begins. A
+guide is a **lens**, never a source: it directs attention, every claim still
+cites the code or config it came from, a guide that cannot be confirmed
+becomes an open question naming the guide, and the pass never writes one.
+
+## D1. The five documents
+
+System-wide, written once — no per-context fan-out:
 
 | Document | Answers |
 |---|---|
@@ -249,25 +257,24 @@ These are system-wide, written once — no per-context fan-out:
 | `docs/22-cross-cutting.md` | auth, tenancy, secrets, observability, resilience *as implemented*, each concern naming its enforcement point |
 | `docs/23-data-flow.md` | where a value originates, what transforms it, where it lands, which trust boundaries it crosses |
 
-Alongside them, `docs/adr/` gets one record per decision the code has plainly
-already made — datastore, transport, isolation, deployment shape — with
-status **`observed`**, a third status beside accepted and superseded: the
-pass can prove a decision was made, never that anyone ratified it, and an
-ADR claiming a ratification the repository never performed is the same lie
-as a completion with no evidence.
-
-Read `docs/guides/` — every human-written guide — before phase A begins. A
-guide is a **lens**, never a source: it directs attention, every claim still
-cites the code or config it came from, a guide that cannot be confirmed
-becomes an open question naming the guide, and the pass never writes one.
-
 Before writing any document, look for what the repository **already covers**
 — a maintained architecture document, existing ADRs. Adopt it or extend it
 in place rather than writing a competing file, and supersede only
 deliberately, with a coverage diff proving nothing is lost.
 
-Quality attributes get their own context — `NFR-REQUIREMENTS.md` in
-ledger-format workspaces — one category per row from exactly eight:
+## D2. Decision records — `docs/adr/NNNN-<slug>.md`
+
+One record per decision the code has plainly already made — datastore,
+transport, isolation, deployment shape — with status **`observed`**, a third
+status beside accepted and superseded: the pass can prove a decision was
+made, never that anyone ratified it, and an ADR claiming a ratification the
+repository never performed is the same lie as a completion with no evidence.
+
+## D3. Non-functional requirements — `tasks/NFR-REQUIREMENTS.md`
+
+Quality attributes get their own requirement context, serialized like any
+other — ledger-format workspaces materialize it at the path above — one
+category per row from exactly eight:
 `performance` · `scalability` · `availability` · `security` · `privacy` ·
 `operability` · `maintainability` · `compatibility`; an open list becomes
 forty overlapping labels within two passes. Sweep for latent thresholds
