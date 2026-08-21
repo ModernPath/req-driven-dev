@@ -131,19 +131,71 @@ Three routings that are not `DERIVED` candidates:
 - a discovery with unclear ownership or a cross-cutting concern goes to the
   triage backlog shape, not the requirement shape.
 
-## Measure, then audit, then claim
+## The coverage contract — the only definition of "done enough"
 
-Report coverage per denominator class as `N/N` with every miss listed. Below
-full coverage the pass is not done: keep deriving, or hand off an honest
-partial that names the precise remainder — a partial is a handoff, never an
-endpoint, and a silent truncation reads as "covered everything".
+**The floor is 90% of every denominator class, the target is 100%, and the
+claim is a script's exit code — never a sentence.** Two recorded failures
+share one cause: a 46-row "complete" corpus over an 80-endpoint,
+two-application estate, and a "110/110 endpoints routed" claim that audited
+to 65/110 the same day. Both stated coverage as prose, and prose drifts
+toward optimism.
+
+- For each denominator class, write the enumeration and matching as a small
+  script kept in the repository (e.g. `tools/endpoint-coverage-audit.py`)
+  that prints `N/N` per context, lists every miss, and
+  **exits non-zero below the floor** — coverage stays re-checkable by anyone, forever. The
+  report **embeds the scripts' verbatim output**; a coverage claim without
+  embedded audit output is invalid, and an orchestrator receiving one
+  re-runs the audit rather than relaying the claim.
+- **No row budgets exist.** There is no such thing as a row budget: the
+  grain is one candidate per observable behavior, however many that yields.
+  A reference estate correctly derived carried **978 requirements** across
+  13 contexts, at per-context densities of 50–130; a context reporting 6
+  rows over 30 endpoints is under-derived, full stop. Grouping is legal only
+  where the observable behavior is genuinely one, and the grouped units are
+  always enumerated on the row.
+- **Below the floor, the pass is not done.** Keep deriving, or hand off an
+  honest partial that names the precise remainder — a partial is a handoff,
+  never an endpoint, and a silent truncation reads as "covered everything".
+- **No silent fallbacks.** A tool that fails — an analysis export missing, a
+  test runner broken, a script erroring — is named in the report with what
+  it blocked; work continues on every path that does not depend on it.
+- Where the workspace ships a standing coverage instrument (for ModernPath
+  workspaces, `modernpath coverage --json`), run it before deriving anything
+  and pin its output as the pass's *before*; take targets from its
+  ranked uncovered directories rather than from taste, and passing over the
+  top-ranked gap needs a stated reason. At the end of the pass
+  the same command is the after — the delta is the pass's receipt, and a pass whose
+  delta on its declared target is zero did not happen, whatever its prose
+  says. An instrument's untraced test files list is standing input for
+  `rdd-verify`: an existing green test nobody traced is the cheapest
+  verification available once its row is confirmed.
 
 Before claiming anything, invoke `skills/rdd-audit/SKILL.md` over what this
 pass produced: every citation resolves from the repository root
 (§"Citations — does every reference resolve?"), every inventory is diffed in
 both directions, and the coverage numbers carry their populations
-(§"The audit"). A coverage claim without the audit behind it is prose, and
-prose drifts toward optimism.
+(§"The audit").
+
+### The full sweep — every context, one run, stated cost
+
+One context per pass is the default because it protects derivation rigor.
+When the human explicitly asks for the complete adoption, the sweep is a
+different contract, not a shortcut, and it runs unattended:
+**one invocation loops** measure → target → derive → audit, taking the next ranked gap each
+iteration, until every denominator-class floor passes **and** the
+**file-coverage floor** passes — coverage lands **well over 50%** of the
+source-file inventory (operationally, keep looping below 60%
+cited-or-dispositioned; files legitimately outside the behavioral surface,
+such as type barrels, migrations, and generated code, count only when
+explicitly dispositioned in the report — a disposition is written, never
+assumed). There is **no human checkpoint inside the loop**: candidates still
+land `DERIVED`, and the confirmation gates open in the terminating report,
+which embeds the final audit output as proof — deferring confirmation to the
+end of the sweep is not skipping it. On an honest-partial handoff the
+orchestrating agent **relaunches for the remainder** automatically rather
+than reporting the partial and waiting; asking the human to notice
+under-coverage is the failure mode this contract exists to prevent.
 
 ## Confirmation — the only exit for a candidate
 
