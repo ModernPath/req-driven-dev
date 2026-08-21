@@ -36,6 +36,39 @@ apply; nothing here redefines them.
    never a silently adopted fact — and this pass never authors a guide, which
    would launder its assumptions into an input.
 
+## Four phases, and the order is the method
+
+```text
+A  DOMAIN        schema and analysis        ->  entities, invariants, contexts
+B  SURFACES      every view, its actors     ->  journeys carrying candidate URs
+C  REQUIREMENTS  entry points, both halves  ->  DERIVED candidates, cross-linked
+D  ARCHITECTURE  the shape around it all    ->  recovered design documents
+```
+
+A–C loop, one bounded context per pass, until the context map lists no
+context without records; phase D runs **once per system**, after at least one
+full A–C pass, because its documents need the context map and the data model.
+A pass that starts at C produces a corpus of refusals with no statement of
+what the product is for — that question is settled in the schema and the
+views, which an endpoint walk never visits.
+
+**Phase A** reads the schema directly — models, migrations, constraints —
+beside whatever analysis exists. For each entity: what it is, who writes it,
+and what the schema enforces; those constraints are invariants nobody wrote
+down anywhere else. Contexts are drawn by **aggregate ownership** — who
+writes which table — never by route-file layout.
+
+**Phase B** walks every surface: which actors reach it (cite the **role
+gate** — it is a fact in code), what each actor can do there, and which entry
+points it calls. Group the views into user journeys; each journey is a
+candidate epic carrying a candidate **user requirement** — an actor, an
+outcome, and the views that serve it, every one cited. Candidate groupings
+serialize to `file-state/EPICS.md` (ledger-format workspaces materialize an
+`epics/` directory).
+
+**Phase C** derives candidates from the entry-point inventory below.
+**Phase D** writes the recovered design documents, further down.
+
 ## Inventory observable behavior — the denominators
 
 Enumerate mechanically, by bounded context, before deriving anything. The
@@ -105,6 +138,12 @@ after a real search is a finding to state plainly, with the search shown.
 Where a decision is recorded but not deployed, write both halves labelled
 **Decided** and **Deployed** — they are different facts with different
 evidence.
+
+Link candidate URs and SRs both ways, then report the **join report**: a view
+calling an entry point that does not exist is a broken or unfinished surface;
+an entry point no view calls is dead surface or an undocumented integration.
+Neither is visible from one side alone, and an empty join over a codebase of
+any size is a claim that needs its own evidence.
 
 ## Everything lands DERIVED
 
@@ -197,6 +236,59 @@ orchestrating agent **relaunches for the remainder** automatically rather
 than reporting the partial and waiting; asking the human to notice
 under-coverage is the failure mode this contract exists to prevent.
 
+## Phase D — the recovered design documents, once per system
+
+Phase C says what the system does; none of it says what the system *is*.
+These are system-wide, written once — no per-context fan-out:
+
+| Document | Answers |
+|---|---|
+| `docs/03-architecture.md` | key subsystems, external interfaces, datastores, the path one request takes — the document a reader opens first |
+| `docs/20-deployment-topology.md` | what runs where and what a request crosses; fold into `03` for a single-stack estate |
+| `docs/21-integrations.md` | each external system — direction, protocol, and **what happens when it is unreachable**, which no dependency list gives you |
+| `docs/22-cross-cutting.md` | auth, tenancy, secrets, observability, resilience *as implemented*, each concern naming its enforcement point |
+| `docs/23-data-flow.md` | where a value originates, what transforms it, where it lands, which trust boundaries it crosses |
+
+Alongside them, `docs/adr/` gets one record per decision the code has plainly
+already made — datastore, transport, isolation, deployment shape — with
+status **`observed`**, a third status beside accepted and superseded: the
+pass can prove a decision was made, never that anyone ratified it, and an
+ADR claiming a ratification the repository never performed is the same lie
+as a completion with no evidence.
+
+Read `docs/guides/` — every human-written guide — before phase A begins. A
+guide is a **lens**, never a source: it directs attention, every claim still
+cites the code or config it came from, a guide that cannot be confirmed
+becomes an open question naming the guide, and the pass never writes one.
+
+Before writing any document, look for what the repository **already covers**
+— a maintained architecture document, existing ADRs. Adopt it or extend it
+in place rather than writing a competing file, and supersede only
+deliberately, with a coverage diff proving nothing is lost.
+
+Quality attributes get their own context — `NFR-REQUIREMENTS.md` in
+ledger-format workspaces — one category per row from exactly eight:
+`performance` · `scalability` · `availability` · `security` · `privacy` ·
+`operability` · `maintainability` · `compatibility`; an open list becomes
+forty overlapping labels within two passes. Sweep for latent thresholds
+(timeouts, pool sizes, retry counts, rate limits, cache TTLs, payload caps),
+but first check whether the behavior **already has a requirement** — an NFR
+row for a threshold another row owns is a duplicate wearing a different id.
+Every remaining bare constant becomes a candidate held as a question —
+`BLOCKED` on the only thing that matters: is the value a target, a measured
+limit, or the first number someone typed? A `timeout: 30_000` gives the
+value, never the intent, and asserting intent from a constant is the same
+failure the `DERIVED` hold exists to prevent.
+
+**D5 — when phase D is done:** the five documents present or explicitly
+folded, every integration carrying a failure entry or an open question,
+every ADR at `observed`, the NFR sweep run with every bare-constant row held
+as a question, and **citations resolve** across all of it — checked, not
+trusted. Phase D is idempotent — ADRs key by slug, NFR rows by the
+`file:symbol` the threshold lives at — and it measures nothing: configured
+thresholds are read, latencies are never invented, and threat models are a
+person's to write, seeded by `22`, never substituted by this pass.
+
 ## Confirmation — the only exit for a candidate
 
 Build exact confirmation gates per `PROCESS.md` §Strict human transitions:
@@ -224,8 +316,12 @@ active release.
 
 Confirmed scope enters the standard loop and this orchestrator's job ends:
 `rdd-plan` → `rdd-cold-review` → `rdd-entry-review`, then `rdd-verify` for
-`PENDING_VERIFICATION` rows or `rdd-build` for `PROPOSED` behavior, then
-`rdd-completion-review`. Comprehensive is reached by repetition — one bounded
+`PENDING_VERIFICATION` rows or `rdd-build` for `PROPOSED` behavior — those
+passes own the advance to `IN_REVIEW` — then `rdd-completion-review`.
+`rdd-start`'s session discipline binds throughout: run the project's
+deterministic process checks (for ModernPath workspaces, `modernpath check`)
+before every commit of derived records, chained so a failure stops the
+commit. Comprehensive is reached by repetition — one bounded
 context per pass, confirmed and handed off, until the context map lists no
 context without records — not by one enormous unreviewable pass.
 
