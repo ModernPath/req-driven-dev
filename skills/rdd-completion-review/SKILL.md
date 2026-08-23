@@ -5,9 +5,10 @@ description: Audit, deliver, reconcile, and complete an IN_REVIEW requirement or
 
 # Review and complete delivered work
 
-Read the project `AGENTS.md`, canonical `PROCESS.md`, every entity explicitly in
-scope, current code/tests/change, gate records, authoritative records, and
-derived views.
+Read the project `AGENTS.md`, canonical `PROCESS.md`
+(`.modernpath/rdd/PROCESS.md` in a consuming repository), every entity
+explicitly in scope, current code/tests/change, gate records, authoritative
+records, and derived views.
 
 ## Procedure
 

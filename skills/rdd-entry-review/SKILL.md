@@ -5,8 +5,9 @@ description: Evaluate and apply the strict implementation-entry gate for an epic
 
 # Review implementation entry
 
-Read the project `AGENTS.md`, canonical `PROCESS.md`, selected planning packet,
-cold-review findings, current gate records, and relevant sources.
+Read the project `AGENTS.md`, canonical `PROCESS.md`
+(`.modernpath/rdd/PROCESS.md` in a consuming repository), selected planning
+packet, cold-review findings, current gate records, and relevant sources.
 
 ## Procedure
 

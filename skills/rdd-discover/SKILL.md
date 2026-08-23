@@ -5,7 +5,8 @@ description: Source and classify product intent before requirement planning. Use
 
 # Discover product intent
 
-Read the project `AGENTS.md` and canonical `PROCESS.md`, especially Authority,
+Read the project `AGENTS.md` and canonical `PROCESS.md`
+(`.modernpath/rdd/PROCESS.md` in a consuming repository), especially Authority,
 Derived requirement hold, Gates, and Discoveries/releases/conflicts.
 `PROCESS.md` controls when this skill and its records disagree.
 

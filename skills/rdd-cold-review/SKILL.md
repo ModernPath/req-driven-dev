@@ -6,9 +6,10 @@ description: Independently audit a requirement planning packet before implementa
 # Run a cold technical review
 
 Start from a context independent of the planning-authoring conversation. Read
-the project `AGENTS.md`, canonical `PROCESS.md`, versioned product sources,
-selected requirements, optional epic/specifications, technical reconnaissance,
-and repository state at the recorded revision.
+the project `AGENTS.md`, canonical `PROCESS.md` (`.modernpath/rdd/PROCESS.md`
+in a consuming repository), versioned product sources, selected requirements,
+optional epic/specifications, technical reconnaissance, and repository state at
+the recorded revision.
 
 ## Procedure
 

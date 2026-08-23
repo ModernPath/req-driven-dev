@@ -5,7 +5,8 @@ description: Classify and route backlog discoveries, implementation findings, an
 
 # Triage and replan
 
-Read the project `AGENTS.md`, canonical `PROCESS.md`, backlog, requirement
+Read the project `AGENTS.md`, canonical `PROCESS.md`
+(`.modernpath/rdd/PROCESS.md` in a consuming repository), backlog, requirement
 records, optional epics, current release, gates, evidence, and affected product
 sources. Treat user feedback as a source, not an automatic implementation
 order.
@@ -19,9 +20,10 @@ order.
    SR.
 3. Route missing human authority or ambiguity to a decision gate and apply
    `BLOCKED` only when work cannot proceed honestly.
-4. Route known future work to `DEFERRED`, capability/specification gaps to gap
-   records, unclear ownership to backlog, and contradicted or removed behavior
-   to an explicit conflict or `OBSOLETE` decision.
+4. Route known future work to `DEFERRED` with an attributable human source for
+   the postponement, capability/specification gaps to gap records, unclear
+   ownership to backlog, and contradicted or removed behavior to an explicit
+   conflict or `OBSOLETE` decision.
 5. For feedback, determine whether one standalone or UR-linked SR can address
    it without changing user outcome, acceptance, or a cross-cutting decision.
    Otherwise route it to epic-scoped planning.

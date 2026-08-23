@@ -8,7 +8,8 @@ description: Verify human-confirmed PENDING_VERIFICATION URs and SRs against rea
 Turn behavior described from shipped code into current direct UR upper or SR
 lower evidence.
 
-Read the repository `AGENTS.md` and canonical `PROCESS.md` before changing a
+Read the repository `AGENTS.md` and canonical `PROCESS.md`
+(`.modernpath/rdd/PROCESS.md` in a consuming repository) before changing a
 project repository. `PROCESS.md` owns trace, status, gate, evidence, and
 completion meanings.
 
@@ -113,7 +114,8 @@ assertion remains unverified.
 4. Restore any temporary mutation, run the focused test green, then run the
    required regression gates.
 5. Update the authoritative requirement, optional related epic, evidence, and
-   work-selection records atomically; regenerate fallback snapshots afterwards.
+   work-selection records atomically; in a store-backed repository, refresh
+   the materialized snapshots afterwards.
 6. Advance only the evidence conclusion justified by the run. Move the selected
    requirement to `IN_REVIEW` only if its applicable trace gates pass; otherwise
    leave it at the strongest supported non-final state.

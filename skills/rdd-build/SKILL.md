@@ -5,9 +5,10 @@ description: Execute the AI-owned TDD loop for one approved system requirement f
 
 # Build one SR slice
 
-Read the project `AGENTS.md`, canonical `PROCESS.md`, selected SR, applicable UR
-acceptance content, optional epic, technical reconnaissance, code, tests, and
-current records.
+Read the project `AGENTS.md`, canonical `PROCESS.md`
+(`.modernpath/rdd/PROCESS.md` in a consuming repository), selected SR,
+applicable UR acceptance content, optional epic, technical reconnaissance,
+code, tests, and current records.
 
 ## Procedure
 

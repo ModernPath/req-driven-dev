@@ -5,7 +5,8 @@ description: Drive an Epic or single-SR scope through the complete requirement-d
 
 # Deliver requirement scope end to end
 
-Read the project `AGENTS.md`, canonical `PROCESS.md`, selected records and
+Read the project `AGENTS.md`, canonical `PROCESS.md`
+(`.modernpath/rdd/PROCESS.md` in a consuming repository), selected records and
 sources, and each focused skill before executing its phase. `PROCESS.md` owns
 all semantics; this skill owns phase order and continuation.
 
