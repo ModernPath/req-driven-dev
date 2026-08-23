@@ -43,7 +43,7 @@ apply that model; `file-state/` serializes its records without redefining it.
 | `AGENTS.md` | shared agent policy and canonical entry point |
 | `PROCESS.md` | complete canonical process |
 | `CLAUDE.md` | root compatibility entry required for Claude discovery |
-| `skills/` | full-loop orchestration plus focused procedures for discovery, planning, review, building, triage, completion, and as-built verification |
+| `skills/` | full-loop orchestration plus focused procedures for discovery, planning, review, building, triage, completion, and as-built verification; corpus adoption for codebases without requirement records (`rdd-reverse-engineer`); a shared document/citation auditing utility (`rdd-audit`) |
 | `file-state/` | canonical serialization shapes for Epic, requirement, gate, work-selection, and backlog/gap records |
 
 ## Distribution

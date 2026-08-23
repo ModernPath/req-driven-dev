@@ -29,6 +29,10 @@ the recorded revision.
 7. Return the cold-review trace gate `PASS` only when the material-finding rule
    in `PROCESS.md` is satisfied. Otherwise return `FAIL` with exact blockers.
 
+Use `skills/rdd-audit/SKILL.md` to resolve the packet's citations and diff its
+inventories against the code — scoped to the packet's affected surface. Its
+findings enter this review's finding list with the same dispositions.
+
 Do not edit implementation, answer a human gate, or treat this technical
 verdict as entry approval.
 

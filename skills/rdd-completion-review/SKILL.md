@@ -21,7 +21,10 @@ records, and derived views.
 3. If the pre-delivery audit passes, deliver through the project's authorized
    integration path while keeping awaiting entities `IN_REVIEW`.
 4. Re-run or confirm evidence against the delivered revision and reconcile all
-   authoritative records and derived views.
+   authoritative records and derived views. Use `skills/rdd-audit/SKILL.md` to
+   verify that delivered records, citations, and documents still describe the
+   code; a finding it surfaces is a stop condition or routes through
+   `rdd-triage`, never a silent correction.
 5. Record completion trace `PASS` only for the exact eligible fingerprint. Only
    then make the scoped human completion gate `OPEN` and present its brief.
 6. Do not answer the gate for the human. If the authorized human answers,
