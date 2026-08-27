@@ -43,12 +43,13 @@ scope, Item ownership, and Planning and readiness sections of `PROCESS.md`.
    boundaries and reuse; testability, expected RED reasons, and proportional
    gates; and human authority. Cite direct support or explain
    `NOT_APPLICABLE` for every area.
-8. When a human authorizes remediation of a failed cold review, take its exact
-   stable finding snapshot and address every authorized, agent-owned finding
-   in one planning batch. Record the changed packet element and resolution
-   evidence for each finding. Do not request re-review after fixing only a
-   subset; return any finding that needs a scope or product decision to the
-   human before handoff.
+8. When an applied workflow human-gate answer authorizes remediation of a
+   failed cold review, take its exact stable finding snapshot and address every
+   authorized, agent-owned finding in one planning batch. Record the changed
+   packet element and claimed resolution evidence for each finding; leave its
+   disposition open until independent re-review verifies that evidence. Do not
+   request re-review after fixing only a subset; return any finding that needs
+   a scope or product decision to the human before handoff.
 9. Route product, scope, architecture, acceptance, priority, release, and
    workflow decisions through exact human gates. Open them only after their
    trace prerequisites pass. Record blockers, conflicts, gaps, and deferrals

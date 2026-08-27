@@ -283,37 +283,58 @@ gates, and unauthorized decisions. It continues after the first blocker and
 records every rubric area as `PASS`, `NOT_APPLICABLE`, or one or more finding
 ids before returning a verdict.
 
-Findings retain stable identities across review rounds. Every finding records
-its classification (`ORIGINAL`, `INTRODUCED_BY_REMEDIATION`, `REVIEW_ESCAPE`,
-`SCOPE_EXPANSION`, or `OUT_OF_SCOPE`), first-seen and last-checked
-plan-subject fingerprints, predecessor or introduced-by lineage, affected
-domain, severity and materiality, direct source, owner, required remediation,
-disposition (`OPEN`, `RESOLVED`, `DEFERRED`, or `REJECTED`), and resolution
-evidence. An `OUT_OF_SCOPE` finding routes through triage and does not fail the
-selected gate unless it is shown to affect the selected trace.
+Findings retain stable identities across review rounds. Every finding record
+stores its classification (`ORIGINAL`, `INTRODUCED_BY_REMEDIATION`,
+`REVIEW_ESCAPE`, `SCOPE_EXPANSION`, or `OUT_OF_SCOPE`), predecessor or
+introduced-by lineage, affected domain, severity and materiality, direct
+source, owner, required remediation, current disposition (`OPEN`, `RESOLVED`,
+`DEFERRED`, or `REJECTED`), and current resolution evidence. Every cold-review
+gate appends an immutable observation of each relevant finding's disposition,
+evidence, and checked plan-subject fingerprint at that round; a re-review never
+rewrites a predecessor gate's observation. An `OUT_OF_SCOPE` finding routes
+through triage and does not fail the selected gate unless it is shown to affect
+the selected trace.
 
-After authorized remediation, a re-review verifies every prior finding against
-its resolution evidence, audits the exact plan diff, and checks the immediate
-control/data-flow, contract, persistence, integration, failure, security,
-operational, and test boundaries touched by that diff. It carries forward
-unchanged coverage instead of starting a new full audit. A material change to
-selected scope or the affected-surface denominator starts a new exhaustive
-review rather than masquerading as a re-review.
+Review mode follows the predecessor, not only its verdict. `FIRST` means no
+predecessor exists, or selected scope or the affected-surface denominator
+changed materially enough to start a new exhaustive review. `RE_REVIEW` means a
+predecessor exists and those boundaries are unchanged. A predecessor whose
+last evaluated verdict was `FAIL` requires an applied human continuation answer
+for its exact finding snapshot, including when remediation has since made that
+gate `STALE`. A predecessor whose last evaluated verdict was `PASS` and is now
+`STALE` requires the attributable source that changed the plan subject, but not
+a failed-review continuation decision.
+
+A re-review verifies every prior finding against its resolution evidence,
+audits the exact plan diff, and checks the immediate control/data-flow,
+contract, persistence, integration, failure, security, operational, and test
+boundaries touched by that diff. It carries forward unchanged coverage instead
+of starting a new full audit.
 
 Open or in-scope deferred correctness, security, data-loss, contract,
-traceability, or testability findings fail the cold-review trace gate. If a
-re-review does not reduce the open material finding set, repeats a finding
-lineage, or expands the affected domains, stop reviewing and treat the result
-as evidence that the packet does not converge. Recommend splitting the scope,
-removing optional behavior, simplifying the design, or replanning the shared
-boundary before another review.
+traceability, or testability findings fail the cold-review trace gate. A
+re-review is non-converging when its open material finding count is greater
+than or equal to its predecessor's, when the same stable finding or descendant
+lineage remains open after the authorized remediation, or when its affected
+domain count increases. Stop reviewing on any of those conditions and treat
+the result as evidence that the packet does not converge. Recommend splitting
+the scope, removing optional behavior, simplifying the design, or replanning
+the shared boundary before another review.
 
-A failed cold review returns its complete finding set, coverage result, and
-recommendation through an exact workflow human gate scoped to that finding
-snapshot. The orchestrator must not automatically remediate and start another
-review. Another round requires that gate's attributable answer and applied
-choice. Technical review cannot grant entry approval, and human authorization
-for another round cannot substitute for a cold-review `PASS`.
+A failed cold review also evaluates a continuation-readiness trace against a
+**review-result fingerprint** over the failed gate id, complete coverage,
+stable finding snapshot and observations, convergence result, structural
+recommendation, and decision brief. That trace passes only when all of those
+inputs are recorded. It is the sole prerequisite for the exact workflow human
+gate; the failed cold-review trace is a source, not a prerequisite. The
+orchestrator must not automatically remediate and start another review. Another
+round requires the workflow gate's attributable answer and applied choice at
+that review-result fingerprint. Applying `remediate` records the exact
+authorized finding snapshot and routes work selection to planning; applying a
+structural choice routes it to triage or planning with the chosen scope action;
+applying `defer` or `stop` records the corresponding hold. Technical review
+cannot grant entry approval, and human authorization for another round cannot
+substitute for a cold-review `PASS`.
 
 Entry review evaluates the complete packet and confirms that its current
 plan-subject fingerprint matches the fingerprint reviewed by cold review. Only
@@ -503,9 +524,11 @@ Every gate record stores id, kind, transition/purpose, exact scope, prerequisite
 fingerprint, state/verdict/answer, actor/evaluator, sources, timestamps,
 application state/revision, and predecessor/successor. A cold-review gate also
 stores its review mode, coverage rubric, predecessor review, reviewed plan diff
-for a re-review, attributable authorization for the round, and stable finding
-records with classifications, lineage, owners, dispositions, and resolution
-evidence.
+for a re-review, attributable authorization for the round, and immutable
+finding observations. `GATES.md` also stores stable cold-review finding records
+with classifications, lineage, owners, current dispositions, and resolution
+evidence, plus the continuation-readiness and workflow decision gates for a
+failed review.
 
 Every evidence record stores targeted clause, stable test case, outcome, role,
 validity, command/report, environment when relevant, fingerprint, revision, and

@@ -20,8 +20,8 @@ packet, cold-review findings, current gate records, and relevant sources.
    candidate links counted as authoritative, ambiguous acceptance, broad SRs,
    stale reconnaissance, incomplete implementation context, inadequate RED
    strategy, or unresolved material cold-review findings.
-3. Record the entry trace gate against the exact content fingerprint. Keep the
-   human gate `DRAFT` when the trace does not pass.
+3. Record the entry trace gate against the exact plan-subject fingerprint. Keep
+   the human gate `DRAFT` when the trace does not pass.
 4. After a current trace `PASS`, make only the exact scoped human gate `OPEN`
    and present its product-language brief and recommendation.
 5. Do not answer the gate for the human. If the authorized human answers,

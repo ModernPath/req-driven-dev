@@ -12,6 +12,8 @@
 Trace gates and human gates are recorded in the same file because a human gate
 is addressable only through the trace gates that gate it. A human gate with no
 recorded prerequisite trace gate is unreadable, not implicitly open.
+Stable cold-review findings are co-located here because review gates carry
+their immutable per-round observations and convergence comparisons.
 
 ## GATE-«AREA»-«NNN» — «Transition or decision purpose»
 
@@ -35,11 +37,11 @@ the plan-subject fingerprint above and does not participate in that
 fingerprint.
 
 - **Review mode:** FIRST / RE_REVIEW
-- **Round authorization:** «workflow human-gate id and USER: source authorizing the exact re-review finding snapshot, or N/A for FIRST»
+- **Round authority:** «for predecessor last evaluated FAIL, even if now STALE: applied workflow human-gate id and USER: source; for predecessor last evaluated PASS and now STALE: source of the plan-subject change; N/A for FIRST»
 - **Predecessor review:** «gate id and reviewed plan-subject fingerprint, or none»
 - **Reviewed plan diff:** «old fingerprint -> new fingerprint plus changed packet elements, or N/A for FIRST»
 - **Affected-surface denominator:** «repositories, flows, contracts, persistence, integrations, and test boundaries covered»
-- **Convergence:** «first review / shrinking / flat / recurring lineage / expanding domains»
+- **Convergence:** «first review, or predecessor/current open-material counts + lineage result + predecessor/current affected-domain counts»
 - **Structural recommendation:** «split / simplify / remove optional behavior / replan shared boundary / none»
 
 #### Coverage rubric
@@ -59,14 +61,15 @@ them.
 | Testability, RED strategy, and proportional gates | PASS / NOT_APPLICABLE / FINDINGS | «refs» |
 | Human authority | PASS / NOT_APPLICABLE / FINDINGS | «refs» |
 
-#### Findings
+#### Finding observations
 
-Finding ids remain stable across a review and its re-reviews. A re-review
-updates the existing row rather than renumbering or restating it.
+One immutable row per finding checked by this gate. Stable finding data lives in
+the `CRF-` record below; a re-review appends observations under its successor
+gate and never edits observations under its predecessor.
 
-| Finding id | Classification | First seen / last checked fingerprint | Lineage | Domain | Severity / materiality | Direct source | Owner | Required remediation | Disposition | Resolution evidence |
-|---|---|---|---|---|---|---|---|---|---|---|
-| «CRF-AREA-NNN» | ORIGINAL / INTRODUCED_BY_REMEDIATION / REVIEW_ESCAPE / SCOPE_EXPANSION / OUT_OF_SCOPE | «fingerprints» | «predecessor or introduced-by finding/fix» | «affected domain» | «severity and material/non-material» | «DOC:/CODE:/TEST:/RUN:/USER:» | «owner» | «exact correction or decision» | OPEN / RESOLVED / DEFERRED / REJECTED | «direct proof or none» |
+| Finding id | Checked fingerprint | Disposition at this review | Evidence at this review |
+|---|---|---|---|
+| «CRF-AREA-NNN» | «plan-subject fingerprint» | OPEN / RESOLVED / DEFERRED / REJECTED | «direct proof or none» |
 
 ### Brief
 
@@ -86,3 +89,38 @@ Human gates only. Omit for trace gates.
 
 - **Held items:** «EPIC/UR/SR ids blocked until this gate closes, or none»
 - **Applied transitions:** «item id -> from -> to, one per line; empty until APPLIED»
+
+## CRF-«AREA»-«NNN» — «Cold-review finding»
+
+A stable cold-review finding record. It is not a gate or lifecycle item. Update
+its current disposition only together with a new immutable observation on the
+evaluating cold-review gate.
+
+- **Classification:** ORIGINAL / INTRODUCED_BY_REMEDIATION / REVIEW_ESCAPE / SCOPE_EXPANSION / OUT_OF_SCOPE
+- **First seen:** «cold-review gate id and plan-subject fingerprint»
+- **Lineage:** «predecessor or introduced-by finding/fix, or none»
+- **Affected scope / domain:** «EPIC/UR/SR ids and technical domain»
+- **Severity / materiality:** «severity and material/non-material»
+- **Direct source:** «DOC:/CODE:/TEST:/RUN:/USER:»
+- **Owner:** «owner»
+- **Required remediation:** «exact correction or decision»
+- **Current disposition:** OPEN / RESOLVED / DEFERRED / REJECTED
+- **Current resolution evidence:** «direct proof or none»
+- **Observation history:** «ordered cold-review gate ids; immutable rows live on those gates»
+
+## Failed cold-review continuation
+
+A failed cold review does not directly prerequisite a human gate because a
+human gate requires passing trace prerequisites. Record two successor gates:
+
+1. A **continuation-readiness trace gate** evaluated at a review-result
+   fingerprint over the failed gate id, complete coverage, exact stable finding
+   snapshot and observations, convergence result, structural recommendation,
+   and decision brief. It passes only when those inputs are complete. The
+   failed cold-review gate is a source.
+2. A **workflow human gate** whose sole prerequisite is the passing
+   continuation-readiness gate. Its exact scope includes the selected work,
+   failed review gate, finding snapshot, and review-result fingerprint.
+   Applying its answer updates work selection: remediation routes to plan with
+   the authorized snapshot; structural change routes to triage or plan with the
+   chosen action; defer or stop records the applicable hold.

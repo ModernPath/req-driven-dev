@@ -13,11 +13,15 @@ the recorded revision.
 
 ## Procedure
 
-1. Resolve the current plan-subject fingerprint and determine the review mode:
-   `FIRST` when no predecessor reviewed this selected scope and affected
-   surface, or `RE_REVIEW` after an attributable human authorized another round
-   for an exact failed finding snapshot. Do not start an unauthorized
-   `RE_REVIEW`.
+1. Resolve the current plan-subject fingerprint and predecessor. Use `FIRST`
+   when there is no predecessor or selected scope or the affected-surface
+   denominator changed materially. Use `RE_REVIEW` for any predecessor with
+   unchanged boundaries. A predecessor whose last evaluated verdict was
+   `FAIL` requires an applied workflow human-gate answer authorizing the exact
+   finding snapshot, even if remediation made that gate `STALE`. A predecessor
+   whose last evaluated verdict was `PASS` and is now `STALE` requires the
+   attributable source of the plan-subject change. Do not start a re-review
+   without its applicable authority.
 2. For `FIRST`, audit the authoritative graph and selected scope without
    relying on unstated author reasoning. Verify the affected repositories,
    files, symbols, entry points, callers, writers, readers, and every changed
@@ -39,20 +43,27 @@ the recorded revision.
    coverage; do not restart the full audit. If the selected scope or
    affected-surface denominator changed materially, supersede this re-review
    and require a new `FIRST` review.
-5. Give every finding a stable id and record its classification, first-seen and
-   last-checked plan-subject fingerprints, lineage, affected domain, severity
-   and materiality, direct source, owner, required remediation, disposition,
-   and resolution evidence. Classify successor discoveries per `PROCESS.md`;
-   route `OUT_OF_SCOPE` findings without allowing them to reset this review.
-6. Compare a re-review with its predecessor by open material finding ids,
-   repeated lineages, and affected domains. If the material set does not
-   shrink, a lineage recurs, or affected domains expand, return a
-   non-convergence recommendation: split the scope, remove optional behavior,
-   simplify the design, or replan the shared boundary.
+5. Give every finding a stable id and maintain its classification, lineage,
+   affected domain, severity and materiality, direct source, owner, required
+   remediation, current disposition, and current resolution evidence. Append
+   an immutable observation for this gate with the finding's checked
+   plan-subject fingerprint, disposition, and evidence; never update a
+   predecessor gate's observation. Classify successor discoveries per
+   `PROCESS.md`; route `OUT_OF_SCOPE` findings without allowing them to reset
+   this review.
+6. Compare a re-review with its predecessor by open material finding count,
+   unresolved stable-id or descendant lineage, and affected-domain count.
+   Return a non-convergence recommendation when the count is not lower, a
+   lineage remains open after remediation, or the domain count increases:
+   split the scope, remove optional behavior, simplify the design, or replan
+   the shared boundary.
 7. Return the cold-review trace gate `PASS` only when the material-finding rule
-   in `PROCESS.md` is satisfied. Otherwise return `FAIL` with exact blockers,
-   complete coverage, and an exact workflow human gate for the next action,
-   scoped to the current finding snapshot.
+   in `PROCESS.md` is satisfied. Otherwise record `FAIL` with exact blockers
+   and complete coverage; calculate the review-result fingerprint and evaluate
+   the continuation-readiness trace; and only after that trace passes, open the
+   exact workflow human gate for the next action scoped to the current finding
+   snapshot and review-result fingerprint. Record the failed review as a source
+   of that human gate, not as its prerequisite.
 
 For a `FIRST` review, use `skills/rdd-audit/SKILL.md` to resolve the packet's
 citations and diff its inventories against the code across the frozen affected
@@ -68,7 +79,8 @@ verdict as entry approval.
 Lead with material findings, then state the review mode, reviewed plan-subject
 fingerprint, predecessor and plan diff when applicable, coverage results,
 stable finding dispositions and lineage, convergence result, and trace-gate
-verdict. A current `PASS` hands off to `rdd-entry-review`. A `FAIL` returns the
+verdict. On `FAIL`, also report the review-result fingerprint and continuation
+gates. A current `PASS` hands off to `rdd-entry-review`. A `FAIL` returns the
 complete findings and recommendation to the human; do not invoke `rdd-plan` or
 another cold review until the workflow gate's attributable answer authorizes
 and applies the exact next action.
