@@ -59,6 +59,11 @@ its skill: `rdd-discover`, `rdd-plan`, `rdd-cold-review`, `rdd-entry-review`,
 `rdd-build`, `rdd-verify`, `rdd-completion-review`, or `rdd-deliver` for the
 complete loop.
 
+A current failed cold-review gate without attributable human authorization for
+its exact finding snapshot is a waiting condition, not permission to route to
+`rdd-plan` or start another review. Report the findings and recommendation and
+hold the selection until the human chooses the next action.
+
 ## Report
 
 Report the store binding and how it was confirmed, the active release and its

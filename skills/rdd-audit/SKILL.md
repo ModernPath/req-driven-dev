@@ -1,6 +1,6 @@
 ---
 name: rdd-audit
-description: Audit a document corpus, a ledger, or a check you wrote — resolve citations, diff an inventory both directions, judge a count, and recognise how an instrument fails. Use when verifying that documents still describe the code, when a measurement disagrees with a previous one, when writing or widening a matcher, or when deciding whether a finding is real before acting on it. A shared utility invoked by rdd-reverse-engineer, rdd-cold-review, and rdd-completion-review — it establishes facts and findings, routes them through rdd-triage, and never assigns lifecycle state.
+description: Audit a document corpus, a ledger, or a check you wrote — resolve citations, diff an inventory both directions, judge a count, and recognise how an instrument fails. Use when verifying that documents still describe the code, when a measurement disagrees with a previous one, when writing or widening a matcher, or when deciding whether a finding is real before acting on it. A shared utility invoked by rdd-reverse-engineer, rdd-cold-review, and rdd-completion-review — it establishes facts and findings, returns them to the invoking phase, and never assigns lifecycle state.
 ---
 
 # Auditing what a document claims
@@ -12,8 +12,10 @@ stale claim may load it alone. Its contract:
 
 - it establishes facts about documents, records, and the instruments that
   check them; it never assigns or advances a lifecycle state;
-- its findings are discoveries — route them through `rdd-triage`, which owns
-  where they land;
+- its findings return first to the invoking phase. During cold review they join
+  that review's stable finding set; route through `rdd-triage` only when the
+  finding changes the selected authoritative trace or is classified
+  `OUT_OF_SCOPE` for separate routing;
 - invoked inside the loop it is scoped to the affected surface; the
   full-corpus sweep is a deliberate act — at adoption, before a release, or
   when `rdd-start` reports drift — never an every-iteration cost.

@@ -12,7 +12,10 @@ packet, cold-review findings, current gate records, and relevant sources.
 ## Procedure
 
 1. Audit every selected entity against the Entry packet, Strict human
-   transitions, and gate-state rules in `PROCESS.md`.
+   transitions, and gate-state rules in `PROCESS.md`. Recalculate the current
+   plan-subject fingerprint and require it to equal the fingerprint named by
+   the passing cold-review gate; review findings and verdict records are linked
+   outputs and do not participate in that fingerprint.
 2. Fail the entry trace for missing or conflicting sources, `DERIVED` items,
    candidate links counted as authoritative, ambiguous acceptance, broad SRs,
    stale reconnaissance, incomplete implementation context, inadequate RED

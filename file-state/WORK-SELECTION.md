@@ -22,7 +22,7 @@ authoritative store and are not recorded here.
 - **Frozen at fingerprint:** «content/code fingerprint the selection was frozen at»
 - **Reconnaissance revision:** «named revision the packet was authored against»
 - **Current phase:** «source / plan / cold review / entry / build / verify / completion / triage»
-- **Waiting on:** «gate id, blocker, external prerequisite, or nothing»
+- **Waiting on:** «gate id, cold-review finding snapshot plus human continuation authorization, blocker, external prerequisite, or nothing»
 - **Owner:** «who holds the selection»
 
 ## Suspended selections

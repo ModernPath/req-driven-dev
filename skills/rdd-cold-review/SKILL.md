@@ -13,31 +13,62 @@ the recorded revision.
 
 ## Procedure
 
-1. Audit the authoritative graph and selected scope without relying on
-   unstated author reasoning.
-2. Verify the affected repositories, files, symbols, entry points, callers,
-   writers, readers, and every changed control/data-flow hop.
-3. Examine contracts, schemas, compatibility, persistence, integrations,
-   failure propagation, retries, concurrency, security, and operational risks
-   where applicable.
-4. Assess feasibility, dependency order, SR boundaries, reuse of established
-   patterns, testability, expected RED reasons, and proportional gates.
-5. Identify any product, architecture, acceptance, or scope choice that lacks
-   human authority.
-6. Record each finding with severity, direct source, owner, and disposition as
-   `OPEN`, `RESOLVED`, `DEFERRED`, or `REJECTED`.
+1. Resolve the current plan-subject fingerprint and determine the review mode:
+   `FIRST` when no predecessor reviewed this selected scope and affected
+   surface, or `RE_REVIEW` after an attributable human authorized another round
+   for an exact failed finding snapshot. Do not start an unauthorized
+   `RE_REVIEW`.
+2. For `FIRST`, audit the authoritative graph and selected scope without
+   relying on unstated author reasoning. Verify the affected repositories,
+   files, symbols, entry points, callers, writers, readers, and every changed
+   control/data-flow hop.
+3. Complete the shared planning/review coverage rubric: trace and scope;
+   affected surface and flow; contracts, schemas, and compatibility;
+   persistence; integrations; failure propagation and retries; concurrency;
+   security; operational risks; feasibility and dependency order; SR
+   boundaries and reuse; testability, expected RED reasons, and proportional
+   gates; and unauthorized product, architecture, acceptance, or scope
+   choices. Mark every area `PASS`, `NOT_APPLICABLE`, or with finding ids.
+   Continue after the first blocker so the first verdict contains the complete
+   material-finding set.
+4. For `RE_REVIEW`, begin with the predecessor's stable finding set. Verify
+   every claimed resolution against direct evidence, inspect the exact plan
+   diff, and audit the immediate callers, readers, writers, contracts,
+   persistence paths, integrations, failure paths, security/operational
+   boundaries, and tests touched by that diff. Carry forward unaffected
+   coverage; do not restart the full audit. If the selected scope or
+   affected-surface denominator changed materially, supersede this re-review
+   and require a new `FIRST` review.
+5. Give every finding a stable id and record its classification, first-seen and
+   last-checked plan-subject fingerprints, lineage, affected domain, severity
+   and materiality, direct source, owner, required remediation, disposition,
+   and resolution evidence. Classify successor discoveries per `PROCESS.md`;
+   route `OUT_OF_SCOPE` findings without allowing them to reset this review.
+6. Compare a re-review with its predecessor by open material finding ids,
+   repeated lineages, and affected domains. If the material set does not
+   shrink, a lineage recurs, or affected domains expand, return a
+   non-convergence recommendation: split the scope, remove optional behavior,
+   simplify the design, or replan the shared boundary.
 7. Return the cold-review trace gate `PASS` only when the material-finding rule
-   in `PROCESS.md` is satisfied. Otherwise return `FAIL` with exact blockers.
+   in `PROCESS.md` is satisfied. Otherwise return `FAIL` with exact blockers,
+   complete coverage, and an exact workflow human gate for the next action,
+   scoped to the current finding snapshot.
 
-Use `skills/rdd-audit/SKILL.md` to resolve the packet's citations and diff its
-inventories against the code — scoped to the packet's affected surface. Its
-findings enter this review's finding list with the same dispositions.
+For a `FIRST` review, use `skills/rdd-audit/SKILL.md` to resolve the packet's
+citations and diff its inventories against the code across the frozen affected
+surface. For `RE_REVIEW`, scope that audit to changed citations and inventories
+plus their immediate dependencies. Its findings enter this review's stable
+finding set with the same classifications and dispositions.
 
 Do not edit implementation, answer a human gate, or treat this technical
 verdict as entry approval.
 
 ## Report
 
-Lead with material findings, then state the reviewed fingerprints, finding
-dispositions, trace-gate verdict, and the exact handoff: `rdd-plan` after a
-failure or `rdd-entry-review` after a current pass.
+Lead with material findings, then state the review mode, reviewed plan-subject
+fingerprint, predecessor and plan diff when applicable, coverage results,
+stable finding dispositions and lineage, convergence result, and trace-gate
+verdict. A current `PASS` hands off to `rdd-entry-review`. A `FAIL` returns the
+complete findings and recommendation to the human; do not invoke `rdd-plan` or
+another cold review until the workflow gate's attributable answer authorizes
+and applies the exact next action.
