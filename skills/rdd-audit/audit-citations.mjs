@@ -27,7 +27,10 @@ import { execSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
-const EXT = "exs|tsx|yaml|json|ex|go|js|ts|yml|sh|py|rb|rs|java|kt|toml|sql";
+// An extension missing here is not reported as unresolved — it is not seen at
+// all. On a .NET estate this printed "10/10 citations resolve" while silently
+// skipping 710 of 720, which reads as a pass. Longest-first still holds.
+const EXT = "exs|tsx|yaml|proto|json|ex|go|js|ts|yml|sh|py|rb|rs|java|kt|toml|sql|cs|vb|fs|php|swift|scala|erl";
 
 // Longest extensions first, and a boundary after — `.ex` must not match inside
 // `.exs`, nor `.ts` inside `.tsx`. This is the first of the three failures.
@@ -36,12 +39,12 @@ const EXT = "exs|tsx|yaml|json|ex|go|js|ts|yml|sh|py|rb|rs|java|kt|toml|sql";
 // A citation may end at a NAME instead of a line — a test
 // identifier survives edits to the file, a line number does not. Group 4 is
 // that name; unchecked, `file.go:TestGoneForever` passed on file existence.
-const PREFIXED = new RegExp(`CODE: ?([A-Za-z0-9_./\\-]+?\\.(?:${EXT}))(?![A-Za-z0-9])(?::(?:((?:\\d+(?:-\\d+)?)(?:,\\d+(?:-\\d+)?)*)|([A-Za-z_][A-Za-z0-9_]{2,})))?`, "g");
+const PREFIXED = new RegExp(`CODE: ?([A-Za-z0-9_./\\[\\]\\-]+?\\.(?:${EXT}))(?![A-Za-z0-9])(?::(?:((?:\\d+(?:-\\d+)?)(?:,\\d+(?:-\\d+)?)*)|([A-Za-z_][A-Za-z0-9_]{2,})))?`, "g");
 // The full grammar, not the first two parts: a citation may list lines and
 // ranges — file:N, file:N-M, file:N,M, file:N-M,P. A pattern holding only two
 // groups matches every one of them and silently skips the rest; 188 citations
 // in one corpus had 3+ parts, up to 9 (RUN:2026-08-14).
-const BARE = new RegExp("`([A-Za-z0-9_./\\-]+\\.(?:" + EXT + ")):((?:\\d+(?:-\\d+)?)(?:,\\d+(?:-\\d+)?)*)", "g");
+const BARE = new RegExp("`([A-Za-z0-9_./\\[\\]\\-]+\\.(?:" + EXT + ")):((?:\\d+(?:-\\d+)?)(?:,\\d+(?:-\\d+)?)*)", "g");
 // The ellipsis may sit mid-path, and
 // the citation must END at a source file — an ellipsis inside /var/folders/…/
 // or a URL is prose. The narrower `CODE:...` form missed 22 real elisions.
@@ -53,7 +56,7 @@ const BARE = new RegExp("`([A-Za-z0-9_./\\-]+\\.(?:" + EXT + ")):((?:\\d+(?:-\\d
 // checked by nothing until RUN:2026-08-14, when 17 of them turned out to hide
 // one malformed compound anchor (`#2.1/#5`).
 const DOCREF = /DOC: ?([A-Za-z0-9_./\-]+\.md)(?:#([^ )|`\u00b7]+))?/g;
-const ELIDED = /(?:CODE:|`)(?:[A-Za-z0-9_.\-]+\/)*\.\.\.\/[A-Za-z0-9_.\/\-]*\.(?:exs|tsx|ex|go|js|ts|py|rb|rs|java|kt|sql|yml|yaml|json|sh|heex)\b/g;
+const ELIDED = /(?:CODE:|`)(?:[A-Za-z0-9_.\\[\\]\-]+\/)*\.\.\.\/[A-Za-z0-9_.\/\\[\\]\-]*\.(?:exs|tsx|ex|go|js|ts|py|rb|rs|java|kt|sql|yml|yaml|json|sh|heex)\b/g;
 
 // C8: a row naming a gap is not a citation. "there is no test_draft_service.py"
 // is the most useful thing a derivation pass produces, and an audit that counts

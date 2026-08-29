@@ -28,6 +28,23 @@ apply; nothing here redefines them.
    file-backed — and serialize every record this pass creates through the
    `file-state/` shapes for that store. This pass never invents a third
    representation.
+
+   **A ledger-format workspace materializes the requirement corpus too.** Where
+   a workspace's tooling reads `tasks/<CTX>-REQUIREMENTS.md` — the shape the
+   `rdd-ledger` adapter and `modernpath factory sync` ingest — write the
+   corpus there as well as to `file-state/REQUIREMENTS.md`, one file per
+   context, in the dashboard/detail-block shape. **Keep the `UR-`/`SR-` id
+   prefix** — it is how a ledger row says which kind it is, and the store
+   routes user and system requirements to different tables. Writing every row
+   as `REQ-` files a user requirement under a system requirement's evidence
+   class, which is a silent loss, not a formatting choice. `REQ-<CTX>-NNN`
+   remains valid and still means a system requirement.
+   `file-state/` alone is not enough for those workspaces: in a store-backed
+   repository it is a projection, so a corpus that exists only there never
+   reaches the store: sync reads its `tasks/` glob, finds nothing, and coverage
+   reports zero rows over the whole tree after a complete pass. This
+   instruction already says so for Epics and for NFRs; saying it for the
+   requirement corpus is the same rule, not a new one.
 3. **Take what analysis exists as a lens.** A platform knowledge core, a
    maintained `ARCHITECTURE.md`, human-written guides — read them all before
    the code. Each proposes; the code decides. Every claim this pass records
@@ -272,6 +289,10 @@ repository never performed is the same lie as a completion with no evidence.
 
 ## D3. Non-functional requirements — `tasks/NFR-REQUIREMENTS.md`
 
+Ids follow the ledger convention, `REQ-NFR-NNN`, not `NFR-<CATEGORY>-NNN`: the
+ledger row regex matches `REQ-<CTX>-NNN` and parses nothing otherwise, so rows
+written any other way are silently ingested as none.
+
 Quality attributes get their own requirement context, serialized like any
 other — ledger-format workspaces materialize it at the path above — one
 category per row from exactly eight:
@@ -295,6 +316,47 @@ trusted. Phase D is idempotent — ADRs key by slug, NFR rows by the
 `file:symbol` the threshold lives at — and it measures nothing: configured
 thresholds are read, latencies are never invented, and threat models are a
 person's to write, seeded by `22`, never substituted by this pass.
+
+## Relation serialization
+
+A relation this pass declares must reach the graph. Write it in the Candidate
+packet, in one of these exact shapes — the reader parses ids that follow the
+verb, and nothing else:
+
+```
+Proposed relations (CANDIDATE): requires SR-KERNEL-030, SR-KERNEL-031.
+```
+
+```
+Proposed relations (CANDIDATE): serves UR-KERNEL-002.
+```
+
+`requires` names the rows that take this one as their parent; `serves` names
+this row's parent. A row may also carry its parent in a dedicated field — a
+`UR` ledger column, a bare `UR-…` in the `Source` cell, or a detail bullet:
+
+```
+- **UR:** UR-KERNEL-002
+```
+
+A dedicated field always wins: a packet sentence never overwrites a parent an
+author stated in a field of its own.
+
+Prose that merely mentions a requirement is a citation, not a relation, and is
+read as none — `Conflict — SR-KERNEL-033 records that …` declares nothing.
+Naming an id no row carries is a corpus defect and is reported, never dropped.
+
+**Do not invent a shape.** Three estates have been synced with every row
+orphaned because a pass wrote parents in a form the reader did not parse
+(REQ-CROSS-076, SR-SY-1402, REQ-CROSS-286). The forms above are the contract
+between this skill and `internal/rdd`, and a test asserts that every example in
+this section parses. A new shape needs a reader in the same change.
+
+Declaring nothing is a real answer, and a common one: most derived rows have no
+parent to propose. Say so by writing no relation clause — not by inventing a
+plausible one. The pass reports how many rows declare a relation against how
+many exist, and that ratio is a quality signal about the derivation, not a
+number to inflate.
 
 ## Confirmation — the only exit for a candidate
 
@@ -344,6 +406,37 @@ context without records — not by one enormous unreviewable pass.
 - edits product code — a pass that edits code can be reviewed as neither
   documentation nor a change;
 - guesses a business rule to avoid recording an open question.
+
+## Coverage floor — the pass is not finished at 59%
+
+Before reporting, run the workspace's own instrument and read the number it
+gives, not one of your own:
+
+```
+modernpath coverage
+```
+
+**A pass below 60% file coverage is incomplete, not merely modest.** It means
+the corpus describes what the system exposes — routes, pages, tables — and not
+what implements it. Entry points are the easy half: a route handler is named in
+one place and reads like a requirement already. The modules behind it are where
+behaviour actually lives, and a corpus that skips them cannot support a change.
+
+Two rules follow:
+
+- **Derive against the implementation layer too.** A `lib/`, `services/`,
+  `domain/` or `internal/` module that holds a rule, a calculation, a state
+  transition or an integration is behaviour a requirement must name and cite.
+  Reaching a directory only through the handler that calls it does not cover it.
+- **Read the per-app breakdown, not just the total.** One directory sitting far
+  below the rest is the gap; a healthy total can hide it. Report each app's
+  number, and treat a low one as a finding with a reason — "these 81 modules are
+  presentation-only" is an answer, silence is not.
+
+The instrument counts what git accounts for, so a vendored or gitignored tree
+never inflates or deflates the result. If the number still looks wrong, say so
+and show the breakdown rather than quietly adopting a denominator that flatters
+the pass.
 
 ## Report
 
