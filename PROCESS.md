@@ -192,6 +192,14 @@ Every human gate carries:
 - Image: <optional evidence>
 ```
 
+The brief is self-contained and in plain product language: an authorized human
+who has not read the packet decides from it alone. State the substance of every
+decision, correction, finding, option, or requirement it rests on — an internal
+identifier (a decision, correction, or finding code) never substitutes for its
+meaning and may appear only as a trailing parenthetical breadcrumb. Prefer
+concrete user-visible outcomes to process, code, or architecture shorthand, and
+name any agent choices the answer will also ratify in those same plain terms.
+
 ### Automatic transitions
 
 An agent or deterministic check may apply these only from a current trace-gate
