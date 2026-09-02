@@ -40,6 +40,15 @@ Do not ask for human input inside the loop. Return to planning only when drift
 creates a new product, scope, architecture, acceptance, priority, release,
 workflow, or material technical decision. Record an external blocker exactly.
 
+This skill runs as one delegated pass per SR (`PROCESS.md` Pass isolation).
+It reads the SR, its planning, and the current records from the store, not
+from the conversation that selected it. A pass interrupted by its environment
+resumes from the last waypoint commit and the recorded state: re-establish the
+RED or passing observation from the repository before continuing. If the
+`IN_REVIEW` exit cannot be reached in this pass, stop at the last waypoint
+commit and report the exact clause and resume condition rather than pressing
+on with a larger attempt.
+
 ## Report
 
 Report the planning revision, RED and passing observations, code and test

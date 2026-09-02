@@ -38,6 +38,12 @@ Freeze the selection per `PROCESS.md` work scope and record it in the
 work-selection record. Packet depth is proportional to the frozen scope; no
 packet item may be omitted.
 
+A session that ended by environment failure — a timed-out or aborted request,
+a lost process — re-enters here exactly like any other. The store, the
+waypoint commits, and the work-selection record carry everything the loop
+needs; nothing from the previous conversation is required, and routing to the
+earliest unmet phase is the recovery.
+
 ## Hold the session discipline
 
 These rules bind every subsequent phase in the session:

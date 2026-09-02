@@ -34,6 +34,23 @@ At an exact `OPEN` human gate, present its brief and wait. If an attributable
 answer is already available, apply it and continue. Never infer or supply the
 answer.
 
+## Run each pass in its own context
+
+Apply the Pass isolation rules of `PROCESS.md`. This skill is the
+orchestrator: it holds the frozen scope, its fingerprint, the current phase,
+the current item or clause, and each pass's report — nothing else.
+
+- Delegate each phase in steps 3–7 and each inner-loop iteration below as one
+  delegated pass with a pass brief: one skill, one item, one revision.
+- Write every fact the pass needs — an applied human answer, a routed
+  discovery, a decision — into the store before delegating. The brief points
+  at records; it does not restate them.
+- Accept only the skill's Report section back. Read the store for the rest.
+- When a report ends at its stop rule, split the work at the next natural
+  boundary and delegate again. Do not enlarge the brief.
+- Never delegate to a copy of this conversation. The pass starts cold from
+  the records and the repository at the named revision.
+
 ## Run the AI TDD inner loop
 
 After entry approval, iterate without human input while the approved fingerprint
@@ -42,7 +59,8 @@ remains unchanged:
 1. Evaluate every selected UR upper trace and SR lower trace. Establish any
    required initial RED observations.
 2. Select the next unmet approved SR clause. Apply `rdd-build` or `rdd-verify`
-   until its lower trace is current and passing.
+   as a delegated pass for that one SR until its lower trace is current and
+   passing.
 3. Rerun affected UR scenarios and update their separate upper evidence.
 4. Repeat for any failing or stale approved trace. Do not stop after the first
    GREEN result or completed SR while another selected trace remains unmet.

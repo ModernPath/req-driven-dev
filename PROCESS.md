@@ -302,6 +302,48 @@ Before each phase, reconcile answered gates and state, then select the earliest
 unmet prerequisite. A focused skill's exit is a handoff, not completion of the
 full loop.
 
+### Pass isolation
+
+Every phase pass and every inner-loop iteration is re-enterable from the
+authoritative store, the repository at a named revision, and its skill file
+alone. It never depends on the conversation that preceded it: session working
+notes are not authoritative (see Authority), so nothing a pass needs is lost
+when that conversation is absent.
+
+A loop that spans many passes runs each one as a **delegated pass** in an
+independent context. The orchestrating context keeps only the frozen scope,
+its fingerprint, the current phase, the current item or clause, and each
+pass's report. Anything else the orchestrator knows that a pass needs — an
+applied human answer, a decision, a routed discovery — is written to the store
+before the pass is delegated, never carried in the brief. A context that is a
+copy of the orchestrator's conversation is not an independent context.
+
+A pass brief is a set of pointers, not a payload:
+
+| Part | Content |
+|---|---|
+| Skill | Exactly one skill to apply |
+| Scope | Exact item ids and the fingerprint or revision |
+| Reading | Paths to the records and the skill to open; never their content |
+| Boundary | What the pass must not do: widen scope, ask a human, advance an unnamed item, resolve a decision |
+| Exit | Return the skill's Report section and nothing else |
+| Stop rule | If the exit cannot be reached, stop at the last waypoint commit and report the exact resume condition |
+
+A brief never contains transcripts, earlier reports, packet bodies, code
+excerpts, background narrative, or a second item. It is a session working
+note: not citable, and never a substitute for the store.
+
+Size every pass as one skill, one item, one revision — one SR, one packet, one
+review, one reconnaissance surface. When a report says the exit was not
+reached, split at the next natural boundary — the next SR clause, the next
+reconnaissance surface — and delegate again. Never re-send the same brief with
+more context attached: the size of the request is what failed.
+
+A pass writes its findings into records and commits and returns only its
+Report fields, so the orchestrator stays small across the whole loop. A pass
+interrupted by its environment resumes from the last waypoint commit and the
+store, not from memory.
+
 ### AI TDD inner loop
 
 After human entry places the selected scope in `TODO`, the AI owns the automatic

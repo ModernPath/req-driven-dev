@@ -22,7 +22,13 @@ scope, Item ownership, and Planning and readiness sections of `PROCESS.md`.
    behavior.
 4. Perform technical reconnaissance at a named repository revision. Record the
    affected surface, control/data flow, contracts, reuse targets, dependencies,
-   risks, test infrastructure, failure modes, and unknowns.
+   risks, test infrastructure, failure modes, and unknowns. For any scope wider
+   than a single SR, delegate reconnaissance per surface — affected code and
+   flow, contracts and data, integrations, test infrastructure, project gates —
+   as read-only passes under the Pass isolation rules of `PROCESS.md`. Each
+   pass returns `DOC:`, `CODE:`, and `TEST:` citations with the fact observed
+   at each; the packet author assembles citations rather than reading every
+   surface in its own context.
 5. Enrich every selected SR with its implementation context, explicit change
    boundary, and lower-RED strategy. Define a separate upper-RED strategy for
    every selected UR.
