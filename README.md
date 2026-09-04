@@ -15,7 +15,8 @@ selected scope -> applicable ACTIVE EC -> engineering trace gate
 Each selected product trace passes planning, technical review, human entry,
 red-first evidence, implementation, cleanup, verification, delivery,
 reconciliation, and human completion. Its separate engineering trace evaluates
-the applicable flat EC set during cold review and at the delivered revision.
+the applicable flat EC set during cold review, before integration, and at the
+delivered revision.
 ```
 
 Product repositories hold authoritative process records in one selected store,

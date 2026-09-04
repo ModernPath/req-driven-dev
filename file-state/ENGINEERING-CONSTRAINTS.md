@@ -16,7 +16,9 @@ service defaults. Every constraint declares its own applicability.
 
 - **Kind:** ARCHITECTURE / QUALITY / ENGINEERING
 - **Status:** PROPOSED / ACTIVE / SUPERSEDED / RETIRED
-- **Statement / source:** «one normative rule» / USER: or DOC:
+- **Statement:** «one normative rule»
+- **Proposal evidence:** «USER:/DOC:/CODE:/TEST:/RUN: observations supporting the proposal»
+- **Authority:** «applied human activation gate and optional normative DOC: source; none while unapproved»
 - **Rationale:** «why the constraint exists and the consequence it prevents»
 - **Scope:** «global, or explicit repository/language/service/domain/path targets»
 - **Effective from:** «release or store revision established by the activation gate»

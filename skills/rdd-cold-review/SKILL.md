@@ -15,9 +15,10 @@ reconnaissance, and repository state at the recorded revision.
 
 1. Audit the authoritative graph and selected scope without relying on
    unstated author reasoning.
-2. Invoke `skills/rdd-engineering-check/SKILL.md` against the exact planning
-   fingerprint. Import its findings and require its current trace gate to pass;
-   do not reproduce its EC-by-EC procedure here.
+2. Invoke `skills/rdd-engineering-check/SKILL.md` with target `PLANNING`
+   against the exact planning fingerprint and post-reconnaissance EC set. Import
+   its findings and require its current trace gate to pass; do not reproduce its
+   EC-by-EC procedure here.
 3. Verify the affected repositories, files, symbols, entry points, callers,
    writers, readers, and every changed control/data-flow hop.
 4. Examine contracts, schemas, compatibility, persistence, integrations,

@@ -19,8 +19,9 @@ authoritative store and are not recorded here.
 - **Selected scope:** «EPIC id, or the single SR id»
 - **Members:** «UR/SR ids in the frozen scope; empty for single-SR scope»
 - **Scope kind:** Epic or single SR
-- **Frozen at fingerprint:** «content/code plus applicable-active-EC-set fingerprint the selection was frozen at»
+- **Frozen at fingerprint:** «selected content/scope fingerprint; EC applicability is unresolved here»
 - **Reconnaissance revision:** «named revision the packet was authored against»
+- **Applicable EC set / fingerprint:** «unresolved before reconnaissance; then exact active EC ids and set fingerprint»
 - **Current phase:** «source / plan / cold review / entry / build / verify / completion / triage»
 - **Waiting on:** «gate id, blocker, external prerequisite, or nothing»
 - **Owner:** «who holds the selection»

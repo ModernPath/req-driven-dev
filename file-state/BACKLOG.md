@@ -24,7 +24,7 @@ requirement and does not belong here.
 - **Raised by / at:** «USER:/CODE:/RUN:/TEST: source» / «timestamp»
 - **Observed:** «what was seen, not what it implies»
 - **Why unrouted:** «unclear owner, cross-cutting, or awaiting a decision»
-- **Candidate route:** «PROPOSED UR/SR, DERIVED, gap, conflict, or decision gate»
+- **Candidate route:** «PROPOSED UR/SR, PROPOSED EC, DERIVED, gap, conflict, or decision gate»
 - **Affected items:** «EPIC/UR/SR/EC ids, or none known»
 - **Disposition:** OPEN / ROUTED to «id» / REJECTED with «source»
 

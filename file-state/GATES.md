@@ -15,7 +15,7 @@ recorded prerequisite trace gate is unreadable, not implicitly open.
 
 ## GATE-«AREA»-«NNN» — «Transition or decision purpose»
 
-- **Kind:** trace or human / «confirmation, EC activation/retirement, engineering-check, entry, decision, cold-review, start-review, completion»
+- **Kind:** trace or human / «confirmation, EC activation/retirement, engineering-check (planning/candidate/delivered), entry, decision, cold-review, start-review, completion»
 - **Transition / purpose:** «exact state transition, or the decision being asked»
 - **Exact scope:** «named EPIC/UR/SR/EC ids this gate covers; one answer may cover an Epic and named members»
 - **Prerequisites:** «gate ids that must be PASS before this one may leave DRAFT, or none»

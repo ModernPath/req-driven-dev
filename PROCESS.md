@@ -82,7 +82,7 @@ for an applied change belongs to the change itself and its gate records.
 | `CODE` | Implementing files, symbols, revisions, branches, and changes |
 | `TEST_CASE` | Stable identity, targeted UR scenario or SR clause, expected observation |
 | `TEST_RESULT` | Outcome, RED/passing role, validity, command/report, environment, and tested fingerprint |
-| `EC` | Persistent architecture, quality, or engineering constraint; explicit scope, source, rationale, lifecycle, and verification method |
+| `EC` | Persistent architecture, quality, or engineering constraint; proposal evidence, authority, explicit scope, rationale, lifecycle, and verification method |
 
 Acceptance scenarios are UR content, not separate lifecycle records. Split an
 SR that contains independently implementable behaviors. Projects may retain
@@ -109,11 +109,16 @@ evidence part of the SR lower trace.
 Engineering conformance is a separate trace. For every selected scope, resolve
 the complete flat set of `ACTIVE` ECs whose declared scope matches the affected
 repository, language, service, domain, or path. ECs are not inherited through
-profiles and are never copied onto URs or SRs. The engineering trace is complete
-when the applicable set is recorded at the exact fingerprint and every member
-passes its declared verification. Ambiguous applicability, a missing
-verification method, or an unmet active EC fails the trace. A proposed,
-superseded, or retired EC does not apply.
+profiles and are never copied onto URs or SRs. Resolve and fingerprint this set
+after reconnaissance establishes the affected surface; initial resolution is
+planning progress, not a change to the frozen work-selection fingerprint.
+
+Engineering checks produce separate trace-gate results for the planning packet,
+the pre-delivery candidate, and the delivered revision. Each result records the
+exact applicable EC set and target fingerprint, and every member must pass its
+declared verification. Ambiguous applicability, a missing verification method,
+or an unmet active EC fails the trace. A proposed, superseded, or retired EC does
+not apply.
 
 ## Lifecycle states
 
@@ -149,7 +154,7 @@ lifecycle. Evidence conclusions are not completion states:
 
 | Status | Meaning |
 |---|---|
-| `PROPOSED` | Constraint statement, source, scope, rationale, and verification method are being prepared for human activation |
+| `PROPOSED` | Constraint statement, proposal evidence, scope, rationale, and verification method are being prepared for human activation |
 | `ACTIVE` | Human-approved constraint included whenever its declared scope applies |
 | `SUPERSEDED` | Terminal constraint version replaced by a named successor |
 | `RETIRED` | Terminal constraint removed by an attributable human decision |
@@ -158,11 +163,12 @@ Activating, superseding, or retiring an EC is a human decision. Code can prove
 an observed convention but cannot make it normative. Changing an active EC's
 statement, scope, or verification method creates a successor rather than
 silently changing the approved constraint. EC activation is prospective from
-the effective release or store revision recorded by its activation gate. A
-changed applicable set makes a nonterminal selection's engineering, cold-review,
-and entry gates stale and returns it to planning; it does not reopen a `DONE`
-scope delivered before that effective point unless the activation decision
-explicitly names it for remediation.
+the effective release or store revision recorded by its activation gate. After
+the initial post-reconnaissance resolution, a changed affected surface or
+applicable set makes a nonterminal selection's engineering, cold-review, and
+entry gates stale and returns it to planning. It does not reopen a `DONE` scope
+delivered before that effective point unless the activation decision explicitly
+names it for remediation.
 
 ### Derived requirement hold
 
@@ -211,7 +217,7 @@ not a gate answer.
 | Transition | Required trace `PASS` before human input |
 |---|---|
 | Requirement `DERIVED -> PROPOSED/PENDING_VERIFICATION/OBSOLETE` | Candidate packet and exact confirmation scope complete |
-| EC `PROPOSED -> ACTIVE` | Statement, source, exact scope, effective point, rationale, verification method, and impact are complete |
+| EC `PROPOSED -> ACTIVE` | Statement, proposal evidence, exact scope, effective point, rationale, verification method, and impact are complete |
 | EC `ACTIVE -> SUPERSEDED/RETIRED` | Successor or retirement effect and affected scope are complete |
 | Requirement `PROPOSED/PENDING_VERIFICATION -> TODO` | Its Entry packet is complete at the exact fingerprint |
 | Epic `PROPOSED -> TODO` | Its Entry packet and every selected member's entry trace are complete |
@@ -301,7 +307,11 @@ The fingerprinted packet must contain:
 
 Reconnaissance cites `DOC:`, `CODE:`, and `TEST:` sources. Generated context is
 navigation only. Material revision drift makes the packet and its dependent
-reviews stale.
+reviews stale. Once reconnaissance establishes the affected repository,
+language, service, domain, and path surface, record the exact applicable active
+EC ids and their set fingerprint in the work selection. This first resolution
+does not alter the frozen selection fingerprint; changing the resolved surface
+or EC set afterwards returns the packet to planning.
 
 Cold review runs from a context independent of packet authoring and audits the
 trace, scope, technical surface, changed flow, contracts, data, compatibility,
@@ -350,10 +360,13 @@ unmet prerequisite. A focused skill's exit is a handoff, not completion of the
 full loop.
 
 `rdd-engineering-check` is a shared utility, not a phase. Cold review invokes it
-against the planning fingerprint, and completion review invokes it against the
-delivered fingerprint. It evaluates EC conformance and records an engineering
-trace gate; it does not perform the rest of either review or change lifecycle
-state.
+against the planning fingerprint. Completion review invokes it first against
+the candidate code before integration, then records a separate result against
+the delivered fingerprint. It evaluates EC conformance and records engineering
+trace gates; it does not perform the rest of either review or change lifecycle
+state. Approved implementation changes do not stale the planning result because
+code is not an input to that result; they require the separate candidate and
+delivered results.
 
 ### AI TDD inner loop
 
@@ -450,17 +463,18 @@ Supplemental evidence causes no demotion. Re-verification may restore
 completion gate. Material approved-scope changes stale entry approval and send
 work back to planning.
 
-A completion human gate may open only when named items are `IN_REVIEW`, code is
-delivered, evidence is current at the delivered revision, state is reconciled,
-candidate relations are excluded, the applicable engineering trace is current
-and passing at the delivered revision, and gaps/deferrals/decisions are
+Delivery may proceed only after the pre-delivery candidate has a current passing
+engineering trace. A completion human gate may open only when named items are
+`IN_REVIEW`, code is delivered, evidence is current at the delivered revision,
+state is reconciled, candidate relations are excluded, the separate delivered
+engineering trace is current and passing, and gaps/deferrals/decisions are
 disclosed.
 
 | Item | `DONE` predicate after human acceptance |
 |---|---|
-| SR | Its lower trace is delivered, current, and reconciled; the scoped engineering trace passes |
-| UR | All scenarios have current upper evidence; every required SR has a complete lower trace; result is delivered and reconciled; the scoped engineering trace passes |
-| Epic | Every member is `DONE`; applicable member, Epic, and engineering gates pass; Epic scope is delivered and reconciled |
+| SR | Its lower trace is delivered, current, and reconciled; the delivered engineering trace passes |
+| UR | All scenarios have current upper evidence; every required SR has a complete lower trace; result is delivered and reconciled; the delivered engineering trace passes |
+| Epic | Every member is `DONE`; applicable member, Epic, and delivered engineering gates pass; Epic scope is delivered and reconciled |
 
 Completing one item never advances an optional related item unless that item
 independently satisfies its predicate and is named in the human gate.

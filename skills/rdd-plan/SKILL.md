@@ -25,7 +25,10 @@ sections of `PROCESS.md`.
    affected surface, control/data flow, contracts, reuse targets, dependencies,
    risks, test infrastructure, failure modes, project gates, and unknowns. Make
    the affected repository, language, service, domain, and path explicit enough
-   for `rdd-engineering-check` to resolve EC applicability independently.
+   for `rdd-engineering-check` to resolve EC applicability independently. Once
+   that surface is known, resolve and record the exact active EC ids and set
+   fingerprint in work selection; this initial post-reconnaissance update does
+   not change the frozen selection fingerprint.
 5. Enrich every selected SR with its implementation context, explicit change
    boundary, and lower-RED strategy. Define a separate upper-RED strategy for
    every selected UR.
@@ -39,4 +42,5 @@ sections of `PROCESS.md`.
 ## Report
 
 Report the selected scope, authoritative graph, reconnaissance revision,
-planned evidence, unresolved decisions, blockers, and cold-review input.
+applicable EC set and fingerprint, planned evidence, unresolved decisions,
+blockers, and cold-review input.
