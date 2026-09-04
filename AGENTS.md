@@ -11,10 +11,12 @@ serialization shapes; it does not contain a project's live delivery state.
   completion, records, and reconciliation.
 - [`skills/`](skills/) contains focused procedures that apply the process.
 - [`file-state/`](file-state/) contains the canonical serialization shapes for
-  Epic, requirement, gate, work-selection, and backlog/gap records.
-- Project instructions own only project-specific rules such as architecture,
-  repository topology, commands, environments, and test gates. They reference
-  rather than redefine the process.
+  Epic, requirement, engineering-constraint, gate, work-selection, and
+  backlog/gap records.
+- Project instructions own project-specific sources such as architecture,
+  repository topology, commands, environments, and test gates. EC records cite
+  those sources and bind their rules into delivery; neither may redefine the
+  process.
 - `CLAUDE.md` files are compatibility pointers; they do not override these
   instructions.
 
@@ -34,10 +36,12 @@ Before planning, changing, reviewing, or delivering product work:
    process pass; use `skills/rdd-verify/SKILL.md` for reverse-engineered
    `PENDING_VERIFICATION` rows, and `skills/rdd-reverse-engineer/SKILL.md` to
    adopt a codebase that has no requirement corpus yet;
+   `skills/rdd-engineering-check/SKILL.md` is the focused EC evaluator invoked
+   by cold and completion review, not a phase;
    `skills/rdd-audit/SKILL.md` is a shared utility other passes invoke, not a
    phase;
 4. read the relevant product sources, requirement records, optional epic, and
-   active work-selection record.
+   active work-selection and engineering-constraint records.
 
 ## Binding process
 

@@ -7,8 +7,9 @@ description: Prepare an epic-scoped or single-SR planning packet for controlled 
 
 Read the project `AGENTS.md`, canonical `PROCESS.md`
 (`.modernpath/rdd/PROCESS.md` in a consuming repository), relevant product
-sources, requirement records, code, tests, and optional epic. Apply the Work
-scope, Item ownership, and Planning and readiness sections of `PROCESS.md`.
+sources, requirement records, active engineering constraints, code, tests, and
+optional epic. Apply the Work scope, Item ownership, and Planning and readiness
+sections of `PROCESS.md`.
 
 ## Procedure
 
@@ -22,7 +23,9 @@ scope, Item ownership, and Planning and readiness sections of `PROCESS.md`.
    behavior.
 4. Perform technical reconnaissance at a named repository revision. Record the
    affected surface, control/data flow, contracts, reuse targets, dependencies,
-   risks, test infrastructure, failure modes, and unknowns.
+   risks, test infrastructure, failure modes, project gates, and unknowns. Make
+   the affected repository, language, service, domain, and path explicit enough
+   for `rdd-engineering-check` to resolve EC applicability independently.
 5. Enrich every selected SR with its implementation context, explicit change
    boundary, and lower-RED strategy. Define a separate upper-RED strategy for
    every selected UR.

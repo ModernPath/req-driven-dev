@@ -18,8 +18,9 @@ all semantics; this skill owns phase order and continuation.
    prerequisite. Never start from the most convenient phase.
 3. If input is not authoritative or is `DERIVED`, apply `rdd-discover` and its
    confirmation gate. Continue only with confirmed requirements and relations.
-4. Apply `rdd-plan`, then `rdd-cold-review`, then `rdd-entry-review`. Repeat from
-   the earliest stale or failed pass until the exact selected scope is `TODO`.
+4. Apply `rdd-plan`, then `rdd-cold-review` with its separate engineering check,
+   then `rdd-entry-review`. Repeat from the earliest stale or failed pass until
+   the exact selected scope is `TODO`.
 5. Run the AI TDD inner loop below. Apply `rdd-build` to changed SRs and
    `rdd-verify` to human-confirmed as-built URs or SRs. Continue until every
    selected requirement satisfies its applicable trace and is `IN_REVIEW`.
@@ -69,5 +70,6 @@ external blocker when progress cannot continue.
 ## Report
 
 Report the selected scope and fingerprint, completed phases, current lifecycle
-states, trace and human gates, evidence and delivered revision, discoveries,
-and either the terminal result or the exact next phase and prerequisite.
+states, product/engineering/human gates, evidence and delivered revision,
+discoveries, and either the terminal result or the exact next phase and
+prerequisite.

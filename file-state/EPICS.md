@@ -14,7 +14,7 @@
 - **Scope / non-goals:** «included and excluded change»
 - **Owner / release:** «owner and release»
 - **Members:** «UR/SR ids with CONFIRMED membership; candidate ids labelled CANDIDATE»
-- **Shared context:** «cross-cutting decision, specification, reconnaissance, and cold-review refs»
+- **Shared context:** «cross-cutting decision, specification, applicable EC refs, reconnaissance, and cold-review refs»
 - **Entry gates:** «GATES.md gate ids»
 - **Completion gates:** «GATES.md gate ids»
 - **Delivered revision:** «repository + revision or not delivered»

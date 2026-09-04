@@ -8,26 +8,30 @@ description: Independently audit a requirement planning packet before implementa
 Start from a context independent of the planning-authoring conversation. Read
 the project `AGENTS.md`, canonical `PROCESS.md` (`.modernpath/rdd/PROCESS.md`
 in a consuming repository), versioned product sources, selected requirements,
-optional epic/specifications, technical reconnaissance, and repository state at
-the recorded revision.
+optional epic/specifications, active engineering constraints, technical
+reconnaissance, and repository state at the recorded revision.
 
 ## Procedure
 
 1. Audit the authoritative graph and selected scope without relying on
    unstated author reasoning.
-2. Verify the affected repositories, files, symbols, entry points, callers,
+2. Invoke `skills/rdd-engineering-check/SKILL.md` against the exact planning
+   fingerprint. Import its findings and require its current trace gate to pass;
+   do not reproduce its EC-by-EC procedure here.
+3. Verify the affected repositories, files, symbols, entry points, callers,
    writers, readers, and every changed control/data-flow hop.
-3. Examine contracts, schemas, compatibility, persistence, integrations,
+4. Examine contracts, schemas, compatibility, persistence, integrations,
    failure propagation, retries, concurrency, security, and operational risks
    where applicable.
-4. Assess feasibility, dependency order, SR boundaries, reuse of established
+5. Assess feasibility, dependency order, SR boundaries, reuse of established
    patterns, testability, expected RED reasons, and proportional gates.
-5. Identify any product, architecture, acceptance, or scope choice that lacks
+6. Identify any product, architecture, acceptance, or scope choice that lacks
    human authority.
-6. Record each finding with severity, direct source, owner, and disposition as
+7. Record each finding with severity, direct source, owner, and disposition as
    `OPEN`, `RESOLVED`, `DEFERRED`, or `REJECTED`.
-7. Return the cold-review trace gate `PASS` only when the material-finding rule
-   in `PROCESS.md` is satisfied. Otherwise return `FAIL` with exact blockers.
+8. Return the cold-review trace gate `PASS` only when the engineering trace is
+   current and passing and the material-finding rule in `PROCESS.md` is
+   satisfied. Otherwise return `FAIL` with exact blockers.
 
 Use `skills/rdd-audit/SKILL.md` to resolve the packet's citations and diff its
 inventories against the code — scoped to the packet's affected surface. Its
@@ -39,5 +43,5 @@ verdict as entry approval.
 ## Report
 
 Lead with material findings, then state the reviewed fingerprints, finding
-dispositions, trace-gate verdict, and the exact handoff: `rdd-plan` after a
-failure or `rdd-entry-review` after a current pass.
+dispositions, engineering and cold-review trace-gate verdicts, and the exact
+handoff: `rdd-plan` after a failure or `rdd-entry-review` after a current pass.

@@ -19,7 +19,7 @@ authoritative store and are not recorded here.
 - **Selected scope:** «EPIC id, or the single SR id»
 - **Members:** «UR/SR ids in the frozen scope; empty for single-SR scope»
 - **Scope kind:** Epic or single SR
-- **Frozen at fingerprint:** «content/code fingerprint the selection was frozen at»
+- **Frozen at fingerprint:** «content/code plus applicable-active-EC-set fingerprint the selection was frozen at»
 - **Reconnaissance revision:** «named revision the packet was authored against»
 - **Current phase:** «source / plan / cold review / entry / build / verify / completion / triage»
 - **Waiting on:** «gate id, blocker, external prerequisite, or nothing»

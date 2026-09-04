@@ -25,11 +25,14 @@ records, and derived views.
    verify that delivered records, citations, and documents still describe the
    code; a finding it surfaces is a stop condition or routes through
    `rdd-triage`, never a silent correction.
-5. Record completion trace `PASS` only for the exact eligible fingerprint. Only
+5. Invoke `skills/rdd-engineering-check/SKILL.md` against the delivered
+   fingerprint. Stop unless the complete applicable active EC set has a current
+   engineering trace `PASS`.
+6. Record completion trace `PASS` only for the exact eligible fingerprint. Only
    then make the scoped human completion gate `OPEN` and present its brief.
-6. Do not answer the gate for the human. If the authorized human answers,
+7. Do not answer the gate for the human. If the authorized human answers,
    record the real actor, role, exact scope, answer, and `USER:` source.
-7. Apply `DONE` only to accepted named entities that independently satisfy the
+8. Apply `DONE` only to accepted named entities that independently satisfy the
    complete applicable predicate. Apply member requirements before a named
    epic. Route rejection or requested changes through `rdd-triage` to the
    earliest invalidated phase.
@@ -38,4 +41,4 @@ records, and derived views.
 
 Report proven, contradicted, incomplete, indirect, and missing completion
 facts; delivered revision; reconciliation result; gate states; applied
-transitions; and remaining work.
+transitions; applicable ECs and engineering verdict; and remaining work.

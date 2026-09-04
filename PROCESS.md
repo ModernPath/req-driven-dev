@@ -17,10 +17,14 @@ UPPER (UR): UR -- contains --> acceptance scenario -> TEST_CASE -> TEST_RESULT
 
 LOWER (SR): SR -> CODE -> TEST_CASE -> TEST_RESULT
 
+ENGINEERING: selected scope -> applicable ACTIVE EC -> engineering trace gate
+
 EPIC: PROPOSED -[HUMAN]-> TODO -> IN_PROGRESS -> IN_REVIEW -[HUMAN]-> DONE
 
 UR/SR: DERIVED -[HUMAN]-> PROPOSED -[HUMAN]-> TODO -> IN_PROGRESS -> IN_REVIEW -[HUMAN]-> DONE
 UR/SR: DERIVED -[HUMAN]-> PENDING_VERIFICATION -[HUMAN]-> TODO -> IN_PROGRESS -> IN_REVIEW -[HUMAN]-> DONE
+
+EC: PROPOSED -[HUMAN]-> ACTIVE -[HUMAN]-> SUPERSEDED | RETIRED
 
 TRACE: PENDING -> PASS | FAIL; PASS | FAIL -> STALE -> PASS | FAIL
 
@@ -33,6 +37,11 @@ path. SR evidence is lower evidence, exercised at the appropriate unit, API,
 component, contract, or integration boundary. Both are red-first. They are
 evidence classes owned by different requirement types, not two arms of one
 requirement.
+
+An engineering constraint (`EC`) is a persistent architectural, quality, or
+engineering rule. It is not product behavior and does not use the UR/SR work
+lifecycle. Applicable active ECs are evaluated independently by an engineering
+trace gate during cold review and again against the delivered revision.
 
 ## Authority
 
@@ -49,6 +58,7 @@ be established from authoritative records, code, tests, or runtime evidence.
 | `TEST:<path>:<name>` | Stable test-case identity |
 | `RUN:<command-or-report>` | Observed test or runtime result |
 | `EPIC:<path>#<section>` | Existing Epic record |
+| `EC:<id>` | Active engineering constraint in the authoritative process store |
 
 Missing support is an open question. Conflicting support remains a conflict
 until a human resolves it. Code proves existing behavior, not intended behavior.
@@ -72,6 +82,7 @@ for an applied change belongs to the change itself and its gate records.
 | `CODE` | Implementing files, symbols, revisions, branches, and changes |
 | `TEST_CASE` | Stable identity, targeted UR scenario or SR clause, expected observation |
 | `TEST_RESULT` | Outcome, RED/passing role, validity, command/report, environment, and tested fingerprint |
+| `EC` | Persistent architecture, quality, or engineering constraint; explicit scope, source, rationale, lifecycle, and verification method |
 
 Acceptance scenarios are UR content, not separate lifecycle records. Split an
 SR that contains independently implementable behaviors. Projects may retain
@@ -94,6 +105,15 @@ a gap. A code link identifies implementation; it does not prove correctness.
 A test covering multiple clauses must identify every target and assertion. A
 UR-to-SR relation makes the SR part of the UR trace; it does not make UR upper
 evidence part of the SR lower trace.
+
+Engineering conformance is a separate trace. For every selected scope, resolve
+the complete flat set of `ACTIVE` ECs whose declared scope matches the affected
+repository, language, service, domain, or path. ECs are not inherited through
+profiles and are never copied onto URs or SRs. The engineering trace is complete
+when the applicable set is recorded at the exact fingerprint and every member
+passes its declared verification. Ambiguous applicability, a missing
+verification method, or an unmet active EC fails the trace. A proposed,
+superseded, or retired EC does not apply.
 
 ## Lifecycle states
 
@@ -124,6 +144,25 @@ lifecycle. Evidence conclusions are not completion states:
 
 - `LOWER_VERIFIED`: current lower evidence for an SR.
 - `UPPER_VALIDATED`: current upper evidence for UR acceptance content.
+
+### Engineering-constraint states
+
+| Status | Meaning |
+|---|---|
+| `PROPOSED` | Constraint statement, source, scope, rationale, and verification method are being prepared for human activation |
+| `ACTIVE` | Human-approved constraint included whenever its declared scope applies |
+| `SUPERSEDED` | Terminal constraint version replaced by a named successor |
+| `RETIRED` | Terminal constraint removed by an attributable human decision |
+
+Activating, superseding, or retiring an EC is a human decision. Code can prove
+an observed convention but cannot make it normative. Changing an active EC's
+statement, scope, or verification method creates a successor rather than
+silently changing the approved constraint. EC activation is prospective from
+the effective release or store revision recorded by its activation gate. A
+changed applicable set makes a nonterminal selection's engineering, cold-review,
+and entry gates stale and returns it to planning; it does not reopen a `DONE`
+scope delivered before that effective point unless the activation decision
+explicitly names it for remediation.
 
 ### Derived requirement hold
 
@@ -172,6 +211,8 @@ not a gate answer.
 | Transition | Required trace `PASS` before human input |
 |---|---|
 | Requirement `DERIVED -> PROPOSED/PENDING_VERIFICATION/OBSOLETE` | Candidate packet and exact confirmation scope complete |
+| EC `PROPOSED -> ACTIVE` | Statement, source, exact scope, effective point, rationale, verification method, and impact are complete |
+| EC `ACTIVE -> SUPERSEDED/RETIRED` | Successor or retirement effect and affected scope are complete |
 | Requirement `PROPOSED/PENDING_VERIFICATION -> TODO` | Its Entry packet is complete at the exact fingerprint |
 | Epic `PROPOSED -> TODO` | Its Entry packet and every selected member's entry trace are complete |
 | Requirement `IN_REVIEW -> DONE` | Its completion predicate is satisfied at the delivered fingerprint |
@@ -271,6 +312,12 @@ in-scope deferred correctness, security, data-loss, contract, traceability, or
 testability findings fail the cold-review trace gate. Technical review cannot
 grant entry approval.
 
+Cold review invokes `rdd-engineering-check` rather than embedding EC evaluation.
+A current engineering trace `PASS` at the planning fingerprint is a prerequisite
+for cold-review `PASS`. Engineering findings join the cold-review finding list,
+but the broader technical review remains responsible for risks not expressed as
+ECs; the flat EC set is not presumed complete.
+
 Entry review evaluates the complete packet at its exact fingerprint. Only a
 current entry trace `PASS` may open the human entry gate. Do not create or
 change tests or implementation until every selected item is `TODO`.
@@ -301,6 +348,12 @@ focused skill alone only when the requested scope explicitly ends at that pass.
 Before each phase, reconcile answered gates and state, then select the earliest
 unmet prerequisite. A focused skill's exit is a handoff, not completion of the
 full loop.
+
+`rdd-engineering-check` is a shared utility, not a phase. Cold review invokes it
+against the planning fingerprint, and completion review invokes it against the
+delivered fingerprint. It evaluates EC conformance and records an engineering
+trace gate; it does not perform the rest of either review or change lifecycle
+state.
 
 ### AI TDD inner loop
 
@@ -399,13 +452,15 @@ work back to planning.
 
 A completion human gate may open only when named items are `IN_REVIEW`, code is
 delivered, evidence is current at the delivered revision, state is reconciled,
-candidate relations are excluded, and gaps/deferrals/decisions are disclosed.
+candidate relations are excluded, the applicable engineering trace is current
+and passing at the delivered revision, and gaps/deferrals/decisions are
+disclosed.
 
 | Item | `DONE` predicate after human acceptance |
 |---|---|
-| SR | Its lower trace is delivered, current, and reconciled |
-| UR | All scenarios have current upper evidence; every required SR has a complete lower trace; result is delivered and reconciled |
-| Epic | Every member is `DONE`; applicable member and declared Epic gates pass; Epic scope is delivered and reconciled |
+| SR | Its lower trace is delivered, current, and reconciled; the scoped engineering trace passes |
+| UR | All scenarios have current upper evidence; every required SR has a complete lower trace; result is delivered and reconciled; the scoped engineering trace passes |
+| Epic | Every member is `DONE`; applicable member, Epic, and engineering gates pass; Epic scope is delivered and reconciled |
 
 Completing one item never advances an optional related item unless that item
 independently satisfies its predicate and is named in the human gate.
@@ -431,22 +486,24 @@ currency is checkable per file.
 file-state/
   EPICS.md
   REQUIREMENTS.md
+  ENGINEERING-CONSTRAINTS.md
   GATES.md
   WORK-SELECTION.md
   BACKLOG.md
 ```
 
 `EPICS.md` stores optional grouping records. `REQUIREMENTS.md` stores URs, SRs,
-declared relations, and trace references. `GATES.md` stores every trace and
-human gate record. `WORK-SELECTION.md` stores the frozen scope, suspended
-selections, and selection history. `BACKLOG.md` stores unrouted triage items
-and gap records. Derived queues and progress views — including the pending
-human-decision projection — are regenerated, not backed up separately.
+declared relations, and trace references. `ENGINEERING-CONSTRAINTS.md` stores
+the flat EC set and its lifecycle. `GATES.md` stores every trace and human gate
+record. `WORK-SELECTION.md` stores the frozen scope, suspended selections, and
+selection history. `BACKLOG.md` stores unrouted triage items and gap records.
+Derived queues and progress views — including the pending human-decision
+projection — are regenerated, not backed up separately.
 
 | Concern | Authority |
 |---|---|
 | Product/domain/architecture/contracts | Product documents and schemas |
-| Epic, requirement, relation, gate, decision, release, and work-selection state | Authoritative process store |
+| Epic, requirement, relation, EC, gate, decision, release, and work-selection state | Authoritative process store |
 | Code, test cases, and results | Implementation repository plus exact evidence references |
 | Aggregate progress and human queues | Generated projections; never lifecycle authority |
 
@@ -470,6 +527,7 @@ After every transition, update the complete affected graph and run checks for:
 - valid identities/statuses and reciprocal declared relations;
 - stable test identities, revision-pinned validity, and invalidation cascades;
 - exact gate fingerprints and legal gate/state transitions;
+- exact applicable active EC sets and current engineering-trace results;
 - no `TODO` without applied entry approval;
 - no `DONE` without delivered evidence, reconciliation, and applied completion;
 - isolation of `DERIVED` items and candidate links from authoritative scope;
@@ -484,6 +542,7 @@ human decisions.
 |---|---|
 | Inferred possible requirement | `DERIVED` plus confirmation gate; links remain candidate-only |
 | Directly sourced requirement | `PROPOSED` UR or SR |
+| Observed or requested architecture, quality, or engineering rule | `PROPOSED` EC; inactive until its human activation gate closes |
 | Missing human decision or ambiguity | Decision gate; `BLOCKED` only when work cannot proceed |
 | Known future work | `DEFERRED` with reason, owner, and target |
 | Capability/specification gap | Gap linked to affected traces |
