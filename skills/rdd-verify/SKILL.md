@@ -31,8 +31,9 @@ approval or prove delivery.
   `DONE` also requires the applicable approval, authoritative-source
   delivery, and reconciliation conditions.
 - If the implementation contradicts the row, record the discovery and route a
-  separate red-first change. Do not silently change behavior during a
-  verification pass.
+  red-first correction through triage: use build when current approval covers
+  it, or renewed planning when scope/intent changes. Do not change behavior
+  during the verification pass.
 
 ## Enter through the same gate as any other change
 
@@ -67,11 +68,11 @@ introduces a cross-cutting decision, return it to Epic-scoped planning. In
 either scope, fulfill the current planning, reconnaissance, cold-review,
 test-strategy, work-selection, and entry-brief facts.
 
-Then obtain strict human entry approval for every selected requirement and
-Epic. An already approved related entity does not return to `TODO` merely
-because another requirement starts. Move the selected requirement to `TODO`
-before changing a test. If the Entry packet is incomplete or the entry answer
-is absent, stop and route the entry first.
+Then require current applied human entry approval for the affected requirements
+and Epic. New entrants move to `TODO` before tests change; approved resumed
+items keep their strongest supported state. Reopen reviewed work via the
+canonical correction/invalidation route before edits. If the Entry packet or
+approval is absent or stale, route that prerequisite first.
 Verification outside the authoritative work selection is invisible to planning,
 and a test written before the gate cannot be traced to approved intent.
 
@@ -93,7 +94,10 @@ For each row, require all of the following:
    that it executed.
 8. Observe the expected failure before the passing result. For already-shipped
    behavior, use a safe local mutation or equivalent targeted failure, restore
-   it immediately, and inspect the diff before continuing.
+   it immediately, and inspect the diff before continuing. Record a separate
+   `SENSITIVITY_RED` result with mutation and restoration proof and assess it
+   `RETAINED`. Reuse retained RED for unchanged clauses/assertions on resume;
+   restored code does not invalidate that historical observation.
 9. Run proportional regression gates and record evidence against the current
    revision.
 10. Cite evidence by stable test path and name, for example
@@ -113,7 +117,9 @@ assertion remains unverified.
    demonstrate its relevant failure mode. Otherwise, add the smallest test.
 4. Restore any temporary mutation, run the focused test green, then run the
    required regression gates.
-5. Update the authoritative requirement, optional related epic, evidence, and
+5. Store separate RED and passing/regression observations with their own
+   fingerprints and role-specific validity assessments. Update the authoritative
+   requirement, optional related epic, evidence, and
    work-selection records atomically; in a store-backed repository, refresh
    the materialized snapshots afterwards.
 6. Advance only the evidence conclusion justified by the run. Move the selected
@@ -155,9 +161,11 @@ assertion remains unverified.
 Do not weaken a test to promote a row.
 
 - If the row is only an inference that no human confirmed as a requirement,
-  move it to `DERIVED`, record candidate links, and emit its confirmation gate.
+  report the authority contradiction through triage, hold downstream work, and
+  emit its confirmation gate; do not silently erase an existing human approval.
 - If the implementation cannot satisfy the row, record the contradiction and
-  route the required new or changed SR through planning.
+  route through triage. An in-scope defect uses the approved correction route
+  to build; a missing or changed requirement/decision needs planning.
 - If verification needs unavailable infrastructure, keep the row
   `PENDING_VERIFICATION` before entry; after entry, use `BLOCKED` and record the
   suspended `TODO` or `IN_PROGRESS` state.
@@ -181,3 +189,13 @@ Report:
 Exit only when every touched row has current direct evidence or an explicit
 reason it remains unverified, all temporary mutations are gone, and repository
 state passes its deterministic checks.
+
+## Execution contract
+
+- Input: confirmed as-built scope with current applied entry approval, no hold,
+  and missing/stale evidence; new entrants TODO, resumed work IN_PROGRESS.
+- Writes: scoped tests and safely restored mutations, per-run observations and
+  assessments, evidence-backed transitions, and durable next action; no new behavior.
+- Exit: applicable current trace and IN_REVIEW, or an exact missing fact/hold.
+  Completion belongs to `rdd-completion-review`; observed defects route to build
+  only after triage establishes the existing approval or renewed entry it needs.

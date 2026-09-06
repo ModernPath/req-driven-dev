@@ -46,8 +46,9 @@ apply that model; `file-state/` serializes its records without redefining it.
 | `AGENTS.md` | shared agent policy and canonical entry point |
 | `PROCESS.md` | complete canonical process |
 | `CLAUDE.md` | root compatibility entry required for Claude discovery |
-| `skills/` | full-loop orchestration plus focused procedures for discovery, planning, review, building, triage, completion, and as-built verification; a focused flat-EC evaluator (`rdd-engineering-check`); corpus adoption for codebases without requirement records (`rdd-reverse-engineer`); a shared document/citation auditing utility (`rdd-audit`) |
+| `skills/` | full-loop orchestration and focused procedures with input/write/exit contracts; a flat-EC evaluator; resumable bounded corpus adoption; a scoped document/citation auditor with optional examples and adapter references |
 | `file-state/` | canonical serialization shapes for Epic, requirement, engineering-constraint, gate, work-selection, and backlog/gap records |
+| `tests/` | executable citation-auditor regressions and lifecycle walkthrough scenarios |
 
 ## Distribution
 
@@ -74,5 +75,23 @@ Changes to lifecycle, status meanings, trace relationships, gate requirements,
 evidence rules, engineering-constraint semantics, or record ownership belong in
 `PROCESS.md`. Validate internal links and search the skills and flat-file shapes
 for competing authority statements whenever it changes.
+
+Run executable tooling regressions with Node's built-in test runner:
+
+```bash
+node --test tests/*.test.mjs
+git diff --check
+```
+
+Use [the lifecycle scenarios](tests/process-scenarios.md) to forward-test changed
+instructions in a fresh reviewer context. These are behavioral walkthroughs,
+not an implemented process-store engine or a substitute for an adopter's
+transition tests. Frontmatter/link validation alone cannot establish that the
+loop is executable.
+
+The evidence schema separates immutable runs from append-only assessments:
+historical RED may be `RETAINED`, while passing/regression evidence must be
+`CURRENT` at the relevant target. Older combined rows need their original run
+reports to migrate accurately; do not infer missing historical fingerprints.
 
 License: MIT.

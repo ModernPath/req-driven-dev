@@ -11,13 +11,14 @@
 Neither record type is a requirement. Neither counts toward trace, release,
 readiness, coverage, progress, or completion. Promotion out of this file always
 goes through `PROCESS.md` routing — a directly sourced item to `PROPOSED`, an
-inferred one to `DERIVED` plus its confirmation gate.
+inferred behavior to `DERIVED` plus its confirmation gate, and an observed or
+requested engineering rule to `PROPOSED` EC plus its human activation gate.
 
 ## Triage backlog
 
 Discoveries with unclear ownership or a cross-cutting concern, held until a
-human assigns them. An item that already has an owner and a source is a
-requirement and does not belong here.
+human assigns them. An item whose owner and route are known belongs in the
+appropriate requirement, EC, gap, or decision record rather than this backlog.
 
 ## BACKLOG-«NNN» — «Discovery in one line»
 

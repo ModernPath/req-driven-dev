@@ -123,6 +123,14 @@ test('a missing requested root is not silently ignored', t => {
   assert.match(result.output, /absent-docs/);
 });
 
+test('default roots include a standalone architecture document without docs', t => {
+  const result = audit(t, '# Unselected claims', {
+    'ARCHITECTURE.md': 'CODE:behavior.test.ts:checksBehavior',
+  }, []);
+  assert.equal(result.status, 0, result.output);
+  assert.match(result.output, /checked=1/);
+});
+
 test('example-only input is exempt, never counted as a successful check', t => {
   const result = audit(t, '```text example-citation\nTEST:absent.test.ts:example\nDOC:absent.md#Example\n```');
   assert.equal(result.status, 2, result.output);

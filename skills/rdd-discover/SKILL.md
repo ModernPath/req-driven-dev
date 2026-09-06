@@ -37,3 +37,11 @@ Derived requirement hold, Gates, and Discoveries/releases/conflicts.
 Report changed sources, confirmed facts, `DERIVED` candidates, conflicts,
 confirmation-gate results, questions requiring human authority, and either the
 next eligible planning input or exact hold.
+
+## Execution contract
+
+- Input: raw sources, observations, or candidates; no downstream approval assumed.
+- Writes: sourced documentation, candidate/confirmation records, attributable
+  confirmation applications, and next action; no tests or implementation.
+- Exit: authoritative planning input or an exact confirmation/decision hold;
+  candidate relations remain separate from authoritative scope.

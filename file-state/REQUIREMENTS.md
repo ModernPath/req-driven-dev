@@ -22,13 +22,33 @@
 
 ### Trace references
 
-| Evidence class | Target | Code | Test case | RED result | Passing result | Outcome | Environment | Fingerprint | Validity/revision |
-|---|---|---|---|---|---|---|---|---|---|
-| UR upper | «UR scenario or N/A» | «code refs» | TEST: | RUN: | RUN: | PASS / FAIL / SKIP | «when relevant» | «content/code fingerprint» | CURRENT / STALE / INVALID / INHERITED_UNVERIFIED + revision |
-| SR lower | «SR clause or N/A» | CODE: | TEST: | RUN: | RUN: | PASS / FAIL / SKIP | «when relevant» | «content/code fingerprint» | CURRENT / STALE / INVALID / INHERITED_UNVERIFIED + revision |
+| Evidence class | Target | Code | Test case | Historical RED result ids | Passing/regression result ids |
+|---|---|---|---|---|---|
+| UR upper | «UR scenario or N/A» | «code refs» | TEST: | «result ids» | «result ids» |
+| SR lower | «SR clause or N/A» | CODE: | TEST: | «result ids» | «result ids» |
 
-The RED/Passing split carries each result's role; `Outcome`, `Environment`,
-and `Fingerprint` carry the remaining mandated evidence-record fields.
+### Evidence results
+
+Repeat this block for each immutable run; never share one outcome or fingerprint
+between RED and passing results. Store-backed serializers may reference the
+equivalent complete result records by id.
+
+- **Result id / role:** «id» / BASELINE_RED / SENSITIVITY_RED / PASSING / REGRESSION
+- **Target / assertion fingerprint:** «exact clause or scenario and exercised assertions»
+- **Test case / code:** TEST: / CODE:
+- **Observed outcome:** PASS / FAIL / SKIP
+- **Command / report:** RUN:«exact command and preserved report»
+- **Environment:** «relevant configuration/runtime, or N/A with basis»
+- **Tested fingerprint / revision:** «code/configuration fingerprint and revision; record patch/tree fingerprint for an uncommitted mutation»
+- **Expected RED cause:** «assertion and observed expected failure, or N/A»
+- **Mutation / restoration:** «sensitivity mutation/target, original fingerprint, restored fingerprint and verification; N/A for other roles»
+
+Validity assessments are append-only; changing an assessment never rewrites the
+observation. Historical RED uses `RETAINED`, not a claim of passing at delivery.
+
+| Assessed at | Validity | Assessment target/revision | Basis / confirming run |
+|---|---|---|---|
+| «timestamp» | CURRENT / RETAINED / STALE / INVALID / INHERITED_UNVERIFIED | «baseline or candidate/delivered fingerprint + revision» | «role-specific basis and direct evidence; prior run/equivalence proof when confirming at a new target» |
 
 ### Gates and delivery
 
@@ -38,4 +58,6 @@ and `Fingerprint` carry the remaining mandated evidence-record fields.
 - **Engineering-check gates:** «GATES.md gate ids»
 - **Completion gates:** «GATES.md gate ids»
 - **Delivered revision:** «repository + revision or not delivered»
+- **Review corrections:** «direct finding, unchanged approval, affected items, correction boundary, required reruns, and resolution; or none»
+- **Hold history:** «WORK-SELECTION.md per-item hold/restoration rows, or none»
 - **Gaps / deferrals / blockers / notes:** «refs or none»

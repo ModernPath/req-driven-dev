@@ -29,7 +29,9 @@ order.
    until an attributable human answer is applied.
 6. For feedback, determine whether one standalone or UR-linked SR can address
    it without changing user outcome, acceptance, or a cross-cutting decision.
-   Otherwise route it to epic-scoped planning.
+   For an implementation/review failure within current approval, record the
+   correction boundary and required reruns, apply the scoped corrective demotion,
+   and route to `rdd-build`. Otherwise route changed scope to planning.
 7. Re-evaluate stale gates and evidence, then reconcile authoritative records,
    release scope, work selection, and derived views. Never promote to `TODO`
    without the strict entry gate.
@@ -41,3 +43,11 @@ Do not change product code in this pass.
 Report each routed item, attributable source, changed state, stale evidence or
 gates, remaining human decisions, and the exact focused skill that resumes the
 loop.
+
+## Execution contract
+
+- Input: sourced discovery or feedback and affected state at any lifecycle point.
+- Writes: routed candidates, decisions, findings, holds with per-item suspended-
+  from state, justified demotions, and reconciled next-action records; no code.
+- Exit: exact affected scope and next skill, or an attributable decision/external
+  hold. Releasing a hold reassesses evidence; it does not blindly restore status.

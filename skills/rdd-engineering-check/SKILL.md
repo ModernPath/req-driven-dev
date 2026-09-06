@@ -36,15 +36,18 @@ reconnaissance, relevant code and configuration, and current gate records.
    is complete, every applicable EC is proven conformant, and no applicability
    conflict is unresolved. If no EC applies, record `0 applicable`, the
    resolution basis, and `PASS`; silence is not an evaluated result.
-6. Apply staleness only from the inputs owned by that result:
-   - `PLANNING` becomes `STALE` when the selected scope, packet,
+6. Apply staleness when any recorded input in that result's kind-specific
+   manifest changes, never from its own output or lifecycle status:
+   - `PLANNING` becomes `STALE` when the selected scope, planning inputs,
      reconnaissance revision or affected surface, applicable EC set, or an
      applicable EC changes. Approved implementation changes alone do not stale
-     it.
-   - `CANDIDATE` becomes `STALE` when its candidate code fingerprint or
-     applicable EC set changes.
-   - `DELIVERED` becomes `STALE` when its delivered fingerprint or applicable
-     EC set changes.
+     it. Appending review findings, verdicts, or human answers does not alter
+     those inputs; use the fingerprint manifests defined by `PROCESS.md`.
+   - `CANDIDATE` becomes `STALE` when its candidate code/configuration,
+     revision, scope/planning reference, applicability, or verification inputs
+     change.
+   - `DELIVERED` becomes `STALE` when the corresponding delivered-target
+     inputs change. Keep the historical candidate result distinct.
 7. Feed the findings and gate verdict to the invoking review. Candidate code
    that expands the approved affected surface invalidates planning rather than
    being treated as an ordinary code-fingerprint change.
@@ -60,3 +63,12 @@ Report the evaluated fingerprint and revision; applicable EC ids with the
 scope match that selected each one; evidence and result per EC; exclusions,
 ambiguities, and findings; the engineering trace-gate verdict; and the exact
 handoff to the invoking cold or completion review.
+
+## Execution contract
+
+- Input: exact target kind/fingerprint, authoritative EC versions/effective
+  points, and resolved affected surface; no assumed lifecycle prerequisites.
+- Writes: target-specific engineering results, per-EC evidence and findings;
+  no implementation, constraint-policy, approval, or lifecycle changes.
+- Exit: PASS or exact FAIL to the invoking review. The caller routes unchanged-
+  scope implementation failures to review correction and changed inputs to plan.
