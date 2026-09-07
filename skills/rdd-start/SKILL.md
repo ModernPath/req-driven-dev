@@ -1,6 +1,6 @@
 ---
 name: rdd-start
-description: Enter a delivery session — verify the process-store binding and active release, reconcile answered gates, take or prompt for the work scope, and route to the phase the loop actually needs, holding commit and check discipline for the whole session. Use at the start of any product-work session, or when asked to start, continue, or pick up requirement-driven work. Not a substitute for any phase skill.
+description: Enter a delivery session — verify the process-store binding and active release, reconcile answered gates, take or prompt for the work scope, and route to the phase the loop actually needs, holding commit and check discipline for the whole session. Use at the start of any product-work session; when asked to start, continue, or pick up requirement-driven work; and whenever the question is what to work on next, where the loop stands, what is waiting on a decision, or what is blocked. Not a substitute for any phase skill.
 ---
 
 # Start a delivery session
@@ -25,14 +25,35 @@ Read the project `AGENTS.md` and the canonical `PROCESS.md` — installed at
    header against the store revision. A stale snapshot is refreshed, never
    edited.
 
+The pending-decision projection may already have been delivered into the
+session by the host — a session-start brief injected as context rather than
+requested. That is the store's own answer arriving early, not ambient
+background: date it against the store revision before relying on it, and
+refresh it when it cannot be dated. A projection whose currency is unknown is
+reported as unknown, never presented as current.
+
 An unmet preflight fact is the report. Do not select work past it.
 
 ## Take the scope
 
 Accept the work scope as the argument: an Epic id, a single SR id, or a raw
-request. Without one, present the current work selection and the routed
-`PROPOSED`/`TODO` queue and ask the human to choose; never pick a release
+request. Without one — including when the request is an orientation question
+rather than a scope — answer from the store: read the pending human decisions
+and the routed `PROPOSED`/`TODO` queue through the store's own projection
+read, present them, and ask the human to choose. Never pick a release
 commitment silently.
+
+Version control, change lists, and the working tree describe the repository,
+not the loop. They are never the source for what to do next; a session that
+answers an orientation question from them has skipped this skill.
+
+Rank what you present by what a single human answer releases: an `OPEN` human
+gate holding built `IN_REVIEW` work outranks unstarted work, and a gate
+holding many items outranks one holding few. State the distribution across
+awaiting-decision, ready-to-build, and awaiting-acceptance. A queue whose
+awaiting-acceptance bucket dwarfs its ready bucket is a finding about where
+the loop is stalled — report it as one rather than leaving the reader to count
+rows.
 
 Freeze the selection per `PROCESS.md` work scope and record it in the
 work-selection record. Packet depth is proportional to the frozen scope; no
@@ -64,3 +85,8 @@ complete loop.
 Report the store binding and how it was confirmed, the active release and its
 source, pending human decisions, the frozen scope and fingerprint, and the
 phase entered — or the exact preflight fact that stopped the session.
+
+Repository and process work that carries no requirement record — tooling,
+instructions, delivery infrastructure — is reported separately and labeled as
+such. It is real work and may be urgent, but it is not what the queue is
+asking for and never substitutes for the queue in the answer.

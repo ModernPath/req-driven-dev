@@ -23,7 +23,9 @@ transition and report the conflict rather than creating a silent local variant.
 
 ## Required reading
 
-Before planning, changing, reviewing, or delivering product work:
+Before planning, changing, reviewing, or delivering product work — and
+before answering what to work on next, where the loop stands, what is waiting
+on a decision, or what is blocked:
 
 1. read the project's root `AGENTS.md` for project-specific rules;
 2. read this file and `PROCESS.md`;
@@ -38,6 +40,13 @@ Before planning, changing, reviewing, or delivering product work:
    phase;
 4. read the relevant product sources, requirement records, optional epic, and
    active work-selection record.
+
+Being asked what to do next is session entry, not a shortcut past it. The
+answer is the store's pending human decisions and routed work, read through
+`skills/rdd-start/SKILL.md`. Version control, change lists, and the working
+tree describe the repository rather than the loop, and never answer that
+question. A project's root `AGENTS.md` names the concrete read for its own
+store; if it names none, that omission is the report.
 
 ## Binding process
 

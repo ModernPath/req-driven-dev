@@ -51,7 +51,10 @@ be established from authoritative records, code, tests, or runtime evidence.
 | `EPIC:<path>#<section>` | Existing Epic record |
 
 Missing support is an open question. Conflicting support remains a conflict
-until a human resolves it. Code proves existing behavior, not intended behavior.
+until a human resolves it. Code proves existing behavior, not intended
+behavior. Repository state — branches, diffs, change lists, and version
+control's own review queues — proves what the repository contains, not what
+the loop holds; it is never a source for selection, status, or priority.
 Here, **material** means capable of changing correctness, security, data
 integrity, a public contract, trace completeness, acceptance, or testability.
 
@@ -288,7 +291,7 @@ focused skill alone only when the requested scope explicitly ends at that pass.
 
 | Phase | Skill | Required exit |
 |---|---|---|
-| Enter session | `rdd-start` | Store binding and single active release verified from the store; answered gates reconciled; frozen scope routed to its earliest unmet phase |
+| Enter session | `rdd-start` | Store binding and single active release verified from the store; answered gates reconciled; frozen scope routed to its earliest unmet phase, or an orientation request answered from the current pending-decision projection |
 | Source/classify | `rdd-discover` | Authoritative input or an exact confirmation gate; no unconfirmed requirement proceeds |
 | Plan/reconnaissance | `rdd-plan` | Entry-packet items 1–6 and the human brief at a named revision |
 | Cold review | `rdd-cold-review` | Current cold-review trace verdict and finding dispositions |
@@ -442,6 +445,12 @@ human gate record. `WORK-SELECTION.md` stores the frozen scope, suspended
 selections, and selection history. `BACKLOG.md` stores unrouted triage items
 and gap records. Derived queues and progress views — including the pending
 human-decision projection — are regenerated, not backed up separately.
+
+That projection is never lifecycle authority, and it is the session's answer
+to what to work on next: it is read from the store, dated against the store
+revision, and presented — ranked by what a single human answer releases. A
+projection delivered into a session ahead of the request is that same answer
+arriving early, not background context.
 
 | Concern | Authority |
 |---|---|
