@@ -18,7 +18,8 @@ packet, cold-review findings, current gate records, and relevant sources.
    stale reconnaissance, incomplete implementation context, inadequate RED
    strategy, a missing/failed/stale engineering trace, or unresolved material
    cold-review findings.
-3. Record the entry trace gate against the exact content fingerprint. Keep the
+3. Record the entry trace against the entry fingerprint: planning inputs plus
+   current prerequisite review references, excluding this gate's outputs. Keep the
    human gate `DRAFT` when the trace does not pass.
 4. After a current trace `PASS`, make only the exact scoped human gate `OPEN`
    and present its brief and recommendation in **plain product language** — see
@@ -30,11 +31,22 @@ packet, cold-review findings, current gate records, and relevant sources.
    record the real actor, role, scope, answer, and `USER:` source; apply only
    named transitions and reconcile all affected records.
 6. Move approved named `PROPOSED` or `PENDING_VERIFICATION` requirements and
-   any named proposed epic to `TODO`. Otherwise retain the strongest honest
-   state and route requested changes.
+   any named proposed epic to `TODO`. Renew invalidated approvals only for the
+   named affected subset; preserve implementation history and each item's
+   strongest supported state. Unchanged approved members need no new entry
+   answer. Otherwise retain the strongest honest state and route changes.
 
 ## Report
 
 Report the entry-trace verdict, exact human-gate state, applied transitions,
 remaining blockers, and the exact handoff: `rdd-build`, `rdd-verify`, or the
 earliest planning pass that must be repeated.
+
+## Execution contract
+
+- Input: completed planning and independent review results, exact affected
+  approval subset, and current gates; existing approved members may be further on.
+- Writes: entry trace, human gate, attributable answer/application, named
+  transitions, and reconciled next action; no implementation or invented answer.
+- Exit: current applied entry authority, an OPEN human gate, or failed/stale
+  prerequisites routed to the earliest affected planning pass.

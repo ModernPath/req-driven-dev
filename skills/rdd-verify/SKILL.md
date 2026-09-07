@@ -1,9 +1,9 @@
 ---
 name: rdd-verify
-description: Verify human-confirmed PENDING_VERIFICATION URs and SRs against real behavior, add missing tests, and advance only evidence-backed state. Use after an as-built requirement has been confirmed and needs current UR upper or SR lower evidence. Repeat verification inside the AI TDD loop without bypassing approval or delivery. Never use for DERIVED requirements or new behavior; run confirmation or the normal red-first build loop instead.
+description: Verify human-confirmed as-built URs/SRs or correct their already-approved tests, including UR-only scope with no required SR. Add missing evidence and resolve test-only review or engineering findings without changing product behavior or acceptance content. Requires current entry approval; never use for DERIVED requirements or new product implementation.
 ---
 
-# Verify confirmed as-built requirements
+# Verify requirements and correct approved tests
 
 Turn behavior described from shipped code into current direct UR upper or SR
 lower evidence.
@@ -15,8 +15,8 @@ completion meanings.
 
 ## Keep the transition honest
 
-This skill verifies confirmed as-built behavior. It does not grant human
-approval or prove delivery.
+This skill verifies confirmed as-built behavior and handles corrections confined
+to already-approved tests. It does not grant approval or change product behavior.
 
 - Never run this skill for a `DERIVED` requirement. `DERIVED` means no human has
   confirmed that the requirement exists; its proposed links are candidate
@@ -27,12 +27,14 @@ approval or prove delivery.
 - For an SR, record `LOWER_VERIFIED` and move it to `IN_REVIEW` only when its
   lower trace is current. For a UR, record `UPPER_VALIDATED` and move it to
   `IN_REVIEW` only when its upper trace and required-SR conditions are current.
+  Either kind also requires its corrective rechecks to pass before review.
 - Never move a requirement to `DONE` from test evidence alone.
   `DONE` also requires the applicable approval, authoritative-source
   delivery, and reconciliation conditions.
 - If the implementation contradicts the row, record the discovery and route a
-  separate red-first change. Do not silently change behavior during a
-  verification pass.
+  red-first correction through triage: use build when an approved SR covers
+  it, or planning when SR authority is absent or scope/intent changes. Do not
+  change behavior during the verification pass.
 
 ## Enter through the same gate as any other change
 
@@ -67,13 +69,35 @@ introduces a cross-cutting decision, return it to Epic-scoped planning. In
 either scope, fulfill the current planning, reconnaissance, cold-review,
 test-strategy, work-selection, and entry-brief facts.
 
-Then obtain strict human entry approval for every selected requirement and
-Epic. An already approved related entity does not return to `TODO` merely
-because another requirement starts. Move the selected requirement to `TODO`
-before changing a test. If the Entry packet is incomplete or the entry answer
-is absent, stop and route the entry first.
+Then require current applied human entry approval for the affected requirements
+and Epic. New entrants move to `TODO` before tests change; approved resumed
+items keep their strongest supported state. Reopen reviewed work via the
+canonical correction/invalidation route before edits. If the Entry packet or
+approval is absent or stale, route that prerequisite first.
 Verification outside the authoritative work selection is invisible to planning,
 and a test written before the gate cannot be traced to approved intent.
+
+## Correct already-approved tests
+
+For a review/EC failure confined to tests, accept the recorded correction even
+when behavioral evidence still passes. Identify its UR/SR owner, unchanged entry
+approval, correction boundary and required reruns. Reopen reviewed items via the
+canonical correction route before edits. A UR-only Epic needs no fabricated SR.
+
+Make only the test correction; preserve product behavior and approved acceptance
+content. Do not weaken assertions to satisfy an EC. Reassess retained RED against
+the targeted clauses/assertions; a naming-only edit needs no artificial RED.
+If a test is renamed, preserve prior observations and record the identity mapping
+and retention basis rather than rewriting historical test names. Changed
+assertions require renewed sensitivity evidence when the old observation no
+longer demonstrates the target.
+
+Run affected upper/lower tests and proportional regression gates, then rerun the
+failed engineering/review check at the corrected candidate fingerprint. Resolve
+the finding only after that check passes. Reconcile evidence, affected lifecycle
+states and the next action; return to completion only after both behavioral and
+corrective checks pass. Product implementation changes leave this pass and need
+an approved SR/build route or planning; acceptance or policy changes replan.
 
 ## Establish the evidence bar
 
@@ -93,7 +117,10 @@ For each row, require all of the following:
    that it executed.
 8. Observe the expected failure before the passing result. For already-shipped
    behavior, use a safe local mutation or equivalent targeted failure, restore
-   it immediately, and inspect the diff before continuing.
+   it immediately, and inspect the diff before continuing. Record a separate
+   `SENSITIVITY_RED` result with mutation and restoration proof and assess it
+   `RETAINED`. Reuse retained RED for unchanged clauses/assertions on resume;
+   restored code does not invalidate that historical observation.
 9. Run proportional regression gates and record evidence against the current
    revision.
 10. Cite evidence by stable test path and name, for example
@@ -113,11 +140,14 @@ assertion remains unverified.
    demonstrate its relevant failure mode. Otherwise, add the smallest test.
 4. Restore any temporary mutation, run the focused test green, then run the
    required regression gates.
-5. Update the authoritative requirement, optional related epic, evidence, and
+5. Store separate RED and passing/regression observations with their own
+   fingerprints and role-specific validity assessments. Update the authoritative
+   requirement, optional related epic, evidence, and
    work-selection records atomically; in a store-backed repository, refresh
    the materialized snapshots afterwards.
 6. Advance only the evidence conclusion justified by the run. Move the selected
-   requirement to `IN_REVIEW` only if its applicable trace gates pass; otherwise
+   requirement to `IN_REVIEW` only if its applicable trace gates and required
+   corrective rechecks pass; otherwise
    leave it at the strongest supported non-final state.
 7. Repeat for every approved scenario or clause lacking current evidence. Do
    not request human input for an evidence failure within the approved
@@ -155,9 +185,11 @@ assertion remains unverified.
 Do not weaken a test to promote a row.
 
 - If the row is only an inference that no human confirmed as a requirement,
-  move it to `DERIVED`, record candidate links, and emit its confirmation gate.
+  report the authority contradiction through triage, hold downstream work, and
+  emit its confirmation gate; do not silently erase an existing human approval.
 - If the implementation cannot satisfy the row, record the contradiction and
-  route the required new or changed SR through planning.
+  route through triage. A product defect uses build only under an approved SR;
+  missing SR authority or a changed requirement/decision needs planning.
 - If verification needs unavailable infrastructure, keep the row
   `PENDING_VERIFICATION` before entry; after entry, use `BLOCKED` and record the
   suspended `TODO` or `IN_PROGRESS` state.
@@ -181,3 +213,15 @@ Report:
 Exit only when every touched row has current direct evidence or an explicit
 reason it remains unverified, all temporary mutations are gone, and repository
 state passes its deterministic checks.
+
+## Execution contract
+
+- Input: confirmed as-built scope or an already-approved test-only correction,
+  with current entry approval and no hold; missing/stale evidence or a recorded
+  review/EC finding is sufficient. New entrants TODO, resumed work IN_PROGRESS;
+  reviewed work is reopened first. UR-owned tests do not require an SR.
+- Writes: scoped tests and safely restored mutations, per-run observations and
+  assessments, evidence-backed transitions, and durable next action; no new behavior.
+- Exit: applicable current trace and IN_REVIEW, or an exact missing fact/hold.
+  Completion belongs to `rdd-completion-review`; product defects route to build
+  only under an approved SR, or to planning if that authority is missing.

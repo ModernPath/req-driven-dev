@@ -20,8 +20,9 @@
 // Neither is worth suppressing automatically: a rule broad enough to catch them
 // would hide real rot. Read the failures before acting on them.
 //
-// Exits 0 when every citation resolves, 1 otherwise. Default roots: docs/ plus
-// ARCHITECTURE.md if present.
+// Exits 0 after at least one real check with no unresolved/unsupported input;
+// 1 for broken/elided references; 2 for unsupported/no-check/setup input.
+// This is a structural check, never proof of test registration or execution.
 
 import { execSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
@@ -39,7 +40,11 @@ const EXT = "exs|tsx|yaml|proto|json|ex|go|js|ts|yml|sh|py|rb|rs|java|kt|toml|sq
 // A citation may end at a NAME instead of a line — a test
 // identifier survives edits to the file, a line number does not. Group 4 is
 // that name; unchecked, `file.go:TestGoneForever` passed on file existence.
-const PREFIXED = new RegExp(`CODE: ?([A-Za-z0-9_./\\[\\]\\-]+?\\.(?:${EXT}))(?![A-Za-z0-9])(?::(?:((?:\\d+(?:-\\d+)?)(?:,\\d+(?:-\\d+)?)*)|([A-Za-z_][A-Za-z0-9_]{2,})))?`, "g");
+const PREFIXED = new RegExp(`CODE: ?([A-Za-z0-9_./\\[\\]\\-]+?\\.(?:${EXT}))(?![A-Za-z0-9])(?::(?:((?:\\d+(?:-\\d+)?)(?:,\\d+(?:-\\d+)?)*)|([A-Za-z_$][A-Za-z0-9_$]*(?:[./#-][A-Za-z0-9_$]+)*)))?(?![A-Za-z0-9_/:#-])`, "g");
+// TEST requires a stable name, optionally quoted for spaces. Consume the whole
+// hierarchical identity so a missing subtest cannot pass on its parent alone.
+// File extensions are unrestricted here; unsupported forms are reported below.
+const TESTREF = /TEST: ?([A-Za-z0-9_./\[\]-]+\.[A-Za-z0-9]+):(?:"([^"\r\n]+)"|'([^'\r\n]+)'|([A-Za-z_$][A-Za-z0-9_$]*(?:[./#-][A-Za-z0-9_$]+)*))(?![A-Za-z0-9_/:#-])/g;
 // The full grammar, not the first two parts: a citation may list lines and
 // ranges — file:N, file:N-M, file:N,M, file:N-M,P. A pattern holding only two
 // groups matches every one of them and silently skips the rest; 188 citations
@@ -56,7 +61,7 @@ const BARE = new RegExp("`([A-Za-z0-9_./\\[\\]\\-]+\\.(?:" + EXT + ")):((?:\\d+(
 // checked by nothing until RUN:2026-08-14, when 17 of them turned out to hide
 // one malformed compound anchor (`#2.1/#5`).
 const DOCREF = /DOC: ?([A-Za-z0-9_./\-]+\.md)(?:#([^ )|`\u00b7]+))?/g;
-const ELIDED = /(?:CODE:|`)(?:[A-Za-z0-9_.\\[\\]\-]+\/)*\.\.\.\/[A-Za-z0-9_.\/\\[\\]\-]*\.(?:exs|tsx|ex|go|js|ts|py|rb|rs|java|kt|sql|yml|yaml|json|sh|heex)\b/g;
+const ELIDED = /(?:CODE:|TEST:|`)(?:[A-Za-z0-9_.\[\]-]+\/)*\.\.\.\/[A-Za-z0-9_.\/\[\]-]+\.[A-Za-z0-9]+\b/g;
 
 // C8: a row naming a gap is not a citation. "there is no test_draft_service.py"
 // is the most useful thing a derivation pass produces, and an audit that counts
@@ -64,7 +69,12 @@ const ELIDED = /(?:CODE:|`)(?:[A-Za-z0-9_.\\[\\]\-]+\/)*\.\.\.\/[A-Za-z0-9_.\/\\
 const ABSENCE = /\b(no|not|missing|absent|never|does not exist|there is no|without)\b[^.]{0,60}$/i;
 
 const roots = process.argv.slice(2).filter((a) => !a.startsWith("--"));
-const targets = roots.length ? roots : ["docs", ...(existsSync("ARCHITECTURE.md") ? ["ARCHITECTURE.md"] : [])];
+const targets = roots.length ? roots : ["docs", "ARCHITECTURE.md"].filter(existsSync);
+const missingTargets = targets.filter(t => !existsSync(t));
+if (missingTargets.length) {
+  console.error("missing audit root(s): " + missingTargets.join(", "));
+  process.exit(2);
+}
 
 // Refuse to audit the prompts. Teaching material deliberately
 // quotes citations that do not resolve — an elided `CODE:.../job_processor.py`
@@ -152,11 +162,13 @@ function markdownFiles(target) {
       : e.name.endsWith(".md") ? [join(target, e.name)] : []);
 }
 
-const docs = targets.flatMap(markdownFiles).sort();
+const docs = [...new Set(targets.flatMap(markdownFiles))].sort();
 let ok = 0;
 let gaps = 0;
+let exempt = 0;
 const broken = [];
 const elided = [];
+const unsupported = [];
 
 // A fenced block whose opening line carries `example-citation` is a VERBATIM
 // DISPLAY of citations, not a set of claims: a client-facing document showing a
@@ -187,6 +199,8 @@ for (const doc of docs) {
   const lines = text.split("\n");
   const exemptRanges = exemptFenceRanges(lines);
   const inExemptFence = (idx) => exemptRanges.some(([a, b]) => idx >= a && idx < b);
+  const isExample = idx => inExemptFence(idx) ||
+    /<!--\s*example-citation\s*-->/.test(lines[text.slice(0, idx).split("\n").length - 1]);
 
   for (const m of text.matchAll(ELIDED)) {
     const line = text.slice(0, m.index).split("\n").length;
@@ -201,16 +215,29 @@ for (const doc of docs) {
   // not counted twice.
   const spans = [];
   for (const m of text.matchAll(PREFIXED)) {
+    if (!citationEnds(text, m)) continue;
     spans.push([m.index, m.index + m[0].length]);
-    if (inExemptFence(m.index)) { ok++; continue; }
+    if (isExample(m.index)) { exempt++; continue; }
     check(doc, text, m);
+  }
+  for (const m of text.matchAll(TESTREF)) {
+    if (!citationEnds(text, m)) continue;
+    spans.push([m.index, m.index + m[0].length]);
+    if (isExample(m.index)) { exempt++; continue; }
+    const normalized = Object.assign(
+      [m[0], m[1], undefined, m[2] ?? m[3] ?? m[4]],
+      { index: m.index },
+    );
+    check(doc, text, normalized);
   }
   for (const m of text.matchAll(BARE)) {
     if (spans.some(([a, b]) => m.index >= a && m.index < b)) continue;
-    if (inExemptFence(m.index)) { ok++; continue; }
+    if (isExample(m.index)) { exempt++; continue; }
     check(doc, text, m);
   }
   for (const m of text.matchAll(DOCREF)) {
+    spans.push([m.index, m.index + m[0].length]);
+    if (isExample(m.index)) { exempt++; continue; }
     const lineNo = text.slice(0, m.index).split("\n").length;
     const found = candidates(m[1]);
     if (!found.length) { broken.push({ doc, lineNo, path: m[1], why: "no such document" }); continue; }
@@ -227,6 +254,16 @@ for (const doc of docs) {
       }
     }
     ok++;
+  }
+  // Count markers independently of the supported grammar. Otherwise an unknown
+  // extension or missing TEST identity disappears from the denominator.
+  for (const m of text.matchAll(/\b(?:CODE|TEST|DOC):/g)) {
+    if (spans.some(([a]) => a === m.index)) continue;
+    if (isExample(m.index)) { exempt++; continue; }
+    unsupported.push({
+      doc, lineNo: text.slice(0, m.index).split("\n").length,
+      snippet: text.slice(m.index).split("\n")[0].slice(0, 120),
+    });
   }
 }
 
@@ -248,13 +285,13 @@ function check(doc, text, m) {
   // line out. Deliberately per-line — exempting the file would blind the audit
   // to real rot in the same document, and this audit has caught real rot there
   // (RUN:2026-08-17: two migration paths and a dead anchor).
-  if (/<!--\s*example-citation\s*-->/.test(text.split("\n")[lineNo - 1] ?? "")) { ok++; return; }
+  if (/<!--\s*example-citation\s*-->/.test(text.split("\n")[lineNo - 1] ?? "")) { exempt++; return; }
 
   const found = candidates(path);
   // A named citation is verified by the name, not the position — that is the
   // whole point of citing one.
   if (name && found.length) {
-    if (found.some((f) => readFileSync(f, "utf8").includes(name))) { ok++; return; }
+    if (found.some(f => namePresent(readFileSync(f, "utf8"), name))) { ok++; return; }
     broken.push({ doc, lineNo, path: `${path}:${name}`, why: "no such test or symbol in the file" });
     return;
   }
@@ -278,6 +315,10 @@ const total = ok + broken.length;
 console.log(`${ok}/${total} citations resolve across ${docs.length} documents` +
   (gaps ? `  (+${gaps} named gaps excused — a cited path stated as absent)` : ""));
 
+console.log("recognized=" + (total + gaps + exempt) + "; checked=" + total +
+  "; unresolved=" + broken.length + "; unsupported=" + unsupported.length +
+  "; exempt=" + exempt + "; gaps=" + gaps);
+
 if (elided.length) {
   console.log(`\n${elided.length} elided path(s) — a citation that resolves to nothing:`);
   for (const e of elided) console.log(`  ${e.doc}:${e.line}  ${e.snippet}`);
@@ -288,4 +329,29 @@ if (broken.length) {
 }
 if (!elided.length && !broken.length) console.log("no elided paths");
 
-process.exit(broken.length || elided.length ? 1 : 0);
+for (const entry of unsupported) {
+  console.log("unsupported: " + entry.doc + ":" + entry.lineNo + "  " + entry.snippet);
+}
+if (!total) console.log("no citations checked — not evidence of trace completeness");
+process.exit(broken.length || elided.length ? 1 : unsupported.length || !total ? 2 : 0);
+
+// A supported name prefix is not a supported citation. Only accept an actual
+// end, prose separator, or closing Markdown delimiter; leave other suffixes for
+// the independent marker scan to report as unsupported.
+function citationEnds(text, match) {
+  const suffix = text.slice(match.index + match[0].length);
+  return /^(?:$|[\s`"'|)\]]|[.,;!?](?=$|[\s`"'|)\]]))/.test(suffix);
+}
+
+function namePresent(source, name) {
+  const escape = value => value.replace(/[.*+?^$()|[\]{}\\]/g, "\\$&");
+  const tokenPresent = value => new RegExp("(^|[^\\w$])" + escape(value) + "(?![\\w$])", "m").test(source);
+  // This checks lexical components, not their registration/nesting in a runner.
+  // Quoted names containing spaces must occur as a complete quoted string.
+  if (/\s/.test(name)) {
+    const staticTemplate = !name.includes('${') && !name.includes('`') &&
+      source.includes('`' + name + '`');
+    return source.includes(JSON.stringify(name)) || source.includes("'" + name + "'") || staticTemplate;
+  }
+  return name.split(/[./#]/).every(tokenPresent);
+}

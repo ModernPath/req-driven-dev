@@ -15,19 +15,27 @@ Read the project `AGENTS.md` and the canonical `PROCESS.md` — installed at
    confirm it is reachable. In a store-backed repository, confirm the binding
    identity from the store itself, never from a number quoted in instructions;
    report binding drift as a defect, not a variance.
-2. Confirm the release registry holds exactly one active release with a
-   `USER:` source. No active release, or more than one, stops selection until
-   a human answers.
-3. Reconcile answered human gates and apply their consequences, then list the
+2. Read current authoritative records and reconcile applicable answered release
+   decisions first. Validate their recorded input revision, prerequisites,
+   scope, and `USER:` source; apply once, without requiring the intended active
+   release to exist already. A stale answer needs a successor gate.
+3. Confirm the reconciled release registry holds exactly one active release
+   with a `USER:` source. Otherwise stop selection at the exact release decision.
+4. Reconcile other answered human gates and apply their consequences, then list the
    pending human decisions — only `OPEN` human gates with current passing
    prerequisites.
-4. Refresh the session's working-set snapshots and check each file's snapshot
+5. Refresh the session's working-set snapshots and check each file's snapshot
    header against the store revision. A stale snapshot is refreshed, never
    edited.
 
 An unmet preflight fact is the report. Do not select work past it.
 
 ## Take the scope
+
+Resume an existing selection by its recorded next action and per-item approvals;
+do not reset its members or re-freeze unchanged inputs simply because a session
+restarted. For adoption, retain the campaign record independently of the current
+delivery selection.
 
 Accept the work scope as the argument: an Epic id, a single SR id, or a raw
 request. Without one, present the current work selection and the routed
@@ -64,3 +72,12 @@ complete loop.
 Report the store binding and how it was confirmed, the active release and its
 source, pending human decisions, the frozen scope and fingerprint, and the
 phase entered — or the exact preflight fact that stopped the session.
+
+## Execution contract
+
+- Input: repository binding, registry, gate records, and requested/current scope;
+  mixed item states are allowed, and no work is selected before preflight passes.
+- Writes: applicable answered-gate consequences, reconciled snapshots, selection
+  and exact next-action record; no inferred human decision or product edits.
+- Exit: earliest legal phase with durable inputs, or the precise failed
+  preflight/decision and condition for resuming it.

@@ -37,10 +37,21 @@ sections of `PROCESS.md`.
    trace prerequisites pass. Record blockers, conflicts, gaps, and deferrals
    rather than guessing.
 7. Assemble Entry-packet items 1–6 and the product-language brief. Reconcile
-   planning records, then hand off to `rdd-cold-review` for item 7.
+   planning records and freeze the planning input manifest/fingerprint per
+   `PROCESS.md`. Hand that snapshot to `rdd-cold-review`; item 7 is an attached
+   review output, not an input to the planning fingerprint.
 
 ## Report
 
 Report the selected scope, authoritative graph, reconnaissance revision,
 applicable EC set and fingerprint, planned evidence, unresolved decisions,
 blockers, and cold-review input.
+
+## Execution contract
+
+- Input: authoritative selected items/relations and sources; no `DERIVED`
+  dependency or candidate link is used as authority.
+- Writes: affected planning records, reconnaissance, initial EC resolution,
+  decision packets, and the versioned planning input manifest; no product edits.
+- Exit: independent-review handoff with exact inputs, or a sourced ambiguity,
+  confirmation/decision gate, and the facts needed to resume.
