@@ -105,6 +105,58 @@ test('an unsupported TEST suffix is not truncated into a pass', t => {
   assert.match(result.output, /unsupported=1/);
 });
 
+for (const reference of [
+  'TEST:behavior.test.ts:checksBehavior[MissingCase]',
+  'TEST:behavior.test.ts:checksBehavior(MissingCase)',
+  'TEST:behavior.test.ts:checksBehavior{MissingCase}',
+  'TEST:behavior.test.ts:checksBehavior@MissingCase',
+  'TEST:behavior.test.ts:checksBehavior<MissingCase>',
+  'TEST:behavior.test.ts:checksBehavior.MissingCase[OtherCase]',
+  'TEST:behavior.test.ts:"rejects invalid input"[MissingCase]',
+  'CODE:behavior.test.ts:checksBehavior[MissingCase]',
+]) {
+  test('unsupported suffix is not checked as a valid prefix: ' + reference, t => {
+    const result = audit(t, reference);
+    assert.equal(result.status, 2, result.output);
+    assert.match(result.output, /unsupported=1/);
+    assert.match(result.output, /checked=0/);
+  });
+}
+
+test('ordinary Markdown and prose citation endings still resolve', t => {
+  const result = audit(t, [
+    '`TEST:behavior.test.ts:checksBehavior`',
+    '(TEST:behavior.test.ts:checksBehavior).',
+    'TEST:behavior.test.ts:checksBehavior, with more prose.',
+    '| TEST:behavior.test.ts:"rejects invalid input" |',
+    'TEST:behavior.test.ts:checksBehavior.',
+  ].join('\n'));
+  assert.equal(result.status, 0, result.output);
+  assert.match(result.output, /checked=5/);
+});
+
+test('quoted citations resolve static template-literal test names', t => {
+  const result = audit(t, 'TEST:behavior.test.ts:"rejects invalid input"', {
+    'behavior.test.ts': 'test(`rejects invalid input`, () => {});\n',
+  });
+  assert.equal(result.status, 0, result.output);
+  assert.match(result.output, /checked=1/);
+});
+
+test('a static template-literal name must match the whole string', t => {
+  const result = audit(t, 'TEST:behavior.test.ts:"rejects invalid input"', {
+    'behavior.test.ts': 'test(`rejects invalid input twice`, () => {});\n',
+  });
+  assert.equal(result.status, 1, result.output);
+});
+
+test('template interpolation text is not a static test name', t => {
+  const result = audit(t, 'TEST:behavior.test.ts:"rejects ${value}"', {
+    'behavior.test.ts': 'test(`rejects ${value}`, () => {});\n',
+  });
+  assert.equal(result.status, 1, result.output);
+});
+
 test('unsupported canonical reference is visible beside passing references', t => {
   const result = audit(t, 'CODE:behavior.test.ts:checksBehavior\nTEST:behavior.test.ts');
   assert.equal(result.status, 2, result.output);
