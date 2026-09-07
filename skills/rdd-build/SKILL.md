@@ -39,7 +39,7 @@ code, tests, and current records.
 8. Move the SR to `IN_REVIEW` when its lower trace passes and its corrective
    findings are resolved by the required rechecks. An affected UR moves
    to `IN_REVIEW` only when its upper trace passes and every required SR is
-   `IN_REVIEW` or `DONE`.
+   `IN_REVIEW` or `DONE`, with any UR-owned corrective rechecks also passing.
 9. Reconcile the affected graph and derived views. Return remaining approved
    trace failures to `rdd-deliver` for another AI iteration. Hand fully eligible
    `IN_REVIEW` scope to `rdd-completion-review`; do not deliver or solicit

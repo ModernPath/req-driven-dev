@@ -61,9 +61,12 @@ requires an adoption/release scope or an explicit audit request.
 The checker resolves paths and line ranges, document headings, and supported
 symbol/test names. Named references establish lexical presence only, including
 the components of hierarchical test names; test runners must establish their
-actual identity and execution. Quoted test names support spaces. Unsupported
-syntax is reported, not skipped. Examples explicitly marked `example-citation`
-and named gaps are exemptions, never successful checks.
+actual identity and execution. Quoted test names support spaces, including names
+declared in static backtick strings; interpolated templates are not static names.
+A parsed name must end at a citation boundary, not an unsupported suffix such as
+`[Case]`; quote the whole name when punctuation is part of its identity.
+Unsupported syntax is reported, not skipped. Examples explicitly marked
+`example-citation` and named gaps are exemptions, never successful checks.
 
 Exit 0 means at least one reference was checked and all recognized references
 were resolved or explicitly exempted. Exit 1 reports broken/elided references;

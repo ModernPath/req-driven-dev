@@ -27,11 +27,12 @@ order.
 5. Route a proposed architecture, quality, language, service, domain, or code
    rule to a flat `PROPOSED` EC and its activation gate. It remains inactive
    until an attributable human answer is applied.
-6. For feedback, determine whether one standalone or UR-linked SR can address
-   it without changing user outcome, acceptance, or a cross-cutting decision.
-   For an implementation/review failure within current approval, record the
-   correction boundary and required reruns, apply the scoped corrective demotion,
-   and route to `rdd-build`. Otherwise route changed scope to planning.
+6. For feedback, identify whether the correction affects product implementation
+   or only already-approved tests. Within current approval, record its boundary
+   and required reruns and apply the scoped corrective demotion. Route test-only
+   corrections to `rdd-verify` under their UR/SR owner, even when a UR has no
+   required SR; route product implementation changes to `rdd-build` under an
+   approved SR. Otherwise route changed scope or missing SR authority to planning.
 7. Re-evaluate stale gates and evidence, then reconcile authoritative records,
    release scope, work selection, and derived views. Never promote to `TODO`
    without the strict entry gate.

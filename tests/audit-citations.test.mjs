@@ -135,6 +135,19 @@ test('ordinary Markdown and prose citation endings still resolve', t => {
   assert.match(result.output, /checked=5/);
 });
 
+test('a quoted parameterized name is checked as a complete name', t => {
+  const result = audit(t, 'TEST:behavior.test.ts:"checksBehavior[ActualCase]"', {
+    'behavior.test.ts': 'test("checksBehavior[ActualCase]", () => {});\n',
+  });
+  assert.equal(result.status, 0, result.output);
+  assert.match(result.output, /checked=1/);
+});
+
+test('a missing quoted parameterized name does not pass on its base name', t => {
+  const result = audit(t, 'TEST:behavior.test.ts:"checksBehavior[MissingCase]"');
+  assert.equal(result.status, 1, result.output);
+});
+
 test('quoted citations resolve static template-literal test names', t => {
   const result = audit(t, 'TEST:behavior.test.ts:"rejects invalid input"', {
     'behavior.test.ts': 'test(`rejects invalid input`, () => {});\n',

@@ -24,7 +24,8 @@ all semantics; this skill owns phase order and continuation.
    current applied approval. New entrants become `TODO`; preserve unchanged
    approved `IN_PROGRESS`, `IN_REVIEW`, and `DONE` items.
 5. Run the AI TDD inner loop below. Apply `rdd-build` to changed SRs and
-   `rdd-verify` to human-confirmed as-built URs or SRs. Continue until every
+   `rdd-verify` to human-confirmed as-built URs/SRs or their approved test-only
+   corrections (including UR-only scope). Continue until every
    selected requirement satisfies its applicable trace and is `IN_REVIEW` or
    `DONE`. Use the review-correction route for an in-scope failure on reviewed
    work; do not wait for an unmet lower clause when the failure is engineering
@@ -47,9 +48,12 @@ remains unchanged:
 
 1. Evaluate every selected UR upper trace and SR lower trace. Establish any
    required initial RED observations.
-2. Select the next unmet approved SR clause or recorded in-scope correction.
+2. Select the next unmet approved SR clause, UR verification scenario, or
+   recorded in-scope correction.
    Reopen affected reviewed items per `PROCESS.md` before edits. Apply
-   `rdd-build` or `rdd-verify` until the required traces/checks pass.
+   `rdd-build` for product implementation under an approved SR, or `rdd-verify`
+   for as-built evidence and test-only corrections under the UR/SR owner, until
+   the required traces/checks pass. Do not invent an SR for UR-owned tests.
 3. Rerun affected UR scenarios and update their separate upper evidence.
 4. Repeat for any failing or stale approved trace. Do not stop after the first
    GREEN result or completed SR while another selected trace remains unmet.

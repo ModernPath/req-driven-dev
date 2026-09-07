@@ -1,6 +1,6 @@
 ---
 name: rdd-engineering-check
-description: Evaluate the complete flat set of active engineering constraints applicable to an exact planning, pre-delivery candidate, or delivered fingerprint. Use from RDD cold review and completion review. Produces a distinct engineering trace verdict and findings for each target; it does not replace technical review, change constraint authority, or advance lifecycle state.
+description: Evaluate the complete flat set of active engineering constraints applicable to an exact planning, pre-delivery candidate, or delivered fingerprint. Use from RDD cold/completion review and their build/verify correction rechecks. Produces a distinct engineering trace verdict and findings for each target; it does not replace technical review, change constraint authority, or advance lifecycle state.
 ---
 
 # Check engineering constraints
@@ -48,7 +48,7 @@ reconnaissance, relevant code and configuration, and current gate records.
      change.
    - `DELIVERED` becomes `STALE` when the corresponding delivered-target
      inputs change. Keep the historical candidate result distinct.
-7. Feed the findings and gate verdict to the invoking review. Candidate code
+7. Feed the findings and gate verdict to the invoking review or correction pass. Candidate code
    that expands the approved affected surface invalidates planning rather than
    being treated as an ordinary code-fingerprint change.
 
@@ -62,7 +62,7 @@ superseded, or retired EC as active.
 Report the evaluated fingerprint and revision; applicable EC ids with the
 scope match that selected each one; evidence and result per EC; exclusions,
 ambiguities, and findings; the engineering trace-gate verdict; and the exact
-handoff to the invoking cold or completion review.
+handoff to the invoking review or build/verify correction pass.
 
 ## Execution contract
 
@@ -70,5 +70,5 @@ handoff to the invoking cold or completion review.
   points, and resolved affected surface; no assumed lifecycle prerequisites.
 - Writes: target-specific engineering results, per-EC evidence and findings;
   no implementation, constraint-policy, approval, or lifecycle changes.
-- Exit: PASS or exact FAIL to the invoking review. The caller routes unchanged-
+- Exit: PASS or exact FAIL to the invoking pass. The caller routes unchanged-
   scope implementation failures to review correction and changed inputs to plan.

@@ -292,7 +292,7 @@ An agent or deterministic check may apply these only from a current trace-gate
 | UR `TODO -> IN_PROGRESS` | Expected upper RED or a required SR is `IN_PROGRESS` |
 | Epic `TODO -> IN_PROGRESS` | An in-scope member is `IN_PROGRESS` |
 | SR `IN_PROGRESS -> IN_REVIEW` | Its lower trace is current and passes; any required corrective rechecks pass |
-| UR `IN_PROGRESS -> IN_REVIEW` | Required SRs are `IN_REVIEW/DONE`; current upper evidence passes |
+| UR `IN_PROGRESS -> IN_REVIEW` | Required SRs are `IN_REVIEW/DONE`; current upper evidence and required corrective rechecks pass |
 | Epic `IN_PROGRESS -> IN_REVIEW` | Members are `IN_REVIEW/DONE`; applicable trace gates pass |
 
 Agents may also apply evidence-invalidation and review-correction demotions,
@@ -306,7 +306,7 @@ a human answer.
 
 An observed upper-flow failure or an implementation/review/engineering finding
 may reopen affected `IN_REVIEW` work as `IN_PROGRESS`. Record the direct source,
-affected SRs and dependent UR/Epic items, correction boundary, unchanged entry
+affected URs/SRs and their dependent items, correction boundary, unchanged entry
 approval, and checks to rerun. This is a corrective demotion, not a forward
 transition requiring a passing implementation trace. Propagate only through
 declared dependencies; unaffected items retain their strongest supported state.
@@ -314,9 +314,13 @@ Stale affected implementation-review, candidate/delivered engineering, and
 completion gates and supersede their unclosed human gates. Do not stale planning,
 cold-review, or entry authority when their recorded inputs are unchanged.
 
-Use `rdd-build` for the correction. For a behavior defect, establish a focused
-reproduction RED against the approved clause or upper scenario. For a
-behavior-preserving engineering correction, the recorded conformance failure
+Route product implementation corrections to `rdd-build` under an approved SR.
+Route corrections confined to already-approved UR/SR tests to `rdd-verify`,
+including a UR-only Epic with no required SRs. A test-only correction does not
+require an invented SR or new relation. If a product implementation change is
+needed but no approved SR covers it, return to planning. For a behavior defect,
+establish a focused reproduction RED against the approved clause or upper
+scenario. For a behavior-preserving engineering correction, the recorded conformance failure
 is the work target; do not invent a new behavioral requirement or RED. Preserve
 admissible historical RED, rerun affected behavioral/regression evidence, and
 rerun the failed review/check after correction. Integration stays blocked until
@@ -425,7 +429,7 @@ focused skill alone only when the requested scope explicitly ends at that pass.
 | Cold review | `rdd-cold-review` | Current cold-review trace verdict and finding dispositions |
 | Entry | `rdd-entry-review` | Current applied approval for the affected subset; new entrants `TODO`, unchanged items preserved, or an explicit non-entry result |
 | Execute changed SR | `rdd-build` | Current lower evidence; eligible SR in `IN_REVIEW`; selected UR evidence updated independently |
-| Verify as-built requirement | `rdd-verify` | Current UR upper or SR lower evidence; eligible requirement in `IN_REVIEW` |
+| Verify as-built behavior / correct approved tests | `rdd-verify` | Current UR upper or SR lower evidence and passing corrective rechecks; eligible requirement in `IN_REVIEW` |
 | Deliver/complete | `rdd-completion-review` | Delivered revision, reconciled records, completion trace, and applied human result |
 | Route change | `rdd-triage` | Discovery assigned to the earliest phase it invalidates |
 
@@ -449,9 +453,10 @@ After applicable human entry approvals are applied, the AI owns the automatic
 It does not request human input while the approved fingerprint remains unchanged.
 
 ```text
-establish selected UR upper RED
-  -> select an unmet approved SR clause
-  -> SR lower RED -> GREEN -> CLEAN -> lower verify
+establish or reuse selected UR upper RED
+  -> select an unmet approved trace or recorded correction
+  -> changed SR: lower RED -> GREEN -> CLEAN -> lower verify
+     as-built evidence / test-only correction: rdd-verify
   -> rerun affected UR upper evidence
   -> all applicable trace gates PASS?
        no  -> repeat
@@ -465,8 +470,9 @@ Run the loop as follows:
    do not recreate an already-observed failure for each subsequent SR. A
    standalone SR has no upper step.
 2. If an SR trace is unmet, select one approved clause, establish its focused
-   lower RED, implement the smallest passing behavior, and perform scoped
-   behavior-preserving cleanup.
+  lower RED, implement the smallest passing behavior, and perform scoped
+   behavior-preserving cleanup. For as-built UR evidence or a test-only review
+   correction, use `rdd-verify` without requiring an SR clause.
 3. Run the SR's focused and boundary-appropriate regression gates on the
    cleaned content, then rerun each affected UR scenario.
 4. Re-evaluate every selected SR lower trace and UR upper trace independently.

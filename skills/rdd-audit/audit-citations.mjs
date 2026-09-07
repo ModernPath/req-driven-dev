@@ -215,11 +215,13 @@ for (const doc of docs) {
   // not counted twice.
   const spans = [];
   for (const m of text.matchAll(PREFIXED)) {
+    if (!citationEnds(text, m)) continue;
     spans.push([m.index, m.index + m[0].length]);
     if (isExample(m.index)) { exempt++; continue; }
     check(doc, text, m);
   }
   for (const m of text.matchAll(TESTREF)) {
+    if (!citationEnds(text, m)) continue;
     spans.push([m.index, m.index + m[0].length]);
     if (isExample(m.index)) { exempt++; continue; }
     const normalized = Object.assign(
@@ -333,13 +335,23 @@ for (const entry of unsupported) {
 if (!total) console.log("no citations checked — not evidence of trace completeness");
 process.exit(broken.length || elided.length ? 1 : unsupported.length || !total ? 2 : 0);
 
+// A supported name prefix is not a supported citation. Only accept an actual
+// end, prose separator, or closing Markdown delimiter; leave other suffixes for
+// the independent marker scan to report as unsupported.
+function citationEnds(text, match) {
+  const suffix = text.slice(match.index + match[0].length);
+  return /^(?:$|[\s`"'|)\]]|[.,;!?](?=$|[\s`"'|)\]]))/.test(suffix);
+}
+
 function namePresent(source, name) {
   const escape = value => value.replace(/[.*+?^$()|[\]{}\\]/g, "\\$&");
   const tokenPresent = value => new RegExp("(^|[^\\w$])" + escape(value) + "(?![\\w$])", "m").test(source);
   // This checks lexical components, not their registration/nesting in a runner.
   // Quoted names containing spaces must occur as a complete quoted string.
   if (/\s/.test(name)) {
-    return source.includes(JSON.stringify(name)) || source.includes("'" + name + "'");
+    const staticTemplate = !name.includes('${') && !name.includes('`') &&
+      source.includes('`' + name + '`');
+    return source.includes(JSON.stringify(name)) || source.includes("'" + name + "'") || staticTemplate;
   }
   return name.split(/[./#]/).every(tokenPresent);
 }

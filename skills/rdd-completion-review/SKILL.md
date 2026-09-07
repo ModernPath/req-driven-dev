@@ -23,8 +23,11 @@ records, and derived views.
 3. Invoke `skills/rdd-engineering-check/SKILL.md` with target `CANDIDATE`
    against the completed pre-delivery code. Do not integrate unless the complete
    applicable active EC set has a current engineering trace `PASS`.
-   On an in-scope implementation failure, record the correction and reopen
-   affected reviewed items per `PROCESS.md`, then hand off to `rdd-build`.
+   On an in-scope implementation/test failure, record the correction and reopen
+   affected reviewed items per `PROCESS.md`. Hand product implementation changes
+   to `rdd-build` under an approved SR, and test-only corrections to `rdd-verify`,
+   including UR-owned acceptance tests with no required SR. Do not fabricate an
+   SR for a test correction; a product change without approved SR scope replans.
    Changed scope/policy goes through triage to planning. Do not manufacture
    an evidence invalidation merely to make a correction eligible.
 4. If the pre-delivery audit and candidate engineering check pass, deliver

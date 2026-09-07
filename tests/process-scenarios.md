@@ -87,6 +87,34 @@ Negative variation: Correcting the finding requires a new architecture decision
 or expands EC applicability. Route to planning and the exact human decision;
 the in-scope correction route cannot authorize the expansion.
 
+## UR-only acceptance-test correction
+
+Initial facts: Epic E contains only a confirmed as-built UR-U with no required
+SRs. Current entry approval covers adding its acceptance tests. U/E are
+IN_REVIEW, upper evidence passes, and sensitivity RED is RETAINED. Candidate
+engineering finds that a new test name violates an existing active EC; the
+affected surface, product behavior and acceptance content are unchanged.
+
+Event: Continue from the candidate failure and correct the test name.
+
+Expected: Block integration and record a correction owned by U. Reopen U and
+dependent E to IN_PROGRESS, preserving current planning/cold/entry authority.
+Route from completion or triage to `rdd-verify`, whose correction input accepts
+the EC finding even though behavioral evidence still passes. Rename only the
+test, record the old/new identity mapping and retention basis, and preserve
+historical observations. Do not invent an SR, relation, behavioral requirement,
+or artificial RED. Rerun upper tests, proportional regression gates, and the
+failed candidate engineering check. Return U/E to IN_REVIEW only after the
+behavioral and corrective rechecks pass, then resume completion with delivery,
+separate delivered engineering evidence and human acceptance.
+
+Negative variations: An unresolved EC finding keeps the correction open. If
+the correction changes assertions, reassess sensitivity and obtain new evidence
+where needed. If actual product implementation must change and no approved SR
+covers it, route to planning for the necessary authority; verification cannot
+make that change under the UR test-correction exception. Changed acceptance,
+policy or affected surface also requires planning.
+
 ## Upper failure after all lower traces pass
 
 Initial facts: All planned SR lower traces pass and SRs are IN_REVIEW. UR-U's
