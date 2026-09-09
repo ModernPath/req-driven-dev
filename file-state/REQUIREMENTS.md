@@ -35,6 +35,7 @@ and `Fingerprint` carry the remaining mandated evidence-record fields.
 - **Confirmation gates:** «GATES.md gate ids, or N/A»
 - **Entry gates:** «GATES.md gate ids»
 - **Start/review gates:** «GATES.md gate ids»
+- **Engineering-check gates:** «GATES.md gate ids»
 - **Completion gates:** «GATES.md gate ids»
 - **Delivered revision:** «repository + revision or not delivered»
 - **Gaps / deferrals / blockers / notes:** «refs or none»

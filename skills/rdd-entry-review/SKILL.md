@@ -16,7 +16,8 @@ packet, cold-review findings, current gate records, and relevant sources.
 2. Fail the entry trace for missing or conflicting sources, `DERIVED` items,
    candidate links counted as authoritative, ambiguous acceptance, broad SRs,
    stale reconnaissance, incomplete implementation context, inadequate RED
-   strategy, or unresolved material cold-review findings.
+   strategy, a missing/failed/stale engineering trace, or unresolved material
+   cold-review findings.
 3. Record the entry trace gate against the exact content fingerprint. Keep the
    human gate `DRAFT` when the trace does not pass.
 4. After a current trace `PASS`, make only the exact scoped human gate `OPEN`

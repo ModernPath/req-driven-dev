@@ -10,10 +10,13 @@ EPIC -- optionally groups --> UR and/or SR
 UR -> acceptance scenario -> TEST_CASE -> TEST_RESULT
 UR acceptance scenario -- may require --> SR
 SR -> CODE -> TEST_CASE -> TEST_RESULT
+selected scope -> applicable ACTIVE EC -> engineering trace gate
 
-Each selected trace passes planning, technical review, human entry, red-first
-evidence, implementation, cleanup, verification, delivery, reconciliation,
-and human completion.
+Each selected product trace passes planning, technical review, human entry,
+red-first evidence, implementation, cleanup, verification, delivery,
+reconciliation, and human completion. Its separate engineering trace evaluates
+the applicable flat EC set during cold review, before integration, and at the
+delivered revision.
 ```
 
 Product repositories hold authoritative process records in one selected store,
@@ -43,8 +46,8 @@ apply that model; `file-state/` serializes its records without redefining it.
 | `AGENTS.md` | shared agent policy and canonical entry point |
 | `PROCESS.md` | complete canonical process |
 | `CLAUDE.md` | root compatibility entry required for Claude discovery |
-| `skills/` | full-loop orchestration plus focused procedures for discovery, planning, review, building, triage, completion, and as-built verification; corpus adoption for codebases without requirement records (`rdd-reverse-engineer`); a shared document/citation auditing utility (`rdd-audit`) |
-| `file-state/` | canonical serialization shapes for Epic, requirement, gate, work-selection, and backlog/gap records |
+| `skills/` | full-loop orchestration plus focused procedures for discovery, planning, review, building, triage, completion, and as-built verification; a focused flat-EC evaluator (`rdd-engineering-check`); corpus adoption for codebases without requirement records (`rdd-reverse-engineer`); a shared document/citation auditing utility (`rdd-audit`) |
+| `file-state/` | canonical serialization shapes for Epic, requirement, engineering-constraint, gate, work-selection, and backlog/gap records |
 
 ## Distribution
 
@@ -68,8 +71,8 @@ human gates with current passing prerequisites. Neither is an authority; see
 ## Process maintenance
 
 Changes to lifecycle, status meanings, trace relationships, gate requirements,
-evidence rules, or record ownership belong in `PROCESS.md`. Validate internal
-links and search the skills and flat-file shapes for competing authority
-statements whenever it changes.
+evidence rules, engineering-constraint semantics, or record ownership belong in
+`PROCESS.md`. Validate internal links and search the skills and flat-file shapes
+for competing authority statements whenever it changes.
 
 License: MIT.

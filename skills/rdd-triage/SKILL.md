@@ -24,10 +24,13 @@ order.
    the postponement, capability/specification gaps to gap records, unclear
    ownership to backlog, and contradicted or removed behavior to an explicit
    conflict or `OBSOLETE` decision.
-5. For feedback, determine whether one standalone or UR-linked SR can address
+5. Route a proposed architecture, quality, language, service, domain, or code
+   rule to a flat `PROPOSED` EC and its activation gate. It remains inactive
+   until an attributable human answer is applied.
+6. For feedback, determine whether one standalone or UR-linked SR can address
    it without changing user outcome, acceptance, or a cross-cutting decision.
    Otherwise route it to epic-scoped planning.
-6. Re-evaluate stale gates and evidence, then reconcile authoritative records,
+7. Re-evaluate stale gates and evidence, then reconcile authoritative records,
    release scope, work selection, and derived views. Never promote to `TODO`
    without the strict entry gate.
 

@@ -15,15 +15,15 @@ recorded prerequisite trace gate is unreadable, not implicitly open.
 
 ## GATE-«AREA»-«NNN» — «Transition or decision purpose»
 
-- **Kind:** trace or human / «confirmation, entry, decision, cold-review, start-review, completion»
+- **Kind:** trace or human / «confirmation, EC activation/retirement, engineering-check (planning/candidate/delivered), entry, decision, cold-review, start-review, completion»
 - **Transition / purpose:** «exact state transition, or the decision being asked»
-- **Exact scope:** «named EPIC/UR/SR ids this gate covers; one answer may cover an Epic and named members»
+- **Exact scope:** «named EPIC/UR/SR/EC ids this gate covers; one answer may cover an Epic and named members»
 - **Prerequisites:** «gate ids that must be PASS before this one may leave DRAFT, or none»
 - **Fingerprint:** «content/code fingerprint the gate was evaluated at»
 - **State:** «trace: PENDING / PASS / FAIL / STALE — human: DRAFT / OPEN / ANSWERED / CLOSED / SUPERSEDED»
 - **Verdict / answer:** «trace verdict with exact blockers, or the human answer as given»
 - **Actor / evaluator:** «real human actor and role for a human gate; evaluating agent or check for a trace gate»
-- **Sources:** «USER:/DOC:/CODE:/TEST:/RUN:/EPIC: support for the verdict or answer»
+- **Sources:** «USER:/DOC:/CODE:/TEST:/RUN:/EPIC:/EC: support for the verdict or answer»
 - **Timestamps:** «evaluated/opened at; answered at; closed at»
 - **Application:** «NOT_APPLICABLE / PENDING / APPLIED / FAILED» at «revision»
 - **Predecessor / successor:** «superseded gate id and successor gate id, or none»
@@ -44,5 +44,5 @@ Human gates only. Omit for trace gates.
 
 ### Holds
 
-- **Held items:** «EPIC/UR/SR ids blocked until this gate closes, or none»
+- **Held items:** «EPIC/UR/SR/EC ids blocked until this gate closes, or none»
 - **Applied transitions:** «item id -> from -> to, one per line; empty until APPLIED»

@@ -1,0 +1,4 @@
+interface:
+  display_name: "RDD Engineering Check"
+  short_description: "Check applicable engineering constraints"
+  default_prompt: "Use $rdd-engineering-check to evaluate the active engineering constraints for this requirement scope."
