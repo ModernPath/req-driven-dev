@@ -14,7 +14,9 @@ serialization shapes; it does not contain a project's live delivery state.
   Epic, requirement, gate, work-selection, and backlog/gap records.
 - Project instructions own only project-specific rules such as architecture,
   repository topology, commands, environments, and test gates. They reference
-  rather than redefine the process.
+  rather than redefine the process. They name the project's sanctioned tool
+  for the process store and its channel for surfacing tooling gaps; the rule
+  that binds both is `PROCESS.md` "State records and reconciliation".
 - `CLAUDE.md` files are compatibility pointers; they do not override these
   instructions.
 
