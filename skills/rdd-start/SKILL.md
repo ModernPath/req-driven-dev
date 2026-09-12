@@ -24,6 +24,9 @@ Read the project `AGENTS.md` and the canonical `PROCESS.md` — installed at
 4. Refresh the session's working-set snapshots and check each file's snapshot
    header against the store revision. A stale snapshot is refreshed, never
    edited.
+5. Count the suspended selections. More than one is a preflight fact: report
+   each with its suspended status and reason, and name the mitigation —
+   resume one, release one — before selecting new work.
 
 The pending-decision projection may already have been delivered into the
 session by the host — a session-start brief injected as context rather than
@@ -64,7 +67,15 @@ packet item may be omitted.
 These rules bind every subsequent phase in the session:
 
 - run the project's deterministic process checks before every commit, chained
-  so a failure stops the commit;
+  so a failure stops the commit — the expected RED of a red-first waypoint is
+  the one failure that does not (see `rdd-build`);
+- read the store's projection before any claim about readiness or state; a
+  claim made from memory of an earlier read is not a fact;
+- timebox the diagnosis of a tooling failure; when the box closes, surface the
+  gap through the project's channel and continue on a read-only path or stop.
+  Never mutate a shared store to test a hypothesis;
+- a direction the human has given twice is a decision: record its `USER:`
+  source and proceed on it rather than re-planning around it;
 - commit at waypoints — specification, expected RED, GREEN, cleanup,
   reconciliation — with RED evidence committed before the change that
   satisfies it, so red-first is auditable in history;

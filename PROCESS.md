@@ -241,7 +241,12 @@ review, in that order. A changed fingerprint or failed result returns work to
 the earliest affected pass; a downstream pass cannot repair an upstream gap.
 Packet depth is proportional to the selected scope — a single-SR packet may
 satisfy an item in a sentence where an Epic needs pages — but no packet item
-may be omitted.
+may be omitted. Depth is also bounded: a single-requirement packet is at most
+one page. Reconnaissance that needs more than that page is evidence that the
+scope is wrong, not that the packet should grow — split or replan the scope.
+The bound is a limit, not a preference: every line a packet carries beyond
+what a builder or a gate acts on is a line a review attacks instead of the
+change.
 
 ### Entry packet
 
@@ -274,9 +279,32 @@ in-scope deferred correctness, security, data-loss, contract, traceability, or
 testability findings fail the cold-review trace gate. Technical review cannot
 grant entry approval.
 
+The review audits the change, not the document. A finding about the packet's
+own wording, counts, or citations that would alter none of the code, the
+tests, the interfaces, or the risks is a note and never blocks; a traceability
+finding is material only when a builder or a gate would act on the wrong
+citation. The independent context is a recorded fact of the verdict — the
+context the verdict was recorded from — not a claim in its text: a verdict
+recorded from the authoring context is not a cold review. A closure carried
+from an earlier round is a claim to re-verify, not a fact. A finding that
+would change a human decision returns to that human as a question; it is never
+resolved by editing the packet.
+
+Cold review converges or stops. At most two rounds run on one change. When a
+second round's new blocking findings are about the packet rather than the
+change, the packet is cut to what the change needs and review proceeds. A
+third round does not start: the work stops and what is known is handed to a
+human.
+
 Entry review evaluates the complete packet at its exact fingerprint. Only a
 current entry trace `PASS` may open the human entry gate. Do not create or
-change tests or implementation until every selected item is `TODO`.
+change tests or implementation until every selected item is `TODO`, with one
+exception — the defect lane. When a defect is already diagnosed and the change
+is bounded, the failing test may be written first, on a branch and before
+entry, and cited in the packet as a `RUN:` source: it is the reconnaissance,
+and it gives the review something executable instead of prose about whether a
+planned test would fail. The red test does not replace the SR's own lower
+RED, which is re-established after entry, and it authorizes no implementation.
 
 ## Development loop
 
@@ -359,6 +387,22 @@ The full loop terminates only when the selected scope is `DONE` or `OBSOLETE`.
 An unanswered human gate, `BLOCKED`, `DEFERRED`, `TODO`, or `IN_REVIEW` state is
 an explicit incomplete handoff, not completion.
 
+### Delegated passes
+
+A pass may be delegated to another context — a cold review, a verification
+sweep, one reconnaissance surface. A delegated pass establishes facts and
+returns them: findings, a verdict, citations. It writes nothing to the process
+store; the orchestrating session records what the pass returned, under its own
+actor attribution. The independence of a cold review is a property of the
+context the verdict is recorded from, not of which process runs the recording,
+so recording from the orchestrating session does not compromise it.
+
+A delegated pass that is refused by its environment — a permission denial, an
+authentication failure, a store refusal — stops and returns the refusal
+verbatim as its report. A refusal is a decision by the environment's owner,
+not an obstacle: the pass never reformulates, splits, or re-issues the refused
+call, and an instruction to finish the task does not override this.
+
 ## Evidence and completion
 
 A test result is immutable. Rerunning creates a new result.
@@ -403,6 +447,10 @@ work back to planning.
 A completion human gate may open only when named items are `IN_REVIEW`, code is
 delivered, evidence is current at the delivered revision, state is reconciled,
 candidate relations are excluded, and gaps/deferrals/decisions are disclosed.
+The delivered revision is the one the authorized integration path produced,
+not the branch head that fed it. A member-scoped trace from an earlier round
+that is `STALE` still counts against its Epic — an Epic-scoped pass does not
+stand in for it — until it is re-evaluated at the current fingerprint.
 
 | Item | `DONE` predicate after human acceptance |
 |---|---|
@@ -429,6 +477,20 @@ case:
 A repository is one or the other, never both at once. Every serialized file
 carries its snapshot header — `Snapshot at` and `Source store/revision` — so
 currency is checkable per file.
+
+A project names one sanctioned tool as its interface to the store — its write
+channels, its reads, its projections — and a channel for surfacing what that
+tool lacks. When a task needs something the tool does not expose — a session
+or authentication fact, an untruncated value, any read — that is a tooling
+gap to surface through that channel, never a variance to absorb. Reaching past
+the tool — reading its credential or configuration files, calling its
+transport by hand, editing store files — is the anti-pattern, with the same
+standing as every other rule here. A read-only workaround that unblocks the
+session is acceptable when the gap is surfaced in the same session. A
+workaround that writes to the store by hand is a stop: it bypasses server-side
+legality and actor attribution, which are safety properties, not conveniences.
+An agent's persistent notes never carry such a workaround as knowledge: the
+gap is filed, and the note is retired when the surface lands.
 
 ```text
 file-state/
