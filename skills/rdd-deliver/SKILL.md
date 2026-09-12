@@ -18,8 +18,13 @@ all semantics; this skill owns phase order and continuation.
    prerequisite. Never start from the most convenient phase.
 3. If input is not authoritative or is `DERIVED`, apply `rdd-discover` and its
    confirmation gate. Continue only with confirmed requirements and relations.
-4. Apply `rdd-plan`, then `rdd-cold-review`, then `rdd-entry-review`. Repeat from
-   the earliest stale or failed pass until the exact selected scope is `TODO`.
+4. Apply `rdd-plan`, then `rdd-cold-review`. On a cold-review `FAIL`, present its
+   complete finding snapshot, coverage, and recommendation to the human and
+   stop. Do not remediate or start another review until continuation readiness
+   passes and the workflow human gate applies the exact next action. After a
+   current cold-review `PASS`, apply
+   `rdd-entry-review` and repeat from the earliest stale or failed non-review
+   pass until the exact selected scope is `TODO`.
 5. Run the AI TDD inner loop below. Apply `rdd-build` to changed SRs and
    `rdd-verify` to human-confirmed as-built URs or SRs. Continue until every
    selected requirement satisfies its applicable trace and is `IN_REVIEW`.
@@ -60,6 +65,8 @@ external blocker when progress cannot continue.
 - Treat a focused skill's exit as a handoff, not completion of this skill.
 - Do not bypass a failed trace gate, a `DERIVED` hold, candidate relation,
   material finding, stale evidence, missing delivery, or failed reconciliation.
+- Do not turn a cold-review failure into an automatic plan/review cycle. Resume
+  only from the applied workflow answer's finding snapshot and action.
 - Keep unchanged approved items at their strongest supported state; re-enter
   only the scope invalidated by changed inputs.
 - Report `DONE` or `OBSOLETE` as terminal outcomes. Report an open human gate,

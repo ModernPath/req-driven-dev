@@ -175,8 +175,8 @@ not a gate answer.
 | Transition | Required trace `PASS` before human input |
 |---|---|
 | Requirement `DERIVED -> PROPOSED/PENDING_VERIFICATION/OBSOLETE` | Candidate packet and exact confirmation scope complete |
-| Requirement `PROPOSED/PENDING_VERIFICATION -> TODO` | Its Entry packet is complete at the exact fingerprint |
-| Epic `PROPOSED -> TODO` | Its Entry packet and every selected member's entry trace are complete |
+| Requirement `PROPOSED/PENDING_VERIFICATION -> TODO` | Its Entry packet is complete at the exact plan-subject fingerprint |
+| Epic `PROPOSED -> TODO` | Its Entry packet and every selected member's entry trace are complete at the exact plan-subject fingerprint |
 | Requirement `IN_REVIEW -> DONE` | Its completion predicate is satisfied at the delivered fingerprint |
 | Epic `IN_REVIEW -> DONE` | Every member is already `DONE` or named and completion-eligible in the same gate; the Epic completion predicate is satisfied |
 
@@ -243,9 +243,19 @@ Packet depth is proportional to the selected scope — a single-SR packet may
 satisfy an item in a sentence where an Epic needs pages — but no packet item
 may be omitted.
 
+A cold-review failure is the routing exception: it returns its complete result
+to the human and does not authorize an automatic planning or review round.
+
+Planning uses a **plan-subject fingerprint** over authoritative item content,
+declared relations, selected scope, the named reconnaissance revision,
+technical context and inventories, evidence strategies, sourced decisions and
+unknowns, and the human entry brief. Cold-review findings, dispositions,
+verdicts, and gate records are outputs linked to that fingerprint; they are not
+inputs to it. Recording a review result therefore cannot stale its own gate.
+
 ### Entry packet
 
-The fingerprinted packet must contain:
+The Entry packet must contain:
 
 1. authoritative item content, declared relations, scope, owner, and release;
 2. UR scenarios and thin SRs where applicable;
@@ -261,29 +271,97 @@ The fingerprinted packet must contain:
 7. cold-review findings and verdict; and
 8. the human entry brief.
 
+Items 1–6 and 8 form the plan subject. Item 7 records the review of that
+subject. A cold-review or entry trace is current only when its reviewed
+plan-subject fingerprint equals the current plan-subject fingerprint.
+
+Planning records a self-check against the same coverage rubric cold review
+will evaluate. When multiple Epics or packets will be authored in parallel, it
+also publishes one sourced cross-packet contract table before authoring fans
+out. The table assigns an owning Epic or SR and exact input, output, error,
+producer, and consumer shapes to every shared module function, endpoint, event,
+payload, or transition; every dependent packet cites that shared definition.
+
 Reconnaissance cites `DOC:`, `CODE:`, and `TEST:` sources. Generated context is
 navigation only. Material revision drift makes the packet and its dependent
 reviews stale.
 
-Cold review runs from a context independent of packet authoring and audits the
-trace, scope, technical surface, changed flow, contracts, data, compatibility,
+Cold review runs from a context independent of packet authoring. The first
+review of a selected scope and plan subject is exhaustive: it audits the trace,
+scope, technical surface, changed flow, contracts, data, compatibility,
 failure behavior, feasibility, dependency order, SR boundaries, RED strategy,
-gates, and unauthorized decisions. Each finding records severity, source,
-owner, and `OPEN`, `RESOLVED`, `DEFERRED`, or `REJECTED` disposition. Open or
-in-scope deferred correctness, security, data-loss, contract, traceability, or
-testability findings fail the cold-review trace gate. Technical review cannot
-grant entry approval.
+gates, and unauthorized decisions. It continues after the first blocker and
+records every rubric area as `PASS`, `NOT_APPLICABLE`, or one or more finding
+ids before returning a verdict.
 
-Entry review evaluates the complete packet at its exact fingerprint. Only a
-current entry trace `PASS` may open the human entry gate. Do not create or
+Findings retain stable identities across review rounds. Every finding record
+stores its classification (`ORIGINAL`, `INTRODUCED_BY_REMEDIATION`,
+`REVIEW_ESCAPE`, `SCOPE_EXPANSION`, or `OUT_OF_SCOPE`), predecessor or
+introduced-by lineage, affected domain, severity and materiality, direct
+source, owner, required remediation, current disposition (`OPEN`, `RESOLVED`,
+`DEFERRED`, or `REJECTED`), and current resolution evidence. Every cold-review
+gate appends an immutable observation of each relevant finding's disposition,
+evidence, and checked plan-subject fingerprint at that round; a re-review never
+rewrites a predecessor gate's observation. An `OUT_OF_SCOPE` finding routes
+through triage and does not fail the selected gate unless it is shown to affect
+the selected trace.
+
+Review mode follows the predecessor, not only its verdict. `FIRST` means no
+predecessor exists, or selected scope or the affected-surface denominator
+changed materially enough to start a new exhaustive review. `RE_REVIEW` means a
+predecessor exists and those boundaries are unchanged. A predecessor whose
+last evaluated verdict was `FAIL` requires an applied human continuation answer
+for its exact finding snapshot, including when remediation has since made that
+gate `STALE`. A predecessor whose last evaluated verdict was `PASS` and is now
+`STALE` requires the attributable source that changed the plan subject, but not
+a failed-review continuation decision.
+
+A re-review verifies every prior finding against its resolution evidence,
+audits the exact plan diff, and checks the immediate control/data-flow,
+contract, persistence, integration, failure, security, operational, and test
+boundaries touched by that diff. It carries forward unchanged coverage instead
+of starting a new full audit.
+
+Open or in-scope deferred correctness, security, data-loss, contract,
+traceability, or testability findings fail the cold-review trace gate. A
+re-review is non-converging when its open material finding count is greater
+than or equal to its predecessor's, when the same stable finding or descendant
+lineage remains open after the authorized remediation, or when its affected
+domain count increases. Stop reviewing on any of those conditions and treat
+the result as evidence that the packet does not converge. Recommend splitting
+the scope, removing optional behavior, simplifying the design, or replanning
+the shared boundary before another review.
+
+A failed cold review also evaluates a continuation-readiness trace against a
+**review-result fingerprint** over the failed gate id, complete coverage,
+stable finding snapshot and observations, convergence result, structural
+recommendation, and decision brief. That trace passes only when all of those
+inputs are recorded. It is the sole prerequisite for the exact workflow human
+gate; the failed cold-review trace is a source, not a prerequisite. The
+orchestrator must not automatically remediate and start another review. Another
+round requires the workflow gate's attributable answer and applied choice at
+that review-result fingerprint. Applying `remediate` records the exact
+authorized finding snapshot and routes work selection to planning; applying a
+structural choice routes it to triage or planning with the chosen scope action;
+applying `defer` or `stop` records the corresponding hold. Technical review
+cannot grant entry approval, and human authorization for another round cannot
+substitute for a cold-review `PASS`.
+
+Entry review evaluates the complete packet and confirms that its current
+plan-subject fingerprint matches the fingerprint reviewed by cold review. Only
+a current entry trace `PASS` may open the human entry gate. Do not create or
 change tests or implementation until every selected item is `TODO`.
 
 ## Development loop
 
 ```text
-SOURCE -> PLAN -> COLD REVIEW -> HUMAN ENTRY -> AI TDD LOOP -> COMPLETE -> DONE
-            ^                                          |
-            +--------------- TRIAGE / REPLAN <----------+
+SOURCE -> PLAN -> COLD REVIEW -[PASS]-> HUMAN ENTRY -> AI TDD LOOP -> COMPLETE -> DONE
+            ^              |
+            |            [FAIL]
+            |              v
+            +------ HUMAN REVIEW DECISION
+            |
+            +---------------- TRIAGE / REPLAN <---------- AI TDD / COMPLETE
 ```
 
 Enter a session with `rdd-start`. Use `rdd-deliver` for end-to-end work. Use a
@@ -294,7 +372,7 @@ focused skill alone only when the requested scope explicitly ends at that pass.
 | Enter session | `rdd-start` | Store binding and single active release verified from the store; answered gates reconciled; frozen scope routed to its earliest unmet phase, or an orientation request answered from the current pending-decision projection |
 | Source/classify | `rdd-discover` | Authoritative input or an exact confirmation gate; no unconfirmed requirement proceeds |
 | Plan/reconnaissance | `rdd-plan` | Entry-packet items 1–6 and the human brief at a named revision |
-| Cold review | `rdd-cold-review` | Current cold-review trace verdict and finding dispositions |
+| Cold review | `rdd-cold-review` | Exhaustive first-review or scoped re-review verdict, stable finding dispositions, and either entry handoff or an exact human continuation decision |
 | Entry | `rdd-entry-review` | Applied human approval and selected items in `TODO`, or an explicit non-entry result |
 | Execute changed SR | `rdd-build` | Current lower evidence; eligible SR in `IN_REVIEW`; selected UR evidence updated independently |
 | Verify as-built requirement | `rdd-verify` | Current UR upper or SR lower evidence; eligible requirement in `IN_REVIEW` |
@@ -461,7 +539,13 @@ arriving early, not background context.
 
 Every gate record stores id, kind, transition/purpose, exact scope, prerequisites,
 fingerprint, state/verdict/answer, actor/evaluator, sources, timestamps,
-application state/revision, and predecessor/successor.
+application state/revision, and predecessor/successor. A cold-review gate also
+stores its review mode, coverage rubric, predecessor review, reviewed plan diff
+for a re-review, attributable authorization for the round, and immutable
+finding observations. `GATES.md` also stores stable cold-review finding records
+with classifications, lineage, owners, current dispositions, and resolution
+evidence, plus the continuation-readiness and workflow decision gates for a
+failed review.
 
 Every evidence record stores targeted clause, stable test case, outcome, role,
 validity, command/report, environment when relevant, fingerprint, revision, and
