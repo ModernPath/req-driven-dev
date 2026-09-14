@@ -35,9 +35,14 @@ packet, cold-review findings, current gate records, and relevant sources.
 6. Move approved named `PROPOSED` or `PENDING_VERIFICATION` requirements and
    any named proposed epic to `TODO`. Otherwise retain the strongest honest
    state and route requested changes.
+7. Report and stop. The entry pass ends with the applied transitions, not
+   with the first build step: the answer was a decision about the gate, not
+   an instruction to build (`PROCESS.md` §Gates). The build begins with a
+   fresh session entry when the human asks for it.
 
 ## Report
 
 Report the entry-trace verdict, exact human-gate state, applied transitions,
 remaining blockers, and the exact handoff: `rdd-build`, `rdd-verify`, or the
-earliest planning pass that must be repeated.
+earliest planning pass that must be repeated — named as the next pass for the
+human to open, not entered by this one.

@@ -69,8 +69,16 @@ These rules bind every subsequent phase in the session:
 - run the project's deterministic process checks before every commit, chained
   so a failure stops the commit — the expected RED of a red-first waypoint is
   the one failure that does not (see `rdd-build`);
-- read the store's projection before any claim about readiness or state; a
-  claim made from memory of an earlier read is not a fact;
+- read the store's projection before any claim about readiness or state, and
+  the repository and its hosting service before any claim about a branch, a
+  pull request, a check run, or a deployment; a claim made from memory of an
+  earlier read is not a fact;
+- name every step that someone outside the loop performs — a merge, a
+  promotion, a deployment — with who does it and when; never imply that it
+  has happened or will;
+- put a question to the human with each option stated by its consequence,
+  and treat the answer as a decision, not as an instruction to continue:
+  apply it, report, and wait (`PROCESS.md` §Gates);
 - timebox the diagnosis of a tooling failure; when the box closes, surface the
   gap through the project's channel and continue on a read-only path or stop.
   Never mutate a shared store to test a hypothesis;
@@ -90,6 +98,10 @@ Select the earliest unmet prerequisite for the frozen scope and hand off to
 its skill: `rdd-discover`, `rdd-plan`, `rdd-cold-review`, `rdd-entry-review`,
 `rdd-build`, `rdd-verify`, `rdd-completion-review`, or `rdd-deliver` for the
 complete loop.
+
+A pass ends with its report. Enter the next phase only when the human asks
+for it, or when the request at session entry was the complete loop and the
+boundary carried no human answer.
 
 ## Report
 
