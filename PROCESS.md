@@ -203,6 +203,14 @@ meaning and may appear only as a trailing parenthetical breadcrumb. Prefer
 concrete user-visible outcomes to process, code, or architecture shorthand, and
 name any agent choices the answer will also ratify in those same plain terms.
 
+The same rule binds every question an agent puts to a human inside the loop,
+not only a gate brief: each option states what it changes for the product, the
+records, and the work ahead, in the same plain terms, and an identifier is at
+most a trailing breadcrumb. A human's answer — to a gate or to a question — is
+a decision about that gate or question, never an instruction to enter the next
+phase: the agent applies it, reports what moved, and waits for the human's
+word before any further phase, in the complete loop as in a focused pass.
+
 ### Automatic transitions
 
 An agent or deterministic check may apply these only from a current trace-gate
