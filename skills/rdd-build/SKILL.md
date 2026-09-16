@@ -31,7 +31,11 @@ code, tests, and current records.
 8. Move the SR to `IN_REVIEW` when its lower trace passes. An affected UR moves
    to `IN_REVIEW` only when its upper trace passes and every required SR is
    `IN_REVIEW` or `DONE`.
-9. Reconcile the affected graph and derived views. Return remaining approved
+9. Reconcile the affected graph and derived views. Progress is recorded as
+   evidence — a result, a trace, the code and test links on the evidence
+   record — never as an edit to the reviewed packet's content: a built-at
+   note or a citation added to a requirement record moves the packet
+   fingerprint and stales the cold review it passed. Return remaining approved
    trace failures to `rdd-deliver` for another AI iteration. Hand fully eligible
    `IN_REVIEW` scope to `rdd-completion-review`; do not deliver or solicit
    completion here.
