@@ -180,6 +180,12 @@ not a gate answer.
 | Requirement `IN_REVIEW -> DONE` | Its completion predicate is satisfied at the delivered fingerprint |
 | Epic `IN_REVIEW -> DONE` | Every member is already `DONE` or named and completion-eligible in the same gate; the Epic completion predicate is satisfied |
 
+The first row's prerequisite is the candidate packet's own completeness, bound
+to the confirmation gate when it opens; unlike the entry and completion rows it
+is not a separately recorded trace gate, and a candidate-confirmation gate names
+no prerequisite trace. The remaining rows are backed by recorded trace gates the
+human gate names.
+
 One human answer may cover an exact Epic and named requirements. Apply member
 requirement transitions before the Epic and record a `USER:` source for each.
 
