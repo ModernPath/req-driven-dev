@@ -282,6 +282,35 @@ Applying `DEFERRED` records a postponement decision and requires an
 attributable human source. No automated transition creates or substitutes for
 a human answer.
 
+### Attributable demotions
+
+Delivered work is not final. An item that reached `IN_REVIEW` or `DONE` re-enters
+the loop through an attributable demotion — a recorded transition with an
+actor, a basis, a `USER:` source, and the decision or defect it rests on —
+never through a duplicate requirement, a hand-edited status, or a synthetic
+failure. The basis chooses the destination:
+
+| Demotion | Basis | What it requires and what follows |
+|---|---|---|
+| Requirement or Epic `IN_REVIEW/DONE -> PROPOSED` | Reversed decision: the approved scope, acceptance, or a decision it rests on no longer holds | The reversing decision linked; entry approval is stale and a new entry packet, cold review, and human entry gate precede `TODO` again |
+| Requirement or Epic `IN_REVIEW/DONE -> IN_PROGRESS` | Defect: the delivered behavior is wrong against the approved requirement | The invalidated evidence named; red-first evidence is re-established for the defect; `IN_REVIEW` returns through the lower or upper trace and `DONE` only through a successor human completion gate |
+| Requirement or Epic `-> OBSOLETE` | Superseded or retired | The replacement or the retiring decision linked (the supersession rule above) |
+
+A demotion is recorded as a human gate of purpose `demotion` whose transition
+names the destination, whose exact scope names the demoted items, and whose
+sources carry the basis. Like a candidate-confirmation gate it names no
+prerequisite trace — the facts it rests on are the human's decision and the
+named defect, not a fingerprint check — and applying it reconciles the graph
+like any other answer. Demoting a member reopens its Epic to the weakest
+member state.
+Siblings the demotion does not touch keep their state: their evidence stays
+`CURRENT` when it is current at the present revision, and the Epic's next
+completion re-validates it there rather than requiring it to be posted again.
+Red-first binds the evidence that first proves a clause; a re-validation of
+evidence that already passed — a sibling at the Epic's next completion, a UR's
+upper validation at delivery — is not a new build and needs no new expected
+failure.
+
 ## Work scope
 
 | Scope | Use when | Required relations |
@@ -567,6 +596,13 @@ selections, and selection history. `BACKLOG.md` stores unrouted triage items
 and gap records. Derived queues and progress views — including the pending
 human-decision projection — are regenerated, not backed up separately.
 
+Backlog, gap, and tooling-gap records are records of the store like every
+other: they are created, routed, and closed there, and their state is read
+from there. A plan, a handover, or an agent's notes may summarize them and is
+a projection at best — it never carries a disposition the store does not, and
+a disagreement between the two is resolved by reading the store, not the
+note. A discovery that lives only in a note is not yet a record.
+
 That projection is never lifecycle authority, and it is the session's answer
 to what to work on next: it is read from the store, dated against the store
 revision, and presented — ranked by what a single human answer releases. A
@@ -577,6 +613,7 @@ arriving early, not background context.
 |---|---|
 | Product/domain/architecture/contracts | Product documents and schemas |
 | Epic, requirement, relation, gate, decision, release, and work-selection state | Authoritative process store |
+| Backlog, gap, and tooling-gap records and their dispositions | Authoritative process store |
 | Code, test cases, and results | Implementation repository plus exact evidence references |
 | Aggregate progress and human queues | Generated projections; never lifecycle authority |
 
@@ -620,6 +657,7 @@ human decisions.
 | Capability/specification gap | Gap linked to affected traces |
 | Unclear ownership/cross-cutting concern | Triage backlog |
 | Contradicted or removed behavior | Conflict or `OBSOLETE` with replacement |
+| Delivered item found defective, or its decision reversed | Attributable demotion of the existing item (§Attributable demotions); never a duplicate requirement |
 
 A project's release registry holds exactly one active release, and release
 selection requires a `USER:` source. Drift between repository records and the
