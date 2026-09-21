@@ -70,7 +70,8 @@ and sources; SRs need a boundary, behavior, source and meaningful criteria.
 Criteria describe expected observations; they do not claim a test ran.
 
 Join both sides: UR journeys to serving SRs, and SRs to implementing code and
-existing test identities. Report missing joins and optional relation rationales.
+existing test identities. Produce a join report naming views calling nothing
+and endpoints no view reaches, alongside missing joins and optional relation rationales.
 Do not infer relations merely from prose mentioning an ID. Do not create Epics
 as discovery folders. Where the user explicitly wants a real grouping, persist
 its intended UR/SR members and verify both membership counts.
@@ -171,7 +172,7 @@ following system-wide set once, with verified code/config citations:
 |---|---|
 | `docs/03-architecture.md` | Subsystems, interfaces, stores and representative request flow |
 | `docs/20-deployment-topology.md` | Runtime locations and boundaries; explicitly fold into architecture for a single stack |
-| `docs/21-integrations.md` | Direction, protocol and failure behavior for each external system |
+| `docs/21-integrations.md` | Direction, protocol and failure behavior, including unreachable dependencies, for each external system |
 | `docs/22-cross-cutting.md` | Auth, tenancy, secrets, observability and resilience enforcement points |
 | `docs/23-data-flow.md` | Origins, transformations, destinations and trust boundaries |
 
@@ -199,7 +200,9 @@ availability, security, privacy, operability, maintainability and compatibility.
 Check existing requirement ownership before deriving another row. A bare timeout,
 pool size, retry count or threshold with unconfirmed intent stays a question or
 DERIVED exception, not an invented target or measured result. Key repeated
-findings by exact source/symbol. Before finishing, check the document set, every
+findings by exact source/symbol. For numeric configuration, read the whole expression
+and its units before interpreting it; a partial grep hit is not a value.
+Before finishing, check the document set, every
 integration's failure behavior, observed ADR provenance, NFR questions and actual
 publication readbacks. A file existing locally does not prove it reached the UI.
 
@@ -214,6 +217,9 @@ failed measurement, not 100% coverage.
 
 Keep re-runnable enumeration/matching scripts and their actual output. Report
 N/N by denominator class and repository/context, exclusions and every miss.
+The audit script exits non-zero below the floor; retain its verbatim output and
+exit code, not just an agent's summary. Run the same measurement before and after;
+rank uncovered directories and untraced test files to choose the next scope.
 The extraction floor is 90% of each applicable behavior class and 60% of eligible
 source files cited or explicitly dispositioned; target complete coverage.
 No row budget replaces behavioral granularity. Below the floor is incomplete,
