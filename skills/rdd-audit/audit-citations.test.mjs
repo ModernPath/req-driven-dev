@@ -60,6 +60,16 @@ test("a nonempty corpus with no recognized references is not a passing audit", t
   assert.match(result.stdout, /vacuity/);
 });
 
+test("the default single-repository audit still works from a nested directory", t => {
+  const f = fixture(t);
+  f.file("project/code.ex", "one\ntwo\n");
+  f.file("project/report.md", "CODE:code.ex:2");
+  const git = (...args) => execFileSync("git", ["-C", f.root, ...args], { stdio: ["ignore", "pipe", "pipe"] });
+  git("init"); git("add", "."); git("-c", "user.name=Test", "-c", "user.email=test@example.test", "commit", "-m", "fixture");
+  const result = spawnSync(process.execPath, [script, "report.md"], { cwd: join(f.root, "project"), encoding: "utf8" });
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+});
+
 test("unknown prefixed source extensions cannot disappear beside a valid citation", t => {
   const f = fixture(t);
   f.file("repo/code.xml", "one");
@@ -67,4 +77,18 @@ test("unknown prefixed source extensions cannot disappear beside a valid citatio
   const result = f.run(`--repository=legacy=${join(f.root, "repo")}`, "report.md");
   assert.equal(result.status, 1, result.stdout + result.stderr);
   assert.match(result.stdout, /missing.unknown/);
+});
+
+test("exempt teaching examples cannot satisfy the checked-citation floor", t => {
+  const f = fixture(t);
+  f.file("repo/code.xml", "one");
+  f.file("report.md", "CODE:missing.xml:2 <!-- example-citation -->\n");
+  const args = [`--repository=legacy=${join(f.root, "repo")}`, "report.md"];
+  const empty = f.run(...args);
+  assert.equal(empty.status, 1, empty.stdout + empty.stderr);
+  assert.match(empty.stdout, /0\/0 citations resolve/);
+  f.file("report.md", "CODE:missing.xml:2 <!-- example-citation -->\nCODE:code.xml:1\n");
+  const mixed = f.run(...args);
+  assert.equal(mixed.status, 0, mixed.stdout + mixed.stderr);
+  assert.match(mixed.stdout, /1\/1 citations resolve/);
 });
