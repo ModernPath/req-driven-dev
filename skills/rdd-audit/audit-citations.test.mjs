@@ -34,6 +34,21 @@ test("ambiguous suffixes across repositories fail even when one candidate is lon
   assert.match(result.stdout, /ambiguous/);
 });
 
+test("exact root paths win over suffixes and missing documents never select a namesake", t => {
+  const f = fixture(t);
+  f.file("repo/AGENTS.md", "# Root");
+  f.file("repo/nested/AGENTS.md", "# Nested");
+  f.file("repo/nested/BACKLOG.md", "# Other backlog");
+  f.file("repo/check.mjs", "export {};\n");
+  f.file("report.md", "DOC:AGENTS.md\nCODE:check.mjs:1");
+  const args = [`--repository=repo=${join(f.root, "repo")}`, "report.md"];
+  assert.equal(f.run(...args).status, 0);
+  f.file("report.md", "DOC:BACKLOG.md");
+  const result = f.run(...args);
+  assert.equal(result.status, 1);
+  assert.match(result.stdout, /no such document/);
+});
+
 test("Git worktrees declared from a non-Git parent preserve revision identity", t => {
   const f = fixture(t);
   const repo = join(f.root, "repo");

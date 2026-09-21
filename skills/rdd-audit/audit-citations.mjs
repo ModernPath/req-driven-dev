@@ -30,7 +30,7 @@ import { join, resolve, relative, basename, isAbsolute } from "node:path";
 // An extension missing here is not reported as unresolved — it is not seen at
 // all. On a .NET estate this printed "10/10 citations resolve" while silently
 // skipping 710 of 720, which reads as a pass. Longest-first still holds.
-const EXT = "heex|leex|eex|exs|tsx|yaml|proto|json|xslt|xml|jsp|xsl|ex|go|js|ts|yml|sh|py|rb|rs|java|kt|toml|sql|cs|vb|fs|php|swift|scala|erl";
+const EXT = "heex|leex|eex|exs|tsx|yaml|proto|json|xslt|xml|jsp|xsl|mjs|cjs|ex|go|js|ts|yml|sh|py|rb|rs|java|kt|toml|sql|cs|vb|fs|php|swift|scala|erl";
 
 // Longest extensions first, and a boundary after — `.ex` must not match inside
 // `.exs`, nor `.ts` inside `.tsx`. This is the first of the three failures.
@@ -171,7 +171,7 @@ function lineCount(p) {
 const resolutionErrors = new Map();
 // A suffix with multiple matches is ambiguous, not permission to pick the one
 // whose line count happens to fit. Typed references resolve only exact paths.
-function candidates(path) {
+function candidates(path, exactOnly = false) {
   const typed = path.match(/^([A-Za-z0-9_.-]+)@([A-Za-z0-9_.-]+):(.+)$/);
   let found;
   if (typed) {
@@ -183,7 +183,8 @@ function candidates(path) {
     const exact = resolve(repo.root, typed[3]);
     found = inside(repo.root, exact) && repo.files.includes(exact) ? [exact] : [];
   } else {
-    found = repositories.flatMap(repo => repo.files.filter(file => relative(repo.root, file) === path || file.endsWith("/" + path)));
+    const exact = repositories.flatMap(repo => repo.files.filter(file => relative(repo.root, file) === path));
+    found = exact.length || exactOnly ? exact : repositories.flatMap(repo => repo.files.filter(file => file.endsWith("/" + path)));
   }
   found = [...new Set(found)];
   if (found.length > 1) {
@@ -259,6 +260,15 @@ for (const doc of docs) {
     if (spans.some(([a, b]) => m.index >= a && m.index < b) || inExemptFence(m.index)) continue;
     const lineNo = text.slice(0, m.index).split("\n").length;
     if (/<!--\s*example-citation\s*-->/.test(lines[lineNo - 1] ?? "")) continue;
+    const value = m[0].replace(/^(?:CODE|TEST): ?/, "");
+    if (value.endsWith(".md")) {
+      if (candidates(value, true).length) ok++;
+      else broken.push({ doc, lineNo, path: value, why: "no such document" });
+      continue;
+    }
+    // Directory references are orientation, not file/line claims. Their contents
+    // are inventoried separately; bare grammar examples are not source files.
+    if (value.endsWith("/") || !/^[A-Za-z0-9_./@:\[\]-]+\.[A-Za-z0-9]+(?::.*)?$/.test(value)) continue;
     broken.push({ doc, lineNo, path: m[0], why: "unsupported or malformed source citation; not silently omitted" });
   }
   for (const m of text.matchAll(BARE)) {
@@ -269,7 +279,7 @@ for (const doc of docs) {
   for (const m of text.matchAll(DOCREF)) {
     const lineNo = text.slice(0, m.index).split("\n").length;
     if (inExemptFence(m.index) || /<!--\s*example-citation\s*-->/.test(lines[lineNo - 1] ?? "")) { examples++; continue; }
-    const found = candidates(m[1]);
+    const found = candidates(m[1], true);
     if (!found.length) { broken.push({ doc, lineNo, path: m[1], why: resolutionErrors.get(m[1]) || "no such document" }); continue; }
     if (m[2]) {
       // A heading may hyphenate where the anchor spaces, and vice versa.
