@@ -44,6 +44,12 @@ on a decision, or what is blocked:
 4. read the relevant product sources, requirement records, optional epic, and
    active work-selection record.
 
+When the project's sanctioned input preparation refreshes a local documentation
+export, locate relevant documents there with `rg` and read the files directly.
+Use the project's live knowledge search or document read only when the export
+lacks the material or the answer must reflect current server state. An exported
+document is a cache, not proof that its contents are current.
+
 Being asked what to do next is session entry, not a shortcut past it. The
 answer is the store's pending human decisions and routed work, read through
 `skills/rdd-start/SKILL.md`. Version control, change lists, and the working
