@@ -345,7 +345,11 @@ The fingerprinted packet must contain:
 3. reconnaissance at a named revision covering the affected surface,
    control/data flow, contracts, persistence, integrations, reuse targets,
    dependencies, failure modes, operational risks, test infrastructure, and
-   project gates;
+   project gates, and — when the change adds or touches persisted or shared
+   state — a state inventory: one row per piece of state, with its writers,
+   the readers that branch on it, what a crash mid-write leaves, what makes
+   it stale, and how it recovers, each mitigation ending `closed`,
+   `residual`, or `decided`;
 4. each SR's owned flow segment, change boundary, dependencies, risks, and test
    path;
 5. an upper-RED strategy for every selected UR, a lower-RED strategy for every
@@ -357,6 +361,14 @@ The fingerprinted packet must contain:
 Reconnaissance cites `DOC:`, `CODE:`, and `TEST:` sources. Generated context is
 navigation only. Material revision drift makes the packet and its dependent
 reviews stale.
+
+A packet is complete before its review starts. The state inventory is where
+the packet states what a review would otherwise have to derive: a row the
+change touches but the inventory lacks is a finding, a cell that ends in
+`backlog` while an acceptance criterion asserts it is a finding, and a
+mechanism the packet does not name is not part of the change. A value the
+packet states — a limit, a timeout, a constant — is read at the call site
+that applies it, not at its definition.
 
 Cold review runs from a context independent of packet authoring and audits the
 trace, scope, technical surface, changed flow, contracts, data, compatibility,
@@ -377,6 +389,16 @@ recorded from the authoring context is not a cold review. A closure carried
 from an earlier round is a claim to re-verify, not a fact. A finding that
 would change a human decision returns to that human as a question; it is never
 resolved by editing the packet.
+
+A `RESOLVED` disposition names how it resolved: a packet edit that clarifies
+what the change already contained, a scope action with its record, or a
+decision with its `USER:` source. No new mechanism enters a packet during a
+review cycle. A finding whose fix needs a new acceptance criterion, a wider
+boundary, or a new flow hop is a scope question — split, defer, or decide —
+and the mechanism is planned with its own reconnaissance as its own change.
+A round whose material findings fall on mechanisms an earlier round's
+resolutions introduced is evidence that the packet was reviewed incomplete,
+not that the review is thorough.
 
 Cold review converges or stops. At most two rounds run on one change. When a
 second round's new blocking findings are about the packet rather than the
