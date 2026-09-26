@@ -44,6 +44,11 @@ on a decision, or what is blocked:
 4. read the relevant product sources, requirement records, optional epic, and
    active work-selection record.
 
+Find and read relevant documents available locally. Checking when documents
+were last updated does not refresh the local copies. When a refresh is needed,
+follow the project's documented procedure. Consult the authoritative source
+when local documents lack the information or you need an up-to-date answer.
+
 Being asked what to do next is session entry, not a shortcut past it. The
 answer is the store's pending human decisions and routed work, read through
 `skills/rdd-start/SKILL.md`. Version control, change lists, and the working

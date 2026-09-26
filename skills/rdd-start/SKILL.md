@@ -11,6 +11,14 @@ Read the project `AGENTS.md` and the canonical `PROCESS.md` — installed at
 
 ## Preflight — before any work selection
 
+If the project provides an input-preparation step, run it once. Complete any
+remaining checks according to the project's instructions.
+
+Find and read relevant documents available locally. Checking when documents
+were last updated does not refresh the local copies. When a refresh is needed,
+follow the project's documented procedure. Consult the authoritative source
+when local documents lack the information or you need an up-to-date answer.
+
 1. Identify the authoritative process store (store-backed or file-backed) and
    confirm it is reachable. In a store-backed repository, confirm the binding
    identity from the store itself, never from a number quoted in instructions;
