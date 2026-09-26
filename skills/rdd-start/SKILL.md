@@ -13,10 +13,11 @@ Read the project `AGENTS.md` and the canonical `PROCESS.md` — installed at
 
 If the project provides a combined input-preparation command, run it once for
 its binding, release, and documentation checks; complete any preflight facts it
-does not cover through the project's sanctioned reads. After it refreshes a
-local documentation export, find relevant documents with `rg` and read the
-files directly. Use live knowledge search or document reads when the export
-lacks the material or a current server answer is needed.
+does not cover through the project's sanctioned reads. A documentation timestamp
+report does not refresh the local export: use the project's explicit sync when
+a refresh is needed. Find relevant local documents with `rg` and read the files
+directly. Use live knowledge search or document reads when the export lacks the
+material or a current server answer is needed.
 
 1. Identify the authoritative process store (store-backed or file-backed) and
    confirm it is reachable. In a store-backed repository, confirm the binding
