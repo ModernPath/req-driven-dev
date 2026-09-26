@@ -84,6 +84,9 @@ These rules bind every subsequent phase in the session:
   Never mutate a shared store to test a hypothesis;
 - a direction the human has given twice is a decision: record its `USER:`
   source and proceed on it rather than re-planning around it;
+- a pass report names what the session holds that the store does not yet — a
+  finding not recorded, a note held back, an item left unwritten on purpose —
+  so the human never has to ask what is not yet in the store;
 - commit at waypoints — specification, expected RED, GREEN, cleanup,
   reconciliation — with RED evidence committed before the change that
   satisfies it, so red-first is auditable in history;

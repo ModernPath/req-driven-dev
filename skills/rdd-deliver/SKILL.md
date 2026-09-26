@@ -19,7 +19,10 @@ all semantics; this skill owns phase order and continuation.
 3. If input is not authoritative or is `DERIVED`, apply `rdd-discover` and its
    confirmation gate. Continue only with confirmed requirements and relations.
 4. Apply `rdd-plan`, then `rdd-cold-review`, then `rdd-entry-review`. Repeat from
-   the earliest stale or failed pass until the exact selected scope is `TODO`.
+   the earliest stale or failed pass until the exact selected scope is `TODO`,
+   inside the review bound: cold review runs at most two rounds on one change,
+   and a third round is never this loop's call. After a second `FAIL`, stop
+   and hand what is known to the human (`PROCESS.md` §Planning and readiness).
 5. Run the AI TDD inner loop below. Apply `rdd-build` to changed SRs and
    `rdd-verify` to human-confirmed as-built URs or SRs. Continue until every
    selected requirement satisfies its applicable trace and is `IN_REVIEW`.

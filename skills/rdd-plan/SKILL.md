@@ -29,9 +29,11 @@ scope, Item ownership, and Planning and readiness sections of `PROCESS.md`.
    callers of the module that owns it, and judge each break per call site
    against the post-change invariants — one file can hold call sites of both
    kinds. Verify every claim about existing code by reading it at that
-   revision; a reconnaissance sentence is a citation, not a memory. Keep the
-   packet within the bound in `PROCESS.md`: a single-requirement packet is at
-   most one page.
+   revision; a reconnaissance sentence is a citation, not a memory. A value
+   the packet states — a limit, a timeout, a constant — is read at the call
+   site that applies it, not at its definition: a defined value may be unused,
+   or one of several the code selects between. Keep the packet within the
+   bound in `PROCESS.md`: a single-requirement packet is at most one page.
 5. Enrich every selected SR with its implementation context, explicit change
    boundary, and lower-RED strategy. Define a separate upper-RED strategy for
    every selected UR. Every planned RED case must fail today for the stated
@@ -44,7 +46,11 @@ scope, Item ownership, and Planning and readiness sections of `PROCESS.md`.
    trace prerequisites pass. Record blockers, conflicts, gaps, and deferrals
    rather than guessing.
 7. Assemble Entry-packet items 1–6 and the product-language brief. Reconcile
-   planning records, then hand off to `rdd-cold-review` for item 7.
+   planning records — every citation, link and note the packet will carry is
+   in it now — then hand off to `rdd-cold-review` for item 7. Which edits move
+   the packet fingerprint is decided by the store, not by the editor's intent:
+   an edit after the verdict is recorded, however small, stales that verdict
+   and returns the scope to cold review.
 
 ## Report
 
