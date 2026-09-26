@@ -44,13 +44,10 @@ on a decision, or what is blocked:
 4. read the relevant product sources, requirement records, optional epic, and
    active work-selection record.
 
-When the project provides a local documentation export, locate relevant documents
-there with `rg` and read the files directly. Input preparation may report when
-the export was last synced and when server documents were last updated; those
-reads do not refresh the export. Use the project's explicit documentation sync
-when a refresh is needed, and live knowledge search or document reads when the
-export lacks the material or a current server answer is needed. An exported
-document is a cache, not proof that its contents are current.
+Find and read relevant documents available locally. Checking when documents
+were last updated does not refresh the local copies. When a refresh is needed,
+follow the project's documented procedure. Consult the authoritative source
+when local documents lack the information or you need an up-to-date answer.
 
 Being asked what to do next is session entry, not a shortcut past it. The
 answer is the store's pending human decisions and routed work, read through
