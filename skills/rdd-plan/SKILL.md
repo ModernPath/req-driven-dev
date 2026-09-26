@@ -29,9 +29,21 @@ scope, Item ownership, and Planning and readiness sections of `PROCESS.md`.
    callers of the module that owns it, and judge each break per call site
    against the post-change invariants — one file can hold call sites of both
    kinds. Verify every claim about existing code by reading it at that
-   revision; a reconnaissance sentence is a citation, not a memory. Keep the
-   packet within the bound in `PROCESS.md`: a single-requirement packet is at
-   most one page.
+   revision; a reconnaissance sentence is a citation, not a memory. When the
+   change adds or touches persisted or shared state — a table, a column, a
+   snapshot, a job, a cache, a file, a join row as much as an entity — write
+   the state inventory: one row per piece of state with its writers today and
+   after the change, the readers that branch on it, what a crash mid-write
+   leaves, what makes it stale, and recovery. End every mitigation cell with
+   `closed` (an acceptance criterion and a RED cover it), `residual` (a named
+   risk no criterion asserts), or `decided` (a `USER:` line); `backlog` is not
+   a closing word while a criterion asserts the cell. Audit the packet against
+   the inventory before handing it over: a cell the packet leaves open is a
+   finding filed now, not one the reviewer files later. A value the packet
+   states — a limit, a timeout, a constant — is read at the call site that
+   applies it, not at its definition: a defined value may be unused, or one of
+   several the code selects between. Keep the packet within the bound in
+   `PROCESS.md`: a single-requirement packet is at most one page.
 5. Enrich every selected SR with its implementation context, explicit change
    boundary, and lower-RED strategy. Define a separate upper-RED strategy for
    every selected UR. Every planned RED case must fail today for the stated
@@ -44,7 +56,11 @@ scope, Item ownership, and Planning and readiness sections of `PROCESS.md`.
    trace prerequisites pass. Record blockers, conflicts, gaps, and deferrals
    rather than guessing.
 7. Assemble Entry-packet items 1–6 and the product-language brief. Reconcile
-   planning records, then hand off to `rdd-cold-review` for item 7.
+   planning records — every citation, mechanism, and inventory row the packet
+   will carry is in it now — then hand off to `rdd-cold-review` for item 7. A
+   mechanism a review finding later needs is not added here: it is a scope
+   question routed through step 6, and the packet returns to step 4 for that
+   mechanism's own reconnaissance.
 
 ## Report
 
