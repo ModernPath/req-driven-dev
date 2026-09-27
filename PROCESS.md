@@ -393,14 +393,16 @@ The fingerprinted packet must contain:
 
 Reconnaissance cites `DOC:`, `CODE:`, and `TEST:` sources. It starts from the
 ledger: each surface the change touches names the delivered requirement that
-owns it, and the packet carries that record's acceptance and the rule its
-tests hold as a constraint the change preserves or, through a scope decision,
-amends or supersedes. A change that contradicts a delivered acceptance is a
-scope question at planning, not a finding at review. Generated system
-documentation is read before the code and cited as `DOC:`; it is navigation,
-and where it and the code at the revision disagree, the code wins and the
-packet records the disagreement. Material revision drift makes the packet
-and its dependent reviews stale.
+owns it — found by searching the records for every verb, symbol, and path
+the change touches, not by recalling likely owners — and the packet carries
+that record's acceptance and the rule its tests hold as a constraint the
+change preserves or, through a scope decision, amends or supersedes. A
+change that contradicts a delivered acceptance is a scope question at
+planning, not a finding at review. Generated system documentation is read
+before the code and cited as `DOC:`; it is navigation, and where it and the
+code at the revision disagree, the code wins and the packet records the
+disagreement. Material revision drift makes the packet and its dependent
+reviews stale.
 
 A packet is complete before its review starts. The state inventory is where
 the packet states what a review would otherwise have to derive: a row the
@@ -409,6 +411,13 @@ change touches but the inventory lacks is a finding, a cell that ends in
 mechanism the packet does not name is not part of the change. A value the
 packet states — a limit, a timeout, a constant — is read at the call site
 that applies it, not at its definition.
+
+A RED strategy names, for each selected requirement, the test file its case
+lives in, the behaviour the case asserts, and why it fails at the revision.
+It carries no command, pattern, or test name: the command that runs the case
+is evidence recorded at the RED commit, where running it is the verification.
+A review finding about a command or a name the packet need not carry is a
+note that the line is dropped, never a blocker.
 
 Cold review runs from a context independent of packet authoring and audits the
 trace, scope, technical surface, changed flow, contracts, data, compatibility,

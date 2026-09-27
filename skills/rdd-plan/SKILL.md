@@ -16,11 +16,13 @@ scope, Item ownership, and Planning and readiness sections of `PROCESS.md`.
    authoritative. Take the scope from the stored relation graph — declared
    members, required SRs, gates — never from a keyword search over records.
    Stop at the confirmation gate for `DERIVED` requirements or candidate-only
-   links. Then take the constraints from the ledger: for each surface the
-   change touches, name the delivered requirement that owns it — the record
-   whose acceptance and tests hold the rule the change meets — and carry
-   that acceptance into the packet as a constraint with its record id. A
-   change that contradicts one is a scope question for step 6 (amend or
+   links. Then take the constraints from the ledger: search the records for
+   every verb, symbol, and path the change touches, and for each surface
+   name the delivered requirement the search returns as its owner — the
+   record whose acceptance and tests hold the rule the change meets — and
+   carry that acceptance into the packet as a constraint with its record id.
+   An owner recalled rather than found is a surprise waiting for the review.
+   A change that contradicts one is a scope question for step 6 (amend or
    supersede the record), never a surprise in review.
 2. Choose epic scope or single-SR scope using `PROCESS.md`. Do not invent epic
    membership or a UR link to make the graph appear complete.
@@ -56,8 +58,12 @@ scope, Item ownership, and Planning and readiness sections of `PROCESS.md`.
    `PROCESS.md`: a single-requirement packet is at most one page.
 5. Enrich every selected SR with its implementation context, explicit change
    boundary, and lower-RED strategy. Define a separate upper-RED strategy for
-   every selected UR. Every planned RED case must fail today for the stated
-   reason; a case that would pass on the current code is not evidence. For a
+   every selected UR. A lower-RED strategy names the test file the case
+   lives in, the behaviour it asserts, and why it fails at the revision — no
+   command, pattern, or test name: the command is evidence at the RED commit,
+   where running it is the verification. Every planned RED case must fail
+   today for the stated reason; a case that would pass on the current code is
+   not evidence. For a
    diagnosed, bounded defect the failing test may already exist on a branch
    as a `RUN:` source — the defect lane in `PROCESS.md` §Entry packet —
    cite it, and plan the SR's own lower RED to be re-established after entry.

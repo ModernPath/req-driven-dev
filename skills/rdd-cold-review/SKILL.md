@@ -57,7 +57,9 @@ review audits the change the packet proposes, not the packet as a document.
    packet's wording, counts, or citations that alters none of the code, tests,
    interfaces, or risks is a note and never blocks; traceability is material
    only when a builder or a gate would act on the wrong citation
-   (`PROCESS.md` §Planning and readiness).
+   (`PROCESS.md` §Planning and readiness). A command, a pattern, or a test
+   name the packet need not carry is audited by dropping it: the finding is a
+   note that the line goes, never a blocker on its syntax.
 8. Bound the rounds: at most two on one change. On a second round whose new
    blocking findings are about the packet rather than the change, return
    `FAIL` with the instruction to cut the packet, not to expand it. Do not
