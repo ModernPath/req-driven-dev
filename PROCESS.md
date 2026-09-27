@@ -254,6 +254,32 @@ meaning and may appear only as a trailing parenthetical breadcrumb. Prefer
 concrete user-visible outcomes to process, code, or architecture shorthand, and
 name any agent choices the answer will also ratify in those same plain terms.
 
+Before requesting any human approval or decision, present its self-contained
+brief and a listing of the current working-set files the human needs to review.
+Give each file a clickable link with its full absolute filesystem path as both
+the visible label and the link target, followed by a short description of what
+it contributes to the decision. These file links let the human open the material
+in their chosen editor. Cover the gate brief, scoped requirement and
+acceptance content, proposed relationships or changes, review findings,
+evidence conclusions, risks, exceptions, and unresolved questions wherever
+those are recorded. List the files relevant to the exact approval scope.
+
+Read the files before presenting the listing. Validate materialized store
+snapshots against authoritative store revisions, and source files against their
+applicable pinned revisions or digests. In a file-backed repository, read the
+current authoritative records. When a gate exists, confirm the listed material
+matches its exact decision inputs; otherwise confirm it matches the current
+choice's source inventory and scope. Refresh stale snapshots through the
+project's sanctioned tool. Resolve missing or stale decision files
+before asking for approval; a ready assertion or record id is not a file listing.
+The listing supports the brief rather than replacing it. Do not print the full
+file contents unless the human asks for them.
+
+For a decision without an existing packet, list the available source or
+authorization files that define the choice. Source-scoped authorization names
+the exact source inventory and permitted publication; do not imply that
+ungenerated requirements have been reviewed.
+
 The same rule binds every question an agent puts to a human inside the loop,
 not only a gate brief: each option states what it changes for the product, the
 records, and the work ahead, in the same plain terms, and an identifier is at

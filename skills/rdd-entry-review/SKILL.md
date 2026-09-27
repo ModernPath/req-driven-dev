@@ -22,7 +22,8 @@ packet, cold-review findings, current gate records, and relevant sources.
    gate opened without a named passing trace cannot be answered. Keep the
    human gate `DRAFT` when the trace does not pass.
 4. After a current trace `PASS`, make only the exact scoped human gate `OPEN`
-   and present its brief and recommendation in **plain product language** — see
+   and present its brief, recommendation, and linked list of relevant working-set
+   files before asking, in **plain product language** — see
    `PROCESS.md` §Gates: self-contained for a reader who has not seen the packet,
    with every referenced decision, correction, or finding stated by its
    substance and not its code. Before presenting, reread the brief as that

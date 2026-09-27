@@ -30,7 +30,8 @@ all semantics; this skill owns phase order and continuation.
    or invalidation alters the selected trace. Resume at the earliest phase it
    invalidates.
 
-At an exact `OPEN` human gate, present its brief and wait. If an attributable
+At an exact `OPEN` human gate, present its brief and linked list of relevant
+working-set files before asking and wait, following `PROCESS.md` §Gates. If an attributable
 answer is already available, apply it and continue. Never infer or supply the
 answer.
 
