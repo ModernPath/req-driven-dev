@@ -31,7 +31,8 @@ records, and derived views.
    `STALE` member-scoped cold-review trace from an earlier round blocks an
    epic's completion until it is re-evaluated at the current fingerprint; an
    epic-scoped pass does not stand in for it. Only then make the scoped human
-   completion gate `OPEN` and present its brief.
+   completion gate `OPEN` and present its complete approval packet before
+   asking for acceptance, following `PROCESS.md` §Gates.
 6. Do not answer the gate for the human. If the authorized human answers,
    record the real actor, role, exact scope, answer, and `USER:` source.
 7. Apply `DONE` only to accepted named entities that independently satisfy the

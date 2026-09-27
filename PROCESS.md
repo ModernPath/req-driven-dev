@@ -254,6 +254,25 @@ meaning and may appear only as a trailing parenthetical breadcrumb. Prefer
 concrete user-visible outcomes to process, code, or architecture shorthand, and
 name any agent choices the answer will also ratify in those same plain terms.
 
+Before requesting any human approval or decision, present the complete current
+decision content in the user-facing message. For a recorded gate, read its
+authoritative packet and show the full brief, exact scope, content being
+approved, every option and its consequences, recommendation, and all review
+findings, risks, exceptions, and unresolved questions. Include the requirement
+statements and acceptance content, proposed relationships or changes, and
+evidence conclusions that the answer covers. For source-scoped authorization,
+show the exact source inventory and permitted publication; do not imply that
+ungenerated requirements have been reviewed.
+
+Show existing human-readable approval content verbatim in fenced `text` blocks,
+with explanations and the approval question outside the blocks. A summary,
+record id, link, tool result, or assertion that the packet is ready does not
+replace this presentation. If the content is long, split it into complete
+labelled parts before asking; never silently truncate or omit it. Supporting
+source files may be cited rather than reproduced unless their content is itself
+being approved. If required decision content cannot be read, report the missing
+content and resolve it before asking for approval.
+
 The same rule binds every question an agent puts to a human inside the loop,
 not only a gate brief: each option states what it changes for the product, the
 records, and the work ahead, in the same plain terms, and an identifier is at

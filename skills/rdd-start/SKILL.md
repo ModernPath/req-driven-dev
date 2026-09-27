@@ -84,7 +84,8 @@ These rules bind every subsequent phase in the session:
 - name every step that someone outside the loop performs — a merge, a
   promotion, a deployment — with who does it and when; never imply that it
   has happened or will;
-- put a question to the human with each option stated by its consequence,
+- present the complete current decision content before asking for approval or
+  a choice, following `PROCESS.md` §Gates; state each option's consequences,
   and treat the answer as a decision, not as an instruction to continue:
   apply it, report, and wait (`PROCESS.md` §Gates);
 - timebox the diagnosis of a tooling failure; when the box closes, surface the

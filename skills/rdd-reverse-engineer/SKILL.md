@@ -23,7 +23,9 @@ turns code inspection into passing verification evidence.
 3. Pin repository revision, dirty state, exact paths/sizes/digests and synchronized
    document identities/versions/digests. Exclude credentials and private workspace
    metadata. Show the source scope and existing corpus counts.
-4. Ask which result the user wants, explaining both consequences:
+4. Present the complete source-scoped authorization content before asking which
+   result the user wants, following `PROCESS.md` §Gates and explaining both
+   consequences:
    - **Baseline ready for use** (recommend for an empty corpus): publish grounded
      as-built URs/SRs and their graph to Base, visible in Ledger and System →
      Requirements as **Baselined — not verified**. The choice authorizes this
@@ -116,8 +118,9 @@ silently assigning PENDING_VERIFICATION.
 
 Prepare the exact typed UR/SR selection and separately named proposed links.
 Preview the current content, evidence, comparisons and transitions at one graph
-fingerprint. One human action may approve all named requirements and links;
-neither an Epic nor an open delivery release is required. Omitted links stay
+fingerprint. Present that complete preview before asking for approval, following
+`PROCESS.md` §Gates. One human action may approve all named requirements and
+links; neither an Epic nor an open delivery release is required. Omitted links stay
 candidate and may be accepted later without reopening accepted requirements.
 
 Route explicit decisions only:
