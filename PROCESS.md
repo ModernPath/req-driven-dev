@@ -264,9 +264,13 @@ acceptance content, proposed relationships or changes, review findings,
 evidence conclusions, risks, exceptions, and unresolved questions wherever
 those are recorded. List the files relevant to the exact approval scope.
 
-Read the files before presenting the listing. Check their snapshot revision and
-fingerprint against the gate's decision inputs, refreshing them through the
-project's sanctioned tool when needed. Resolve missing or stale decision files
+Read the files before presenting the listing. Validate materialized store
+snapshots against authoritative store revisions, and source files against their
+applicable pinned revisions or digests. In a file-backed repository, read the
+current authoritative records. When a gate exists, confirm the listed material
+matches its exact decision inputs; otherwise confirm it matches the current
+choice's source inventory and scope. Refresh stale snapshots through the
+project's sanctioned tool. Resolve missing or stale decision files
 before asking for approval; a ready assertion or record id is not a file listing.
 The listing supports the brief rather than replacing it. Do not print the full
 file contents unless the human asks for them.
