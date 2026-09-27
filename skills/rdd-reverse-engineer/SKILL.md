@@ -243,6 +243,15 @@ ADRs are labelled observed, not ratified. NFRs use the same store and authority
 as other requirements; bare thresholds with unknown intent remain questions.
 
 Onboarding ends with a usable base or a clearly reviewable candidate set and an
-honest remainder. Normal `rdd-plan`/entry review and `rdd-verify` own subsequent
-verification; reverse-engineering itself changes no implementation, executes no
+honest remainder. Dedicated `rdd-reverse-engineer-verify` and
+`rdd-reverse-engineer-accept` own subsequent existing-proof acceptance; reverse-engineering itself changes no implementation, executes no
 untrusted code and creates no passing test result or DONE state.
+
+## Existing-proof handoff
+
+Publication creates no test PASS or acceptance. For published
+PENDING_VERIFICATION baselines, use rdd-reverse-engineer-verify for existing
+semantic assertion/execution and integration proof, then
+rdd-reverse-engineer-accept for one exact human decision and guarded DONE
+application. Adding tests or changing behavior needs an explicitly scoped
+normal development handoff.

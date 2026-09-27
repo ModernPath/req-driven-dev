@@ -22,6 +22,7 @@ EPIC: PROPOSED -[HUMAN]-> TODO -> IN_PROGRESS -> IN_REVIEW -[HUMAN]-> DONE
 UR/SR: DERIVED -[HUMAN]-> PROPOSED -[HUMAN]-> TODO -> IN_PROGRESS -> IN_REVIEW -[HUMAN]-> DONE
 UR/SR: DERIVED -[HUMAN]-> PENDING_VERIFICATION -[HUMAN]-> TODO -> IN_PROGRESS -> IN_REVIEW -[HUMAN]-> DONE
 UR/SR: source-scoped baseline authorization -[publish as-built]-> PENDING_VERIFICATION
+UR/SR: PENDING_VERIFICATION -[complete current verified/delivered proof + one HUMAN acceptance]-> DONE
 
 TRACE: PENDING -> PASS | FAIL; PASS | FAIL -> STALE -> PASS | FAIL
 
@@ -106,7 +107,7 @@ UR and SR use the same status vocabulary.
 | Status | Meaning |
 |---|---|
 | `DERIVED` | Inferred requirement awaiting human confirmation; all relations are candidate-only |
-| `PENDING_VERIFICATION` | As-built behavior established by exact confirmation or source-scoped baseline authorization; awaiting entry approval and current direct evidence |
+| `PENDING_VERIFICATION` | As-built behavior established by exact confirmation or source-scoped baseline authorization; awaiting current direct proof and acceptance; normal development entry applies when tests or behavior need development |
 | `PROPOSED` | Confirmed or directly sourced requirement being prepared for entry |
 | `TODO` | Entry trace passed and human entry approval was applied |
 | `IN_PROGRESS` | Applicable red-first evidence work is underway |
@@ -226,6 +227,7 @@ not a gate answer.
 |---|---|
 | Requirement `DERIVED -> PROPOSED/PENDING_VERIFICATION/OBSOLETE` | Candidate packet and exact confirmation scope complete |
 | Source-scoped baseline authorization | Bound system/store, current corpus and exact source/document inventory reviewed; allowed baseline publication made explicit |
+| Requirement `PENDING_VERIFICATION -> DONE` | Complete exact current as-built verification and separate repository integration proof; one dedicated reviewed human acceptance |
 | Requirement `PROPOSED/PENDING_VERIFICATION -> TODO` | Its Entry packet is complete at the exact fingerprint |
 | Epic `PROPOSED -> TODO` | Its Entry packet and every selected member's entry trace are complete |
 | Requirement `IN_REVIEW -> DONE` | Its completion predicate is satisfied at the delivered fingerprint |
@@ -499,13 +501,54 @@ focused skill alone only when the requested scope explicitly ends at that pass.
 | Cold review | `rdd-cold-review` | Current cold-review trace verdict and finding dispositions |
 | Entry | `rdd-entry-review` | Applied human approval and selected items in `TODO`, or an explicit non-entry result |
 | Execute changed SR | `rdd-build` | Current lower evidence; eligible SR in `IN_REVIEW`; selected UR evidence updated independently |
-| Verify as-built requirement | `rdd-verify` | Current UR upper or SR lower evidence; eligible requirement in `IN_REVIEW` |
+| Verify entered work requiring tests | `rdd-verify` | Current UR upper or SR lower evidence; eligible requirement in `IN_REVIEW` |
+| Verify existing baseline | `rdd-reverse-engineer-verify` | Complete applicable current assertion/execution proof and separate repository integration observations; exact eligibility packet |
+| Accept existing baseline | `rdd-reverse-engineer-accept` | One reviewed human decision atomically applied from `PENDING_VERIFICATION` to `DONE`, with durable receipt; compliance unchanged |
 | Deliver/complete | `rdd-completion-review` | Delivered revision, reconciled records, completion trace, and applied human result |
 | Route change | `rdd-triage` | Discovery assigned to the earliest phase it invalidates |
 
 Before each phase, reconcile answered gates and state, then select the earliest
 unmet prerequisite. A focused skill's exit is a handoff, not completion of the
 full loop.
+
+### As-built verification and acceptance
+
+A published source-scoped baseline starts in `PENDING_VERIFICATION`. Publication
+establishes requirement authority, not test PASS, delivery or compliance approval.
+A dedicated existing-behavior path may move exactly reviewed URs/SRs directly to
+`DONE` with **one human acceptance decision** after all of the following hold:
+
+- Every active applicable criterion has inspected semantic assertion coverage,
+  confirmed code/test connections and genuine current named execution proof.
+  UR upper evidence is evaluated independently and includes its required SRs;
+  a standalone SR needs no invented parent or Epic.
+- Exact requirement content, graph, source/test bytes, revisions, report/result
+  identities and CI provider/repository/run/job/attempt/tested commit are pinned.
+  Missing, unexecuted, contradictory, stale, inaccessible or revoked proof is a
+  gap, not a partial PASS or an accepted undisclosed coverage limit.
+- Every repository has a distinct retained integration observation of the clean
+  tested revision at the fetched remote default-branch tip, matching the captured
+  snapshot. Passing unmerged branch tests do not prove delivery. This is an
+  integration observation, not a deployment claim or a live provider connector.
+- A current server-evaluated eligibility trace supports the exact human decision.
+  Its attributed reviewed answer and guarded application recheck the complete
+  proof. Application is atomic across the named scope and uses normal lifecycle
+  events. A stable key and identical input recover the same receipt; changed
+  input conflicts. Historical receipts and their exact reviewed evidence remain
+  readable after drift, while stale proof cannot be applied or replayed as current.
+
+`rdd-reverse-engineer` remains publication-only. The dedicated
+`rdd-reverse-engineer-verify` gathers and evaluates existing evidence;
+`rdd-reverse-engineer-accept` reviews the exact packet, records the one human
+answer and applies/readbacks its receipt. No skill fabricates RED or rebuilds an
+already proven product. Test additions and behavior changes remain gaps until
+an explicitly scoped handoff to normal development. No general-purpose gate
+label, client flag or generic advance authorizes this transition.
+
+This path changes work lifecycle only: compliance draft/approved fields are
+unchanged. Normal `rdd-build`, `rdd-verify` and `rdd-completion-review` retain their
+RED/GREEN, entry and completion contracts. Requirements reopened for a defect
+return to normal development; baseline provenance alone does not reroute them.
 
 ### AI TDD inner loop
 

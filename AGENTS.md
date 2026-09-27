@@ -35,10 +35,13 @@ on a decision, or what is blocked:
    binding and active release before any selection; then use
    `skills/rdd-deliver/SKILL.md` for end-to-end delivery, or the applicable
    focused `skills/rdd-*/SKILL.md` when the request explicitly ends at one
-   process pass; use `skills/rdd-verify/SKILL.md` for reverse-engineered
-   `PENDING_VERIFICATION` rows, and `skills/rdd-reverse-engineer/SKILL.md` to
+   process pass; use `skills/rdd-verify/SKILL.md` for entered verification work
+   requiring new tests, and `skills/rdd-reverse-engineer/SKILL.md` to
    establish an authorized as-built baseline or propose DERIVED additions to
    an existing requirement corpus;
+   use `skills/rdd-reverse-engineer-verify/SKILL.md` and
+   `skills/rdd-reverse-engineer-accept/SKILL.md` for already implemented baselines
+   with existing proof (one human acceptance directly to DONE);
    `skills/rdd-audit/SKILL.md` is a shared utility other passes invoke, not a
    phase;
 4. read the relevant product sources, requirement records, optional epic, and

@@ -12,6 +12,13 @@ all semantics; this skill owns phase order and continuation.
 
 ## Run the loop
 
+For a genuine published baseline still in PENDING_VERIFICATION, take the
+separate rdd-reverse-engineer-verify → rdd-reverse-engineer-accept path. Its
+single reviewed human decision applies verified and delivered proof directly
+to DONE. Normal planning, entry, RED/GREEN and completion below apply only after
+an explicitly scoped handoff for missing tests or changed behavior. Reopened
+requirements remain normal development work.
+
 1. Reconcile authoritative state, answered gates, evidence validity, and
    projections. Fix state disagreement before selecting work.
 2. Freeze the selected Epic or single-SR scope and find its earliest unmet

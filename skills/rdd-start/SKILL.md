@@ -109,6 +109,14 @@ its skill: `rdd-discover`, `rdd-plan`, `rdd-cold-review`, `rdd-entry-review`,
 `rdd-build`, `rdd-verify`, `rdd-completion-review`, or `rdd-deliver` for the
 complete loop.
 
+For genuine source-scoped baseline requirements still in PENDING_VERIFICATION,
+route to rdd-reverse-engineer-verify without development entry. When a dedicated
+current exact-proof decision names the complete selected scope, route to
+rdd-reverse-engineer-accept. Holds, suspension, blockers and DERIVED confirmation
+retain precedence. Mixed scopes remain explicit; do not silently change the
+selection or apply normal RED requirements to this dedicated path. Provenance
+alone never reroutes an entered or defect-reopened item.
+
 A pass ends with its report. Enter the next phase only when the human asks
 for it, or when the request at session entry was the complete loop and the
 boundary carried no human answer.
