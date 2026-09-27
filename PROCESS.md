@@ -372,10 +372,11 @@ The fingerprinted packet must contain:
    control/data flow, contracts, persistence, integrations, reuse targets,
    dependencies, failure modes, operational risks, test infrastructure, and
    project gates, and — when the change adds or touches persisted or shared
-   state — a state inventory: one row per piece of state, with its writers,
-   the readers that branch on it, what a crash mid-write leaves, what makes
-   it stale, and how it recovers, each mitigation ending `closed`,
-   `residual`, or `decided`;
+   state — a state inventory: one row per piece of state, with its writers
+   and each write shape it admits (a birth, an edit of an open row, an edit
+   of a settled row, a row born before the change), the readers that branch
+   on it, what a crash mid-write leaves, what makes it stale, and how it
+   recovers, each mitigation ending `closed`, `residual`, or `decided`;
 4. each SR's owned flow segment, change boundary, dependencies, risks, and test
    path;
 5. an upper-RED strategy for every selected UR, a lower-RED strategy for every
@@ -384,9 +385,16 @@ The fingerprinted packet must contain:
 7. cold-review findings and verdict; and
 8. the human entry brief.
 
-Reconnaissance cites `DOC:`, `CODE:`, and `TEST:` sources. Generated context is
-navigation only. Material revision drift makes the packet and its dependent
-reviews stale.
+Reconnaissance cites `DOC:`, `CODE:`, and `TEST:` sources. It starts from the
+ledger: each surface the change touches names the delivered requirement that
+owns it, and the packet carries that record's acceptance and the rule its
+tests hold as a constraint the change preserves or, through a scope decision,
+amends or supersedes. A change that contradicts a delivered acceptance is a
+scope question at planning, not a finding at review. Generated system
+documentation is read before the code and cited as `DOC:`; it is navigation,
+and where it and the code at the revision disagree, the code wins and the
+packet records the disagreement. Material revision drift makes the packet
+and its dependent reviews stale.
 
 A packet is complete before its review starts. The state inventory is where
 the packet states what a review would otherwise have to derive: a row the
@@ -422,9 +430,12 @@ decision with its `USER:` source. No new mechanism enters a packet during a
 review cycle. A finding whose fix needs a new acceptance criterion, a wider
 boundary, or a new flow hop is a scope question — split, defer, or decide —
 and the mechanism is planned with its own reconnaissance as its own change.
-A round whose material findings fall on mechanisms an earlier round's
-resolutions introduced is evidence that the packet was reviewed incomplete,
-not that the review is thorough.
+A resolution edit re-enters reconnaissance for what it names: every symbol,
+path, or test it names is read at the revision before the disposition is
+recorded, and a fix the reviewer proposed is a claim verified the same way
+as a closure carried from an earlier round. A round whose material findings
+fall on mechanisms an earlier round's resolutions introduced is evidence
+that the packet was reviewed incomplete, not that the review is thorough.
 
 Cold review converges or stops. At most two rounds run on one change. When a
 second round's new blocking findings are about the packet rather than the

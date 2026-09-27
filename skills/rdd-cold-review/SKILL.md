@@ -28,7 +28,10 @@ review audits the change the packet proposes, not the packet as a document.
    transition between concurrent writers in both directions, and file a row
    the change touches that the inventory lacks. Where the change touches
    state and the packet carries no inventory, that absence is the first
-   material finding.
+   material finding. Where the change touches a surface a delivered
+   requirement owns, the packet names that record and the constraint it
+   carries; a surface with no named owner, or a constraint the change
+   contradicts without a scope decision, is a material finding.
 3. Examine contracts, schemas, compatibility, persistence, integrations,
    failure propagation, retries, concurrency, security, and operational risks
    where applicable.
@@ -45,7 +48,9 @@ review audits the change the packet proposes, not the packet as a document.
    with its `USER:` source — and a packet edit only clarifies what the change
    already contained: a resolution that adds an acceptance criterion, widens
    a boundary, or adds a flow hop is a scope question returned to `rdd-plan`,
-   never a resolution.
+   never a resolution. A fix you propose is a claim for the author to verify
+   at the revision, not an instruction; the round that follows re-verifies
+   it as it does a carried closure.
 7. Grade materiality by what the finding would change. A finding about the
    packet's wording, counts, or citations that alters none of the code, tests,
    interfaces, or risks is a note and never blocks; traceability is material
