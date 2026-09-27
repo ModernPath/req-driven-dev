@@ -254,24 +254,27 @@ meaning and may appear only as a trailing parenthetical breadcrumb. Prefer
 concrete user-visible outcomes to process, code, or architecture shorthand, and
 name any agent choices the answer will also ratify in those same plain terms.
 
-Before requesting any human approval or decision, present the complete current
-decision content in the user-facing message. For a recorded gate, read its
-authoritative packet and show the full brief, exact scope, content being
-approved, every option and its consequences, recommendation, and all review
-findings, risks, exceptions, and unresolved questions. Include the requirement
-statements and acceptance content, proposed relationships or changes, and
-evidence conclusions that the answer covers. For source-scoped authorization,
-show the exact source inventory and permitted publication; do not imply that
-ungenerated requirements have been reviewed.
+Before requesting any human approval or decision, present its self-contained
+brief and a listing of the current working-set files the human needs to review.
+Give each file a clickable link with its full absolute filesystem path as both
+the visible label and the link target, followed by a short description of what
+it contributes to the decision. These file links let the human open the material
+in their chosen editor. Cover the gate brief, scoped requirement and
+acceptance content, proposed relationships or changes, review findings,
+evidence conclusions, risks, exceptions, and unresolved questions wherever
+those are recorded. List the files relevant to the exact approval scope.
 
-Show existing human-readable approval content verbatim in fenced `text` blocks,
-with explanations and the approval question outside the blocks. A summary,
-record id, link, tool result, or assertion that the packet is ready does not
-replace this presentation. If the content is long, split it into complete
-labelled parts before asking; never silently truncate or omit it. Supporting
-source files may be cited rather than reproduced unless their content is itself
-being approved. If required decision content cannot be read, report the missing
-content and resolve it before asking for approval.
+Read the files before presenting the listing. Check their snapshot revision and
+fingerprint against the gate's decision inputs, refreshing them through the
+project's sanctioned tool when needed. Resolve missing or stale decision files
+before asking for approval; a ready assertion or record id is not a file listing.
+The listing supports the brief rather than replacing it. Do not print the full
+file contents unless the human asks for them.
+
+For a decision without an existing packet, list the available source or
+authorization files that define the choice. Source-scoped authorization names
+the exact source inventory and permitted publication; do not imply that
+ungenerated requirements have been reviewed.
 
 The same rule binds every question an agent puts to a human inside the loop,
 not only a gate brief: each option states what it changes for the product, the

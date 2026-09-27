@@ -19,8 +19,8 @@ order.
    a confirmation gate. Route directly sourced behavior to a `PROPOSED` UR or
    SR.
 3. Route missing human authority or ambiguity to a decision gate and apply
-   `BLOCKED` only when work cannot proceed honestly. Present the complete
-   current decision content before asking, following `PROCESS.md` §Gates.
+   `BLOCKED` only when work cannot proceed honestly. Present the decision
+   brief and linked list of relevant working-set files before asking, following `PROCESS.md` §Gates.
 4. Route known future work to `DEFERRED` with an attributable human source for
    the postponement, capability/specification gaps to gap records, unclear
    ownership to backlog, and contradicted or removed behavior to an explicit
