@@ -227,6 +227,8 @@ not a gate answer.
 | Requirement `DERIVED -> PROPOSED/PENDING_VERIFICATION/OBSOLETE` | Candidate packet and exact confirmation scope complete |
 | Source-scoped baseline authorization | Bound system/store, current corpus and exact source/document inventory reviewed; allowed baseline publication made explicit |
 | Requirement `PROPOSED/PENDING_VERIFICATION -> TODO` | Its Entry packet is complete at the exact fingerprint |
+| Lane authorization for a system | The classes, excluded areas, who may apply it, expiry and daily cap are explicit |
+| Small change `PROPOSED -> TODO` | Its narrow independent pass is `PASS`, it is eligible, and a current lane authorization covers its class and cap; the entry is recorded as an application of that authorization, attributed to the human who answered it |
 | Epic `PROPOSED -> TODO` | Its Entry packet and every selected member's entry trace are complete |
 | Requirement `IN_REVIEW -> DONE` | Its completion predicate is satisfied at the delivered fingerprint |
 | Epic `IN_REVIEW -> DONE` | Every member is already `DONE` or named and completion-eligible in the same gate; the Epic completion predicate is satisfied |
@@ -343,10 +345,41 @@ failure.
 |---|---|---|
 | Epic | Multiple requirements form one human-readable change, or shared product/architecture/contract/data decisions are required | Exact member UR/SR set; membership is grouping, not ancestry |
 | Single SR | Exactly one independently verifiable system behavior changes | Authoritative SR source; Epic and UR relations optional |
+| Small change | One SR changes one bounded behavior, the change meets the lane's eligibility, and a current lane authorization covers its class | Authoritative SR source; the lane authorization it applies; UR relation optional |
 
 Expand single-SR work to Epic scope when it changes user outcome or acceptance,
 requires another SR, or introduces a cross-cutting decision. Related approved
 items repeat entry approval only when their approved scope changes.
+
+### Small-change lane
+
+The small-change lane scales review and gates to the size of the change; it
+keeps every invariant of the loop. A change is eligible only when all of these
+hold, checked by the store and the CLI rather than asserted by an agent:
+
+- exactly one SR changes and no other requirement changes status;
+- its change boundary names at most five non-test source files in one
+  repository (tests are not counted — red-first adds them);
+- it touches none of: security, authentication, authorization, or the
+  process's own guards and permissions; migrations, persisted schema or tenant
+  data access; public API routes, response shapes, or CLI verbs and flags;
+  model prompts or anything that calls a model or runs a background job;
+  billing; and any area the lane authorization excludes;
+- its class is one the current lane authorization covers. The classes are: a
+  defect with a diagnosed failing test; wording or copy; a presentation-only
+  change inside one view or one library component; a patch-version dependency
+  update with the suite passing. New features are never small changes.
+
+A lane authorization is a strict human gate answered once for a system by a
+workspace admin or the process owner. It names the classes it covers, any
+further excluded areas, who may apply it, its expiry (at most 90 days; renewed
+by a successor gate), and a daily cap. It can be withdrawn at any time; work
+already entered finishes, nothing new enters. Every application of it is
+visible in the authorizing human's feed.
+
+A change that stops being eligible — a finding, a wider boundary, an excluded
+area — leaves the lane for single-SR scope with its full packet and review. It
+is never forced through.
 
 ## Planning and readiness
 
@@ -355,7 +388,10 @@ review, in that order. A changed fingerprint or failed result returns work to
 the earliest affected pass; a downstream pass cannot repair an upstream gap.
 Packet depth is proportional to the selected scope — a single-SR packet may
 satisfy an item in a sentence where an Epic needs pages — but no packet item
-may be omitted. Depth is also bounded: a single-requirement packet is at most
+may be omitted. A small change's packet is its SR record: statement and source,
+change boundary (files, and what must not change), RED plan (the failing test and
+why it fails today), and lane class; together they satisfy the eight items, and
+they fit in about ten lines. Depth is also bounded: a single-requirement packet is at most
 one page. Reconnaissance that needs more than that page is evidence that the
 scope is wrong, not that the packet should grow — split or replan the scope.
 The bound is a limit, not a preference: every line a packet carries beyond
@@ -404,7 +440,10 @@ from an earlier round is a claim to re-verify, not a fact. A finding that
 would change a human decision returns to that human as a question; it is never
 resolved by editing the packet.
 
-Cold review converges or stops. At most two rounds run on one change. When a
+Cold review converges or stops. At most two rounds run on one change. A small
+change gets one narrow pass from an independent context — the boundary against
+the code, the RED plan, and the eligibility — and no second round: a blocking
+finding sends it out of the lane. When a
 second round's new blocking findings are about the packet rather than the
 change, the packet is cut to what the change needs and review proceeds. A
 third round does not start: the work stops and what is known is handed to a
@@ -557,6 +596,10 @@ Supplemental evidence causes no demotion. Re-verification may restore
 `IN_REVIEW`; restoring `DONE` at a new fingerprint requires a successor human
 completion gate. Material approved-scope changes stale entry approval and send
 work back to planning.
+
+One completion human gate may name many small changes — a lane batch — each
+meeting its own predicate below; the human may reject single items, which stay
+`IN_REVIEW`.
 
 A completion human gate may open only when named items are `IN_REVIEW`, code is
 delivered, evidence is current at the delivered revision, state is reconciled,

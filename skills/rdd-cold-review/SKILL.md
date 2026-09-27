@@ -41,11 +41,15 @@ review audits the change the packet proposes, not the packet as a document.
    interfaces, or risks is a note and never blocks; traceability is material
    only when a builder or a gate would act on the wrong citation
    (`PROCESS.md` §Planning and readiness).
-8. Bound the rounds: at most two on one change. On a second round whose new
+8. For a small change, run one narrow pass: the boundary against the code, the
+   RED plan, and the lane's eligibility. There is no second round — a blocking
+   finding returns `FAIL` with the instruction that the change leaves the lane
+   for single-SR scope.
+9. Bound the rounds: at most two on one change. On a second round whose new
    blocking findings are about the packet rather than the change, return
    `FAIL` with the instruction to cut the packet, not to expand it. Do not
    start a third round: stop and hand what is known to a human.
-9. Return the cold-review trace gate `PASS` only when the material-finding rule
+10. Return the cold-review trace gate `PASS` only when the material-finding rule
    in `PROCESS.md` is satisfied. Otherwise return `FAIL` with exact blockers.
 
 Use `skills/rdd-audit/SKILL.md` to resolve the packet's citations and diff its

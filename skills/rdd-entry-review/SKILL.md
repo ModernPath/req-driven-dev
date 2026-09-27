@@ -28,6 +28,11 @@ packet, cold-review findings, current gate records, and relevant sources.
    with every referenced decision, correction, or finding stated by its
    substance and not its code. Before presenting, reread the brief as that
    reader and expand any bare identifier or jargon.
+   For a small change there is no per-change human gate: after its narrow pass
+   is `PASS` and its eligibility holds, record its entry as an application of
+   the current lane authorization, which names the human who answered it; a
+   missing, expired, exhausted or non-covering authorization stops here and the
+   change follows the single-SR entry.
 5. Do not answer the gate for the human. If the authorized human answers,
    record the real actor, role, scope, answer, and `USER:` source; apply only
    named transitions and reconcile all affected records. The answer and its

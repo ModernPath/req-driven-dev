@@ -105,7 +105,8 @@ These rules bind every subsequent phase in the session:
 ## Route
 
 Select the earliest unmet prerequisite for the frozen scope and hand off to
-its skill: `rdd-discover`, `rdd-plan`, `rdd-cold-review`, `rdd-entry-review`,
+its skill; a change that meets the small-change lane's eligibility under a
+current lane authorization is planned, reviewed and entered through that lane: `rdd-discover`, `rdd-plan`, `rdd-cold-review`, `rdd-entry-review`,
 `rdd-build`, `rdd-verify`, `rdd-completion-review`, or `rdd-deliver` for the
 complete loop.
 
