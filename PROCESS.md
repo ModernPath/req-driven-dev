@@ -283,10 +283,16 @@ ungenerated requirements have been reviewed.
 The same rule binds every question an agent puts to a human inside the loop,
 not only a gate brief: each option states what it changes for the product, the
 records, and the work ahead, in the same plain terms, and an identifier is at
-most a trailing breadcrumb. A human's answer — to a gate or to a question — is
-a decision about that gate or question, never an instruction to enter the next
-phase: the agent applies it, reports what moved, and waits for the human's
-word before any further phase, in the complete loop as in a focused pass.
+most a trailing breadcrumb. A question is put only when no rule, record, or
+earlier answer already implies its answer: preserving a delivered acceptance,
+applying a stance the human has stated, or bookkeeping that follows from a
+decision already given is done and reported, never asked. Each question
+stands alone in one plain sentence about what changes for the product, and
+bookkeeping is never bundled with a decision. A human's answer — to a gate
+or to a question — is a decision about that gate or question, never an
+instruction to enter the next phase: the agent applies it, reports what
+moved, and waits for the human's word before any further phase, in the
+complete loop as in a focused pass.
 
 ### Automatic transitions
 

@@ -43,7 +43,9 @@ review audits the change the packet proposes, not the packet as a document.
    `OPEN`, `RESOLVED`, `DEFERRED`, or `REJECTED`. A `RESOLVED` closure carried
    from an earlier round is a claim: verify it against the current packet and
    code before accepting it. A finding that would change a human decision is a
-   question for that human, never a packet edit. A `RESOLVED` disposition
+   question for that human, never a packet edit; a finding whose fix preserves
+   a delivered acceptance or applies a stance the human has stated is not
+   such a question — name the rule it applies instead. A `RESOLVED` disposition
    names its kind — packet edit, scope action with its record, or decision
    with its `USER:` source — and a packet edit only clarifies what the change
    already contained: a resolution that adds an acceptance criterion, widens

@@ -63,8 +63,12 @@ scope, Item ownership, and Planning and readiness sections of `PROCESS.md`.
    cite it, and plan the SR's own lower RED to be re-established after entry.
 6. Route product, scope, architecture, acceptance, priority, release, and
    workflow decisions through exact human gates. Open them only after their
-   trace prerequisites pass. Record blockers, conflicts, gaps, and deferrals
-   rather than guessing.
+   trace prerequisites pass. Before opening one, check whether a rule, a
+   record, or an earlier answer already implies it — a change that preserves
+   a delivered acceptance, or applies a stance the human has stated, is
+   recorded and reported, not asked. Put what remains in one plain sentence
+   about what changes for the product, the identifier a trailing breadcrumb.
+   Record blockers, conflicts, gaps, and deferrals rather than guessing.
 7. Assemble Entry-packet items 1–6 and the product-language brief. Reconcile
    planning records — every citation, mechanism, and inventory row the packet
    will carry is in it now — then hand off to `rdd-cold-review` for item 7. A
