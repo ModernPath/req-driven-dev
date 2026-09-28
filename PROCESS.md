@@ -491,7 +491,11 @@ as a closure carried from an earlier round. A round whose material findings
 fall on mechanisms an earlier round's resolutions introduced is evidence
 that the packet was reviewed incomplete, not that the review is thorough.
 
-Cold review converges or stops. At most two rounds run on one change. A small
+Cold review converges or stops. At most two rounds run on one change. A later
+round reviews what changed since the previous round's recorded trace — the
+records and sections whose fingerprints moved, the findings still open, and
+what those touch — and carries the unchanged remainder at that round's verdict;
+its trace still pins the full current aggregate. A small
 change gets one narrow pass from an independent context — the boundary against
 the code, the RED plan, and the eligibility — and no second round: a blocking
 finding sends it out of the lane. When a
