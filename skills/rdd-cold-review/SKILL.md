@@ -23,7 +23,15 @@ review audits the change the packet proposes, not the packet as a document.
 1. Audit the authoritative graph and selected scope without relying on
    unstated author reasoning.
 2. Verify the affected repositories, files, symbols, entry points, callers,
-   writers, readers, and every changed control/data-flow hop.
+   writers, readers, and every changed control/data-flow hop. Where the packet
+   carries a state inventory, enumerate it: attack each cell and each
+   transition between concurrent writers in both directions, and file a row
+   the change touches that the inventory lacks. Where the change touches
+   state and the packet carries no inventory, that absence is the first
+   material finding. Where the change touches a surface a delivered
+   requirement owns, the packet names that record and the constraint it
+   carries; a surface with no named owner, or a constraint the change
+   contradicts without a scope decision, is a material finding.
 3. Examine contracts, schemas, compatibility, persistence, integrations,
    failure propagation, retries, concurrency, security, and operational risks
    where applicable.
@@ -35,12 +43,23 @@ review audits the change the packet proposes, not the packet as a document.
    `OPEN`, `RESOLVED`, `DEFERRED`, or `REJECTED`. A `RESOLVED` closure carried
    from an earlier round is a claim: verify it against the current packet and
    code before accepting it. A finding that would change a human decision is a
-   question for that human, never a packet edit.
+   question for that human, never a packet edit; a finding whose fix preserves
+   a delivered acceptance or applies a stance the human has stated is not
+   such a question — name the rule it applies instead. A `RESOLVED` disposition
+   names its kind — packet edit, scope action with its record, or decision
+   with its `USER:` source — and a packet edit only clarifies what the change
+   already contained: a resolution that adds an acceptance criterion, widens
+   a boundary, or adds a flow hop is a scope question returned to `rdd-plan`,
+   never a resolution. A fix you propose is a claim for the author to verify
+   at the revision, not an instruction; the round that follows re-verifies
+   it as it does a carried closure.
 7. Grade materiality by what the finding would change. A finding about the
    packet's wording, counts, or citations that alters none of the code, tests,
    interfaces, or risks is a note and never blocks; traceability is material
    only when a builder or a gate would act on the wrong citation
-   (`PROCESS.md` §Planning and readiness).
+   (`PROCESS.md` §Planning and readiness). A command, a pattern, or a test
+   name the packet need not carry is audited by dropping it: the finding is a
+   note that the line goes, never a blocker on its syntax.
 8. Bound the rounds: at most two on one change. On a second round whose new
    blocking findings are about the packet rather than the change, return
    `FAIL` with the instruction to cut the packet, not to expand it. Do not
@@ -59,6 +78,7 @@ verdict as entry approval.
 
 Lead with material findings, then state the round number, the context the
 verdict is recorded from, the reviewed fingerprints, finding dispositions
-(notes separated from blockers), trace-gate verdict, and the exact handoff:
+(notes separated from blockers), which findings fall on mechanisms an earlier
+round's resolutions introduced, trace-gate verdict, and the exact handoff:
 `rdd-plan` after a failure, `rdd-entry-review` after a current pass, or the
 human after a bounded third round.

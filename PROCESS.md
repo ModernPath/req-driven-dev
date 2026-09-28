@@ -283,10 +283,16 @@ ungenerated requirements have been reviewed.
 The same rule binds every question an agent puts to a human inside the loop,
 not only a gate brief: each option states what it changes for the product, the
 records, and the work ahead, in the same plain terms, and an identifier is at
-most a trailing breadcrumb. A human's answer — to a gate or to a question — is
-a decision about that gate or question, never an instruction to enter the next
-phase: the agent applies it, reports what moved, and waits for the human's
-word before any further phase, in the complete loop as in a focused pass.
+most a trailing breadcrumb. A question is put only when no rule, record, or
+earlier answer already implies its answer: preserving a delivered acceptance,
+applying a stance the human has stated, or bookkeeping that follows from a
+decision already given is done and reported, never asked. Each question
+stands alone in one plain sentence about what changes for the product, and
+bookkeeping is never bundled with a decision. A human's answer — to a gate
+or to a question — is a decision about that gate or question, never an
+instruction to enter the next phase: the agent applies it, reports what
+moved, and waits for the human's word before any further phase, in the
+complete loop as in a focused pass.
 
 ### Automatic transitions
 
@@ -371,7 +377,12 @@ The fingerprinted packet must contain:
 3. reconnaissance at a named revision covering the affected surface,
    control/data flow, contracts, persistence, integrations, reuse targets,
    dependencies, failure modes, operational risks, test infrastructure, and
-   project gates;
+   project gates, and — when the change adds or touches persisted or shared
+   state — a state inventory: one row per piece of state, with its writers
+   and each write shape it admits (a birth, an edit of an open row, an edit
+   of a settled row, a row born before the change), the readers that branch
+   on it, what a crash mid-write leaves, what makes it stale, and how it
+   recovers, each mitigation ending `closed`, `residual`, or `decided`;
 4. each SR's owned flow segment, change boundary, dependencies, risks, and test
    path;
 5. an upper-RED strategy for every selected UR, a lower-RED strategy for every
@@ -380,9 +391,35 @@ The fingerprinted packet must contain:
 7. cold-review findings and verdict; and
 8. the human entry brief.
 
-Reconnaissance cites `DOC:`, `CODE:`, and `TEST:` sources. Generated context is
-navigation only. Material revision drift makes the packet and its dependent
+Reconnaissance cites `DOC:`, `CODE:`, and `TEST:` sources. It starts from the
+ledger: each surface the change touches names the delivered requirement that
+owns it — found by searching the records for every verb, symbol, and path
+the change touches, not by recalling likely owners — and the packet carries
+that record's acceptance and the rule its tests hold as a constraint the
+change preserves or, through a scope decision, amends or supersedes. A
+change that contradicts a delivered acceptance is a scope question at
+planning, not a finding at review. Generated system documentation is read
+before the code and cited as `DOC:`; it is navigation, and where it and the
+code at the revision disagree, the code wins and the packet records the
+disagreement. Material revision drift makes the packet and its dependent
 reviews stale.
+
+A packet is complete before its review starts. The state inventory is where
+the packet states what a review would otherwise have to derive: a row the
+change touches but the inventory lacks is a finding, a cell that ends in
+`backlog` while an acceptance criterion asserts it is a finding, and a
+mechanism the packet does not name is not part of the change. A value the
+packet states — a limit, a timeout, a constant — is read at the call site
+that applies it, not at its definition.
+
+A RED strategy names, for each selected requirement, the test file its case
+lives in, the behaviour the case asserts, and why it fails at the revision.
+It carries no command, pattern, or test name: the command that runs the case
+is evidence recorded at the RED commit, where running it is the verification.
+A review finding about a command or a name the packet need not carry is a
+note that the line is dropped, never a blocker. A migration or a schema
+change is production: it lands with the GREEN it serves, never with a RED,
+and a case that needs it fails at the revision because it is absent.
 
 Cold review runs from a context independent of packet authoring and audits the
 trace, scope, technical surface, changed flow, contracts, data, compatibility,
@@ -404,11 +441,34 @@ from an earlier round is a claim to re-verify, not a fact. A finding that
 would change a human decision returns to that human as a question; it is never
 resolved by editing the packet.
 
+A `RESOLVED` disposition names how it resolved: a packet edit that clarifies
+what the change already contained, a scope action with its record, or a
+decision with its `USER:` source. No new mechanism enters a packet during a
+review cycle. A finding whose fix needs a new acceptance criterion, a wider
+boundary, or a new flow hop is a scope question — split, defer, or decide —
+and the mechanism is planned with its own reconnaissance as its own change.
+A resolution edit re-enters reconnaissance for what it names: every symbol,
+path, or test it names is read at the revision before the disposition is
+recorded, and a fix the reviewer proposed is a claim verified the same way
+as a closure carried from an earlier round. A round whose material findings
+fall on mechanisms an earlier round's resolutions introduced is evidence
+that the packet was reviewed incomplete, not that the review is thorough.
+
 Cold review converges or stops. At most two rounds run on one change. When a
 second round's new blocking findings are about the packet rather than the
 change, the packet is cut to what the change needs and review proceeds. A
 third round does not start: the work stops and what is known is handed to a
 human.
+
+A review of the built change is not a round of the packet's review. It runs
+from its own independent context at the revision it read and numbers its own
+rounds; its findings are recorded on the same scope but count neither toward
+the two-round bound nor in the packet's round history, and an open material
+finding on the change stops delivery. A `RESOLVED` finding on the change
+names the commit that resolved it: the commit only brings the code to what
+the approved change already contained, and a fix that needs a new acceptance
+criterion, a wider boundary, or a new flow hop is a scope question, as in the
+inner loop.
 
 Entry review evaluates the complete packet at its exact fingerprint. Only a
 current entry trace `PASS` may open the human entry gate. Do not create or
