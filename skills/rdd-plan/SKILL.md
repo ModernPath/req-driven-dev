@@ -16,7 +16,15 @@ scope, Item ownership, and Planning and readiness sections of `PROCESS.md`.
    authoritative. Take the scope from the stored relation graph — declared
    members, required SRs, gates — never from a keyword search over records.
    Stop at the confirmation gate for `DERIVED` requirements or candidate-only
-   links.
+   links. Then take the constraints from the ledger: search the records for
+   every verb, symbol, and path the change touches, and for each surface
+   name the delivered requirement the search returns as its owner — the
+   record whose acceptance and tests hold the rule the change meets — and
+   carry that acceptance into the packet as a constraint with its record id.
+   An owner recalled rather than found is a surprise waiting for the review.
+   A change that contradicts one is a scope question for step 6 (amend or
+   supersede the record), never a surprise in review. For a small change the
+   search covers the files its boundary names.
 2. Choose epic scope, single-SR scope, or the small-change lane using
    `PROCESS.md`. Do not invent epic membership or a UR link to make the graph
    appear complete. Take the small-change lane only when the change meets the
@@ -26,29 +34,62 @@ scope, Item ownership, and Planning and readiness sections of `PROCESS.md`.
 3. Create or update the selected item content: sourced UR outcomes and inline
    scenarios when user behavior is in scope, and thin testable SRs for system
    behavior.
-4. Perform technical reconnaissance at a named repository revision. Record the
-   affected surface, control/data flow, contracts, reuse targets, dependencies,
-   risks, test infrastructure, failure modes, and unknowns. Inventory the
+4. Perform technical reconnaissance at a named repository revision. Read the
+   project's generated system documentation for the owning subsystem before
+   the code and cite it as `DOC:`; where it and the code disagree, the code
+   at the revision wins and the packet says so. Record the affected surface,
+   control/data flow, contracts, reuse targets, dependencies, risks, test
+   infrastructure, failure modes, and unknowns. Inventory the
    surface by what depends on the invariant the change alters, not by the
    callers of the module that owns it, and judge each break per call site
    against the post-change invariants — one file can hold call sites of both
    kinds. Verify every claim about existing code by reading it at that
-   revision; a reconnaissance sentence is a citation, not a memory. Keep the
-   packet within the bound in `PROCESS.md`: a single-requirement packet is at
-   most one page.
+   revision; a reconnaissance sentence is a citation, not a memory. When the
+   change adds or touches persisted or shared state — a table, a column, a
+   snapshot, a job, a cache, a file, a join row as much as an entity — write
+   the state inventory: one row per piece of state with its writers today and
+   after the change and each write shape it admits — a birth, an edit of an
+   open row, an edit of a settled row, a row born before the change — the
+   readers that branch on it, what a crash mid-write leaves, what makes it
+   stale, and recovery. End every mitigation cell with
+   `closed` (an acceptance criterion and a RED cover it), `residual` (a named
+   risk no criterion asserts), or `decided` (a `USER:` line); `backlog` is not
+   a closing word while a criterion asserts the cell. Audit the packet against
+   the inventory before handing it over: a cell the packet leaves open is a
+   finding filed now, not one the reviewer files later. A value the packet
+   states — a limit, a timeout, a constant — is read at the call site that
+   applies it, not at its definition: a defined value may be unused, or one of
+   several the code selects between. Keep the packet within the bound in
+   `PROCESS.md`: a single-requirement packet is at most one page.
 5. Enrich every selected SR with its implementation context, explicit change
    boundary, and lower-RED strategy. Define a separate upper-RED strategy for
-   every selected UR. Every planned RED case must fail today for the stated
-   reason; a case that would pass on the current code is not evidence. For a
+   every selected UR. A lower-RED strategy names the test file the case
+   lives in, the behaviour it asserts, and why it fails at the revision — no
+   command, pattern, or test name: the command is evidence at the RED commit,
+   where running it is the verification. Every planned RED case must fail
+   today for the stated reason; a case that would pass on the current code is
+   not evidence. For a
    diagnosed, bounded defect the failing test may already exist on a branch
    as a `RUN:` source — the defect lane in `PROCESS.md` §Entry packet —
    cite it, and plan the SR's own lower RED to be re-established after entry.
 6. Route product, scope, architecture, acceptance, priority, release, and
    workflow decisions through exact human gates. Open them only after their
-   trace prerequisites pass. Record blockers, conflicts, gaps, and deferrals
-   rather than guessing.
+   trace prerequisites pass. Before opening one, check whether a rule, a
+   record, or an earlier answer already implies it — a change that preserves
+   a delivered acceptance, or applies a stance the human has stated, is
+   recorded and reported, not asked. Put what remains in one plain sentence
+   about what changes for the product, the identifier a trailing breadcrumb.
+   Record blockers, conflicts, gaps, and deferrals rather than guessing.
 7. Assemble Entry-packet items 1–6 and the product-language brief. Reconcile
-   planning records, then hand off to `rdd-cold-review` for item 7.
+   planning records — every citation, mechanism, and inventory row the packet
+   will carry is in it now — then hand off to `rdd-cold-review` for item 7. A
+   mechanism a review finding later needs is not added here: it is a scope
+   question routed through step 6, and the packet returns to step 4 for that
+   mechanism's own reconnaissance. A resolution edit — a sentence, a symbol,
+   a test name — re-enters step 4 for what it names: read every symbol, path,
+   or test it names at the revision before the disposition is recorded, and
+   treat a fix the reviewer proposed as a claim verified the same way as a
+   carried closure, not as an instruction.
 
 ## Report
 
