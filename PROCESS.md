@@ -417,7 +417,9 @@ lives in, the behaviour the case asserts, and why it fails at the revision.
 It carries no command, pattern, or test name: the command that runs the case
 is evidence recorded at the RED commit, where running it is the verification.
 A review finding about a command or a name the packet need not carry is a
-note that the line is dropped, never a blocker.
+note that the line is dropped, never a blocker. A migration or a schema
+change is production: it lands with the GREEN it serves, never with a RED,
+and a case that needs it fails at the revision because it is absent.
 
 Cold review runs from a context independent of packet authoring and audits the
 trace, scope, technical surface, changed flow, contracts, data, compatibility,
@@ -457,6 +459,16 @@ second round's new blocking findings are about the packet rather than the
 change, the packet is cut to what the change needs and review proceeds. A
 third round does not start: the work stops and what is known is handed to a
 human.
+
+A review of the built change is not a round of the packet's review. It runs
+from its own independent context at the revision it read and numbers its own
+rounds; its findings are recorded on the same scope but count neither toward
+the two-round bound nor in the packet's round history, and an open material
+finding on the change stops delivery. A `RESOLVED` finding on the change
+names the commit that resolved it: the commit only brings the code to what
+the approved change already contained, and a fix that needs a new acceptance
+criterion, a wider boundary, or a new flow hop is a scope question, as in the
+inner loop.
 
 Entry review evaluates the complete packet at its exact fingerprint. Only a
 current entry trace `PASS` may open the human entry gate. Do not create or
