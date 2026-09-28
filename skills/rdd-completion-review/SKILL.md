@@ -17,7 +17,8 @@ records, and derived views.
    completion condition against direct current sources.
 2. Stop for any `DERIVED` dependency, candidate link counted as authoritative,
    stale or inherited-unverified evidence, missing RED observation, material
-   cold-review finding, undisclosed gap, or incomplete reconciliation.
+   finding from the packet's cold review or from a review of the change,
+   undisclosed gap, or incomplete reconciliation.
 3. If the pre-delivery audit passes, deliver through the project's authorized
    integration path while keeping awaiting entities `IN_REVIEW`.
 4. Re-run or confirm evidence against the delivered revision — the revision

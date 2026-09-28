@@ -66,9 +66,11 @@ scope, Item ownership, and Planning and readiness sections of `PROCESS.md`.
    every selected UR. A lower-RED strategy names the test file the case
    lives in, the behaviour it asserts, and why it fails at the revision — no
    command, pattern, or test name: the command is evidence at the RED commit,
-   where running it is the verification. Every planned RED case must fail
-   today for the stated reason; a case that would pass on the current code is
-   not evidence. For a
+   where running it is the verification. A migration or a schema change is
+   production: it lands with the GREEN it serves, never with a RED, and a
+   case that needs it fails at the revision because it is absent. Every
+   planned RED case must fail today for the stated reason; a case that would
+   pass on the current code is not evidence. For a
    diagnosed, bounded defect the failing test may already exist on a branch
    as a `RUN:` source — the defect lane in `PROCESS.md` §Entry packet —
    cite it, and plan the SR's own lower RED to be re-established after entry.
