@@ -377,8 +377,8 @@ hold, checked by the store and the CLI rather than asserted by an agent:
   update with the suite passing. New features are never small changes.
 
 A lane authorization is a strict human gate answered once for a system by a
-workspace admin or the process owner. It names the classes it covers, any
-further excluded areas, who may apply it, its expiry (at most 90 days; renewed
+workspace admin or a platform superuser. It names the classes it covers, any
+further excluded areas, who may apply it, its expiry (at most 30 days; renewed
 by a successor gate), and a daily cap. It can be withdrawn at any time; work
 already entered finishes, nothing new enters. Every application of it is
 visible in the authorizing human's feed.
