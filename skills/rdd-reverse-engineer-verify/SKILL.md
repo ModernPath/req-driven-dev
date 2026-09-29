@@ -1,20 +1,78 @@
 ---
 name: rdd-reverse-engineer-verify
-description: Verify existing reverse-engineered PENDING_VERIFICATION requirements against exact captured sources, complete semantic assertions, genuine test execution and repository integration proof. Use for an as-built baseline before human acceptance; does not implement missing behavior or approve requirements.
+description: Verify a published reverse-engineered baseline using existing captured sources, semantic assertions, genuine execution reports and repository integration proof. Use before human acceptance; missing tests or behavior require normal development, and this skill grants no approval.
 ---
 
 # Verify an existing baseline
 
-Read PROCESS.md's "As-built verification and acceptance" and the consuming project's sanctioned CLI procedure. Keep the exact requested UR/SR scope; a standalone SR needs no invented parent or Epic. Check current PENDING_VERIFICATION state and persisted baseline provenance. DERIVED proposals require their own confirmation first. Reopened development work uses the normal development skills.
+## Purpose
 
-1. Read the current requirement and every active criterion. For each UR, include every required confirmed SR and evaluate the UR's own upper scenarios independently. Record an explicit denominator and omissions.
-2. Resolve captured code and test citations against their exact IDs, revisions and hashes. Read the actual bytes through the supported source reader. Inspect the production subject and test assertions: a test name, citation, aggregate CI badge, self-generated assertion or test that never exercises the behavior is insufficient. Bind the exact executed test name to its registered TestCase or test citation
-   `test_case_ref` on the captured file; an unrelated passing test in the same
-   file is insufficient. Update missing citation identities through sanctioned
-   fingerprinted authoring, then refresh the packet. Map every applicable criterion to an assertion that checks its expected behavior and the production subject it executes.
-3. Run the existing tests against the exact captured revision, or inspect a genuine retained current execution report. Record command, environment, named executed test outcomes, and exact source/test/report identities. For CI, preserve provider, repository, run, job, attempt and tested commit. Record the per-clause results through the existing evidence store, LOWER for SRs and UPPER for URs. Never relabel an unexecuted test as passing, fabricate historical RED, or reuse an SR pass as UR proof.
-4. Obtain a separate retained integration observation for every repository using the supported delivery collector. It must fetch the remote default branch, observe the tested clean revision at its tip, and match the captured snapshot. Passing branch tests alone do not establish delivery. Delivery means repository integration; it makes no deployment claim.
-5. Preview the exact typed proof. Resolve missing, contradictory, stale, revoked or inaccessible evidence as gaps. Adding tests or changing behavior needs an explicitly scoped handoff to normal planning/build/verify. This skill changes no product or test code.
-6. Retain the input and returned proof digest, complete coverage, source/execution/CI/integration identities and disclosed limits. Hand off an eligible exact packet to rdd-reverse-engineer-accept. Preview alone changes no lifecycle or compliance state.
+Build an exact eligibility packet for existing behavior. This pass records real
+evidence and gaps; it changes no product/test code, requirement lifecycle or
+compliance approval and fabricates no RED or PASS.
 
-Report eligible versus incomplete proof, all denominators/gaps and what evidence remains. Verification is not acceptance. If the installed CLI lacks a required operation, file the tooling gap through the sanctioned channel; do not call the API or edit the store directly.
+## Inputs and prerequisites
+
+Read the project `AGENTS.md`, canonical `PROCESS.md` "As-built verification and
+acceptance", and the consuming project's sanctioned CLI procedure. In ModernPath,
+use `.claude/skills/mp-process-cli/SKILL.md` and `.modernpath/cli-reference.md`.
+
+Start from the publication packet: exact requested UR/SR identities, captured
+source/run identities, persisted citations and publication receipts. Acceptance
+targets must be PENDING_VERIFICATION with persisted baseline provenance. Include
+every required confirmed SR of each selected UR; already DONE SRs may remain
+proof dependencies without being accepted again. A standalone SR needs no
+invented parent or Epic. DERIVED proposals need confirmation first; entered or
+defect-reopened development work uses the normal development skills.
+
+## Resume checks
+
+Read retained source, execution, integration and preview identities before
+collecting again. Reuse genuine current evidence for the same captured snapshot;
+rerun only what is missing, stale or invalid. Preserve stable evidence keys and
+returned report/result IDs and digests. Resolve conflicts before retrying.
+
+If an acceptance gate already exists or an answer/application was interrupted,
+hand its ID and retained inputs to `rdd-reverse-engineer-accept` for a status
+read first. Do not reopen a completed acceptance by previewing DONE targets as
+new pending work or regenerating their evidence.
+
+## Steps
+
+1. **Define the denominator.** Read every active criterion for the selected
+   requirements and required SR dependencies. Evaluate each UR's own upper
+   scenarios independently. Record omissions explicitly.
+2. **Inspect semantic proof.** Resolve captured code/test citations by exact ID,
+   revision and hash through the supported source reader. Map each criterion to
+   a meaningful assertion and the production subject it exercises. Bind the
+   executed name to its registered TestCase or captured citation's `test_case_ref`.
+   A name, CI badge, self-generated assertion, or unrelated passing test in the
+   same file is insufficient. Add missing citation identities only through
+   sanctioned fingerprinted authoring, then refresh the affected packet.
+3. **Retain genuine execution.** Run existing tests at the exact captured revision
+   or inspect a genuine retained current report. Record command, environment,
+   named outcomes and exact source/test/report identities. CI reports retain
+   provider, repository, run, job, attempt and tested commit. Record per-clause
+   results through the evidence store: LOWER for SRs, UPPER for URs. Never reuse
+   an SR pass as UR proof or label an unexecuted test as passing.
+4. **Retain integration proof.** For each repository, use a genuine current
+   integration observation or the supported collector, which fetches the remote
+   default branch and checks the tested clean revision and captured snapshot at
+   its tip. Preserve the returned observation and digest across identical
+   retries. Passing branch tests alone are insufficient. Delivery here means
+   observed repository integration, not deployment or live CI monitoring.
+5. **Preview exact proof.** Submit the typed proof for server eligibility. Missing,
+   contradictory, stale, revoked or inaccessible evidence stays a gap. Adding
+   tests or changing behavior requires an explicitly scoped handoff to normal
+   planning/build/verify; do not repair product/test code in this pass.
+
+## Outputs and handoff
+
+Retain the exact proof input and returned digest/eligibility, criterion coverage,
+all gaps, source/execution/CI/integration identities, stable retry inputs and
+disclosed limits. An eligible packet goes to `rdd-reverse-engineer-accept`; an
+incomplete packet names what evidence or development work remains. Preview alone
+changes no lifecycle or compliance state.
+
+If a required operation is missing, file the tooling gap through the sanctioned
+channel. Do not call the API or edit the store directly as a workaround.

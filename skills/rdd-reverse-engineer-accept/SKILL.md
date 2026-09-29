@@ -1,16 +1,86 @@
 ---
 name: rdd-reverse-engineer-accept
-description: Review and apply one human decision accepting an exact verified and delivered reverse-engineered PENDING_VERIFICATION baseline. Use only with an eligible current as-built proof packet; preserves compliance approval and normal development gates.
+description: Obtain and apply one human decision for an exact verified and delivered reverse-engineered baseline, or recover its existing gate and receipt. Use with a verification packet or known acceptance gate; preserves compliance approval and normal development gates.
 ---
 
 # Accept verified existing behavior
 
-Read PROCESS.md's "As-built verification and acceptance" and the consuming project's sanctioned CLI procedure. This path uses one reviewed human acceptance decision, not normal development entry/completion gates.
+## Purpose
 
-1. Read the retained verification packet and preview it again. Require complete applicable SR lower and independent UR upper proof plus the separate current per-repository integration observations. Already DONE required SRs remain independently verified proof dependencies and are not reaccepted or transitioned. A gap, changed pin or unmerged revision returns to rdd-reverse-engineer-verify.
-2. Open the dedicated acceptance decision using its exact scope, proof digest, stable retry key and human brief. Show what becomes DONE, the evidence identities and coverage limits, the risk of accepting incorrect proof and the recommendation. Compliance draft/approved state is unchanged. Opening the gate is not a human answer.
-3. Obtain one explicit attributable human accept/reject decision for that exact packet. Prior permission to reverse-engineer or implement tooling is not acceptance of the baseline. Submit the reviewed answer through the existing answer mechanism, pinned to both the current gate and proof fingerprints with the USER source. The server rechecks the retained proof here.
-4. Apply an approved answer using the dedicated guarded operation, exact fingerprints and stable retry key. The server rechecks all proof and atomically moves exactly the named PENDING_VERIFICATION requirements to DONE, records lifecycle events, closes the applied decision and retains the receipt. Rejection grants no promotion. Never advance through generic author or fabricate RED.
-5. Read the application receipt and each named lifecycle/compliance state. A recorded answer without an applied receipt is still pending application. After interruption, read status first, then retry identical input only; changed input conflicts and requires fresh review. Historical receipts remain readable after later drift, but stale proof cannot be replayed as current acceptance.
+Apply one reviewed human decision from PENDING_VERIFICATION directly to DONE.
+This uses the dedicated acceptance operation, not normal development entry or
+completion gates. Compliance draft/approved state is unchanged.
 
-Report the human answer, recorded/applied state, receipt identity, exact named scope and unchanged compliance status. Stop at the phase report unless the user already requested the complete loop. Merge, publishing and deployment require their own authority.
+## Inputs and prerequisites
+
+Read the project `AGENTS.md`, canonical `PROCESS.md` "As-built verification and
+acceptance", and the consuming project's sanctioned CLI procedure. In ModernPath,
+use `.claude/skills/mp-process-cli/SKILL.md` and `.modernpath/cli-reference.md`.
+
+For new acceptance, retain the verification packet: typed proof, returned proof
+digest, exact pending scope, complete SR lower and independent UR upper proof,
+and separate per-repository integration observations. Already DONE required SRs
+are proof dependencies, not additional acceptance targets. For recovery, retain
+the gate ID, exact opening/application inputs and stable keys, and any actual
+human answer/source already provided. Prior permission to reverse-engineer or
+implement tooling is not acceptance of the baseline.
+
+## Resume checks
+
+When a gate exists or an answer/application may already have succeeded, read its
+status before previewing proof, opening a gate or asking the human again.
+
+| Observed state | Next action |
+|---|---|
+| No existing gate, current eligible verification packet | Follow the new-acceptance steps below |
+| Open gate, current proof | Reuse its stored scope and brief; obtain the answer only if the user has not already given it for this packet |
+| Approved answer, current proof, no applied receipt | Apply the retained exact input; do not ask again |
+| Rejected answer, no applied receipt | Report rejection and unchanged lifecycle; do not promote |
+| Applied receipt, current proof | Report that receipt and returned lifecycle/compliance states; no repeat application or new decision |
+| Changed pins or stale proof | Report any receipt as historical; return to verification before fresh review, without reusing an old answer for changed proof |
+| Status unavailable | Report the read/tooling gap; do not assume no gate exists or invent a new key |
+
+If the opening response was lost before retaining the gate ID, retry the exact
+opening input/key to recover that gate, then follow its returned state.
+
+Reuse the stored gate and stable retry keys. After a lost response, retry
+identical input only if the status read shows that application still needs
+recovery. Changed input conflicts; stale proof cannot be replayed as current.
+
+## Steps
+
+1. **Use the verified packet.** Require complete applicable proof and the exact
+   pending scope. Use the retained eligibility result when it describes this
+   packet; opening the decision rechecks it server-side. A known gap, changed
+   pin or unmerged revision returns to `rdd-reverse-engineer-verify`. Do not
+   recollect unchanged evidence merely to open a decision.
+2. **Open and present the decision.** Supply the typed proof, proof digest,
+   stable opening key and human brief. Show the exact requirements becoming
+   DONE, evidence identities, coverage limits, risk and recommendation, with
+   links to relevant packet files. State that compliance approval is unchanged.
+   Opening a gate is not a human answer.
+3. **Record the human answer.** Obtain one explicit attributable accept/reject
+   decision for that exact packet unless it is already present in the session.
+   Submit it through the existing reviewed answer mechanism with both gate and
+   proof fingerprints and the USER source. The server rechecks proof here.
+   Rejection ends with a report and grants no promotion.
+4. **Apply and report.** Apply an approved answer through the dedicated guarded
+   operation using the exact proof/gate fingerprints and a stable application
+   key. It rechecks proof, atomically moves exactly the pending named scope to
+   DONE, records lifecycle events, closes the applied decision and retains a
+   receipt. Never use generic author/advance or fabricate RED for this edge.
+   Read the receipt and lifecycle/compliance states from the successful apply
+   response. Do not add status/list/preview calls or replay the write merely to
+   repeat that confirmation. Use a status read when the response is missing,
+   incomplete or contradictory, or when recovering an interrupted operation.
+
+## Outputs and handoff
+
+Report the actual human answer/source, recorded versus applied state, receipt
+identity, exact named scope, proof currency and unchanged compliance status.
+An answer without an applied receipt is pending application, not DONE. Historical
+receipts remain readable after later drift without proving current acceptance.
+
+Stop at the phase report unless the user requested the complete loop. Merge,
+publication and deployment need their own authority. Missing operations go to
+the sanctioned tooling-gap channel, not raw API/store writes.
