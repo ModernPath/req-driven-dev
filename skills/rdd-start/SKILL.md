@@ -43,7 +43,9 @@ background: date it against the store revision before relying on it, and
 refresh it when it cannot be dated. A projection whose currency is unknown is
 reported as unknown, never presented as current.
 
-An unmet preflight fact is the report. Do not select work past it.
+An unmet preflight fact is the report. Do not select work past it — unless a
+current autopilot grant covers the scope: then clear or log each fact and
+continue (`PROCESS.md` §Autopilot, `rdd-autopilot`).
 
 ## Take the scope
 
@@ -107,7 +109,8 @@ These rules bind every subsequent phase in the session:
 Select the earliest unmet prerequisite for the frozen scope and hand off to
 its skill: `rdd-discover`, `rdd-plan`, `rdd-cold-review`, `rdd-entry-review`,
 `rdd-build`, `rdd-verify`, `rdd-completion-review`, or `rdd-deliver` for the
-complete loop.
+complete loop. When a current autopilot grant covers the scope, or the human
+asks for one, hand off to `rdd-autopilot` instead.
 
 A pass ends with its report. Enter the next phase only when the human asks
 for it, or when the request at session entry was the complete loop and the

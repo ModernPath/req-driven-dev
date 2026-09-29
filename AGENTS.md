@@ -33,7 +33,9 @@ on a decision, or what is blocked:
 2. read this file and `PROCESS.md`;
 3. enter the session with `skills/rdd-start/SKILL.md` — it verifies the store
    binding and active release before any selection; then use
-   `skills/rdd-deliver/SKILL.md` for end-to-end delivery, or the applicable
+   `skills/rdd-deliver/SKILL.md` for end-to-end delivery,
+   `skills/rdd-autopilot/SKILL.md` for a sprint under a human's autopilot
+   grant, or the applicable
    focused `skills/rdd-*/SKILL.md` when the request explicitly ends at one
    process pass; use `skills/rdd-verify/SKILL.md` for reverse-engineered
    `PENDING_VERIFICATION` rows, and `skills/rdd-reverse-engineer/SKILL.md` to

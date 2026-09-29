@@ -63,7 +63,10 @@ review audits the change the packet proposes, not the packet as a document.
 8. Bound the rounds: at most two on one change. On a second round whose new
    blocking findings are about the packet rather than the change, return
    `FAIL` with the instruction to cut the packet, not to expand it. Do not
-   start a third round: stop and hand what is known to a human.
+   start a third round: stop and hand what is known to a human. Under an
+   autopilot grant there is one pass and at most one narrow confirmation that
+   its folded findings close it; either way the sprint continues
+   (`PROCESS.md` §Autopilot).
 9. Return the cold-review trace gate `PASS` only when the material-finding rule
    in `PROCESS.md` is satisfied. Otherwise return `FAIL` with exact blockers.
 
