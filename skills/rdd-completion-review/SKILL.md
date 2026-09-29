@@ -42,6 +42,9 @@ records, and derived views.
    epic-scoped pass does not stand in for it. Only then make the scoped human
    completion gate `OPEN` and present its brief and linked list of relevant
    working-set files before asking for acceptance, following `PROCESS.md` §Gates.
+   Small changes may be completed together in one lane-batch gate that lists
+   each change with its evidence and review verdict; the human may reject
+   single items, which stay `IN_REVIEW`.
 6. Do not answer the gate for the human. If the authorized human answers,
    record the real actor, role, exact scope, answer, and `USER:` source.
 7. Apply `DONE` only to accepted named entities that independently satisfy the

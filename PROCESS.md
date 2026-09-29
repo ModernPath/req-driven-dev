@@ -244,6 +244,8 @@ not a gate answer.
 | Source-scoped baseline authorization | Bound system/store, current corpus and exact source/document inventory reviewed; allowed baseline publication made explicit |
 | Source-scoped baseline requirement `PENDING_VERIFICATION -> DONE` | Complete exact current as-built verification and separate repository integration proof; one dedicated reviewed human acceptance |
 | Requirement `PROPOSED/PENDING_VERIFICATION -> TODO` | Its Entry packet is complete at the exact fingerprint |
+| Lane authorization for a system | The classes, excluded areas, who may apply it, expiry and daily cap are explicit |
+| Small change `PROPOSED -> TODO` | Its narrow independent pass is `PASS`, it is eligible, and a current lane authorization covers its class and cap; the entry is recorded as an application of that authorization, attributed to the human who answered it |
 | Epic `PROPOSED -> TODO` | Its Entry packet and every selected member's entry trace are complete |
 | Requirement `IN_REVIEW -> DONE` | Its completion predicate is satisfied at the delivered fingerprint |
 | Epic `IN_REVIEW -> DONE` | Every member is already `DONE` or named and completion-eligible in the same gate; the Epic completion predicate is satisfied |
@@ -368,6 +370,7 @@ failure.
 |---|---|---|
 | Epic | Multiple requirements form one human-readable change, or shared product/architecture/contract/data decisions are required | Exact member UR/SR set; membership is grouping, not ancestry |
 | Single SR | Exactly one independently verifiable system behavior changes | Authoritative SR source; Epic and UR relations optional |
+| Small change | One SR changes one bounded behavior, the change meets the lane's eligibility, and a current lane authorization covers its class | Authoritative SR source; the lane authorization it applies; UR relation optional |
 | Named UR/SR set | Candidate confirmation or source-scoped baseline verification or acceptance | Exact named requirements and applicable declared dependencies; no Epic required |
 | Source inventory | Reverse-engineering before requirement IDs exist | Exact repository/file and document revisions, corpus fingerprint, derivation mode, and source authorization; publication receipts identify the resulting requirements |
 
@@ -388,6 +391,36 @@ Normal delivery selection requires exactly one active release with a `USER:`
 source. Candidate confirmation and source-scoped baseline work do not select a
 delivery release and do not require one to be active.
 
+### Small-change lane
+
+The small-change lane scales review and gates to the size of the change; it
+keeps every invariant of the loop. A change is eligible only when all of these
+hold, checked by the store and the CLI rather than asserted by an agent:
+
+- exactly one SR changes and no other requirement changes status;
+- its change boundary names at most five non-test source files in one
+  repository (tests are not counted — red-first adds them);
+- it touches none of: security, authentication, authorization, or the
+  process's own guards and permissions; migrations, persisted schema or tenant
+  data access; public API routes, response shapes, or CLI verbs and flags;
+  model prompts or anything that calls a model or runs a background job;
+  billing; and any area the lane authorization excludes;
+- its class is one the current lane authorization covers. The classes are: a
+  defect with a diagnosed failing test; wording or copy; a presentation-only
+  change inside one view or one library component; a patch-version dependency
+  update with the suite passing. New features are never small changes.
+
+A lane authorization is a strict human gate answered once for a system by a
+workspace admin or a platform superuser. It names the classes it covers, any
+further excluded areas, who may apply it, its expiry (at most 30 days; renewed
+by a successor gate), and a daily cap. It can be withdrawn at any time; work
+already entered finishes, nothing new enters. Every application of it is
+visible in the authorizing human's feed.
+
+A change that stops being eligible — a finding, a wider boundary, an excluded
+area — leaves the lane for single-SR scope with its full packet and review. It
+is never forced through.
+
 ## Planning and readiness
 
 Planning consists of packet authoring, independent cold review, and entry
@@ -397,6 +430,12 @@ Packet depth is proportional to the selected scope — a single-SR packet may
 satisfy an item in a sentence where an Epic needs pages — but no packet item
 may be omitted. Include the information a builder or gate needs to assess the
 change; document length does not determine requirement scope.
+A small change's packet is its SR record: statement and source, change
+boundary (files, and what must not change), RED plan (the failing test and why
+it fails today), and lane class; together they satisfy the packet items. It
+carries no state inventory — the lane's excluded areas keep persisted and
+shared state out of it — and its ledger search covers the files its boundary
+names.
 
 ### Entry packet
 
@@ -439,6 +478,7 @@ entry review also requires the cold-review verdict. Missing required state
 analysis or an unresolved risk to an acceptance criterion is a finding. Read a
 stated limit, timeout, or constant at the call site that applies it, including the
 conditions that select its value.
+A small change's SR record is its complete packet.
 
 A RED strategy names, for each case requiring new evidence, the planned test
 file, the behavior it asserts, and why it is expected to fail at the revision.
@@ -488,6 +528,9 @@ not itself authorize implementation.
 At most two cold-review rounds run on the selected planning scope. A current
 pass proceeds to entry review. After a second failed round, report the remaining
 material findings to the human; do not start a third round automatically.
+A small change gets one narrow pass from an independent context — the
+boundary against the code, the RED plan, and the eligibility — and no second
+round: a blocking finding sends it out of the lane.
 
 Completion review requires an independent code review of the built change for
 Epic scope. For single-SR scope, obtain one when project gates or the user
@@ -701,6 +744,10 @@ Supplemental evidence causes no demotion. Re-verification may restore
 `IN_REVIEW`; restoring `DONE` at a new fingerprint requires a successor human
 completion gate. Material approved-scope changes stale entry approval and send
 work back to planning.
+
+One completion human gate may name many small changes — a lane batch — each
+meeting its own predicate below; the human may reject single items, which stay
+`IN_REVIEW`.
 
 A normal completion human gate may open only when named items are `IN_REVIEW`,
 code is delivered, evidence is current at the delivered revision, state is reconciled,

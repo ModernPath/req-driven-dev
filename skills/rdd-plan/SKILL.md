@@ -20,9 +20,14 @@ scope, Item ownership, and Planning and readiness sections of `PROCESS.md`.
    and verify each match against its content and declared relations. Carry
    applicable delivered acceptance into the packet. Record surfaces with no
    existing owner without inventing one. A change to existing acceptance
-   is a scope decision for step 6.
-2. Choose epic scope or single-SR scope using `PROCESS.md`. Do not invent epic
-   membership or a UR link to make the graph appear complete.
+   is a scope decision for step 6. For a small change the search covers the
+   files its boundary names.
+2. Choose epic scope, single-SR scope, or the small-change lane using
+   `PROCESS.md`. Do not invent epic membership or a UR link to make the graph
+   appear complete. Take the small-change lane only when the change meets the
+   lane's eligibility and a current lane authorization covers its class; its
+   packet is the SR record's statement, boundary, RED plan and lane class, and
+   nothing more.
 3. Create or update the selected item content: sourced UR outcomes and inline
    scenarios when user behavior is in scope, and thin testable SRs for system
    behavior.
