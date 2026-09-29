@@ -45,7 +45,7 @@ apply that model; `file-state/` serializes its records without redefining it.
 |---|---|
 | `AGENTS.md` | shared agent policy and canonical entry point |
 | `PROCESS.md` | complete canonical process |
-| `skills/` | delivery orchestration and focused passes; `rdd-verify` for entered verification work; `rdd-reverse-engineer` for baseline publication or DERIVED additions; `rdd-reverse-engineer-verify` and `rdd-reverse-engineer-accept` for eligible existing baselines; `rdd-audit` for documents and citations |
+| `skills/` | delivery orchestration, an autopilot sprint (`rdd-autopilot`), and focused passes; `rdd-verify` for entered verification work; `rdd-reverse-engineer` for baseline publication or DERIVED additions; `rdd-reverse-engineer-verify` and `rdd-reverse-engineer-accept` for eligible existing baselines; `rdd-audit` for documents and citations |
 | `file-state/` | canonical serialization shapes for Epic, requirement, gate, work-selection, and backlog/gap records |
 
 ## Distribution

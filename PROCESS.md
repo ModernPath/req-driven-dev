@@ -43,6 +43,8 @@ Humans decide product intent, scope, architecture, acceptance, priority,
 release, and workflow. Agents establish facts and propose options; they do not
 make those decisions by assumption. Ask humans only for decisions that cannot
 be established from authoritative records, code, tests, or runtime evidence.
+Under an autopilot grant an agent may take a reversible product decision as a
+recorded assumption pending confirmation (§Autopilot).
 
 | Tag | Source |
 |---|---|
@@ -311,7 +313,8 @@ bookkeeping is never bundled with a decision. A human's answer — to a gate
 or to a question — is a decision about that gate or question, never an
 instruction to enter the next phase: the agent applies it, reports what
 moved, and waits for the human's word before any further phase, in the
-complete loop as in a focused pass.
+complete loop as in a focused pass. Under an autopilot grant the agent
+continues instead (§Autopilot).
 
 ### Automatic transitions
 
@@ -420,6 +423,81 @@ visible in the authorizing human's feed.
 A change that stops being eligible — a finding, a wider boundary, an excluded
 area — leaves the lane for single-SR scope with its full packet and review. It
 is never forced through.
+
+### Autopilot
+
+Autopilot is for building larger scopes — greenfield systems, initiatives,
+many Epics — when stopping at every process check costs more than the check
+protects. It keeps the records and the tests. It moves the human checkpoint to
+the end of a sprint, and turns process refusals into logged work instead of
+stops.
+
+**The grant.** A human who may answer entry and completion gates for the scope
+grants autopilot once. The grant names:
+
+- the scope (Epics, an initiative, or a system);
+- the end of the sprint (a date);
+- any areas that stay out of it.
+
+It is recorded with its `USER:` source where the scope's decisions are
+recorded: in each Epic's decisions as it is selected, in a store-backed
+repository, and as `process/autopilot.md` in a file-backed one. The grant is
+the human's answer, given in advance, to every entry gate in its scope. The
+agent applies it by answering each such gate with the grant's `USER:` source.
+It is never the answer to a completion gate. A grant ends at its date, when the
+human withdraws it, or when its scope is done.
+
+**Under a current grant these rules change:**
+
+| Rule | Normal | Autopilot |
+|---|---|---|
+| Entry gate | The human answers | The agent answers, citing the grant |
+| Cold review | Up to two rounds, blocking | One pass, then at most one narrow confirmation. Material findings are folded into the packet as tests or boundary lines, and the rest are logged. If the confirmation still fails, the item is built ahead of its record and the failure is logged. |
+| Packet completeness | Items 1–6 and the brief complete before review | Write what the builder needs; a gap the review finds is folded in or logged, never a stop |
+| Preflight facts (suspended selections, stale snapshots, drift, open holds) | Stop selection | Clear each with its documented verb, or log it and continue |
+| A refusal at a phase boundary | Stop and report | Try the documented clearing verb once. If it still refuses, log it, move to the next item, and let the record catch up at sprint end. |
+| A product question | Asked; the loop waits | Asked, but the loop does not wait: see below |
+| After a gate answer or a pass | Wait for the human's word | Continue |
+
+**Product questions.** The agent still asks the questions only a human can
+answer: behavior, scope, user experience, meaning of data, priority. It asks
+each one when it arises, in plain words. Then it takes the most reasonable
+default and records it in the Epic's decisions as *assumed under autopilot,
+pending confirmation*, with the grant's `USER:` source. Then it continues.
+
+It waits for an answer only when a wrong guess is hard to undo:
+
+- deleting or migrating data that already exists;
+- security, authentication, or authorization;
+- money, billing, or legal terms;
+- a contract with an outside party.
+
+**What does not change:**
+
+- Requirements are written with sources, and assumptions are marked as such.
+- Red-first tests, with evidence recorded.
+- The store's server-side refusals are cleared through the sanctioned tool or
+  logged. They are never bypassed with hand-made writes.
+- Merging, deploying, and releasing stay with humans.
+- Destructive operations, secrets, and the grant's excluded areas stay out.
+
+**The log.** Each skipped check, uncleared refusal, advisory finding left
+open, and build ahead of its record is filed as a gap record naming the
+sprint. Nothing is dropped silently.
+
+**Sprint end.** One independent review reads everything the sprint built —
+the change, not the packets — against its requirements and tests. The human
+then gets one page:
+
+- what was built, with evidence;
+- the assumed decisions to confirm or change;
+- the log;
+- the review's findings.
+
+The human answers completion item by item, as in a lane batch. A rejected
+item stays `IN_REVIEW`. A changed assumption is triaged into the next sprint.
+Only then does normal gate discipline apply again to anything the grant did
+not cover.
 
 ## Planning and readiness
 
@@ -531,7 +609,8 @@ records and sections whose fingerprints moved, the findings still open, and
 what those touch — and carries the unchanged remainder at that round's verdict;
 its trace still pins the full current aggregate. A current
 pass proceeds to entry review. After a second failed round, report the remaining
-material findings to the human; do not start a third round automatically.
+material findings to the human; do not start a third round automatically. Under an autopilot grant, one pass
+and at most one narrow confirmation replace the rounds (§Autopilot).
 A small change gets one narrow pass from an independent context — the
 boundary against the code, the RED plan, and the eligibility — and no second
 round: a blocking finding sends it out of the lane.

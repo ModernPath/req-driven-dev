@@ -69,7 +69,9 @@ review audits the change the packet proposes, not the packet as a document.
    for single-SR scope.
 9. Run at most two rounds on the selected planning scope. After a second
    failed round, report the remaining material findings to the human;
-   do not start a third round automatically.
+   do not start a third round automatically. Under an autopilot grant there is
+   one pass and at most one narrow confirmation that its folded findings close
+   it; either way the sprint continues (`PROCESS.md` §Autopilot).
 10. Return the cold-review trace gate `PASS` only when the material-finding rule
    in `PROCESS.md` is satisfied. Otherwise return `FAIL` with exact blockers.
 

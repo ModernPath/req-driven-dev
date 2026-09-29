@@ -45,7 +45,9 @@ background: date it against the store revision before relying on it, and
 refresh it when it cannot be dated. A projection whose currency is unknown is
 reported as unknown, never presented as current.
 
-An unmet preflight fact is the report. Do not select work past it.
+An unmet preflight fact is the report. Do not select work past it — unless a
+current autopilot grant covers the scope: then clear or log each fact and
+continue (`PROCESS.md` §Autopilot, `rdd-autopilot`).
 
 ## Take the scope
 
@@ -113,7 +115,9 @@ Select the earliest unmet prerequisite for the frozen scope and hand off to
 its skill; a change that meets the small-change lane's eligibility under a
 current lane authorization is planned, reviewed and entered through that lane: `rdd-discover`, `rdd-plan`, `rdd-cold-review`, `rdd-entry-review`,
 `rdd-build`, `rdd-verify`, `rdd-completion-review`, or `rdd-deliver` for the
-complete loop. Source-inventory onboarding uses `rdd-reverse-engineer`.
+complete loop. When a current autopilot grant covers the scope, or the human
+asks for one, hand off to `rdd-autopilot` instead. Source-inventory
+onboarding uses `rdd-reverse-engineer`.
 
 For genuine source-scoped baseline requirements still in PENDING_VERIFICATION,
 route to rdd-reverse-engineer-verify without development entry. When a dedicated
