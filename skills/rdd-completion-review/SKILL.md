@@ -16,14 +16,17 @@ records, and derived views.
    acceptance scenario, declared relation, gate, evidence result, and
    completion condition against direct current sources. Already DONE members
    are proof dependencies; keep them DONE when their evidence is current and
-   exclude them from new acceptance transitions. Obtain an independent
-   code review when required by project gates or requested by the user, at the
-   named implementation revision; record its findings separately from planning
-   review and verify fixes against their commits and test evidence.
+   exclude them from new acceptance transitions. Obtain an independent code
+   review of the built change for Epic scope. For single-SR scope, obtain one
+   when required by project gates or requested by the user. Use a context
+   independent of implementation; record the reviewer, reviewed revision,
+   findings, and verdict separately from planning review. Verify fixes against
+   their commits and test evidence.
 2. Stop for any `DERIVED` dependency, candidate link counted as authoritative,
    stale or inherited-unverified evidence, missing required RED observation,
-   unresolved material finding from planning or implementation review,
-   undisclosed gap, or incomplete reconciliation.
+   missing required independent code review, unresolved material finding from
+   planning or implementation review, undisclosed gap, or incomplete
+   reconciliation.
 3. If the pre-delivery audit passes, deliver through the project's authorized
    integration path while keeping awaiting entities `IN_REVIEW`.
 4. Re-run or confirm evidence against the delivered revision — the revision

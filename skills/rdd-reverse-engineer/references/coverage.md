@@ -8,7 +8,7 @@ authorized context. Do not shrink a denominator to make a result pass.
 ## Citation validity
 
 Use `rdd-audit` and its supplied `audit-citations.mjs` for citations in recovered
-local documents. It checks path/locator resolution and a minimum recognized
+local documents. It checks cited file resolution and a minimum recognized
 citation **count** (`--min=N`). It does not enforce percentage coverage. Historical
 source availability is checked through the sanctioned immutable source reader;
 store citations and links use the store's typed contract, not a retired ledger scan.

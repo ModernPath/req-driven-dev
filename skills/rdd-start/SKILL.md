@@ -71,9 +71,11 @@ awaiting-acceptance bucket dwarfs its ready bucket is a finding about where
 the loop is stalled — report it as one rather than leaving the reader to count
 rows.
 
-Freeze the selection per `PROCESS.md` work scope and record it in the
-work-selection record. For normal planning, entry-packet depth is proportional
-to the frozen scope; no required packet item may be omitted.
+For normal delivery, freeze the Epic or single-SR selection in the existing
+work-selection record. For candidate and baseline work, retain the exact scope
+in the applicable authorization, run and decision records. For normal planning,
+entry-packet depth is proportional to the frozen scope; no required item may
+be omitted.
 
 ## Hold the session discipline
 

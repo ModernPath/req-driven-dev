@@ -37,7 +37,7 @@ status before previewing proof, opening a gate or asking the human again.
 | Approved answer, current proof, no applied receipt | Apply the retained exact input; do not ask again |
 | Rejected answer, no applied receipt | Report rejection and unchanged lifecycle; do not promote |
 | Applied receipt | Report the historical decision, receipt and current lifecycle/compliance states. Do not reapply it or send DONE targets through baseline verification. If current required evidence is invalidated, hand that finding to `rdd-triage` |
-| Pending targets with changed pins or stale proof, no applied receipt | Retain the old gate's status and return to verification for a fresh packet. Supersede the obsolete gate through the sanctioned workflow before fresh human review; never reuse its answer for changed proof |
+| Pending targets with changed pins or stale proof, no applied receipt | Retain the old gate's status and return to verification for a fresh packet. Follow the consuming project's documented CLI recovery or replacement procedure before fresh human review; never reuse the old answer for changed proof |
 | Status unavailable | Report the read/tooling gap; do not assume no gate exists or invent a new key |
 
 If the opening response was lost before retaining the gate ID, retry the exact
@@ -45,8 +45,11 @@ opening input/key to recover that gate, then follow its returned state.
 
 For recovery of the same packet, reuse the stored gate and stable retry keys.
 After a lost response, retry identical input only if the status read shows that
-application still needs recovery. A successor packet needs a new gate and keys;
-changed input under an existing key conflicts.
+application still needs recovery. A successor packet needs a new gate and keys
+through the documented replacement procedure; changed input under an existing
+key conflicts. If a required recovery or replacement operation is unsupported,
+report the tooling gap through the sanctioned channel and stop that acceptance
+attempt. Do not invent parameters or substitute a generic gate.
 
 ## Steps
 
@@ -56,14 +59,11 @@ changed input under an existing key conflicts.
    pin or unmerged revision returns to `rdd-reverse-engineer-verify`. Do not
    recollect unchanged evidence merely to open a decision.
 2. **Open and present the decision.** Supply the typed proof, proof digest,
-   stable opening key and human brief. Show the exact requirements becoming
-   DONE, evidence identities, coverage limits, risk and recommendation, with
-   links to relevant packet files. State that compliance approval is unchanged.
-   Opening a gate is not a human answer.
-   In ModernPath, the brief payload has exactly `what`, `why_now`,
-   `changes_if_approved`, `risk_if_wrong`, and `recommendation`, each a nonempty
-   text value stating the corresponding `PROCESS.md` brief content. Present
-   the current decision files before asking.
+   stable opening key and human brief defined in `PROCESS.md`. Show the exact
+   requirements becoming DONE, evidence identities, coverage limits, risk and
+   recommendation, with links to relevant packet files. State that compliance
+   approval is unchanged. Opening a gate is not a human answer. Present the
+   current decision files before asking.
 3. **Record the human answer.** Obtain one explicit attributable accept/reject
    decision for that exact packet unless it is already present in the session.
    Submit it through the existing reviewed answer mechanism with both gate and

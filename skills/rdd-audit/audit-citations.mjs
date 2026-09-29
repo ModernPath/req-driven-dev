@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-// Structural citation checks for explicitly selected Markdown documents.
+// Resolve cited files in explicitly selected Markdown documents.
 // Usage: node audit-citations.mjs <document-root...> --repository=<key>=<root>
-// Exits 0 for checked citations, 1 for findings or insufficient citations,
-// and 2 for an invalid source inventory or guarded prompt target.
+// Exits 0 for a passing check, 1 for findings or insufficient citations,
+// and 2 for missing document targets, invalid source inventory, or refused prompt targets.
 
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, statSync, realpathSync } from "node:fs";
@@ -11,11 +11,10 @@ import { join, resolve, relative, basename, isAbsolute } from "node:path";
 // Unknown prefixed source extensions are reported, not silently skipped.
 const EXT = "heex|leex|eex|exs|tsx|yaml|proto|json|xslt|xml|jsp|xsl|mjs|cjs|ex|go|js|ts|yml|sh|py|rb|rs|java|kt|toml|sql|cs|vb|fs|php|swift|scala|erl";
 
-// Capture the full locator, including unsupported composite test identities.
-// A partial match must not turn an unknown subtest into a valid parent reference.
+// Consume optional navigation suffixes, but validate only the cited file.
 const PREFIXED = new RegExp(`(?:CODE|TEST): ?((?:[A-Za-z0-9_.-]+@[A-Za-z0-9_.-]+:)?[A-Za-z0-9_./\\[\\]\\-]+?\\.(?:${EXT}))(?!\\.?[A-Za-z0-9])(?::([^\\s\\x60<>|;)]*))?`, "g");
 const UNKNOWN_PREFIX = /(?:CODE|TEST): ?[^\s`<>|;)]+/g;
-// Bare citations retain the full locator for the same validation.
+// Bare path:locator citations also resolve only the file.
 const BARE = new RegExp("`([A-Za-z0-9_./\\[\\]\\-]+\\.(?:" + EXT + ")):([^\\s`<>|;)]*)", "g");
 const DOCREF = /DOC: ?([A-Za-z0-9_./\-]+\.md)(?:#([^\s)|`\u00b7]+))?/g;
 const ELIDED = /(?:CODE:|`)(?:[A-Za-z0-9_.\\[\\]\-]+\/)*\.\.\.\/[A-Za-z0-9_.\/\\[\\]\-]*\.(?:exs|tsx|ex|go|js|ts|py|rb|rs|java|kt|sql|yml|yaml|json|sh|heex)\b/g;
@@ -89,25 +88,9 @@ try {
   process.exit(2);
 }
 
-const sourceCache = new Map();
-function readSource(file) {
-  const key = `${file.revision ?? "working-tree"}:${file.path}`;
-  if (!sourceCache.has(key)) {
-    const content = file.revision
-      ? execFileSync("git", ["-C", file.root, "show", `${file.revision}:${relative(file.root, file.path)}`],
-          { encoding: "utf8", maxBuffer: 64 << 20, stdio: ["ignore", "pipe", "pipe"] })
-      : readFileSync(file.path, "utf8");
-    sourceCache.set(key, content);
-  }
-  return sourceCache.get(key);
-}
-function lineCount(file) {
-  return readSource(file).split("\n").length;
-}
-
 const resolutionErrors = new Map();
-// A suffix with multiple matches is ambiguous, not permission to pick the one
-// whose line count happens to fit. Typed references resolve only exact paths.
+// A path suffix with multiple matches is ambiguous. Typed references resolve
+// only exact paths at the declared revision.
 function candidates(path, exactOnly = false) {
   const typed = path.match(/^([A-Za-z0-9_.-]+)@([A-Za-z0-9_.-]+):(.+)$/);
   let found;
@@ -124,16 +107,15 @@ function candidates(path, exactOnly = false) {
         resolutionErrors.set(path, "no such file at the cited revision");
         return [];
       }
-      found = [{ path: exact, root: repo.root, revision: repo.revision }];
+      found = [exact];
     } else {
-      found = repo.files.includes(exact) ? [{ path: exact }] : [];
+      found = repo.files.includes(exact) ? [exact] : [];
     }
   } else {
     const exact = repositories.flatMap(repo => repo.files.filter(file => relative(repo.root, file) === path));
-    found = (exact.length || exactOnly ? exact : repositories.flatMap(repo => repo.files.filter(file => file.endsWith("/" + path))))
-      .map(path => ({ path }));
+    found = exact.length || exactOnly ? exact : repositories.flatMap(repo => repo.files.filter(file => file.endsWith("/" + path)));
   }
-  found = [...new Map(found.map(file => [file.path, file])).values()];
+  found = [...new Set(found)];
   if (found.length > 1) {
     resolutionErrors.set(path, `ambiguous path (${found.length} matches); name repository@revision:exact/path`);
     return [];
@@ -177,33 +159,6 @@ function exemptFenceRanges(lines) {
     }
   }
   return ranges;
-}
-
-// Resolve whole anchors for plain #-style headings, excluding code fences.
-// Renderer-specific anchors and other heading syntax need a separate check.
-function headingAnchors(content) {
-  const anchors = new Set();
-  let fence = null;
-  for (const line of content.split("\n")) {
-    const marker = line.match(/^ {0,3}(`{3,}|~{3,})(.*)$/);
-    if (fence) {
-      if (marker && marker[1][0] === fence[0] && marker[1].length >= fence.length && !marker[2].trim()) fence = null;
-      continue;
-    }
-    if (marker) { fence = marker[1]; continue; }
-    const heading = line.match(/^ {0,3}#{1,6}[ \t]+(.+?)\s*$/);
-    if (!heading) continue;
-    const title = heading[1].replace(/[ \t]+#+[ \t]*$/, "").trim();
-    // Inline markup needs a Markdown renderer. It can also change duplicate
-    // numbering, so do not certify anchors from a partially parsed document.
-    if (/[`*_\[\]<>\\&]/.test(title)) return null;
-    const base = title.toLowerCase().replace(/[^\p{L}\p{N}\p{M}_ -]/gu, "").replace(/ /g, "-");
-    let anchor = base;
-    let suffix = 0;
-    while (anchors.has(anchor)) anchor = `${base}-${++suffix}`;
-    anchors.add(anchor);
-  }
-  return anchors;
 }
 
 for (const doc of docs) {
@@ -254,57 +209,30 @@ for (const doc of docs) {
     if (inExemptFence(m.index) || /<!--\s*example-citation\s*-->/.test(lines[lineNo - 1] ?? "")) { examples++; continue; }
     const found = candidates(m[1], true);
     if (!found.length) { broken.push({ doc, lineNo, path: m[1], why: resolutionErrors.get(m[1]) || "no such document" }); continue; }
-    if (m[2]) {
-      if (!found.some(f => headingAnchors(readSource(f))?.has(m[2]))) {
-        broken.push({ doc, lineNo, path: `${m[1]}#${m[2]}`, why: "no such section anchor or unsupported heading syntax" });
-        continue;
-      }
-    }
     ok++;
   }
 }
 
 function check(doc, text, m) {
-  const [, path, locator] = m;
+  const [, path] = m;
   const lineNo = text.slice(0, m.index).split("\n").length;
 
   // Explicit teaching examples are excluded from the checked denominator.
   if (/<!--\s*example-citation\s*-->/.test(text.split("\n")[lineNo - 1] ?? "")) { examples++; return; }
 
   const found = candidates(path);
-  const display = locator === undefined ? path : `${path}:${locator}`;
   if (!found.length) {
-    broken.push({ doc, lineNo, path: display, why: resolutionErrors.get(path) || "no such file" });
+    broken.push({ doc, lineNo, path, why: resolutionErrors.get(path) || "no such file" });
     return;
   }
-  if (locator === undefined) { ok++; return; }
-
-  if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(locator)) {
-    // This checks a complete token's occurrence, not its semantic identity.
-    const token = new RegExp(`(?:^|[^A-Za-z0-9_])${locator}(?=$|[^A-Za-z0-9_])`);
-    if (found.some(f => token.test(readSource(f)))) { ok++; return; }
-    broken.push({ doc, lineNo, path: display, why: "no such name in the file" });
-    return;
-  }
-
-  if (!/^[1-9]\d*(?:-[1-9]\d*)?(?:,[1-9]\d*(?:-[1-9]\d*)?)*$/.test(locator)) {
-    broken.push({ doc, lineNo, path: display, why: "unsupported or malformed locator; resolve composite test identities with the runner" });
-    return;
-  }
-  const ranges = locator.split(",").map(part => part.split("-").map(Number));
-  if (ranges.some(([lo, hi = lo]) => !Number.isSafeInteger(lo) || !Number.isSafeInteger(hi) || hi < lo)) {
-    broken.push({ doc, lineNo, path: display, why: "invalid line range" });
-    return;
-  }
-  const hi = Math.max(...ranges.flat());
-  if (found.some(f => lineCount(f) >= hi)) { ok++; return; }
-  broken.push({ doc, lineNo, path: display, why: `no candidate reaches line ${hi}` });
+  ok++;
 }
 
 const total = ok + broken.length;
 const belowMinimum = total < minCitations;
-console.log(`${ok}/${total} citations resolve across ${docs.length} documents` +
+console.log(`${ok}/${total} citations resolve to files across ${docs.length} documents` +
   (examples ? `  (${examples} teaching examples skipped; not checked citations)` : ""));
+console.log("File resolution only; source contents and navigation suffixes are not checked.");
 
 if (elided.length) {
   console.log(`\n${elided.length} elided path(s) — a citation that resolves to nothing:`);

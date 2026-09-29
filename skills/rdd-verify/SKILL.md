@@ -23,17 +23,19 @@ handoff. This skill does not grant human approval or prove delivery.
 - Never run this skill for a `DERIVED` requirement. `DERIVED` means no human has
   confirmed that the requirement exists; its proposed links are candidate
   context and all downstream work is held. Apply its confirmation gate first.
-- A requirement selected for normal verification must have applied entry
-  approval and be `TODO` or `IN_PROGRESS` before tests change.
+- Before tests change, current applied entry approval must cover the whole
+  selected delivery scope under `PROCESS.md`, including the Epic when selected.
+  The requirement being verified must be `TODO` or `IN_PROGRESS`.
 - For an SR, record `LOWER_VERIFIED` and move it to `IN_REVIEW` only when its
   lower trace is current. For a UR, record `UPPER_VALIDATED` and move it to
   `IN_REVIEW` only when its upper trace and required-SR conditions are current.
 - Never move a requirement to `DONE` from test evidence alone.
   `DONE` also requires the applicable approval, authoritative-source
   delivery, and reconciliation conditions.
-- If the implementation contradicts the row, record the discovery and route a
-  separate red-first change. Do not silently change behavior during a
-  verification pass.
+- If the implementation contradicts approved behavior, retain the failing
+  evidence and hand the same entered SR to `rdd-build`. Route through planning
+  only when satisfying it requires changed scope or a material decision. Do
+  not silently change behavior during a verification pass.
 
 ## Enter through the same gate as any other change
 
@@ -71,8 +73,8 @@ test-strategy, work-selection, and entry-brief facts.
 Check the existing entry approval for the exact selected scope. Reuse current
 applied approval and preserve `TODO` or `IN_PROGRESS`; resuming verification
 does not reopen entry or move work backwards. If entry is missing or stale,
-route to planning and entry before changing tests. A reopened baseline that
-never had normal entry follows `PROCESS.md` to `PROPOSED` for that preparation.
+route to planning and entry before changing tests. Missing entry does not
+authorize an additional demotion or a hand-edited status.
 Verification stays within the authoritative work selection. The diagnosed-defect
 exception in `PROCESS.md` permits a failing test before entry; it does not
 authorize this verification pass or implementation.

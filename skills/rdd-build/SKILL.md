@@ -12,9 +12,11 @@ code, tests, and current records.
 
 ## Procedure
 
-1. Orient and select exactly one `TODO` or `IN_PROGRESS` SR with current applied
-   normal entry approval, current planning and no active hold. A reopened
-   baseline without that approval needs planning and entry first. Work on a
+1. Check that current applied normal entry approval covers the whole selected
+   delivery scope, including the Epic when selected, under `PROCESS.md`.
+   Then select exactly one `TODO` or `IN_PROGRESS` SR with current planning
+   and no active hold. A reopened baseline without that approval needs
+   planning and entry first. Work on a
    reviewable feature branch and preserve unrelated changes.
 2. Before its first implementation iteration, establish upper RED for selected
    UR scenarios requiring new evidence. Re-validation of previously proven

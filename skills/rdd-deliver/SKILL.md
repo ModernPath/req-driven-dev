@@ -28,7 +28,8 @@ requirements remain normal development work.
 4. For active work lacking current entry approval, apply `rdd-plan`, then
    `rdd-cold-review`, then `rdd-entry-review` until entry is applied to those
    items as `TODO`. Resume already-entered work at its current phase; unchanged
-   DONE dependencies do not repeat entry.
+   DONE dependencies do not repeat entry. Entry approval must cover the whole
+   selected delivery scope, including the Epic when selected, before step 5.
 5. Run the AI TDD inner loop below. Apply `rdd-build` to changed SRs and
    `rdd-verify` to entered verification work establishing regression-sensitive
    evidence for existing behavior. Continue until every selected requirement

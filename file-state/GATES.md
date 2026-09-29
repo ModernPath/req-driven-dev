@@ -15,11 +15,11 @@ only where `PROCESS.md` explicitly permits it, such as an attributable demotion.
 
 ## GATE-«AREA»-«NNN» — «Transition or decision purpose»
 
-- **Kind:** trace or human
+- **Kind:** trace or human / «confirmation, entry, decision, demotion, cold-review, start-review, completion»
 - **Transition / purpose:** «exact state transition, or the decision being asked»
 - **Exact scope:** «named EPIC/UR/SR ids, or the immutable source inventory for baseline authorization before requirements exist»
 - **Prerequisites:** «gate ids that must be PASS before this one may leave DRAFT, or none»
-- **Fingerprint / inputs:** «approval-scope or evidence fingerprint and the exact inputs evaluated, per PROCESS.md»
+- **Fingerprint:** «approval-scope or evidence fingerprint and the exact inputs evaluated, per PROCESS.md»
 - **State:** «trace: PENDING / PASS / FAIL / STALE — human: DRAFT / OPEN / ANSWERED / CLOSED / SUPERSEDED»
 - **Verdict / answer:** «trace verdict with exact blockers, or the human answer as given»
 - **Actor / evaluator:** «real human actor and role for a human gate; evaluating agent or check for a trace gate»

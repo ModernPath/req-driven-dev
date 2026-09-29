@@ -108,136 +108,106 @@ test("exempt teaching examples cannot satisfy the checked-citation minimum", t =
   assert.match(mixed.stdout, /1\/1 citations resolve/);
 });
 
-test("a nonexistent subtest cannot pass on its parent name", t => {
+test("source citations resolve files regardless of navigation suffixes or contents", t => {
   const f = fixture(t);
-  f.file("repo/subject.py", "def TestParent():\n    return True\n");
-  f.file("report.md", "TEST:subject.py:TestParent/DoesNotExist\n");
+  f.file("repo/subject.ex", "# REQ-EXAMPLE-001\n");
+  f.file("repo/subject_test.go", "// REQ-EXAMPLE-001\n");
+  f.file("report.md", [
+    "CODE:subject.ex",
+    "CODE:subject.ex:validate/1",
+    "CODE:subject.ex:validator",
+    "CODE:subject.ex:Sample.Auth",
+    "CODE:subject.ex:900-999",
+    "CODE:subject.ex:0,2-1",
+    "TEST:subject_test.go",
+    "TEST:subject_test.go:TestParent/Child",
+    "`subject.ex:missing_symbol`",
+  ].join("\n"));
   const result = f.run(`--repository=repo=${join(f.root, "repo")}`, "report.md");
-  assert.equal(result.status, 1, result.stdout + result.stderr);
-  assert.match(result.stdout, /TestParent\/DoesNotExist/);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /9\/9 citations resolve to files/);
+  assert.match(result.stdout, /source contents and navigation suffixes are not checked/);
 });
 
-test("composite test identities require runner validation, not a partial text match", t => {
+test("navigation suffixes never rescue a missing source file", t => {
   const f = fixture(t);
-  f.file("repo/subject.go", 'func TestParent(t *testing.T) { t.Run("Child", func(t *testing.T) {}) }\n');
-  f.file("report.md", "TEST:subject.go:TestParent/Child\n");
+  f.file("repo/subject.ex", "# REQ-EXAMPLE-001\n");
+  f.file("report.md", "CODE:subject.ex\nCODE:missing.ex:validate/1\nTEST:missing_test.exs:TestParent/Child\n");
   const result = f.run(`--repository=repo=${join(f.root, "repo")}`, "report.md");
   assert.equal(result.status, 1, result.stdout + result.stderr);
-  assert.match(result.stdout, /unsupported.*locator/i);
+  assert.match(result.stdout, /1\/3 citations resolve to files/);
+  assert.match(result.stdout, /missing.ex.*no such file/);
+  assert.match(result.stdout, /missing_test.exs.*no such file/);
 });
 
-test("absence wording does not excuse missing files or invalid line citations", t => {
+test("absence wording does not excuse missing files", t => {
   const f = fixture(t);
-  f.file("repo/subject.py", "def TestParent():\n    return True\n");
-  f.file("report.md", "CODE:subject.py:1\nNo retries protect `CODE:subject.py:900`.\nMissing validation in `CODE:absent.py:1`.\n");
+  f.file("repo/subject.py", "# REQ-EXAMPLE-001\n");
+  f.file("report.md", "CODE:subject.py\nMissing validation in `CODE:absent.py:1`.\n");
   const result = f.run(`--repository=repo=${join(f.root, "repo")}`, "report.md");
   assert.equal(result.status, 1, result.stdout + result.stderr);
-  assert.match(result.stdout, /1\/3 citations resolve/);
-  assert.match(result.stdout, /subject.py:900/);
-  assert.match(result.stdout, /absent.py:1/);
+  assert.match(result.stdout, /1\/2 citations resolve to files/);
+  assert.match(result.stdout, /absent.py.*no such file/);
 });
 
 test("plain gap descriptions are not supporting citations", t => {
   const f = fixture(t);
-  f.file("repo/subject.py", "def run():\n    return True\n");
-  f.file("report.md", "CODE:subject.py:1\nThere is no `test_missing.py`; verification remains unresolved.\n");
+  f.file("repo/subject.py", "# REQ-EXAMPLE-001\n");
+  f.file("report.md", "CODE:subject.py\nThere is no `test_missing.py`; verification remains unresolved.\n");
   const result = f.run(`--repository=repo=${join(f.root, "repo")}`, "report.md");
   assert.equal(result.status, 0, result.stdout + result.stderr);
-  assert.match(result.stdout, /1\/1 citations resolve/);
-});
-
-test("simple names including short names and numeric ranges are checked completely", t => {
-  const f = fixture(t);
-  f.file("repo/subject.py", "def x():\n    return True\n");
-  f.file("report.md", "CODE:subject.py:x\nCODE:subject.py:1-2,2\n");
-  const args = [`--repository=repo=${join(f.root, "repo")}`, "report.md"];
-  assert.equal(f.run(...args).status, 0);
-  f.file("report.md", "CODE:subject.py:y\n");
-  const result = f.run(...args);
-  assert.equal(result.status, 1, result.stdout + result.stderr);
-  assert.match(result.stdout, /subject.py:y/);
-});
-
-test("invalid numeric locators cannot fall back to a valid prefix", t => {
-  const f = fixture(t);
-  f.file("repo/subject.py", "one\ntwo\n");
-  for (const locator of ["0", "2-1", "1,", "1/missing"]) {
-    for (const citation of [`CODE:subject.py:${locator}`, `\`subject.py:${locator}\``]) {
-      f.file("report.md", `${citation}\n`);
-      const result = f.run(`--repository=repo=${join(f.root, "repo")}`, "report.md");
-      assert.equal(result.status, 1, `${citation}: ${result.stdout}${result.stderr}`);
-    }
-  }
+  assert.match(result.stdout, /1\/1 citations resolve to files/);
 });
 
 test("a missing document root cannot disappear beside a valid report", t => {
   const f = fixture(t);
-  f.file("repo/subject.py", "one\n");
-  f.file("report.md", "CODE:subject.py:1\n");
+  f.file("repo/subject.py", "# REQ-EXAMPLE-001\n");
+  f.file("report.md", "CODE:subject.py\n");
   const result = f.run(`--repository=repo=${join(f.root, "repo")}`, "report.md", "missing-docs");
   assert.equal(result.status, 2, result.stdout + result.stderr);
   assert.match(result.stderr, /missing-docs/);
 });
 
-test("revision-qualified citations read committed bytes while ordinary citations read the working tree", t => {
+test("revision-qualified files must exist in the commit regardless of working-tree changes", t => {
   const f = fixture(t);
   const repo = join(f.root, "repo");
-  f.file("repo/subject.py", "def committed():\n    return True\n");
+  f.file("repo/subject.py", "# REQ-EXAMPLE-001\n");
   const git = (...args) => execFileSync("git", ["-C", repo, ...args], { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] });
   git("init"); git("add", "."); git("-c", "user.name=Test", "-c", "user.email=test@example.test", "commit", "-m", "fixture");
   const revision = git("rev-parse", "HEAD").trim();
-  f.file("repo/subject.py", "def uncommitted():\n    return True\n\n# extra\n# lines\n");
-  f.file("repo/untracked.py", "def untracked():\n    return True\n");
+  f.file("repo/subject.py", "changed contents\n");
+  f.file("repo/untracked.py", "new file\n");
   const args = [`--repository=repo=${repo}`, "report.md"];
 
-  f.file("report.md", `CODE:repo@${revision}:subject.py:committed\nCODE:subject.py:uncommitted\n`);
+  f.file("report.md", `CODE:repo@${revision}:subject.py\nCODE:untracked.py\n`);
   let result = f.run(...args);
   assert.equal(result.status, 0, result.stdout + result.stderr);
-  assert.match(result.stdout, /2\/2 citations resolve/);
+  assert.match(result.stdout, /2\/2 citations resolve to files/);
 
-  for (const citation of ["subject.py:uncommitted", "subject.py:5", "untracked.py:untracked", "untracked.py"]) {
-    f.file("report.md", `CODE:repo@${revision}:${citation}\n`);
-    result = f.run(...args);
-    assert.equal(result.status, 1, `${citation}: ${result.stdout}${result.stderr}`);
-  }
+  f.file("report.md", `CODE:repo@${revision}:untracked.py\n`);
+  result = f.run(...args);
+  assert.equal(result.status, 1, result.stdout + result.stderr);
+  assert.match(result.stdout, /no such file at the cited revision/);
 
   rmSync(join(repo, "subject.py"));
-  f.file("report.md", `CODE:repo@${revision}:subject.py:committed\n`);
+  f.file("report.md", `CODE:repo@${revision}:subject.py\n`);
   result = f.run(...args);
   assert.equal(result.status, 0, result.stdout + result.stderr);
+  f.file("report.md", "CODE:subject.py\n");
+  result = f.run(...args);
+  assert.equal(result.status, 1, result.stdout + result.stderr);
 });
 
-test("document sections require whole heading anchors and never consume the next line", t => {
+test("document citations resolve files without inspecting headings", t => {
   const f = fixture(t);
-  f.file("repo/guide.md", "# Authentication settings\n\n## Follow-up ###\n");
+  f.file("repo/guide.md", "REQ-EXAMPLE-001\n");
   const args = [`--repository=repo=${join(f.root, "repo")}`, "report.md"];
-  for (const anchor of ["Auth", "settings", "authentication", "follow"]) {
-    f.file("report.md", `\`DOC:guide.md#${anchor}\`\n`);
-    const result = f.run(...args);
-    assert.equal(result.status, 1, `${anchor}: ${result.stdout}${result.stderr}`);
-  }
-  f.file("report.md", "DOC:guide.md#authentication-settings\nDOC:guide.md#follow-up\n");
-  const result = f.run(...args);
+  f.file("report.md", "DOC:guide.md#Trace completeness\nDOC:guide.md#missing-heading\nDOC:guide.md\n");
+  let result = f.run(...args);
   assert.equal(result.status, 0, result.stdout + result.stderr);
-  assert.match(result.stdout, /2\/2 citations resolve/);
-
-  f.file("repo/guide.md", "# [Auth](auth.md)\n");
-  f.file("report.md", "DOC:guide.md#authauthmd\n");
-  const unsupported = f.run(...args);
-  assert.equal(unsupported.status, 1, unsupported.stdout + unsupported.stderr);
-  assert.match(unsupported.stdout, /unsupported heading syntax/);
-});
-
-test("heading anchors exclude fenced examples and distinguish duplicate headings", t => {
-  const f = fixture(t);
-  f.file("repo/guide.md", "```md\n# Fake heading\n```\n~~~md\n# Another fake\n~~~\n# Real heading\n# Real heading\n");
-  const args = [`--repository=repo=${join(f.root, "repo")}`, "report.md"];
-  for (const anchor of ["fake-heading", "another-fake", "real-heading-2"]) {
-    f.file("report.md", `\`DOC:guide.md#${anchor}\`\n`);
-    const result = f.run(...args);
-    assert.equal(result.status, 1, `${anchor}: ${result.stdout}${result.stderr}`);
-  }
-  f.file("report.md", "DOC:guide.md#real-heading\nDOC:guide.md#real-heading-1\n");
-  const result = f.run(...args);
-  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /3\/3 citations resolve to files/);
+  f.file("report.md", "DOC:missing.md#Trace completeness\n");
+  result = f.run(...args);
+  assert.equal(result.status, 1, result.stdout + result.stderr);
+  assert.match(result.stdout, /missing.md.*no such document/);
 });

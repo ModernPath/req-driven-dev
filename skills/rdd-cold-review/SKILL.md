@@ -35,6 +35,10 @@ review audits the change the packet proposes, not the packet as a document.
    where applicable.
 4. Assess feasibility, dependency order, SR boundaries, reuse of established
    patterns, testability, expected RED reasons, and proportional gates.
+   Check each planned RED failure reason against the code at the recorded
+   revision, including any planned temporary mutation for entered verification.
+   A case that would pass under its stated RED conditions is a testability
+   finding; do not defer that check to build.
 5. Identify any product, architecture, acceptance, or scope choice that lacks
    human authority.
 6. Record each finding with severity, direct source, owner, and disposition as
@@ -45,11 +49,15 @@ review audits the change the packet proposes, not the packet as a document.
    a delivered acceptance or applies a stance the human has stated is not
    such a question — name the rule it applies instead. A `RESOLVED` disposition
    records the correction and evidence, or the scope decision and its `USER:`
-   source. Changed scope or material decisions return to `rdd-plan`; technical
-   corrections within scope update the packet and affected review inputs.
-   A fix you propose is a claim for the author to verify
-   at the revision, not an instruction; the round that follows re-verifies
-   it as it does a carried closure.
+   source. Packet edits may clarify what the change already contained; no new
+   mechanism enters the packet during the review cycle. A fix needing a new
+   mechanism, acceptance criterion, wider boundary, or flow hop is a scope
+   question for `rdd-plan`, with its own reconnaissance as its own change.
+   Other changed scope or material decisions also return to `rdd-plan`.
+   Before marking a finding `RESOLVED`, reread every symbol, path, and test
+   named by its correction at the recorded revision. A fix you propose is a
+   claim for the author to verify through the same reconnaissance; the round
+   that follows re-verifies it as it does a carried closure.
 7. Grade materiality by what the finding would change. A finding about the
    packet's wording, counts, or citations that alters none of the code, tests,
    interfaces, or risks is a note and never blocks; traceability is material

@@ -47,11 +47,16 @@ be established from authoritative records, code, tests, or runtime evidence.
 | Tag | Source |
 |---|---|
 | `USER:<date>:<summary>` | Attributable human fact, decision, or approval |
-| `DOC:<path>#<section>` | Product, domain, architecture, or contract source |
-| `CODE:<path>:<symbol>` | Observed implementation behavior |
-| `TEST:<path>:<name>` | Stable test-case identity |
+| `DOC:<path>` | Product, domain, architecture, or contract source |
+| `CODE:<path>` | Implementation source file |
+| `TEST:<path>` | Verification source file |
 | `RUN:<command-or-report>` | Observed test or runtime result |
 | `EPIC:<path>#<section>` | Existing Epic record |
+
+File citations name the source file. The cited file carries the requirement or
+other item ID it supports. Optional line, symbol, test-name or section suffixes
+are navigation hints; the citation auditor checks only that the file resolves.
+Execution evidence separately identifies the tests that ran and their results.
 
 Missing support is an open question. Conflicting support remains a conflict
 until a human resolves it. Code proves existing behavior, not intended
@@ -329,8 +334,9 @@ a human answer.
 ### Attributable demotions
 
 An item that reached `IN_REVIEW` or `DONE` re-enters the loop under the same
-identity. Record the transition, actor, basis, and supporting evidence or
-decision. Observed evidence invalidation follows the automatic rules under
+identity, never through a duplicate requirement, a hand-edited status, or a
+synthetic failure. Record the transition, actor, basis, and supporting evidence
+or decision. Observed evidence invalidation follows the automatic rules under
 Evidence and completion: attribute it to the evaluating agent or check with
 its factual sources, without inventing a human answer or `USER:` source.
 Demotions based on a human decision use the human gate described below.
@@ -338,8 +344,7 @@ Demotions based on a human decision use the human gate described below.
 | Demotion | Basis | What it requires and what follows |
 |---|---|---|
 | Requirement or Epic `IN_REVIEW/DONE -> PROPOSED` | Reversed decision: the approved scope, acceptance, or a decision it rests on no longer holds | The reversing decision linked; entry approval is stale and a new entry packet, cold review, and human entry gate precede `TODO` again |
-| Requirement `IN_REVIEW/DONE -> IN_PROGRESS` | Defect or invalidated required evidence, with current normal-development entry approval | Name the invalidated evidence; re-establish the affected trace; return to DONE only through a successor human completion gate |
-| Requirement `IN_REVIEW/DONE -> PROPOSED` | Defect or invalidated required evidence, without current normal-development entry approval | Preserve the requirement and previous acceptance receipt; perform normal planning and entry before development. This includes baselines accepted directly to DONE; preparing their entry does not imply changed product intent |
+| Requirement or Epic `IN_REVIEW/DONE -> IN_PROGRESS` | Defect: the delivered behavior is wrong against the approved requirement | The invalidated evidence named; red-first evidence is re-established for the defect; `IN_REVIEW` returns through the lower or upper trace and `DONE` only through a successor human completion gate |
 | Requirement or Epic `-> OBSOLETE` | Superseded or retired | The replacement or the retiring decision linked (the supersession rule above) |
 
 A human-directed demotion is recorded as a gate of purpose `demotion`. Its
@@ -348,8 +353,7 @@ its sources carry the human decision and `USER:` attribution. This gate requires
 no prerequisite trace; retain the decision and supporting facts. Applying it
 reconciles the graph like any other answer. Evidence invalidation needs no
 human demotion gate.
-Reconcile an affected Epic against its members: it returns to `PROPOSED` if
-required entry approval is absent or stale, otherwise to `IN_PROGRESS`.
+Demoting a member reopens its Epic to the weakest member state.
 Siblings the demotion does not touch keep their state: their evidence stays
 `CURRENT` when it is current at the present revision, and the Epic's next
 completion re-validates it there rather than requiring it to be posted again.
@@ -366,6 +370,10 @@ failure.
 | Single SR | Exactly one independently verifiable system behavior changes | Authoritative SR source; Epic and UR relations optional |
 | Named UR/SR set | Candidate confirmation or source-scoped baseline verification or acceptance | Exact named requirements and applicable declared dependencies; no Epic required |
 | Source inventory | Reverse-engineering before requirement IDs exist | Exact repository/file and document revisions, corpus fingerprint, derivation mode, and source authorization; publication receipts identify the resulting requirements |
+
+Record Epic and single-SR delivery selections in the existing work-selection
+format. Candidate and baseline scopes belong to their authorization, run and
+decision records; they do not add work-selection kinds or phase values.
 
 While preparing source authorization, record the mode or authorization as
 pending where undecided. Publication requires the applied authorization.
@@ -434,6 +442,12 @@ conditions that select its value.
 
 A RED strategy names, for each case requiring new evidence, the planned test
 file, the behavior it asserts, and why it is expected to fail at the revision.
+For new or changed behavior, every planned RED case must fail against the code
+at the planning revision for the stated reason; a case that would already pass
+cannot serve as RED evidence. For entered verification of existing behavior,
+the strategy names the safe temporary mutation or equivalent targeted failure
+that makes the case fail, as described in `rdd-verify`. Cold review checks these
+failure reasons against the code at the recorded revision.
 Planned commands and test identities are proposals, not execution evidence.
 Record the actual command and expected failure at the RED revision. A migration
 or schema change that satisfies the test lands with GREEN, not with RED.
@@ -457,26 +471,39 @@ from an earlier round is a claim to re-verify, not a fact. A finding that
 would change a human decision returns to that human as a question; it is never
 resolved by editing the packet.
 
-A `RESOLVED` disposition records the correction and its evidence, or the scope
-decision and its `USER:` source. A proposed correction is checked against the
-current sources before closure. Changes to approved behavior, scope, architecture,
-acceptance, or a material technical decision return to the affected planning
-pass. Technical corrections within scope update the packet and affected review
-inputs; a review finding does not itself authorize implementation.
+A `RESOLVED` disposition names how it resolved: a packet edit that clarifies
+what the change already contained, a scope action with its record, or a
+decision with its `USER:` source. No new mechanism enters a packet during a
+review cycle. A finding whose fix needs a new acceptance criterion, a wider
+boundary, or a new flow hop is a scope question — split, defer, or decide —
+and the mechanism is planned with its own reconnaissance as its own change.
+A resolution edit re-enters reconnaissance for what it names: reread every
+symbol, path, and test it names at the recorded revision before marking the
+finding `RESOLVED`. Verify a fix proposed by the reviewer in the same way as
+a closure carried from an earlier round.
+Changes to approved behavior, scope, architecture, acceptance, or a material
+technical decision return to the affected planning pass. A review finding does
+not itself authorize implementation.
 
 At most two cold-review rounds run on the selected planning scope. A current
 pass proceeds to entry review. After a second failed round, report the remaining
 material findings to the human; do not start a third round automatically.
 
-Completion review audits the built change. It obtains an independent code review
-when the project gates or the user require one, at a named revision. Record that
-review separately from planning review. Open material findings stop delivery;
-resolved implementation findings cite the correcting commit and verification.
+Completion review requires an independent code review of the built change for
+Epic scope. For single-SR scope, obtain one when project gates or the user
+require it. The review runs from a context independent of implementation;
+record the reviewer, reviewed revision, findings, and verdict separately from
+planning review. Missing required review or open material findings stop
+delivery and completion. Resolved implementation findings cite the correcting
+commit and verification.
 
 Entry review evaluates the complete packet at its exact fingerprint. Only a
-current entry trace `PASS` may open the human entry gate. Normal development
-requires current applied entry approval for the item being changed, in `TODO`
-or `IN_PROGRESS`. Unchanged DONE dependencies are not re-entered. There is one
+current entry trace `PASS` may open the human entry gate. Do not create or
+change tests or implementation until current applied entry approval covers the
+whole selected delivery scope, including the Epic when selected. Newly entered
+items must be `TODO`; already-entered items retain their current states.
+Unchanged `DONE` dependencies are not re-entered. Partial entry approval does
+not permit development to start on the approved subset. There is one
 exception — the defect lane. When a defect is already diagnosed and the change
 is bounded, the failing test may be written first, on a branch and before
 entry, and cited in the packet as a `RUN:` source: it is the reconnaissance,
@@ -534,9 +561,9 @@ A dedicated existing-behavior path may move exactly reviewed URs/SRs directly to
   tested revision at the fetched remote default-branch tip, matching the captured
   snapshot. Passing unmerged branch tests do not prove delivery. This is an
   integration observation, not a deployment claim or a live provider connector.
-  Retain the observed remote identity. If the collector does not validate it
-  against an independently declared repository identity, disclose that limitation;
-  a local origin setting alone does not establish repository ownership.
+  Retain the observed remote identity. If the integration check does not validate
+  it against an independently declared repository identity, disclose that
+  limitation; a local origin setting alone does not establish repository ownership.
 - A current eligibility trace evaluated through the sanctioned tool supports
   the exact human decision.
   Its attributed reviewed answer and guarded application recheck the complete
@@ -667,9 +694,7 @@ Invalidating required evidence atomically:
 2. makes dependent trace gates `STALE` and supersedes dependent unclosed human
    gates;
 3. removes affected evidence conclusions;
-4. reopens dependent `IN_REVIEW`/`DONE` requirements as `IN_PROGRESS` when normal
-   entry approval remains current, otherwise as `PROPOSED` for planning and entry;
-   reconciles affected Epics under Attributable demotions;
+4. demotes dependent `IN_REVIEW`/`DONE` Epic, UR, and SR items to `IN_PROGRESS`;
 5. propagates only through declared relations.
 
 Supplemental evidence causes no demotion. Re-verification may restore
@@ -736,7 +761,7 @@ file-state/
 
 `EPICS.md` stores optional grouping records. `REQUIREMENTS.md` stores URs, SRs,
 declared relations, and trace references. `GATES.md` stores every trace and
-human gate record. `WORK-SELECTION.md` stores the frozen scope, suspended
+human gate record. `WORK-SELECTION.md` stores the frozen delivery scope, suspended
 selections, and selection history. `BACKLOG.md` stores unrouted triage items
 and gap records. Derived queues and progress views — including the pending
 human-decision projection — are regenerated, not backed up separately.

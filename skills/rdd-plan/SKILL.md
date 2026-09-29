@@ -55,6 +55,10 @@ scope, Item ownership, and Planning and readiness sections of `PROCESS.md`.
    each selected UR scenario requiring new evidence. Re-validating unchanged,
    previously proven behavior needs no new RED. A lower-RED strategy names
    the planned test file, the behavior it asserts, and the expected failure.
+   Every planned RED case for new or changed behavior must fail against the
+   code at the planning revision for the stated reason; a case that would
+   already pass cannot serve as RED evidence. Check that reason against the
+   current code during planning.
    Planned commands and test identities are proposals; actual commands and
    outcomes become evidence when executed at the RED revision. A migration or
    schema change that satisfies the test lands with GREEN. For entered
@@ -72,10 +76,16 @@ scope, Item ownership, and Planning and readiness sections of `PROCESS.md`.
    about what changes for the product, the identifier a trailing breadcrumb.
    Record blockers, conflicts, gaps, and deferrals rather than guessing.
 7. Assemble Entry-packet items 1–6 and the product-language brief. Reconcile
-   planning records, then hand off to `rdd-cold-review` for item 7. Recheck the
-   affected sources after a correction. Route changed approved scope or
-   material decisions through step 6; technical corrections within scope
-   update the packet and affected review inputs.
+   planning records, then hand off to `rdd-cold-review` for item 7. A resolution
+   edit re-enters step 4 for what it names: reread every symbol, path, and test
+   it names at the recorded revision before marking the finding `RESOLVED`.
+   Verify a fix proposed by the reviewer in the same way as a closure carried
+   from an earlier round. A new mechanism needed to resolve a review finding
+   is not added during the review cycle: route it as a scope
+   question through step 6 and plan it as its own change with its own
+   reconnaissance in step 4. Packet edits may clarify what the change already
+   contained. Route other changes to approved scope or material decisions
+   through step 6.
 
 ## Report
 

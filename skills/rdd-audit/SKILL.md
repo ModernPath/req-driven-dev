@@ -40,20 +40,17 @@ node <skill-directory>/audit-citations.mjs <document-root> --repository=<key>=<s
 
 Repeat `--repository` for multiple repositories. Git worktrees and explicitly
 declared non-Git roots are supported. A qualified reference has the form
-`CODE:repository@revision:exact/path:locator` or `TEST:` with the same structure.
-Qualified Git revisions must match the declared checkout's HEAD; their files
-and contents are read from that commit, regardless of working-tree changes.
+`CODE:repository@revision:exact/path` or `TEST:` with the same structure.
+Qualified Git revisions must match the declared checkout's HEAD; files must
+exist in that commit, regardless of working-tree changes.
 Unqualified references and `@unversioned` roots use local files. Use the
 sanctioned source reader for captured dirty snapshots or other historical revisions.
 
-The checker handles file existence, unique path resolution, numeric line
-locators, simple symbol-name occurrences, and Markdown `DOC:` references with
-exact anchors for plain `#` headings. Inline heading markup, other heading syntax,
-or renderer-specific anchors require an independent check; a heading substring
-is never a match. It does not establish that the cited code supports the claim
-or that a named test executed. Composite test identities require the test runner or the store's test
-identity contract; an unsupported locator is reported, never shortened to a
-passing parent name.
+The checker resolves cited files for `CODE:`, `TEST:` and `DOC:`. The referenced
+file carries the requirement or other item ID it supports. Optional symbol,
+line, test-name and heading suffixes are ignored. The checker does not read
+source contents or match strings within them. File resolution does not establish
+that the source supports a claim or that a test executed.
 
 Describe missing artifacts as gaps in prose. Do not prefix an absent path with
 `CODE:` or `TEST:` as though it were supporting evidence. Nearby words such as
@@ -65,11 +62,19 @@ never included in the checked denominator. Prompt directories are guarded by
 the checker; use `--force-prompts` only for an intentional review of their
 examples and real references.
 
-The checker exits non-zero for broken, ambiguous, unsupported, or elided
-references, or when fewer than `--min=N` citations were checked. The default
-minimum is one; `--min` is a citation-count guard against an empty or incomplete
-scan, not an extraction-coverage threshold. Establish an expected citation count
-independently before using a higher minimum.
+The checker uses these exit statuses:
+
+- `0`: the file-resolution check passed and the minimum citation count was met.
+- `1`: broken, ambiguous, unsupported, or elided references, or fewer than
+  `--min=N` citations checked.
+- `2`: a requested document target is missing, the source inventory is invalid,
+  or a guarded prompt target was refused.
+
+Exit `2` means the audit could not run on the requested inputs. Retain the error,
+correct the inputs or invocation, and rerun; it is not a pass or an automatic
+skip. The default minimum is one; `--min` is a citation-count guard against an
+empty or incomplete scan, not an extraction-coverage threshold. Establish an
+expected citation count independently before using a higher minimum.
 
 ## Verify meaning and measurement
 
@@ -106,5 +111,10 @@ Preserve command output and exit codes for measurements used by a gate.
 
 Route findings through the invoking pass and the sanctioned process store when
 they affect process records. A report does not itself change a requirement,
-resolve a gap, approve a decision, or waive missing evidence. Recheck affected
-claims after an authorized correction; change documents only within that scope.
+resolve a gap, approve a decision, or waive missing evidence.
+
+After an authorized correction, search the audited documents and relevant
+repositories for other occurrences of the corrected claim and its identifiers,
+including examples, configuration, and templates. Verify each occurrence
+against current sources before editing. Correct only within the authorized
+scope and report findings outside it. Recheck affected claims after changes.

@@ -32,9 +32,9 @@ order.
    demotions). Observed evidence invalidation is an automatic transition with
    agent/check attribution and factual sources; human-directed demotion uses
    a human gate and its `USER:` source. A reversed decision returns work to
-   `PROPOSED`. A defect or evidence invalidation returns a requirement to
-   `IN_PROGRESS` only with current normal entry approval; otherwise use
-   `PROPOSED` for planning and entry, preserving its prior acceptance receipt.
+   `PROPOSED`. A defect or invalidated required evidence returns affected
+   requirements and Epics to `IN_PROGRESS`. Preserve prior acceptance receipts;
+   reopening does not waive the entry prerequisites for changing code or tests.
 6. Re-evaluate stale gates and evidence, then reconcile authoritative records,
    release scope, work selection, and derived views. Never promote to `TODO`
    without the strict entry gate.

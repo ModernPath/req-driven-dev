@@ -45,9 +45,6 @@ through `rdd-triage`, not back through baseline acceptance.
 1. **Define the denominator.** Read every active criterion for the selected
    requirements and required SR dependencies. Evaluate each UR's own upper
    scenarios independently. Record omissions explicitly.
-   In ModernPath proof payloads, clause identifiers are active acceptance
-   criteria's `external_id` values. The supplied set must match that complete
-   set exactly, without duplicates; an empty set is ineligible.
 2. **Inspect semantic proof.** Resolve captured code/test citations by exact ID,
    revision and hash through the supported source reader. Map each criterion to
    a meaningful assertion and the production subject it exercises. Bind the
@@ -61,10 +58,6 @@ through `rdd-triage`, not back through baseline acceptance.
    provider, repository, run, job, attempt and tested commit. Record per-clause
    results through the evidence store: LOWER for SRs, UPPER for URs. Never reuse
    an SR pass as UR proof or label an unexecuted test as passing.
-   ModernPath's `execution-proof --file <path|->` retains a report; it does not
-   execute tests. Its `kind` is `local_test`, `ci`, `browser_verification`, or
-   `compliance_test_run`. Each result's `target_clause` names the criterion's
-   `external_id`.
 4. **Retain integration proof.** For each repository, use a genuine current
    integration observation or the supported collector, which fetches the remote
    default branch and checks the tested clean revision and captured snapshot at

@@ -41,7 +41,7 @@ it does not resolve a gap in an affected trace.
 - **Affected traces:** «EPIC/UR/SR ids whose trace is incomplete because of it»
 - **Consequence:** «what the affected traces cannot currently prove»
 - **Disclosed in:** «gate ids where this gap was disclosed before an answer»
-- **Disposition:** OPEN / CLOSED by «resolution and supporting UR/SR or decision source»
+- **Disposition:** OPEN / CLOSED by «UR/SR id» / ACCEPTED with «USER: source»
 
 Every open gap affecting an item in a completion gate's scope must be disclosed
 in that gate before it is answered.

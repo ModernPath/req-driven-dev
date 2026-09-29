@@ -35,7 +35,9 @@ packet, cold-review findings, current gate records, and relevant sources.
    and report an answer that is recorded but not yet applied as exactly that.
 6. Move approved named `PROPOSED` or `PENDING_VERIFICATION` requirements and
    any named proposed epic to `TODO`. Otherwise retain the strongest honest
-   state and route requested changes.
+   state and route requested changes. Report any remaining entry approvals
+   needed for the selected delivery scope; partial approval does not permit
+   development to start on the approved subset.
 7. Report and stop. The entry pass ends with the applied transitions, not
    with the first build step: the answer was a decision about the gate, not
    an instruction to build (`PROCESS.md` §Gates). The build begins with a
