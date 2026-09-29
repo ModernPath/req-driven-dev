@@ -17,7 +17,7 @@ and execute no untrusted repository code during this pass.
 
 Read the project `AGENTS.md` and canonical `PROCESS.md`
 (`.modernpath/rdd/PROCESS.md` in a consuming workspace). In ModernPath, read
-`.claude/skills/mp-process-cli/SKILL.md` for the onboarding sequence and
+the installed `mp-process-cli` skill for the onboarding sequence and
 `.modernpath/cli-reference.md` for the installed command contracts.
 
 Establish the target system, requested behavior/context scope, source roots and
@@ -104,6 +104,7 @@ Join UR journeys to serving SRs and SRs to code/test identities. Report missing
 joins, views calling nothing, endpoints no view reaches and justified absent
 relations. Do not infer edges from prose mentions or invent parents. Create an
 Epic only when the user requested a real grouping, with exact UR/SR memberships.
+Verify the persisted member identities and both UR and SR counts against that scope.
 
 For a full-system adoption or requested design-document output, use
 [recovered documents](references/recovered-documents.md). A narrow requirement
@@ -120,8 +121,9 @@ These reusable inputs are staging artifacts, not another requirement store.
 
 Publish coherent atomic groups of related requirements. Split only for supported
 limits or dependencies, sending referenced parents before dependent groups.
-Retain the returned receipts and perform one consolidated read-back and audit
-after the batch. Do not alternate deriving and publishing one row at a time.
+Read and retain each returned group receipt; perform a consolidated record
+read-back and audit after the batch. Do not alternate deriving and publishing
+one row at a time.
 Atomicity is per group; report any unpublished groups explicitly.
 
 Apply the authorized mode:
@@ -145,8 +147,8 @@ existing file-backed workspace only, use [file-backed formats](references/file-b
 
 Use [coverage and citation checks](references/coverage.md) for the distinct
 measurements and failure conditions. Citation resolution, extraction coverage,
-governed linkage and verified behavior are separate claims. Neither a green
-citation checker nor source-file coverage proves behavior-class coverage.
+governed linkage and verified behavior are separate claims. Neither a passing
+citation checker nor source-file coverage proves behavioral coverage.
 
 Read back exact IDs, lifecycle/release, citations, relationship authority, test
 artifacts and any requested Epic memberships. For baseline, verify Ledger and
@@ -179,7 +181,7 @@ delivery entry or DONE.
 Retain the authorized scope and source/run identities, prepared batch and group
 keys, publication receipts, exact persisted IDs/links, coverage scripts/reports,
 and all gaps or unpublished groups. Include design documents only when in scope.
-Below-floor or unchecked coverage remains incomplete. Continue a requested full
+Unresolved in-scope work and unchecked coverage remain incomplete. Continue a requested full
 sweep across remaining authorized contexts without per-context reapproval.
 
 Finish with a usable baseline or a reviewable candidate set and an honest

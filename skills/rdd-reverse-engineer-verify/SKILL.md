@@ -15,15 +15,15 @@ compliance approval and fabricates no RED or PASS.
 
 Read the project `AGENTS.md`, canonical `PROCESS.md` "As-built verification and
 acceptance", and the consuming project's sanctioned CLI procedure. In ModernPath,
-use `.claude/skills/mp-process-cli/SKILL.md` and `.modernpath/cli-reference.md`.
+use the installed `mp-process-cli` skill and `.modernpath/cli-reference.md`.
 
 Start from the publication packet: exact requested UR/SR identities, captured
 source/run identities, persisted citations and publication receipts. Acceptance
-targets must be PENDING_VERIFICATION with persisted baseline provenance. Include
+targets must be PENDING_VERIFICATION with persisted source-scoped baseline provenance. Include
 every required confirmed SR of each selected UR; already DONE SRs may remain
 proof dependencies without being accepted again. A standalone SR needs no
-invented parent or Epic. DERIVED proposals need confirmation first; entered or
-defect-reopened development work uses the normal development skills.
+invented parent or Epic. Individual DERIVED confirmation alone does not confer
+eligibility for this path. Entered or defect-reopened work uses normal development.
 
 ## Resume checks
 
@@ -42,6 +42,9 @@ new pending work or regenerating their evidence.
 1. **Define the denominator.** Read every active criterion for the selected
    requirements and required SR dependencies. Evaluate each UR's own upper
    scenarios independently. Record omissions explicitly.
+   In ModernPath proof payloads, clause identifiers are active acceptance
+   criteria's `external_id` values. The supplied set must match that complete
+   set exactly, without duplicates; an empty set is ineligible.
 2. **Inspect semantic proof.** Resolve captured code/test citations by exact ID,
    revision and hash through the supported source reader. Map each criterion to
    a meaningful assertion and the production subject it exercises. Bind the
@@ -55,12 +58,19 @@ new pending work or regenerating their evidence.
    provider, repository, run, job, attempt and tested commit. Record per-clause
    results through the evidence store: LOWER for SRs, UPPER for URs. Never reuse
    an SR pass as UR proof or label an unexecuted test as passing.
+   ModernPath's `execution-proof --file <path|->` retains a report; it does not
+   execute tests. Its `kind` is `local_test`, `ci`, `browser_verification`, or
+   `compliance_test_run`. Each result's `target_clause` names the criterion's
+   `external_id`.
 4. **Retain integration proof.** For each repository, use a genuine current
    integration observation or the supported collector, which fetches the remote
    default branch and checks the tested clean revision and captured snapshot at
    its tip. Preserve the returned observation and digest across identical
    retries. Passing branch tests alone are insufficient. Delivery here means
    observed repository integration, not deployment or live CI monitoring.
+   Record the observed remote. ModernPath's collector reads the checkout's
+   `origin`; it does not bind that setting to an independently declared expected
+   repository. Disclose this limitation in the proof packet.
 5. **Preview exact proof.** Submit the typed proof for server eligibility. Missing,
    contradictory, stale, revoked or inaccessible evidence stays a gap. Adding
    tests or changing behavior requires an explicitly scoped handoff to normal

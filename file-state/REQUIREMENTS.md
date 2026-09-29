@@ -23,19 +23,20 @@
 
 ### Trace references
 
-| Evidence class | Target | Code | Test case | RED result | Passing result | Outcome | Environment | Fingerprint | Validity/revision |
+| Evidence class | Target | Code | Test case | Result | Role | Outcome | Environment | Fingerprint | Validity/revision |
 |---|---|---|---|---|---|---|---|---|---|
-| UR upper | «UR scenario or N/A» | «code refs» | TEST: | RUN: | RUN: | PASS / FAIL / SKIP | «when relevant» | «content/code fingerprint» | CURRENT / STALE / INVALID / INHERITED_UNVERIFIED + revision |
-| SR lower | «SR clause or N/A» | CODE: | TEST: | RUN: | RUN: | PASS / FAIL / SKIP | «when relevant» | «content/code fingerprint» | CURRENT / STALE / INVALID / INHERITED_UNVERIFIED + revision |
+| UR upper | «UR scenario» | «code refs» | TEST: | RUN: | RED or passing | PASS / FAIL / SKIP | «when relevant» | «content/code fingerprint» | CURRENT / STALE / INVALID / INHERITED_UNVERIFIED + revision |
+| SR lower | «SR clause» | CODE: | TEST: | RUN: | RED or passing | PASS / FAIL / SKIP | «when relevant» | «content/code fingerprint» | CURRENT / STALE / INVALID / INHERITED_UNVERIFIED + revision |
 
-The RED/Passing split carries each result's role; `Outcome`, `Environment`,
-and `Fingerprint` carry the remaining mandated evidence-record fields.
+Use one row per result so each retains its own role, outcome, environment,
+fingerprint, validity, and revision. RED is required only on the applicable
+normal-development path; the existing-baseline path does not fabricate it.
 
 ### Gates and delivery
 
 - **Confirmation gates:** «GATES.md gate ids, or N/A»
-- **Entry gates:** «GATES.md gate ids»
-- **Start/review gates:** «GATES.md gate ids»
-- **Completion gates:** «GATES.md gate ids»
+- **Entry gates:** «GATES.md gate ids; N/A for the dedicated existing-baseline path»
+- **Automatic-transition trace gates:** «GATES.md gate ids, or N/A»
+- **Acceptance gates:** «normal completion or dedicated existing-baseline GATES.md gate ids»
 - **Delivered revision:** «repository + revision or not delivered»
 - **Gaps / deferrals / blockers / notes:** «refs or none»

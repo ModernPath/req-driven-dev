@@ -11,11 +11,11 @@ in a consuming repository), versioned product sources, selected requirements,
 optional epic/specifications, technical reconnaissance, and repository state at
 the recorded revision.
 
-The independent context is a recorded fact of the verdict, not a claim: the
-verdict is recorded from that context, and a verdict recorded from the
-authoring context is not a cold review. Run as a delegated pass, this skill
-returns its findings and verdict and writes nothing to the store; the
-orchestrating session records them (`PROCESS.md` §Delegated passes). The
+Record the reviewer and independent review context with the verdict; an
+author's self-review is not a cold review. Run as a delegated pass, this skill
+returns its findings and verdict and writes nothing to the store. The
+orchestrating session records them with reviewer attribution
+(`PROCESS.md` §Delegated passes). The
 review audits the change the packet proposes, not the packet as a document.
 
 ## Procedure
@@ -24,14 +24,12 @@ review audits the change the packet proposes, not the packet as a document.
    unstated author reasoning.
 2. Verify the affected repositories, files, symbols, entry points, callers,
    writers, readers, and every changed control/data-flow hop. Where the packet
-   carries a state inventory, enumerate it: attack each cell and each
-   transition between concurrent writers in both directions, and file a row
-   the change touches that the inventory lacks. Where the change touches
+   carries a state inventory, check its writers, readers, concurrent updates,
+   failure behavior, and mitigations. Record missing affected state. Where the change touches
    state and the packet carries no inventory, that absence is the first
-   material finding. Where the change touches a surface a delivered
-   requirement owns, the packet names that record and the constraint it
-   carries; a surface with no named owner, or a constraint the change
-   contradicts without a scope decision, is a material finding.
+   material finding. Check applicable existing requirement ownership and
+   constraints. A contradiction with delivered acceptance needs a scope
+   decision; absence of an existing owner does not itself block new behavior.
 3. Examine contracts, schemas, compatibility, persistence, integrations,
    failure propagation, retries, concurrency, security, and operational risks
    where applicable.
@@ -46,24 +44,20 @@ review audits the change the packet proposes, not the packet as a document.
    question for that human, never a packet edit; a finding whose fix preserves
    a delivered acceptance or applies a stance the human has stated is not
    such a question — name the rule it applies instead. A `RESOLVED` disposition
-   names its kind — packet edit, scope action with its record, or decision
-   with its `USER:` source — and a packet edit only clarifies what the change
-   already contained: a resolution that adds an acceptance criterion, widens
-   a boundary, or adds a flow hop is a scope question returned to `rdd-plan`,
-   never a resolution. A fix you propose is a claim for the author to verify
+   records the correction and evidence, or the scope decision and its `USER:`
+   source. Changed scope or material decisions return to `rdd-plan`; technical
+   corrections within scope update the packet and affected review inputs.
+   A fix you propose is a claim for the author to verify
    at the revision, not an instruction; the round that follows re-verifies
    it as it does a carried closure.
 7. Grade materiality by what the finding would change. A finding about the
    packet's wording, counts, or citations that alters none of the code, tests,
    interfaces, or risks is a note and never blocks; traceability is material
    only when a builder or a gate would act on the wrong citation
-   (`PROCESS.md` §Planning and readiness). A command, a pattern, or a test
-   name the packet need not carry is audited by dropping it: the finding is a
-   note that the line goes, never a blocker on its syntax.
-8. Bound the rounds: at most two on one change. On a second round whose new
-   blocking findings are about the packet rather than the change, return
-   `FAIL` with the instruction to cut the packet, not to expand it. Do not
-   start a third round: stop and hand what is known to a human.
+   (`PROCESS.md` §Planning and readiness).
+8. Run at most two rounds on the selected planning scope. After a second
+   failed round, report the remaining material findings to the human;
+   do not start a third round automatically.
 9. Return the cold-review trace gate `PASS` only when the material-finding rule
    in `PROCESS.md` is satisfied. Otherwise return `FAIL` with exact blockers.
 
@@ -76,9 +70,8 @@ verdict as entry approval.
 
 ## Report
 
-Lead with material findings, then state the round number, the context the
-verdict is recorded from, the reviewed fingerprints, finding dispositions
-(notes separated from blockers), which findings fall on mechanisms an earlier
-round's resolutions introduced, trace-gate verdict, and the exact handoff:
-`rdd-plan` after a failure, `rdd-entry-review` after a current pass, or the
-human after a bounded third round.
+Lead with material findings, then state the round number, reviewer and review
+context, the reviewed fingerprints, finding dispositions
+(notes separated from blockers), trace-gate verdict, and the exact handoff:
+`rdd-plan` after the first failure, `rdd-entry-review` after a current pass,
+or the human after a second failed round.

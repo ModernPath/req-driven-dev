@@ -72,7 +72,7 @@ test("a nonempty corpus with no recognized references is not a passing audit", t
   f.file("report.md", "No traceable citations were emitted.");
   const result = f.run(`--repository=legacy=${join(f.root, "repo")}`, "report.md");
   assert.equal(result.status, 1, result.stdout + result.stderr);
-  assert.match(result.stdout, /vacuity/);
+  assert.match(result.stdout, /insufficient citations/);
 });
 
 test("the default single-repository audit still works from a nested directory", t => {
@@ -94,7 +94,7 @@ test("unknown prefixed source extensions cannot disappear beside a valid citatio
   assert.match(result.stdout, /missing.unknown/);
 });
 
-test("exempt teaching examples cannot satisfy the checked-citation floor", t => {
+test("exempt teaching examples cannot satisfy the checked-citation minimum", t => {
   const f = fixture(t);
   f.file("repo/code.xml", "one");
   f.file("report.md", "CODE:missing.xml:2 <!-- example-citation -->\n");
@@ -106,4 +106,75 @@ test("exempt teaching examples cannot satisfy the checked-citation floor", t => 
   const mixed = f.run(...args);
   assert.equal(mixed.status, 0, mixed.stdout + mixed.stderr);
   assert.match(mixed.stdout, /1\/1 citations resolve/);
+});
+
+test("a nonexistent subtest cannot pass on its parent name", t => {
+  const f = fixture(t);
+  f.file("repo/subject.py", "def TestParent():\n    return True\n");
+  f.file("report.md", "TEST:subject.py:TestParent/DoesNotExist\n");
+  const result = f.run(`--repository=repo=${join(f.root, "repo")}`, "report.md");
+  assert.equal(result.status, 1, result.stdout + result.stderr);
+  assert.match(result.stdout, /TestParent\/DoesNotExist/);
+});
+
+test("composite test identities require runner validation, not a partial text match", t => {
+  const f = fixture(t);
+  f.file("repo/subject.go", 'func TestParent(t *testing.T) { t.Run("Child", func(t *testing.T) {}) }\n');
+  f.file("report.md", "TEST:subject.go:TestParent/Child\n");
+  const result = f.run(`--repository=repo=${join(f.root, "repo")}`, "report.md");
+  assert.equal(result.status, 1, result.stdout + result.stderr);
+  assert.match(result.stdout, /unsupported.*locator/i);
+});
+
+test("absence wording does not excuse missing files or invalid line citations", t => {
+  const f = fixture(t);
+  f.file("repo/subject.py", "def TestParent():\n    return True\n");
+  f.file("report.md", "CODE:subject.py:1\nNo retries protect `CODE:subject.py:900`.\nMissing validation in `CODE:absent.py:1`.\n");
+  const result = f.run(`--repository=repo=${join(f.root, "repo")}`, "report.md");
+  assert.equal(result.status, 1, result.stdout + result.stderr);
+  assert.match(result.stdout, /1\/3 citations resolve/);
+  assert.match(result.stdout, /subject.py:900/);
+  assert.match(result.stdout, /absent.py:1/);
+});
+
+test("plain gap descriptions are not supporting citations", t => {
+  const f = fixture(t);
+  f.file("repo/subject.py", "def run():\n    return True\n");
+  f.file("report.md", "CODE:subject.py:1\nThere is no `test_missing.py`; verification remains unresolved.\n");
+  const result = f.run(`--repository=repo=${join(f.root, "repo")}`, "report.md");
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /1\/1 citations resolve/);
+});
+
+test("simple names including short names and numeric ranges are checked completely", t => {
+  const f = fixture(t);
+  f.file("repo/subject.py", "def x():\n    return True\n");
+  f.file("report.md", "CODE:subject.py:x\nCODE:subject.py:1-2,2\n");
+  const args = [`--repository=repo=${join(f.root, "repo")}`, "report.md"];
+  assert.equal(f.run(...args).status, 0);
+  f.file("report.md", "CODE:subject.py:y\n");
+  const result = f.run(...args);
+  assert.equal(result.status, 1, result.stdout + result.stderr);
+  assert.match(result.stdout, /subject.py:y/);
+});
+
+test("invalid numeric locators cannot fall back to a valid prefix", t => {
+  const f = fixture(t);
+  f.file("repo/subject.py", "one\ntwo\n");
+  for (const locator of ["0", "2-1", "1,", "1/missing"]) {
+    for (const citation of [`CODE:subject.py:${locator}`, `\`subject.py:${locator}\``]) {
+      f.file("report.md", `${citation}\n`);
+      const result = f.run(`--repository=repo=${join(f.root, "repo")}`, "report.md");
+      assert.equal(result.status, 1, `${citation}: ${result.stdout}${result.stderr}`);
+    }
+  }
+});
+
+test("a missing document root cannot disappear beside a valid report", t => {
+  const f = fixture(t);
+  f.file("repo/subject.py", "one\n");
+  f.file("report.md", "CODE:subject.py:1\n");
+  const result = f.run(`--repository=repo=${join(f.root, "repo")}`, "report.md", "missing-docs");
+  assert.equal(result.status, 2, result.stdout + result.stderr);
+  assert.match(result.stderr, /missing-docs/);
 });

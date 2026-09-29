@@ -1,6 +1,6 @@
 ---
 name: rdd-deliver
-description: Drive an Epic or single-SR scope through the complete requirement-driven delivery loop. Use when work is requested end to end rather than as one explicitly bounded process pass. Sequence discovery or confirmation, planning, cold review, human entry, red-first execution or as-built verification, delivery, reconciliation, human completion, and triage until the selected scope is DONE or OBSOLETE, or an exact human or external prerequisite prevents further progress.
+description: Drive selected requirements through the applicable delivery path. Use for end-to-end work including normal planning, entry, red-first development and completion, or existing-proof verification and acceptance of an eligible source-scoped baseline. Stops at an unmet human or external prerequisite.
 ---
 
 # Deliver requirement scope end to end
@@ -12,7 +12,7 @@ all semantics; this skill owns phase order and continuation.
 
 ## Run the loop
 
-For a genuine published baseline still in PENDING_VERIFICATION, take the
+For a source-scoped published baseline still in PENDING_VERIFICATION, take the
 separate rdd-reverse-engineer-verify → rdd-reverse-engineer-accept path. Its
 single reviewed human decision applies verified and delivered proof directly
 to DONE. Normal planning, entry, RED/GREEN and completion below apply only after
@@ -21,14 +21,15 @@ requirements remain normal development work.
 
 1. Reconcile authoritative state, answered gates, evidence validity, and
    projections. Fix state disagreement before selecting work.
-2. Freeze the selected Epic or single-SR scope and find its earliest unmet
+2. Freeze the selected scope under `PROCESS.md` and find its earliest unmet
    prerequisite. Never start from the most convenient phase.
 3. If input is not authoritative or is `DERIVED`, apply `rdd-discover` and its
    confirmation gate. Continue only with confirmed requirements and relations.
 4. Apply `rdd-plan`, then `rdd-cold-review`, then `rdd-entry-review`. Repeat from
    the earliest stale or failed pass until the exact selected scope is `TODO`.
 5. Run the AI TDD inner loop below. Apply `rdd-build` to changed SRs and
-   `rdd-verify` to human-confirmed as-built URs or SRs. Continue until every
+   `rdd-verify` to entered verification work establishing regression-sensitive
+   evidence for existing behavior. Continue until every
    selected requirement satisfies its applicable trace and is `IN_REVIEW`.
 6. Apply `rdd-completion-review` to audit, deliver, recheck the delivered
    revision, reconcile records, run the completion trace gate, and apply the
@@ -38,14 +39,14 @@ requirements remain normal development work.
    invalidates.
 
 At an exact `OPEN` human gate, present its brief and linked list of relevant
-working-set files before asking and wait, following `PROCESS.md` §Gates. If an attributable
-answer is already available, apply it and continue. Never infer or supply the
-answer.
+working-set files before asking and wait, following `PROCESS.md` §Gates. If an
+attributable answer is already available, apply it, report, and wait for the
+human to resume. Never infer or supply the answer.
 
 ## Run the AI TDD inner loop
 
-After entry approval, iterate without human input while the approved fingerprint
-remains unchanged:
+When the human resumes after applied entry approval, iterate without further
+human input while the approved scope remains unchanged:
 
 1. Evaluate every selected UR upper trace and SR lower trace. Establish any
    required initial RED observations.

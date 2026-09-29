@@ -15,9 +15,9 @@ inferred one to `DERIVED` plus its confirmation gate.
 
 ## Triage backlog
 
-Discoveries with unclear ownership or a cross-cutting concern, held until a
-human assigns them. An item that already has an owner and a source is a
-requirement and does not belong here.
+Discoveries awaiting classification or assignment. Route them using the
+discovery table in `PROCESS.md`; an owner and a source alone do not establish
+a requirement.
 
 ## BACKLOG-«NNN» — «Discovery in one line»
 
@@ -31,8 +31,8 @@ requirement and does not belong here.
 ## Gap records
 
 A capability or specification deficiency linked to the traces it affects. A gap
-is a disclosed absence, not a deferral: deferral postpones work that is already
-a requirement, a gap names something no requirement yet covers.
+is a disclosed absence. Deferral records a decision to postpone requirement work;
+it does not resolve a gap in an affected trace.
 
 ## GAP-«AREA»-«NNN» — «Missing capability or specification»
 
@@ -41,7 +41,10 @@ a requirement, a gap names something no requirement yet covers.
 - **Affected traces:** «EPIC/UR/SR ids whose trace is incomplete because of it»
 - **Consequence:** «what the affected traces cannot currently prove»
 - **Disclosed in:** «gate ids where this gap was disclosed before an answer»
-- **Disposition:** OPEN / CLOSED by «UR/SR id» / ACCEPTED with «USER: source»
+- **Disposition:** OPEN / CLOSED by «resolution and supporting UR/SR or decision source»
 
 Every open gap affecting an item in a completion gate's scope must be disclosed
 in that gate before it is answered.
+Acknowledging a gap does not resolve it or waive missing trace evidence. A scope
+decision that removes the affected obligation is recorded on that requirement
+and its gates before the gap is closed.

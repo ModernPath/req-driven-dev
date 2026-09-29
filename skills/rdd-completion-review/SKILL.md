@@ -14,10 +14,13 @@ records, and derived views.
 
 1. Treat completion as unproven. Audit every scoped requirement clause,
    acceptance scenario, declared relation, gate, evidence result, and
-   completion condition against direct current sources.
+   completion condition against direct current sources. Obtain an independent
+   code review when required by project gates or requested by the user, at the
+   named implementation revision; record its findings separately from planning
+   review and verify fixes against their commits and test evidence.
 2. Stop for any `DERIVED` dependency, candidate link counted as authoritative,
-   stale or inherited-unverified evidence, missing RED observation, material
-   finding from the packet's cold review or from a review of the change,
+   stale or inherited-unverified evidence, missing required RED observation,
+   unresolved material finding from planning or implementation review,
    undisclosed gap, or incomplete reconciliation.
 3. If the pre-delivery audit passes, deliver through the project's authorized
    integration path while keeping awaiting entities `IN_REVIEW`.

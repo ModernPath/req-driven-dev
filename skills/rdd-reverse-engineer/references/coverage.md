@@ -20,38 +20,31 @@ scope; still validate their captured identities and links.
 
 ## Extraction and source coverage
 
-Keep a separate rerunnable coverage checker with the run's staging artifacts.
-Reuse one that measures these inputs correctly; otherwise write a scoped checker
-from the frozen inventory and authoritative read-back. This is an audit artifact,
-not a product test or another requirement store. In ModernPath,
-`reverse-engineer coverage --run ID` supplies source/trace coverage; it does not
-enumerate behavior classes or enforce the extraction floors below.
+Define each inventory's unit, scope and enumeration method before counting it.
+Use the frozen inventory and authoritative read-back. Retain enumeration and
+matching scripts and their actual output when used; these are audit artifacts,
+not product tests or another requirement store.
 
 Record stable unit identities and mappings so the checker can report:
 
 | Measurement | Denominator | Numerator / required result |
 |---|---|---|
-| Behavior extraction, per applicable class and repository/context | Enumerated in-scope behavior units | Units mapped to grounded persisted requirements; at least 90% in each applicable class |
-| Source disposition, per repository | Eligible inventory files after documented exclusions | Distinct files cited by persisted rows or explicitly dispositioned with a reason; at least 60% |
+| Requirement extraction | Enumerated in-scope items, such as routes or jobs | Account for every item as extracted, already covered, excluded with a reason, or unresolved; cite the supporting records |
+| Source disposition, per repository | Eligible inventory files after documented exclusions | Distinct files cited by persisted rows, excluded with a reason, or unresolved |
 | Governed and candidate linkage | The same inventory and mappings | Separate counts for confirmed links, candidate links and their overlap; no invented promotion |
 | Reverse mapping | Every persisted requirement/source reference in the batch | Resolve inside authorized inventory or to an explicitly authorized existing identity |
 
-Behavior classes include the applicable routes/RPCs, jobs/events/webhooks,
-CLI/agent tools, data behavior, access controls, client flows and integrations
-identified during derivation. State genuinely absent classes as inapplicable;
-an unexplored class is not absent. A file disposition does not establish behavior
-coverage, a candidate link does not establish governed coverage, and neither
-establishes executed or verified behavior. Count each unit once within its class.
+State absent surfaces as inapplicable only after checking; unexplored surfaces
+remain unresolved. A file disposition does not establish behavioral coverage,
+and candidate links do not establish governed or verified behavior. Counts and
+percentages describe the inventory; they do not define a passing gate.
 
-Make this separate checker exit nonzero when a floor is missed, an applicable
-denominator is missing/unmeasured, a mapping cannot resolve, or its inputs do not
-match the authorized inventory/read-back. Unknown or partial input is incomplete.
-Validate the checker with a deliberately missing mapping before trusting its
-passing result, then restore the input. Keep its command, verbatim output and
-exit code. A successful citation audit cannot substitute for this result.
+Missing denominators, unresolved mappings, and inputs that do not match the
+authorized inventory/read-back are incomplete measurements. Validate any checker
+against known-good and known-bad inputs. Keep its command, output and exit code;
+a successful citation audit cannot substitute for checking inventory completeness.
 
-Run comparable measurements before and after publication. Report N/N for each
-class and repository/context, exclusions, unresolved references and uncovered
-units; rank uncovered directories and untraced tests to guide remaining work.
-Target complete coverage and preserve meaningful requirement granularity; the
-floors and a row count are not permission to truncate an authorized full sweep.
+Report counts with their denominators, exclusions, unresolved references and
+uncovered items for each inventory. Unresolved in-scope work remains incomplete.
+Preserve meaningful requirement granularity and finish the requested authorized
+scope; a row count is not permission to truncate a full sweep.

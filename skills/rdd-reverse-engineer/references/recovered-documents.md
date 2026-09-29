@@ -6,8 +6,8 @@ update relevant existing documents and report out-of-scope areas; the full set
 below is not an exit requirement for that run. Do not expand source authorization
 to complete a template.
 
-Read maintained `docs/guides/` as a human lens and preserve its provenance
-separately from code-derived findings. Adopt or extend existing documents before
+Read maintained project guides, where available, as a human lens and preserve
+their provenance separately from code-derived findings. Adopt or extend existing documents before
 creating competing accounts. Verify code/config citations and distinguish
 implemented behavior from unconfirmed intent.
 

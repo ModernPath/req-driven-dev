@@ -15,7 +15,7 @@ completion gates. Compliance draft/approved state is unchanged.
 
 Read the project `AGENTS.md`, canonical `PROCESS.md` "As-built verification and
 acceptance", and the consuming project's sanctioned CLI procedure. In ModernPath,
-use `.claude/skills/mp-process-cli/SKILL.md` and `.modernpath/cli-reference.md`.
+use the installed `mp-process-cli` skill and `.modernpath/cli-reference.md`.
 
 For new acceptance, retain the verification packet: typed proof, returned proof
 digest, exact pending scope, complete SR lower and independent UR upper proof,
@@ -59,6 +59,10 @@ recovery. Changed input conflicts; stale proof cannot be replayed as current.
    DONE, evidence identities, coverage limits, risk and recommendation, with
    links to relevant packet files. State that compliance approval is unchanged.
    Opening a gate is not a human answer.
+   In ModernPath, the brief payload has exactly `what`, `why_now`,
+   `changes_if_approved`, `risk_if_wrong`, and `recommendation`, each a nonempty
+   text value stating the corresponding `PROCESS.md` brief content. Present
+   the current decision files before asking.
 3. **Record the human answer.** Obtain one explicit attributable accept/reject
    decision for that exact packet unless it is already present in the session.
    Submit it through the existing reviewed answer mechanism with both gate and
@@ -69,6 +73,8 @@ recovery. Changed input conflicts; stale proof cannot be replayed as current.
    key. It rechecks proof, atomically moves exactly the pending named scope to
    DONE, records lifecycle events, closes the applied decision and retains a
    receipt. Never use generic author/advance or fabricate RED for this edge.
+   ModernPath permits an authorized applier other than the answerer; retain both
+   identities in the receipt. Application cannot change the approved scope.
    Read the receipt and lifecycle/compliance states from the successful apply
    response. Do not add status/list/preview calls or replay the write merely to
    repeat that confirmation. Use a status read when the response is missing,
@@ -81,6 +87,7 @@ identity, exact named scope, proof currency and unchanged compliance status.
 An answer without an applied receipt is pending application, not DONE. Historical
 receipts remain readable after later drift without proving current acceptance.
 
-Stop at the phase report unless the user requested the complete loop. Merge,
-publication and deployment need their own authority. Missing operations go to
-the sanctioned tooling-gap channel, not raw API/store writes.
+After applying a human answer, report and wait as required by `PROCESS.md`,
+including during the complete loop. Merge, publication and deployment need their
+own authority. Missing operations go to the sanctioned tooling-gap channel,
+not raw API/store writes.
