@@ -36,22 +36,23 @@ status before previewing proof, opening a gate or asking the human again.
 | Open gate, current proof | Reuse its stored scope and brief; obtain the answer only if the user has not already given it for this packet |
 | Approved answer, current proof, no applied receipt | Apply the retained exact input; do not ask again |
 | Rejected answer, no applied receipt | Report rejection and unchanged lifecycle; do not promote |
-| Applied receipt, current proof | Report that receipt and returned lifecycle/compliance states; no repeat application or new decision |
-| Changed pins or stale proof | Report any receipt as historical; return to verification before fresh review, without reusing an old answer for changed proof |
+| Applied receipt | Report the historical decision, receipt and current lifecycle/compliance states. Do not reapply it or send DONE targets through baseline verification. If current required evidence is invalidated, hand that finding to `rdd-triage` |
+| Pending targets with changed pins or stale proof, no applied receipt | Retain the old gate's status and return to verification for a fresh packet. Supersede the obsolete gate through the sanctioned workflow before fresh human review; never reuse its answer for changed proof |
 | Status unavailable | Report the read/tooling gap; do not assume no gate exists or invent a new key |
 
 If the opening response was lost before retaining the gate ID, retry the exact
 opening input/key to recover that gate, then follow its returned state.
 
-Reuse the stored gate and stable retry keys. After a lost response, retry
-identical input only if the status read shows that application still needs
-recovery. Changed input conflicts; stale proof cannot be replayed as current.
+For recovery of the same packet, reuse the stored gate and stable retry keys.
+After a lost response, retry identical input only if the status read shows that
+application still needs recovery. A successor packet needs a new gate and keys;
+changed input under an existing key conflicts.
 
 ## Steps
 
 1. **Use the verified packet.** Require complete applicable proof and the exact
    pending scope. Use the retained eligibility result when it describes this
-   packet; opening the decision rechecks it server-side. A known gap, changed
+   packet; the sanctioned opening operation rechecks it. A known gap, changed
    pin or unmerged revision returns to `rdd-reverse-engineer-verify`. Do not
    recollect unchanged evidence merely to open a decision.
 2. **Open and present the decision.** Supply the typed proof, proof digest,
@@ -66,7 +67,8 @@ recovery. Changed input conflicts; stale proof cannot be replayed as current.
 3. **Record the human answer.** Obtain one explicit attributable accept/reject
    decision for that exact packet unless it is already present in the session.
    Submit it through the existing reviewed answer mechanism with both gate and
-   proof fingerprints and the USER source. The server rechecks proof here.
+   proof fingerprints and the USER source. The sanctioned operation rechecks
+   proof here.
    Rejection ends with a report and grants no promotion.
 4. **Apply and report.** Apply an approved answer through the dedicated guarded
    operation using the exact proof/gate fingerprints and a stable application
@@ -85,7 +87,10 @@ recovery. Changed input conflicts; stale proof cannot be replayed as current.
 Report the actual human answer/source, recorded versus applied state, receipt
 identity, exact named scope, proof currency and unchanged compliance status.
 An answer without an applied receipt is pending application, not DONE. Historical
-receipts remain readable after later drift without proving current acceptance.
+receipts remain readable after later drift without proving current evidence.
+Drift in a receipt's proof pins does not itself change lifecycle state. Route
+an established invalidation through `rdd-triage`, retaining the receipt as historical evidence;
+normal development resumes according to the item's entry approval and state.
 
 After applying a human answer, report and wait as required by `PROCESS.md`,
 including during the complete loop. Merge, publication and deployment need their

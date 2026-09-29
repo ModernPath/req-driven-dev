@@ -25,9 +25,11 @@ the sanctioned document collector recognizes them.
 | `docs/22-cross-cutting.md` | Auth, tenancy, secrets, observability and resilience enforcement points |
 | `docs/23-data-flow.md` | Origins, transformations, destinations and trust boundaries |
 
-Use the sanctioned document publication route and verify store read-back before
-claiming publication. A local file does not prove visibility in the UI. Recovered
-documents are derived design sources, not a second requirement store.
+Use the project's document publication route and verify the published revision
+and content. For a file-backed project, read the versioned published documents;
+for a store-backed project, use the sanctioned read-back operation. A local
+draft does not prove publication. Recovered documents are derived design
+sources, not a second requirement store.
 
 ## Observed decisions and NFRs
 

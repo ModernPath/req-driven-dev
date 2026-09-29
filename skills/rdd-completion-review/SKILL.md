@@ -14,7 +14,9 @@ records, and derived views.
 
 1. Treat completion as unproven. Audit every scoped requirement clause,
    acceptance scenario, declared relation, gate, evidence result, and
-   completion condition against direct current sources. Obtain an independent
+   completion condition against direct current sources. Already DONE members
+   are proof dependencies; keep them DONE when their evidence is current and
+   exclude them from new acceptance transitions. Obtain an independent
    code review when required by project gates or requested by the user, at the
    named implementation revision; record its findings separately from planning
    review and verify fixes against their commits and test evidence.

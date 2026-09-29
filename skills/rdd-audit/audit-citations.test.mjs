@@ -178,3 +178,66 @@ test("a missing document root cannot disappear beside a valid report", t => {
   assert.equal(result.status, 2, result.stdout + result.stderr);
   assert.match(result.stderr, /missing-docs/);
 });
+
+test("revision-qualified citations read committed bytes while ordinary citations read the working tree", t => {
+  const f = fixture(t);
+  const repo = join(f.root, "repo");
+  f.file("repo/subject.py", "def committed():\n    return True\n");
+  const git = (...args) => execFileSync("git", ["-C", repo, ...args], { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] });
+  git("init"); git("add", "."); git("-c", "user.name=Test", "-c", "user.email=test@example.test", "commit", "-m", "fixture");
+  const revision = git("rev-parse", "HEAD").trim();
+  f.file("repo/subject.py", "def uncommitted():\n    return True\n\n# extra\n# lines\n");
+  f.file("repo/untracked.py", "def untracked():\n    return True\n");
+  const args = [`--repository=repo=${repo}`, "report.md"];
+
+  f.file("report.md", `CODE:repo@${revision}:subject.py:committed\nCODE:subject.py:uncommitted\n`);
+  let result = f.run(...args);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /2\/2 citations resolve/);
+
+  for (const citation of ["subject.py:uncommitted", "subject.py:5", "untracked.py:untracked", "untracked.py"]) {
+    f.file("report.md", `CODE:repo@${revision}:${citation}\n`);
+    result = f.run(...args);
+    assert.equal(result.status, 1, `${citation}: ${result.stdout}${result.stderr}`);
+  }
+
+  rmSync(join(repo, "subject.py"));
+  f.file("report.md", `CODE:repo@${revision}:subject.py:committed\n`);
+  result = f.run(...args);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+});
+
+test("document sections require whole heading anchors and never consume the next line", t => {
+  const f = fixture(t);
+  f.file("repo/guide.md", "# Authentication settings\n\n## Follow-up ###\n");
+  const args = [`--repository=repo=${join(f.root, "repo")}`, "report.md"];
+  for (const anchor of ["Auth", "settings", "authentication", "follow"]) {
+    f.file("report.md", `\`DOC:guide.md#${anchor}\`\n`);
+    const result = f.run(...args);
+    assert.equal(result.status, 1, `${anchor}: ${result.stdout}${result.stderr}`);
+  }
+  f.file("report.md", "DOC:guide.md#authentication-settings\nDOC:guide.md#follow-up\n");
+  const result = f.run(...args);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /2\/2 citations resolve/);
+
+  f.file("repo/guide.md", "# [Auth](auth.md)\n");
+  f.file("report.md", "DOC:guide.md#authauthmd\n");
+  const unsupported = f.run(...args);
+  assert.equal(unsupported.status, 1, unsupported.stdout + unsupported.stderr);
+  assert.match(unsupported.stdout, /unsupported heading syntax/);
+});
+
+test("heading anchors exclude fenced examples and distinguish duplicate headings", t => {
+  const f = fixture(t);
+  f.file("repo/guide.md", "```md\n# Fake heading\n```\n~~~md\n# Another fake\n~~~\n# Real heading\n# Real heading\n");
+  const args = [`--repository=repo=${join(f.root, "repo")}`, "report.md"];
+  for (const anchor of ["fake-heading", "another-fake", "real-heading-2"]) {
+    f.file("report.md", `\`DOC:guide.md#${anchor}\`\n`);
+    const result = f.run(...args);
+    assert.equal(result.status, 1, `${anchor}: ${result.stdout}${result.stderr}`);
+  }
+  f.file("report.md", "DOC:guide.md#real-heading\nDOC:guide.md#real-heading-1\n");
+  const result = f.run(...args);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+});

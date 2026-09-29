@@ -30,9 +30,10 @@ when local documents lack the information or you need an up-to-date answer.
 3. Reconcile answered human gates and apply their consequences, then list the
    pending human decisions — only `OPEN` human gates with current passing
    prerequisites.
-4. Refresh the session's working-set snapshots and check each file's snapshot
-   header against the store revision. A stale snapshot is refreshed, never
-   edited.
+4. In a store-backed project, refresh working-set snapshots and check their
+   headers against the store revision; never edit a stale snapshot. In a
+   file-backed project, read the authoritative versioned records and regenerate
+   any derived projections from them.
 5. Count the suspended selections. More than one is a preflight fact: report
    each with its suspended status and reason, and name the mitigation —
    resume one, release one — before selecting new work.
@@ -52,10 +53,11 @@ Accept the work scope as the argument: an Epic id, a single SR id, an exact
 UR/SR set for candidate or baseline work, a source inventory for onboarding,
 or a raw request.
 Without one — including when the request is an orientation question
-rather than a scope — answer from the store: read the pending human decisions
-and the routed `PROPOSED`/`TODO` queue through the store's own projection
-read, present them, and ask the human to choose. Never pick a release
-commitment silently.
+rather than a scope — answer from the store: read pending human decisions,
+current and suspended selections, and routed work across all supported phases.
+Include `PENDING_VERIFICATION` baselines awaiting proof or acceptance and
+interrupted gate applications needing recovery. Present the projection and
+ask the human to choose. Never pick a release commitment silently.
 
 Version control, change lists, and the working tree describe the repository,
 not the loop. They are never the source for what to do next; a session that

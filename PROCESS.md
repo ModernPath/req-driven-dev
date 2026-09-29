@@ -328,25 +328,28 @@ a human answer.
 
 ### Attributable demotions
 
-Delivered work is not final. An item that reached `IN_REVIEW` or `DONE` re-enters
-the loop through an attributable demotion — a recorded transition with an
-actor, a basis, a `USER:` source, and the decision or defect it rests on —
-never through a duplicate requirement, a hand-edited status, or a synthetic
-failure. The basis chooses the destination:
+An item that reached `IN_REVIEW` or `DONE` re-enters the loop under the same
+identity. Record the transition, actor, basis, and supporting evidence or
+decision. Observed evidence invalidation follows the automatic rules under
+Evidence and completion: attribute it to the evaluating agent or check with
+its factual sources, without inventing a human answer or `USER:` source.
+Demotions based on a human decision use the human gate described below.
 
 | Demotion | Basis | What it requires and what follows |
 |---|---|---|
 | Requirement or Epic `IN_REVIEW/DONE -> PROPOSED` | Reversed decision: the approved scope, acceptance, or a decision it rests on no longer holds | The reversing decision linked; entry approval is stale and a new entry packet, cold review, and human entry gate precede `TODO` again |
-| Requirement or Epic `IN_REVIEW/DONE -> IN_PROGRESS` | Defect: the delivered behavior is wrong against the approved requirement | The invalidated evidence named; red-first evidence is re-established for the defect; `IN_REVIEW` returns through the lower or upper trace and `DONE` only through a successor human completion gate |
+| Requirement `IN_REVIEW/DONE -> IN_PROGRESS` | Defect or invalidated required evidence, with current normal-development entry approval | Name the invalidated evidence; re-establish the affected trace; return to DONE only through a successor human completion gate |
+| Requirement `IN_REVIEW/DONE -> PROPOSED` | Defect or invalidated required evidence, without current normal-development entry approval | Preserve the requirement and previous acceptance receipt; perform normal planning and entry before development. This includes baselines accepted directly to DONE; preparing their entry does not imply changed product intent |
 | Requirement or Epic `-> OBSOLETE` | Superseded or retired | The replacement or the retiring decision linked (the supersession rule above) |
 
-A demotion is recorded as a human gate of purpose `demotion` whose transition
-names the destination, whose exact scope names the demoted items, and whose
-sources carry the basis. This demotion gate requires no prerequisite trace —
-the facts it rests on are the human's decision and the
-named defect, not a fingerprint check — and applying it reconciles the graph
-like any other answer. Demoting a member reopens its Epic to the weakest
-member state.
+A human-directed demotion is recorded as a gate of purpose `demotion`. Its
+transition names the destination, its exact scope names the demoted items, and
+its sources carry the human decision and `USER:` attribution. This gate requires
+no prerequisite trace; retain the decision and supporting facts. Applying it
+reconciles the graph like any other answer. Evidence invalidation needs no
+human demotion gate.
+Reconcile an affected Epic against its members: it returns to `PROPOSED` if
+required entry approval is absent or stale, otherwise to `IN_PROGRESS`.
 Siblings the demotion does not touch keep their state: their evidence stays
 `CURRENT` when it is current at the present revision, and the Epic's next
 completion re-validates it there rather than requiring it to be posted again.
@@ -471,8 +474,9 @@ review separately from planning review. Open material findings stop delivery;
 resolved implementation findings cite the correcting commit and verification.
 
 Entry review evaluates the complete packet at its exact fingerprint. Only a
-current entry trace `PASS` may open the human entry gate. Do not create or
-change tests or implementation until every selected item is `TODO`, with one
+current entry trace `PASS` may open the human entry gate. Normal development
+requires current applied entry approval for the item being changed, in `TODO`
+or `IN_PROGRESS`. Unchanged DONE dependencies are not re-entered. There is one
 exception — the defect lane. When a defect is already diagnosed and the change
 is bounded, the failing test may be written first, on a branch and before
 entry, and cited in the packet as a `RUN:` source: it is the reconnaissance,
@@ -533,7 +537,8 @@ A dedicated existing-behavior path may move exactly reviewed URs/SRs directly to
   Retain the observed remote identity. If the collector does not validate it
   against an independently declared repository identity, disclose that limitation;
   a local origin setting alone does not establish repository ownership.
-- A current server-evaluated eligibility trace supports the exact human decision.
+- A current eligibility trace evaluated through the sanctioned tool supports
+  the exact human decision.
   Its attributed reviewed answer and guarded application recheck the complete
   proof. Application is atomic across the named scope and uses normal lifecycle
   events. A stable key and identical input recover the same receipt; changed
@@ -662,7 +667,9 @@ Invalidating required evidence atomically:
 2. makes dependent trace gates `STALE` and supersedes dependent unclosed human
    gates;
 3. removes affected evidence conclusions;
-4. demotes dependent `IN_REVIEW`/`DONE` Epic, UR, and SR items to `IN_PROGRESS`;
+4. reopens dependent `IN_REVIEW`/`DONE` requirements as `IN_PROGRESS` when normal
+   entry approval remains current, otherwise as `PROPOSED` for planning and entry;
+   reconciles affected Epics under Attributable demotions;
 5. propagates only through declared relations.
 
 Supplemental evidence causes no demotion. Re-verification may restore

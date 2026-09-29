@@ -32,10 +32,13 @@ collecting again. Reuse genuine current evidence for the same captured snapshot;
 rerun only what is missing, stale or invalid. Preserve stable evidence keys and
 returned report/result IDs and digests. Resolve conflicts before retrying.
 
-If an acceptance gate already exists or an answer/application was interrupted,
-hand its ID and retained inputs to `rdd-reverse-engineer-accept` for a status
-read first. Do not reopen a completed acceptance by previewing DONE targets as
-new pending work or regenerating their evidence.
+If a gate for this scope exists and its answer/application status is unknown,
+hand its ID and retained inputs to `rdd-reverse-engineer-accept` for recovery
+before collecting evidence. A known stale, unapplied gate does not repeat that
+handoff: continue verification of its pending targets and retain the old gate
+status for successor review. An applied receipt is historical evidence; do not
+preview DONE targets as pending work. Established evidence invalidation routes
+through `rdd-triage`, not back through baseline acceptance.
 
 ## Steps
 
@@ -71,8 +74,8 @@ new pending work or regenerating their evidence.
    Record the observed remote. ModernPath's collector reads the checkout's
    `origin`; it does not bind that setting to an independently declared expected
    repository. Disclose this limitation in the proof packet.
-5. **Preview exact proof.** Submit the typed proof for server eligibility. Missing,
-   contradictory, stale, revoked or inaccessible evidence stays a gap. Adding
+5. **Preview exact proof.** Submit the typed proof to the sanctioned eligibility
+   evaluator. Missing, contradictory, stale, revoked or inaccessible evidence stays a gap. Adding
    tests or changing behavior requires an explicitly scoped handoff to normal
    planning/build/verify; do not repair product/test code in this pass.
 

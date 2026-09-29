@@ -28,11 +28,13 @@ order.
 5. For feedback, determine whether one standalone or UR-linked SR can address
    it without changing user outcome, acceptance, or a cross-cutting decision.
    Otherwise route it to epic-scoped planning.
-   A delivered item found defective, or whose decision was reversed, is
-   routed to an attributable demotion of that item (`PROCESS.md`
-   §Attributable demotions) — to `IN_PROGRESS` for a defect, to `PROPOSED`
-   for a reversed decision — with its `USER:` source and the linked defect or
-   decision, never to a duplicate requirement or a hand-edited status.
+   Reopen delivered work under the same identity (`PROCESS.md` §Attributable
+   demotions). Observed evidence invalidation is an automatic transition with
+   agent/check attribution and factual sources; human-directed demotion uses
+   a human gate and its `USER:` source. A reversed decision returns work to
+   `PROPOSED`. A defect or evidence invalidation returns a requirement to
+   `IN_PROGRESS` only with current normal entry approval; otherwise use
+   `PROPOSED` for planning and entry, preserving its prior acceptance receipt.
 6. Re-evaluate stale gates and evidence, then reconcile authoritative records,
    release scope, work selection, and derived views. Never promote to `TODO`
    without the strict entry gate.

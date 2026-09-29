@@ -41,13 +41,17 @@ node <skill-directory>/audit-citations.mjs <document-root> --repository=<key>=<s
 Repeat `--repository` for multiple repositories. Git worktrees and explicitly
 declared non-Git roots are supported. A qualified reference has the form
 `CODE:repository@revision:exact/path:locator` or `TEST:` with the same structure.
-Qualified revisions must match the declared checkout. Use the sanctioned source
-reader when checking captured historical bytes.
+Qualified Git revisions must match the declared checkout's HEAD; their files
+and contents are read from that commit, regardless of working-tree changes.
+Unqualified references and `@unversioned` roots use local files. Use the
+sanctioned source reader for captured dirty snapshots or other historical revisions.
 
 The checker handles file existence, unique path resolution, numeric line
-locators, simple symbol-name occurrences, and Markdown `DOC:` references. It
-does not establish that the cited code supports the claim or that a named test
-executed. Composite test identities require the test runner or the store's test
+locators, simple symbol-name occurrences, and Markdown `DOC:` references with
+exact anchors for plain `#` headings. Inline heading markup, other heading syntax,
+or renderer-specific anchors require an independent check; a heading substring
+is never a match. It does not establish that the cited code supports the claim
+or that a named test executed. Composite test identities require the test runner or the store's test
 identity contract; an unsupported locator is reported, never shortened to a
 passing parent name.
 

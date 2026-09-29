@@ -24,7 +24,7 @@ Establish the target system, requested behavior/context scope, source roots and
 whether state is store-backed or file-backed. Prefer fresh synchronized local
 documents: check freshness, search/read local files, and refresh only missing or
 stale exports. Use live reads for missing material or a current authoritative
-answer; the authoritative source wins a disagreement. Always read the live
+answer; the authoritative source wins a disagreement. Always read the authoritative
 requirement corpus and fingerprint through the sanctioned tool before authorizing
 a run. An empty directory or cache does not prove an empty system.
 
@@ -57,12 +57,12 @@ inventory files. Obtain an explicit attributable mode choice unless the session
 already contains that exact authorization:
 
 - **Baseline ready for use:** grounded as-built requirements and confirmed links
-  appear in Base, Ledger and System → Requirements as **Baselined — not verified**.
+  enter the authoritative corpus in Base as PENDING_VERIFICATION.
   Recommend this for an empty corpus. It authorizes source-scoped publication,
   not acceptance of statements that have not yet been generated.
 - **DERIVED additions for approval:** distinct proposed requirements and links
-  await exact later review in System → Requirements. Existing governed content
-  and Ledger remain unchanged. Recommend this when requirements already exist.
+  await exact later review, separate from the confirmed corpus. Existing
+  governed content remains unchanged. Recommend this when requirements already exist.
 
 Record the chosen mode/source authorization through the sanctioned operation.
 Do not substitute generic requirement birth with a forced status, raw API writes
@@ -151,9 +151,12 @@ governed linkage and verified behavior are separate claims. Neither a passing
 citation checker nor source-file coverage proves behavioral coverage.
 
 Read back exact IDs, lifecycle/release, citations, relationship authority, test
-artifacts and any requested Epic memberships. For baseline, verify Ledger and
-System → Requirements agree with receipts. For DERIVED, verify candidate review
-contains the proposals while governed views/counts remain unchanged. Report
+artifacts and any requested Epic memberships from the authoritative store. In
+a file-backed project, verify the versioned records and their receipt/revision;
+in a store-backed project, use the sanctioned read-back operation and projections.
+For ModernPath, check Ledger and System → Requirements against the receipts.
+For DERIVED, verify candidate records contain the proposals while confirmed
+records and governed counts remain unchanged. Report
 created, reused, baselined, derived, rejected and unresolved counts separately.
 
 ### 5. Confirm candidates only when requested

@@ -68,11 +68,11 @@ introduces a cross-cutting decision, return it to Epic-scoped planning. In
 either scope, fulfill the current planning, reconnaissance, cold-review,
 test-strategy, work-selection, and entry-brief facts.
 
-Then obtain strict human entry approval for every selected requirement and
-Epic. An already approved related entity does not return to `TODO` merely
-because another requirement starts. Move the selected requirement to `TODO`
-before changing a test. If the Entry packet is incomplete or the entry answer
-is absent, stop and route the entry first.
+Check the existing entry approval for the exact selected scope. Reuse current
+applied approval and preserve `TODO` or `IN_PROGRESS`; resuming verification
+does not reopen entry or move work backwards. If entry is missing or stale,
+route to planning and entry before changing tests. A reopened baseline that
+never had normal entry follows `PROCESS.md` to `PROPOSED` for that preparation.
 Verification stays within the authoritative work selection. The diagnosed-defect
 exception in `PROCESS.md` permits a failing test before entry; it does not
 authorize this verification pass or implementation.
@@ -159,8 +159,9 @@ Do not weaken a test to promote a row.
 - If the row lacks authoritative requirement support, stop verification and
   route the inconsistent authority through `rdd-triage`. Do not silently rewrite
   its lifecycle, approvals, or relationships.
-- If the implementation cannot satisfy the row, record the contradiction and
-  route the required new or changed SR through planning.
+- If the implementation contradicts approved behavior, retain the failing
+  evidence and hand the same entered SR to `rdd-build`. Route through planning
+  only when satisfying it requires changed scope or a material decision.
 - If verification needs unavailable infrastructure, keep the row
   `PENDING_VERIFICATION` before entry; after entry, use `BLOCKED` and record the
   suspended `TODO` or `IN_PROGRESS` state.

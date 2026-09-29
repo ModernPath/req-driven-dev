@@ -25,12 +25,15 @@ requirements remain normal development work.
    prerequisite. Never start from the most convenient phase.
 3. If input is not authoritative or is `DERIVED`, apply `rdd-discover` and its
    confirmation gate. Continue only with confirmed requirements and relations.
-4. Apply `rdd-plan`, then `rdd-cold-review`, then `rdd-entry-review`. Repeat from
-   the earliest stale or failed pass until the exact selected scope is `TODO`.
+4. For active work lacking current entry approval, apply `rdd-plan`, then
+   `rdd-cold-review`, then `rdd-entry-review` until entry is applied to those
+   items as `TODO`. Resume already-entered work at its current phase; unchanged
+   DONE dependencies do not repeat entry.
 5. Run the AI TDD inner loop below. Apply `rdd-build` to changed SRs and
    `rdd-verify` to entered verification work establishing regression-sensitive
-   evidence for existing behavior. Continue until every
-   selected requirement satisfies its applicable trace and is `IN_REVIEW`.
+   evidence for existing behavior. Continue until every selected requirement
+   has a current passing trace and is `IN_REVIEW` or already `DONE`. Keep
+   unchanged DONE members as proof dependencies, without reaccepting them.
 6. Apply `rdd-completion-review` to audit, deliver, recheck the delivered
    revision, reconcile records, run the completion trace gate, and apply the
    human completion answer.
@@ -55,8 +58,9 @@ human input while the approved scope remains unchanged:
 3. Rerun affected UR scenarios and update their separate upper evidence.
 4. Repeat for any failing or stale approved trace. Do not stop after the first
    GREEN result or completed SR while another selected trace remains unmet.
-5. Move eligible requirements to `IN_REVIEW` only after all applicable trace
-   gates pass.
+5. Move eligible active requirements to `IN_REVIEW` only after all applicable
+   trace gates pass. Previously DONE members retain their state when their
+   proof is current; invalidated proof returns through `rdd-triage`.
 
 If all planned SR lower traces pass while a UR upper trace still fails, diagnose
 the mismatch. Continue the loop for an implementation defect within approved

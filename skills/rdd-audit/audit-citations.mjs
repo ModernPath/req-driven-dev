@@ -17,7 +17,7 @@ const PREFIXED = new RegExp(`(?:CODE|TEST): ?((?:[A-Za-z0-9_.-]+@[A-Za-z0-9_.-]+
 const UNKNOWN_PREFIX = /(?:CODE|TEST): ?[^\s`<>|;)]+/g;
 // Bare citations retain the full locator for the same validation.
 const BARE = new RegExp("`([A-Za-z0-9_./\\[\\]\\-]+\\.(?:" + EXT + ")):([^\\s`<>|;)]*)", "g");
-const DOCREF = /DOC: ?([A-Za-z0-9_./\-]+\.md)(?:#([^ )|`\u00b7]+))?/g;
+const DOCREF = /DOC: ?([A-Za-z0-9_./\-]+\.md)(?:#([^\s)|`\u00b7]+))?/g;
 const ELIDED = /(?:CODE:|`)(?:[A-Za-z0-9_.\\[\\]\-]+\/)*\.\.\.\/[A-Za-z0-9_.\/\\[\\]\-]*\.(?:exs|tsx|ex|go|js|ts|py|rb|rs|java|kt|sql|yml|yaml|json|sh|heex)\b/g;
 
 const roots = process.argv.slice(2).filter((a) => !a.startsWith("--"));
@@ -71,29 +71,38 @@ try {
     if (!statSync(root).isDirectory() || repositories.some(r => r.key === key || r.root === root)) throw new Error("repository keys and roots must be distinct directories");
     let revision = "unversioned";
     let files;
+    let committedFiles;
     if (existsSync(join(root, ".git"))) {
       const git = (...args) => execFileSync("git", ["-C", root, ...args], { encoding: "utf8", maxBuffer: 64 << 20, stdio: ["ignore", "pipe", "pipe"] });
       revision = git("rev-parse", "HEAD").trim();
+      committedFiles = new Set(git("ls-tree", "-r", "--name-only", "-z", revision).split("\0").filter(Boolean));
       files = git("ls-files", "-z", "--cached", "--others", "--exclude-standard").split("\0").filter(Boolean).map(path => join(root, path));
     } else {
       if (!declared.length) throw new Error("not a Git repository; declare every source root with --repository=key=directory");
       files = walk(root, []);
     }
     files = [...new Set(files.filter(path => existsSync(path) && statSync(path).isFile() && inside(root, realpathSync(path))))];
-    repositories.push({ key, root, revision, files });
+    repositories.push({ key, root, revision, files, committedFiles });
   }
 } catch (error) {
   console.error(`source inventory refused: ${error.message}`);
   process.exit(2);
 }
 
-const lineCache = new Map();
-function lineCount(p) {
-  if (!lineCache.has(p)) {
-    try { lineCache.set(p, readFileSync(p, "utf8").split("\n").length); }
-    catch { lineCache.set(p, -1); }
+const sourceCache = new Map();
+function readSource(file) {
+  const key = `${file.revision ?? "working-tree"}:${file.path}`;
+  if (!sourceCache.has(key)) {
+    const content = file.revision
+      ? execFileSync("git", ["-C", file.root, "show", `${file.revision}:${relative(file.root, file.path)}`],
+          { encoding: "utf8", maxBuffer: 64 << 20, stdio: ["ignore", "pipe", "pipe"] })
+      : readFileSync(file.path, "utf8");
+    sourceCache.set(key, content);
   }
-  return lineCache.get(p);
+  return sourceCache.get(key);
+}
+function lineCount(file) {
+  return readSource(file).split("\n").length;
 }
 
 const resolutionErrors = new Map();
@@ -109,12 +118,22 @@ function candidates(path, exactOnly = false) {
       return [];
     }
     const exact = resolve(repo.root, typed[3]);
-    found = inside(repo.root, exact) && repo.files.includes(exact) ? [exact] : [];
+    if (!inside(repo.root, exact)) return [];
+    if (repo.committedFiles) {
+      if (!repo.committedFiles.has(relative(repo.root, exact))) {
+        resolutionErrors.set(path, "no such file at the cited revision");
+        return [];
+      }
+      found = [{ path: exact, root: repo.root, revision: repo.revision }];
+    } else {
+      found = repo.files.includes(exact) ? [{ path: exact }] : [];
+    }
   } else {
     const exact = repositories.flatMap(repo => repo.files.filter(file => relative(repo.root, file) === path));
-    found = exact.length || exactOnly ? exact : repositories.flatMap(repo => repo.files.filter(file => file.endsWith("/" + path)));
+    found = (exact.length || exactOnly ? exact : repositories.flatMap(repo => repo.files.filter(file => file.endsWith("/" + path))))
+      .map(path => ({ path }));
   }
-  found = [...new Set(found)];
+  found = [...new Map(found.map(file => [file.path, file])).values()];
   if (found.length > 1) {
     resolutionErrors.set(path, `ambiguous path (${found.length} matches); name repository@revision:exact/path`);
     return [];
@@ -158,6 +177,33 @@ function exemptFenceRanges(lines) {
     }
   }
   return ranges;
+}
+
+// Resolve whole anchors for plain #-style headings, excluding code fences.
+// Renderer-specific anchors and other heading syntax need a separate check.
+function headingAnchors(content) {
+  const anchors = new Set();
+  let fence = null;
+  for (const line of content.split("\n")) {
+    const marker = line.match(/^ {0,3}(`{3,}|~{3,})(.*)$/);
+    if (fence) {
+      if (marker && marker[1][0] === fence[0] && marker[1].length >= fence.length && !marker[2].trim()) fence = null;
+      continue;
+    }
+    if (marker) { fence = marker[1]; continue; }
+    const heading = line.match(/^ {0,3}#{1,6}[ \t]+(.+?)\s*$/);
+    if (!heading) continue;
+    const title = heading[1].replace(/[ \t]+#+[ \t]*$/, "").trim();
+    // Inline markup needs a Markdown renderer. It can also change duplicate
+    // numbering, so do not certify anchors from a partially parsed document.
+    if (/[`*_\[\]<>\\&]/.test(title)) return null;
+    const base = title.toLowerCase().replace(/[^\p{L}\p{N}\p{M}_ -]/gu, "").replace(/ /g, "-");
+    let anchor = base;
+    let suffix = 0;
+    while (anchors.has(anchor)) anchor = `${base}-${++suffix}`;
+    anchors.add(anchor);
+  }
+  return anchors;
 }
 
 for (const doc of docs) {
@@ -209,11 +255,8 @@ for (const doc of docs) {
     const found = candidates(m[1], true);
     if (!found.length) { broken.push({ doc, lineNo, path: m[1], why: resolutionErrors.get(m[1]) || "no such document" }); continue; }
     if (m[2]) {
-      // Escape the heading pattern before allowing spaces and hyphens to match.
-      const want = m[2].replace(/[.*+?^${}()|[\]\\]/g, (c) => "\\" + c).replace(/(?:\\?-|\s)+/g, "[-\\s]+");
-      const re = new RegExp("^#{1,6} .*" + want, "mi");
-      if (!found.some((f) => re.test(readFileSync(f, "utf8")))) {
-        broken.push({ doc, lineNo, path: `${m[1]}#${m[2]}`, why: "no such section" });
+      if (!found.some(f => headingAnchors(readSource(f))?.has(m[2]))) {
+        broken.push({ doc, lineNo, path: `${m[1]}#${m[2]}`, why: "no such section anchor or unsupported heading syntax" });
         continue;
       }
     }
@@ -239,7 +282,7 @@ function check(doc, text, m) {
   if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(locator)) {
     // This checks a complete token's occurrence, not its semantic identity.
     const token = new RegExp(`(?:^|[^A-Za-z0-9_])${locator}(?=$|[^A-Za-z0-9_])`);
-    if (found.some(f => token.test(readFileSync(f, "utf8")))) { ok++; return; }
+    if (found.some(f => token.test(readSource(f)))) { ok++; return; }
     broken.push({ doc, lineNo, path: display, why: "no such name in the file" });
     return;
   }
