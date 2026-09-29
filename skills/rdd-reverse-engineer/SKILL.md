@@ -12,9 +12,14 @@ turns code inspection into passing verification evidence.
 ## Connect, inspect, then ask once
 
 1. Establish the target system and workspace binding through the sanctioned
-   tool. Synchronize documentation locally. Read the authoritative requirement
-   corpus and current fingerprint; directories and cached exports are not proof
-   the system is empty. Do not change a different system's records.
+   tool. Prefer locally synchronized materials, including documents under
+   `.modernpath/<system-slug>/`: check freshness, search and read the local
+   files first, and refresh the export when missing or stale. Use live document
+   reads only for missing material or a current authoritative answer; if local
+   and live content disagree, the authoritative source wins. Read the live
+   requirement corpus and current fingerprint through the sanctioned tool;
+   directories and cached exports are not proof the system is empty. Do not
+   change a different system's records.
 2. Declare every repository with a stable key and local root. The parent may be
    non-Git; a Git worktree may have a `.git` file. Inventory tracked/unignored
    files or explicitly scoped non-Git files. Include configuration and legacy
@@ -78,7 +83,7 @@ Do not infer relations merely from prose mentioning an ID. Do not create Epics
 as discovery folders. Where the user explicitly wants a real grouping, persist
 its intended UR/SR members and verify both membership counts.
 
-## Capture, publish, read back
+## Capture, prepare the batch, then publish
 
 Capture authorized bytes before publishing references. New systems need not
 have provider OAuth or FileAnalysis records. A source snapshot is not an AI
@@ -88,7 +93,23 @@ repository key, revision, relative path, digest, optional locator and immutable
 source identity. A document citation names the authorized document revision.
 Ambiguous basenames and unresolved evidence are not valid authority.
 
-Publish each coherent group atomically and read its receipt back:
+Prepare the full requested requirement scope locally before the first
+requirement publication. Assemble URs, SRs, scenarios, criteria, citations and
+relationships into reusable publication inputs with stable run/group keys.
+Check duplicate identities, existing-corpus reuse, unresolved citations and
+cross-context relationships across the whole batch before sending it. These
+inputs are staging artifacts, not a second requirement store.
+
+Then sync the entire prepared batch through the sanctioned publication route.
+Use coherent atomic groups containing multiple related requirements; split only
+where the supported contract, size limits or dependencies require it, publishing
+referenced parents before dependent groups. Do not alternate deriving one row
+and publishing it, or issue one write and read-back per requirement. Retain each
+group receipt, then perform one consolidated read-back and coverage audit over
+all prepared IDs and relationships. Report any unpublished groups explicitly;
+atomicity applies per group, not across separate calls.
+
+Apply the authorized mode to every group:
 
 - **Baseline:** create new grounded requirements as PENDING_VERIFICATION in Base
   with confirmed canonical UR–SR and SR–code/test relationships. Reuse only exact
