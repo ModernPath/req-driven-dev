@@ -525,7 +525,11 @@ Changes to approved behavior, scope, architecture, acceptance, or a material
 technical decision return to the affected planning pass. A review finding does
 not itself authorize implementation.
 
-At most two cold-review rounds run on the selected planning scope. A current
+At most two cold-review rounds run on the selected planning scope. A later
+round reviews what changed since the previous round's recorded trace — the
+records and sections whose fingerprints moved, the findings still open, and
+what those touch — and carries the unchanged remainder at that round's verdict;
+its trace still pins the full current aggregate. A current
 pass proceeds to entry review. After a second failed round, report the remaining
 material findings to the human; do not start a third round automatically.
 A small change gets one narrow pass from an independent context — the
