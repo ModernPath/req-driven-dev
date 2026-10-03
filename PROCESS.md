@@ -432,6 +432,48 @@ protects. It keeps the records and the tests. It moves the human checkpoint to
 the end of a sprint, and turns process refusals into logged work instead of
 stops.
 
+**The unit of work is a connected journey.** Autopilot selects a coherent
+user journey and the existing requirements it needs — not one package per
+table, route, screen, or test boundary. A journey may span Epics; requirement
+ownership, sources, and requirement-to-test links do not change, and the exact
+scope is held as the Epic and single-SR selections and entry records the
+store supports. A journey is coordination, not a new requirement kind or
+selection kind. Within the scope, a missing view or primary action outranks
+refining one that already works. This changes the order of work, never what a
+requirement means or what completion requires.
+
+The sprint keeps a usable-coverage matrix: for each journey, whether its
+entry point is reachable, its primary action is connected to real state, the
+state persists, the next step works, and end-to-end evidence exists — each
+marked built, partial, missing, or externally held. A navigable prototype, a
+mocked response, or an isolated backend test does not make a journey built.
+Every unfinished requirement clause stays visible in it. The matrix is a
+working view of the sprint, reported at checkpoints and on the sprint-end
+page; it links requirement records and never stands in for them.
+
+A journey is built in three passes:
+
+1. connect its entry points and primary actions to real, authorized local
+   state, and mark what is unfinished, simulated, or externally held;
+2. complete representative end-to-end runs, including persistence, reload,
+   and the handoff to the next step — in disposable fixtures where the grant
+   excludes customer writes or external actions;
+3. harden the remaining acceptance clauses, edge cases, scale, and
+   presentation.
+
+Security, authorization, tenant isolation, and atomic data integrity belong to
+the first functioning slice. They are never deferred to the hardening pass.
+
+**Build-time and completion-time verification are separate.** During the
+sprint, focused checks are the feedback gate: a focused-green slice is a
+development waypoint, not a completion event, and the next step is the next
+missing capability. A run of the full verifier before closeout needs a
+concrete cross-system risk that focused checks cannot bound, or a human's
+request, and the reason is stated. Full regression, the remaining acceptance
+assertions, and hardening run in the sprint's closeout, with time reserved for
+repairs. Missing or failing required evidence keeps an item partial: it stops
+acceptance, not the building of the next authorized action.
+
 **The grant.** A human who may answer entry and completion gates for the scope
 grants autopilot once. The grant names:
 
@@ -458,6 +500,25 @@ human withdraws it, or when its scope is done.
 | A refusal at a phase boundary | Stop and report | Try the documented clearing verb once. If it still refuses, log it, move to the next item, and let the record catch up at sprint end. |
 | A product question | Asked; the loop waits | Asked, but the loop does not wait: see below |
 | After a gate answer or a pass | Wait for the human's word | Continue |
+| Work selection | An Epic or a single SR | A connected journey with its exact existing requirements |
+| Planning and cold review | Per selected scope | Once per journey. An unchanged reviewed packet goes straight to RED; only a material change to security, data integrity, contracts, or testability is reviewed again, and only that change |
+| Readiness to build | The complete packet and an applied entry | Code starts once the source, outcome, owning requirements, state and safety boundaries, and representative RED assertions are clear; remaining inventory and record updates run alongside the build. Code written before the entry is applied is reversible local build-ahead; the entry is applied before any requirement advances |
+| Cold review timing | Before any code | May run alongside reversible local build-ahead. A material safety finding is repaired before the affected behavior is used |
+| AI TDD inner loop | One SR clause at a time, rerunning affected URs each iteration | Batch: representative journey and state-boundary REDs cover adjacent primary actions, which are implemented together and checked with one focused integrated GREEN run. Clause-level assertions not yet written are closeout work |
+| Commits | At each waypoint: RED, GREEN, cleanup, reconciliation | Per connected batch: one RED commit carrying the batch's failing tests, its RED evidence recorded there, then the working batch. Required commit checks run unchanged |
+| Records | Reconciled after each pass | Reconciled at each integration checkpoint; record grooming never holds the build |
+| Full verification | At each phase's required exit | At sprint closeout, unless the exception above applies |
+
+**Checkpoints.** At each integration checkpoint, compare usable coverage with
+the previous checkpoint. When the batch added no user capability and repaired
+no blocking defect, the next action is the next missing journey step; any
+exception is explained in user-outcome terms. Immediate further work on a
+green slice is justified only by a safety or data-integrity defect, a
+regression, or a failure that blocks the selected journey; every other finding
+is queued with an owner and a next action. Report the observed split between
+implementation and preparation or checking; when preparation and checking
+dominate, stop discretionary process work and build the next missing action.
+Timings are observed, never reconstructed.
 
 **Product questions.** The agent still asks the questions only a human can
 answer: behavior, scope, user experience, meaning of data, priority. It asks
@@ -475,7 +536,12 @@ It waits for an answer only when a wrong guess is hard to undo:
 **What does not change:**
 
 - Requirements are written with sources, and assumptions are marked as such.
-- Red-first tests, with evidence recorded.
+- Red-first tests, with evidence recorded. A RED is observed before the code
+  that satisfies it, and no evidence is reconstructed after the fact.
+- Security, authorization, tenant isolation, and atomic data integrity hold
+  from the first functioning slice.
+- Every acceptance clause is met before acceptance. Focused-green slices,
+  partial evidence, and the sprint's end date are not acceptance.
 - The store's server-side refusals are cleared through the sanctioned tool or
   logged. They are never bypassed with hand-made writes.
 - Merging, deploying, and releasing stay with humans.
@@ -485,11 +551,14 @@ It waits for an answer only when a wrong guess is hard to undo:
 open, and build ahead of its record is filed as a gap record naming the
 sprint. Nothing is dropped silently.
 
-**Sprint end.** One independent review reads everything the sprint built —
-the change, not the packets — against its requirements and tests. The human
-then gets one page:
+**Sprint end.** Closeout runs the full required verification, completes the
+remaining acceptance assertions, and repairs what fails; an item is presented
+as eligible for completion only when its required evidence passes. Then one
+independent review reads everything the sprint built — the change, not the
+packets — against its requirements and tests. The human then gets one page:
 
-- what was built, with evidence;
+- the journeys and primary actions a user can now complete, with evidence;
+- the coverage matrix: remaining clauses and what is still unavailable;
 - the assumed decisions to confirm or change;
 - the log;
 - the review's findings.
@@ -742,6 +811,10 @@ Run the loop as follows:
 5. Exit to `IN_REVIEW` only when every selected SR lower trace is current and
    `PASS`, and every selected UR upper trace is current and `PASS` with all of
    its required SRs in `IN_REVIEW` or `DONE`.
+
+Under a current autopilot grant, §Autopilot's batch cadence replaces the
+per-clause rhythm of steps 2–4 until closeout. The exit in step 5 does not
+change.
 
 Use a reviewable feature branch and preserve RED and passing fingerprints. For
 as-built behavior entered into normal verification, demonstrate regression
