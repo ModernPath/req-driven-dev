@@ -51,6 +51,11 @@ that satisfies it is what makes red-first auditable in history. Record the
 RED evidence while the repository stands at the RED commit, so the evidence
 is pinned to the revision that produced it.
 
+Under a current autopilot grant, `PROCESS.md` §Autopilot's batch cadence
+applies: one RED commit carries a connected batch's failing tests, adjacent
+actions are implemented together, and full verification waits for closeout.
+The exit to `IN_REVIEW` in step 8 does not change.
+
 ## Report
 
 Report the planning revision, RED and passing observations, code and test
