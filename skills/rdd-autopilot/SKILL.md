@@ -128,7 +128,8 @@ asks.
    logged refusals.
 2. **Close out.** Run the full required verification and harden the
    combined change (stage 3). Closeout adds verification and hardening, not
-   RED for clauses already built; the checkpoint limit on further work on a
+   RED for clauses already built; a clause first built at closeout gets its
+   own RED like any other. The checkpoint limit on further work on a
    green slice does not apply here. Repair what fails
    before presenting any item as eligible for completion. The end date is not
    evidence.

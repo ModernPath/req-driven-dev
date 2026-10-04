@@ -493,7 +493,7 @@ own feedback runs; the project's commit gate runs on every commit as
 configured, even when it runs the full suite. Full regression and hardening
 run in the sprint's closeout, with time reserved for repairs. Closeout adds
 verification and hardening, not RED for clauses already built. Missing or
-failing required evidence keeps an item partial: it stops
+failing required evidence keeps an item from `IN_REVIEW`: it stops
 acceptance, not the building of the next authorized action.
 
 **The grant.** A human who may answer entry and completion gates for the scope
