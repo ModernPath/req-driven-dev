@@ -82,12 +82,13 @@ bounds differ from §Autopilot, §Autopilot applies.
    - commit and push the working batch. The full-verifier rule governs your
      own feedback runs; the project's commit gate runs on every commit as
      configured, even when it runs the full suite. Never skip, disable, or
-     leave a test failing to get a commit past it. Never merge.
+     leave a test failing to get a commit past it, other than the declared
+     RED tests of a RED commit as the gate admits them. Never merge.
    Work stages 1 and 2 in order per journey: connect, then complete end to
    end. Stage 3, harden, runs at closeout.
    Record RED, GREEN, and limits as you go. Advance a requirement to
-   `IN_REVIEW` only with its full required evidence; a partial slice stays
-   partial.
+   `IN_REVIEW` only with its full required evidence; a requirement in a
+   partial slice keeps its state.
 5. **Checkpoint.** Reconcile the batch's records. Update the coverage matrix
    and compare it with the previous checkpoint, as §Autopilot's checkpoint
    rule says. Queue findings that do not block the journey with an owner and

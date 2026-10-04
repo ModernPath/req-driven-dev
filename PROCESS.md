@@ -455,8 +455,8 @@ marked built, partial, missing, or externally held. Externally held means the
 cell waits on something the sprint cannot supply — a human answer, access, or
 an outside party. It is a matrix mark, not a lifecycle state: when the hold
 stops work on a requirement, that requirement is `BLOCKED` with the blocker
-recorded; otherwise the requirement stays partial and the matrix names the
-hold. A navigable prototype, a
+recorded; otherwise the requirement keeps its state and its matrix cell names
+the hold. A navigable prototype, a
 mocked response, or an isolated backend test does not make a journey built.
 Every unfinished requirement clause stays visible in it. The matrix is a
 working view of the sprint, reported at checkpoints and on the sprint-end
@@ -527,7 +527,7 @@ human withdraws it, or when its scope is done.
 | Readiness to build | The complete packet and an applied entry | Code starts once the source, outcome, owning requirements, state and safety boundaries, and representative RED assertions are clear; remaining inventory and record updates run alongside the build. Code written before the entry is applied is reversible local build-ahead (below); the entry is applied before any RED evidence is recorded or any requirement advances |
 | Cold review timing | Before any code | May run alongside reversible local build-ahead. A material safety finding is repaired before the affected code is committed past its RED commit |
 | AI TDD inner loop | One SR clause at a time, rerunning affected URs each iteration | Batch: representative journey and state-boundary REDs cover adjacent primary actions, which are implemented together and checked with one focused integrated GREEN run. The batch's RED commit carries a failing assertion for every clause the batch implements; representative REDs only reduce the number of commits, never the assertions |
-| Commits | At each waypoint: RED, GREEN, cleanup, reconciliation | Per connected batch: one RED commit carrying the batch's failing tests, its RED evidence recorded there, then the working batch. A RED commit carries only failing tests that its next commit turns green; that commit lands the whole batch. To land a batch SR by SR, use one RED/GREEN pair per SR. A journey assertion is written in the batch that can make it pass. A test is never skipped, disabled or left failing to get a commit past the project's gate, which runs on every commit as configured |
+| Commits | At each waypoint: RED, GREEN, cleanup, reconciliation | Per connected batch: one RED commit carrying the batch's failing tests, its RED evidence recorded there, then the working batch. A RED commit carries only failing tests that its next commit turns green; that commit lands the whole batch. To land a batch SR by SR, use one RED/GREEN pair per SR. A journey assertion is written in the batch that can make it pass. A test is never skipped, disabled or left failing to get a commit past the project's gate, other than the declared RED tests of a RED commit as the gate admits them; the gate runs on every commit as configured |
 | Records | Reconciled after each pass | Reconciled at each integration checkpoint; record grooming never holds the build |
 | Full verification | At each phase's required exit | The agent's full-verifier feedback runs wait for sprint closeout, unless the exception above applies; the project's commit gate is unchanged |
 
@@ -855,8 +855,11 @@ Run the loop as follows:
    its required SRs in `IN_REVIEW` or `DONE`.
 
 Under a current autopilot grant, §Autopilot's batch cadence replaces the
-per-clause rhythm of steps 2–4 until closeout. The exit in step 5 does not
-change.
+per-clause rhythm of steps 2–4, at closeout as during the sprint: a clause
+first built at closeout gets its own RED like any other. Step 1 changes in
+one respect: a UR scenario's upper RED is established in the batch that can
+make it pass, and it still fails at that batch's RED revision. The exit in
+step 5 does not change.
 
 Use a reviewable feature branch and preserve RED and passing fingerprints. For
 as-built behavior entered into normal verification, demonstrate regression

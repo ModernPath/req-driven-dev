@@ -23,6 +23,8 @@ code, tests, and current records.
 2. Before its first implementation iteration, establish upper RED for selected
    UR scenarios requiring new evidence. Re-validation of previously proven
    unchanged scenarios needs no new RED. Keep upper evidence on the UR.
+   Under an autopilot grant, a scenario's upper RED is established in the
+   batch that can make it pass (`PROCESS.md` §AI TDD inner loop).
 3. Select one unmet approved SR clause, establish its focused lower RED for the
    expected reason, and link the stable test identity to the clause.
 4. Implement the smallest behavior that makes the focused evidence pass.
@@ -62,7 +64,8 @@ A RED commit carries only failing tests that its next commit turns green;
 that commit lands the whole batch. To land a batch SR by SR, use one RED/GREEN
 pair per SR. A journey assertion is written in the batch that can make it
 pass. A test is never skipped, disabled or left failing to get a commit past
-the project's gate, which runs on every commit as configured, even when it
+the project's gate, other than the declared RED tests of a RED commit as the
+gate admits them; the gate runs on every commit as configured, even when it
 runs the full suite.
 The exit to `IN_REVIEW` in step 8 does not change.
 
