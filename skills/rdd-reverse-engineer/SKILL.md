@@ -58,7 +58,8 @@ not permission to invent a new key or overwrite an existing requirement. Read
 the run mode from the run's authorization source and the sweep's run-mode
 change file as the `mp-process-cli` onboarding says, and do not ask for it
 again: the run is autonomous only when its source says so and the change file
-holds no confirm entry for it; otherwise confirm after each batch.
+holds no confirm entry for it; otherwise, and also when the change file is
+unreadable, confirm after each publication group.
 
 Resume against the run's captured source identities. Reconcile corpus changes
 against its own receipts; external changes to the authorized source or
@@ -66,17 +67,17 @@ materially changed source scope require fresh scope authorization. Never
 replace unavailable historical evidence with latest code or ask again for an
 unchanged authorized run.
 
-A publication group is refused only for a collision with a record it names,
-never because the rest of the corpus changed. Runs publish one after another:
-authorize the next run only after the previous one has published every group,
-its source assessments included, and meets the finish condition, or after the
-person decided to leave it unfinished. Fold a correction into a group before
-publishing it. A later run cites the source file ids of its own capture; a
-file covered by a requirement from an earlier run is assessed as reviewed,
-naming that requirement. Contexts on published requirements are set before
-verification records execution proof; citation changes and trace refreshes
-belong to verification. The `mp-process-cli` onboarding gives the checks and
-the refusals.
+Of the corpus, a publication group is refused only for a collision with a
+record it names, never because the rest of the corpus changed. Runs publish
+one after another: authorize the next run only after the previous one has
+published every group, its source assessments included, and meets the finish
+condition, or after the person decided to leave it unfinished. Fold a
+correction into a group before publishing it. A later run cites the source
+file ids of its own capture; a file covered by a requirement from an earlier
+run is assessed as reviewed, naming that requirement. Contexts on published
+requirements are set before verification records execution proof; citation
+changes and trace refreshes belong to verification. The `mp-process-cli`
+onboarding gives the checks and the refusals.
 
 ## Steps
 
