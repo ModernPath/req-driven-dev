@@ -30,12 +30,13 @@ prove semantic coverage or authorize a lifecycle transition.
 
 ## Check citations
 
-Use `audit-citations.mjs` beside this skill for local Markdown citations. Pass
-the actual document roots and source repositories explicitly. Substitute the
-paths and repository keys in this command:
+Use `modernpath audit citations`, the citation audit the `modernpath` CLI
+ships, for local Markdown citations. Pass the actual document roots and source
+repositories explicitly. Substitute the paths and repository keys in this
+command:
 
 ```text
-node <skill-directory>/audit-citations.mjs <document-root> --repository=<key>=<source-root>
+modernpath audit citations <document-root> --repository=<key>=<source-root>
 ```
 
 Repeat `--repository` for multiple repositories. Git worktrees and explicitly
@@ -75,6 +76,13 @@ correct the inputs or invocation, and rerun; it is not a pass or an automatic
 skip. The default minimum is one; `--min` is a citation-count guard against an
 empty or incomplete scan, not an extraction-coverage threshold. Establish an
 expected citation count independently before using a higher minimum.
+
+If the audit cannot run — an exit `2` you cannot correct, or a CLI without the
+citation audit — keep the error, read each citation the review relies on, and
+report the citation check as not run, with the error. Never report it as passed.
+When the agent that writes the review cannot run commands, the agent that runs
+the audit passes it the command line, exit status and output, or the error;
+the reviewer lists the citation check as not run when the audit did not run.
 
 ## Verify meaning and measurement
 
