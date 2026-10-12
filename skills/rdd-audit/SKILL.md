@@ -30,12 +30,14 @@ prove semantic coverage or authorize a lifecycle transition.
 
 ## Check citations
 
-Use `audit-citations.mjs` beside this skill for local Markdown citations. Pass
-the actual document roots and source repositories explicitly. Substitute the
-paths and repository keys in this command:
+Check local Markdown citations with the citation audit the consuming project's
+tooling ships. In ModernPath, use `modernpath audit citations`, part of the
+`modernpath` CLI; `.modernpath/cli-reference.md` lists its flags and exit
+statuses. Pass the actual document roots and source repositories explicitly.
+Substitute the paths and repository keys in this command:
 
 ```text
-node <skill-directory>/audit-citations.mjs <document-root> --repository=<key>=<source-root>
+modernpath audit citations <document-root> --repository=<key>=<source-root>
 ```
 
 Repeat `--repository` for multiple repositories. Git worktrees and explicitly
@@ -46,7 +48,8 @@ exist in that commit, regardless of working-tree changes.
 Unqualified references and `@unversioned` roots use local files. Use the
 sanctioned source reader for captured dirty snapshots or other historical revisions.
 
-The checker resolves cited files for `CODE:`, `TEST:` and `DOC:`. The referenced
+The checker resolves cited files for `CODE:`, `TEST:` and `DOC:`, and for
+backticked `path.ext:locator` citations. The referenced
 file carries the requirement or other item ID it supports. Optional symbol,
 line, test-name and heading suffixes are ignored. The checker does not read
 source contents or match strings within them. File resolution does not establish
@@ -67,14 +70,37 @@ The checker uses these exit statuses:
 - `0`: the file-resolution check passed and the minimum citation count was met.
 - `1`: broken, ambiguous, unsupported, or elided references, or fewer than
   `--min=N` citations checked.
-- `2`: a requested document target is missing, the source inventory is invalid,
-  or a guarded prompt target was refused.
+- `2`: a requested document target is missing or unreadable, the source
+  inventory is invalid or Git is missing for a Git root, a flag is invalid, or
+  a guarded prompt target was refused.
 
 Exit `2` means the audit could not run on the requested inputs. Retain the error,
 correct the inputs or invocation, and rerun; it is not a pass or an automatic
 skip. The default minimum is one; `--min` is a citation-count guard against an
 empty or incomplete scan, not an extraction-coverage threshold. Establish an
 expected citation count independently before using a higher minimum.
+
+A run that printed no report did not run, whatever its exit status: the report
+starts with a `N/M citations resolve to files` line. A CLI without the citation
+audit answers `unknown command "audit"` with exit `1`, and a shell without the
+CLI cannot start it at all. `modernpath audit citations --help` exits `0` only
+when the command exists.
+
+If the audit cannot run — an exit `2` you cannot correct, or a CLI without the
+citation audit — keep the error, read each citation the review relies on, and
+report the citation check as not run, with the error. Never report it as passed.
+A citation check that did not run does not by itself block the gate the review
+serves: the review records it as not run, with the error, and the human sees
+that at the gate. A run refused by its environment — a permission denial or an
+authentication failure — is a stop: report the refusal verbatim (`PROCESS.md`
+"Delegated passes").
+
+When a delegated pass cannot run commands, the orchestrating session runs the
+audit and passes it the command line, the exit status, the standard output and
+standard error, and the revision of each declared repository — or the error.
+The pass lists the citation check as not run when the audit did not run, or
+when that command line does not name the documents and repositories under
+review.
 
 ## Verify meaning and measurement
 

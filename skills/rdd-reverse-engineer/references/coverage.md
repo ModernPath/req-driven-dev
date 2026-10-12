@@ -7,7 +7,7 @@ authorized context. Do not shrink a denominator to make a result pass.
 
 ## Citation validity
 
-Use `rdd-audit` and its supplied `audit-citations.mjs` for citations in recovered
+Use `rdd-audit` and the citation audit it names for citations in recovered
 local documents. It checks cited file resolution and a minimum recognized
 citation **count** (`--min=N`). It does not enforce percentage coverage. Historical
 source availability is checked through the sanctioned immutable source reader;
