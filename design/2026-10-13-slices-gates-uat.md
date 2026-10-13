@@ -1,7 +1,7 @@
 # Slices, project gate rules and user acceptance tests
 
-Status: draft for the process owner's decisions. Nothing here is normative
-until `PROCESS.md` and the skills say it.
+Status: decided (see Decisions); not yet normative — `PROCESS.md` and the
+skills change in the next step.
 
 Source: `USER:2026-10-13:slices-gates-uat` — "we are testing too often and
 deeply in RDD-process, it's wasting time … bring concept of slice of work to
@@ -194,22 +194,19 @@ project does not use acceptance tests.
 
 Each of 2 and 3 is product work and goes through the loop.
 
-## Decisions for the process owner
+## Decisions (`USER:2026-10-13:slices-gates-uat-as-recommended`)
 
-- **D1 — red-first inside a slice.** Keep red-first per connected batch
-  (recommended: every clause still gets a failing assertion before code,
-  but one RED commit and one GREEN per batch), or drop red-first evidence and
-  keep only the slice-end full run?
-- **D2 — floors.** Is there anything a project's gate rules may not hand to
-  the agent (recommended: completion of a slice that touches auth, payments,
-  existing data or an external contract stays human in the default and
-  autopilot presets, but a project may still change it)?
-- **D3 — acceptance tests and completion.** Is the tester's sign-off required
-  before the slice can complete (recommended: required when the project's
-  gate rules say so; the default file requires the guide but not the
-  sign-off), or is the guide only delivered alongside?
-- **D4 — the rename.** Today's "slice" (code a batch lands) becomes
-  "increment" — or another word?
-- **D5 — `EPIC-CLI-DELIVERY-PATH`.** Build it now on today's process (its
-  test-citation part split off and absorbed into section 1's separate review
-  fingerprint), or fold it into the first slice built under the new process?
+- **D1 — red-first inside a slice:** kept, per connected batch. Every clause
+  gets a failing assertion before its code, with one RED commit and one GREEN
+  commit per batch.
+- **D2 — floors:** the shipped default and autopilot gate files keep slice
+  completion human when the slice touches sign-in, payments, existing data or
+  an external contract. A project may change that in its own copy.
+- **D3 — acceptance tests and completion:** the default gate file requires the
+  acceptance-test guide before completion; whether the tester's sign-off is
+  also required is each project's gate-file rule (default: not required).
+- **D4 — rename:** today's "slice" (the code a batch lands) becomes
+  **increment**.
+- **D5 — `EPIC-CLI-DELIVERY-PATH`:** built now on today's process, without
+  `REQ-CROSS-553`, which is deferred to this work's separate review
+  fingerprint.
