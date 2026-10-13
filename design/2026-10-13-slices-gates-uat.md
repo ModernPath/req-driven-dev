@@ -210,3 +210,23 @@ Each of 2 and 3 is product work and goes through the loop.
 - **D5 — `EPIC-CLI-DELIVERY-PATH`:** built now on today's process, without
   `REQ-CROSS-553`, which is deferred to this work's separate review
   fingerprint.
+
+## The slice that delivers this (`USER:2026-10-13:one-slice-dogfood`)
+
+The whole change is planned, entered, built, verified and accepted as one
+slice, run under its own rules before the tooling exists ("eat our own
+dogfood"). Where the tools cannot yet hold a rule, it is followed by
+convention and the gap is filed.
+
+- **Slice:** `SLICE-RDD-FLOW` — opened 2026-10-13 by the process owner.
+- **Members:** `EPIC-CLI-DELIVERY-PATH` (planned; three cold-review rounds,
+  passing), `EPIC-RDD-SLICES`, `EPIC-RDD-GATE-RULES`, `EPIC-RDD-ACCEPTANCE`.
+- **Plan review:** one review of the new epics and their fit with the
+  delivery-path epic; additions get a narrow review when recorded.
+- **Entry:** one decision by the process owner for the whole slice
+  (convention: the per-epic entry gates are answered together on that one
+  word; `ENTRY-EPIC-CLI-DELIVERY-PATH` is held open until then).
+- **Build:** red-first per connected batch; focused tests per batch.
+- **End:** full verification, one independent code review, the
+  acceptance-test guide, one completion page answered item by item.
+- **Gaps met:** `BACKLOG-TOOL-522` (no slice record or selection kind).
