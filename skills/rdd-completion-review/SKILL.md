@@ -34,10 +34,20 @@ records, and derived views.
    planning or implementation review, undisclosed gap, or incomplete
    reconciliation.
 3. If the pre-delivery audit passes, deliver through the project's authorized
-   integration path while keeping awaiting entities `IN_REVIEW`.
+   integration path while keeping awaiting entities `IN_REVIEW`. The path is
+   the one `process/integration-path.md` declares: `merge`, the default when
+   the file is absent, or `deploy` (`PROCESS.md` §Evidence and completion).
 4. Re-run or confirm evidence against the delivered revision — the revision
    the authorized integration path produced, not the branch head that fed
-   it; for a slice this is its one full verification — and reconcile all authoritative records and derived views. Use
+   it; for a slice this is its one full verification — and reconcile all authoritative records and derived views.
+   On `merge`, the delivered revision is the fetched remote default-branch
+   tip, and it must contain every requirement's tested commit; the checkout
+   need not sit on the tip. On `deploy`, name the deployed commit and record
+   a deployment run with the environment and the smoke checks. A requirement
+   whose latest evidence is failing, stale, or missing, or whose tested
+   commit the delivered revision does not contain, stops completion by name
+   before anything is written. After a squash or rebase merge, re-run the
+   tests at the merged commit and record that run. Use
    `skills/rdd-audit/SKILL.md` to verify that delivered records, citations,
    and documents still describe the code; a finding it surfaces is a stop
    condition or routes through `rdd-triage`, never a silent correction.
