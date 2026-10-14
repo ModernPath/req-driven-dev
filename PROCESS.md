@@ -1053,6 +1053,8 @@ A dedicated existing-behavior path may move exactly reviewed URs/SRs directly to
   Retain the observed remote identity. If the integration check does not validate
   it against an independently declared repository identity, disclose that
   limitation; a local origin setting alone does not establish repository ownership.
+  The project's declared integration path (§Evidence and completion) governs
+  completion and does not change this observation.
 - A current eligibility trace evaluated through the sanctioned tool supports
   the exact human decision.
   Its attributed reviewed answer and guarded application recheck the complete
@@ -1218,7 +1220,24 @@ A normal completion human gate may open only when named items are `IN_REVIEW`,
 code is delivered, evidence is current at the delivered revision, state is reconciled,
 candidate relations are excluded, and gaps/deferrals/decisions are disclosed.
 The delivered revision is the one the authorized integration path produced,
-not the branch head that fed it. An applicable member-scoped trace from an
+not the branch head that fed it.
+
+**Integration path.** A project declares how it delivers in the tracked file
+`process/integration-path.md` (shape: `file-state/INTEGRATION-PATH.md`):
+`merge`, the default when the file is absent, or `deploy`. A person declares
+it in a reviewed commit. On `merge`, the delivered revision is the fetched
+tip of the remote default branch, and that branch must contain the tested
+commit of every requirement being completed, wherever the checkout sits — on
+another branch or behind the tip. On `deploy`, the deployed commit is named
+as the delivered revision, and the completion records a deployment run that
+names the environment and the smoke checks. On both, a requirement whose
+latest evidence is failing, stale, or missing, or whose tested commit is not
+contained in the delivered revision, is refused by name before anything is
+written. A squash or rebase merge leaves the tested commit outside the
+default branch, so containment cannot be proven; the team re-runs the tests
+at the merged commit and records that run.
+
+An applicable member-scoped trace from an
 earlier round that is `STALE` still counts against its Epic — an Epic-scoped
 pass does not stand in for it — until it is re-evaluated at the current
 fingerprint. Excluded-only proof does not block current work; mixed-scope proof
@@ -1310,6 +1329,7 @@ file-state/
   SLICE.md
   HUMAN-GATES.md
   ACCEPTANCE-GUIDE.md
+  INTEGRATION-PATH.md
 ```
 
 `EPICS.md` stores optional grouping records. `REQUIREMENTS.md` stores URs, SRs,
@@ -1319,11 +1339,12 @@ selections, and selection history. `BACKLOG.md` stores unrouted triage items
 and gap records. Derived queues and progress views — including the pending
 human-decision projection — are regenerated, not backed up separately.
 
-`SLICE.md`, `HUMAN-GATES.md`, and `ACCEPTANCE-GUIDE.md` are not store
-records: they give the shapes of the tracked slice file (§Slices), the
-project's gate rules file (§Project gate rules), and the acceptance test
-guide (§Evidence and completion), which are versioned in the repository in
-both kinds of store. The presets of the gate rules file are under `presets/`.
+`SLICE.md`, `HUMAN-GATES.md`, `ACCEPTANCE-GUIDE.md`, and `INTEGRATION-PATH.md`
+are not store records: they give the shapes of the tracked slice file
+(§Slices), the project's gate rules file (§Project gate rules), the
+acceptance test guide, and the project's integration path declaration
+(§Evidence and completion), which are versioned in the repository in both
+kinds of store. The presets of the gate rules file are under `presets/`.
 
 Backlog, gap, and tooling-gap records are records of the store like every
 other: they are created, routed, and closed there, and their state is read

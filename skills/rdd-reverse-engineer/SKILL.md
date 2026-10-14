@@ -36,7 +36,9 @@ captured dirty cannot be accepted as built, whatever is committed later,
 without a new authorized run with its own capture. As-built acceptance also
 needs the tested commit to be the tip of the remote default branch — which may
 lie past the captured commit, when the commits between changed none of the
-files the run authorized (the `mp-process-cli` verification steps). Put
+files the run authorized (the `mp-process-cli` verification steps). This
+as-built check is not completion: the project's declared integration path
+(`PROCESS.md` §Evidence and completion) does not change it. Put
 untracked files that are not source
 into the repository's local exclude file: ignored files are left out and
 disclosed, and tracked files are listed whatever the ignore rules say, except
