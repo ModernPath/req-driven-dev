@@ -53,8 +53,13 @@ records, and derived views.
    single items, which stay `IN_REVIEW`. A slice presents one completion
    brief, carried by each member's completion gate and answered item by
    item.
-6. Do not answer the gate for the human. If the authorized human answers,
-   record the real actor, role, exact scope, answer, and `USER:` source.
+6. Do not answer the gate for the human. Completion is a person's in both
+   shipped gate rules presets; where a project's own rules give the
+   `completion` row to the agent, prepare the answer with the disclosure
+   `PROCESS.md` §Project gate rules describes, and a scope that touches an
+   always-human area is still completed by a person. If the authorized human
+   answers, record the real actor, role, exact scope, answer, and `USER:`
+   source.
 7. Apply `DONE` only to accepted named entities that independently satisfy the
    complete applicable predicate. The answer and its application are separate
    steps: apply member requirements before a named epic, and report an answer

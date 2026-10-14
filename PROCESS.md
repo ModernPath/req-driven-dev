@@ -44,7 +44,9 @@ release, and workflow. Agents establish facts and propose options; they do not
 make those decisions by assumption. Ask humans only for decisions that cannot
 be established from authoritative records, code, tests, or runtime evidence.
 Under an autopilot grant an agent may take a reversible product decision as a
-recorded assumption pending confirmation (§Autopilot).
+recorded assumption pending confirmation (§Autopilot). Where the project's gate
+rules let the agent decide a gate, it decides only under the row's condition
+and discloses it in the answer (§Project gate rules).
 
 | Tag | Source |
 |---|---|
@@ -281,7 +283,8 @@ part of onboarding completion, not evidence of product verification.
 
 A trace gate evaluates non-human facts at an exact fingerprint. A human gate
 records a decision by an authorized human. A human gate may become `OPEN` only
-after every prerequisite trace gate is `PASS`.
+after every prerequisite trace gate is `PASS`. Who decides each decision point
+is the project's gate rules (§Project gate rules).
 
 An approval-scope fingerprint identifies the requirement content, declared
 relations, scope, and decisions being approved. An evidence fingerprint identifies
@@ -398,6 +401,123 @@ authorization (§Source-scoped baseline onboarding). Merging, deploying, and
 releasing are not phases the loop continues into: they stay human acts in the
 project's own tools, and the agent performs one only on a human's explicit
 instruction for it.
+
+### Project gate rules
+
+This section names the decision points and what each must carry. Who decides
+each one is the project's rule, kept in `process/rdd-human-gates.md` in the
+shape `file-state/HUMAN-GATES.md` gives. The process ships two presets of that
+file: `presets/default.md` and `presets/autopilot.md`. Installation seeds the
+project's file once from the default preset and never overwrites it; a
+deleted file is seeded again.
+
+The file has one row per decision point: `entry`, `slice_addition`,
+`small_change_entry`, `pre_approved_entry`, `defect_fix`, `incident_fix`,
+`product_assumption`, `completion`, `candidate_confirmation`, `demotion`,
+`acceptance_guide`, `tester_signoff`, and the rows that are always a person's —
+`baseline_acceptance`, `gate_rules`, and `lane_authorization`. Each row says
+who decides — a person (`human`) or the agent (`agent`) — the one condition
+under which the agent may decide, and the always-human areas: `sign_in`,
+`payments`, `existing_data`, and `external_contract`. When a change touches an
+area a row names, a person decides that row, whatever else it says; when the
+agent is unsure whether a change touches one, a person decides. Candidate
+confirmation, demotion, and the always-human rows are never the agent's.
+`acceptance_guide` and `tester_signoff` say `required` or `not_required`
+instead (§Evidence and completion).
+
+The rules count only when they are merged on the project's default branch
+with a `Decided:` line carrying the process owner's `USER:` source. The rows
+`entry`, `slice_addition`, `product_assumption`, and `completion` may be the
+agent's only in a file with an `Expires` date; a file may also name the Epics
+and requirements it covers (`Scope`). Expired, refused, or missing rules mean
+the default preset, and the session says so at its start; nothing expires
+silently.
+
+- **Default preset.** Today's rules with the light paths off: a person
+  decides entry, additions, product assumptions, completion, and the light
+  paths `pre_approved_entry`, `defect_fix`, and `incident_fix`;
+  `small_change_entry` is the small-change lane as it stands. The acceptance
+  test guide is required and the tester's sign-off is not. The seeded file
+  carries `kit-default` in place of a `USER:` source and is shown as "kit
+  default, not decided by this project". The marker is valid only while the
+  file is identical to the kit's default preset; a project that edits the
+  file decides it with its own `Decided:` source.
+- **Autopilot preset.** The default, plus: the agent may decide entry after a
+  passing plan review, an addition after its passing narrow review, and a
+  reversible product assumption inside the scope; the light paths are on —
+  a recorded pre-approval is honoured, and reproduced defects and declared
+  incidents are fixed first. Completion stays a person's. It carries `Scope`
+  and `Expires` placeholders that must be filled before it counts (§Autopilot).
+
+In both presets every row the agent may decide names all four always-human
+areas — the incident path names `sign_in`, `payments`, and `existing_data` —
+and completion is a person's, so a slice that touches sign-in, payments,
+existing data, or an external contract is completed by a person. A project
+may change this in its own copy, except that the incident path always keeps
+`sign_in`, `payments`, and `existing_data` with a person. Merging, deploying,
+and releasing are not decision points of this process: they stay human acts
+in the project's own tools.
+
+**Light paths.** On only where the project's rules turn them on — the
+autopilot preset or the process owner's own copy:
+
+- **Pre-approved entry** (`pre_approved_entry`): a person's earlier words
+  naming the exact scope are cited as the entry answer's `USER:` source,
+  without a new decision brief. A recorded pre-approval naming the scope is
+  honoured; one that does not name it is not.
+- **Defect fixed first** (`defect_fix`): a reproduced defect is fixed first
+  and recorded afterwards. The reproduction test is committed failing before
+  the fix; the SR, the entry answer, the evidence, and a gap record naming
+  the fix-first follow before other work is selected.
+- **Incident fixed first** (`incident_fix`): only for an incident a person
+  declared. An incident counts as declared only when a person's words
+  declaring it are quoted as a `USER:` source in the fix-first gap record;
+  the agent never declares one. The fix may go first and the reproduction
+  test follow as verification; the SR, the entry answer, and the evidence
+  follow before other work is selected. The incident path keeps `sign_in`,
+  `payments`, and `existing_data` with a person.
+- **Small change** (`small_change_entry`): the small-change lane
+  (§Small-change lane), under a lane authorization whose end is shown before
+  it comes.
+
+The always-human areas apply to every light path.
+
+**How an agent decision is recorded.** The commands that send a gate answer
+or a lane approval as the person's ask the person before they run; a harness
+that cannot ask refuses them, and the person runs them. When a rules row lets
+the agent decide, the agent prepares the answer and writes `decided by the
+agent under process/rdd-human-gates.md row <row>`, with the condition it
+relied on, in the answer text; the person confirms it at the ask. This
+disclosure is a known limit: the store records the answer as the person's.
+
+**Residual risks.** Until the store enforces the rules, these risks are
+accepted and stated:
+
+1. The server does not read the rules file and records every answer as the
+   signed-in person's.
+2. The disclosure in the answer text is a convention the server does not
+   check.
+3. The rules are not enforced: the agent assesses its own conditions, the
+   always-human areas, and whether a person declared an incident; when
+   unsure, a person decides.
+4. The rules are read from the working tree, so a branch or an uncommitted
+   edit changes what the agent is shown; they count only once merged on the
+   default branch.
+5. A harness running without prompts cannot ask: prompt-skipping modes are
+   denied rather than asked.
+6. A missing CLI binary fails the hook open: the permission setting then
+   applies with no ask.
+7. Direct API use with the developer's token bypasses the ask.
+8. Other commands that record or apply a person's decision — a finding
+   disposition with a decision, an advance, a gate withdrawal, an entry
+   reapplied or re-entered, a demotion, an as-built acceptance applied — are
+   asked only where the workspace's permission settings place them on ask,
+   which not every harness honours.
+9. Outage replay: an answer kept during a store outage can be replayed
+   without a new ask until BACKLOG-CLI-OUTAGE-09 is delivered.
+10. On the store, fix-first evidence ordering is unverified: whether it
+    accepts RED evidence recorded at a revision before the entry answer is
+    not yet known.
 
 ### Automatic transitions
 
@@ -542,6 +662,10 @@ A change that stops being eligible — a finding, a wider boundary, an excluded
 area — leaves the lane for single-SR scope with its full packet and review. It
 is never forced through.
 
+In the project's gate rules the lane is the `small_change_entry` row
+(§Project gate rules). The end of the current lane authorization is shown
+before it comes.
+
 ### Autopilot
 
 Autopilot is for building larger scopes — greenfield systems, initiatives,
@@ -616,25 +740,28 @@ failing required evidence keeps an item from `IN_REVIEW`: it stops
 acceptance, not the building of the next authorized action.
 
 **The grant.** A human who may answer entry and completion gates for the scope
-grants autopilot once. The grant names:
+grants autopilot once, by merging the autopilot preset into the project's
+gate rules (§Project gate rules) with their own `Decided:` `USER:` source. The
+grant names:
 
-- the scope (Epics, an initiative, or a system);
-- the end of the grant (a date) — the slice itself has no dates;
-- any areas that stay out of it.
+- the scope (Epics, an initiative, or a system) — the rules file's `Scope`;
+- the end of the grant (a date) — its `Expires`; the slice itself has no dates;
+- any areas that stay out of it — the always-human areas, and any the human
+  adds.
 
-It is recorded with its `USER:` source where the scope's decisions are
-recorded: in each Epic's decisions as it is selected, in a store-backed
-repository, and as `process/autopilot.md` in a file-backed one. The grant is
-the human's answer, given in advance, to every entry gate in its scope. The
-agent applies it by answering each such gate with the grant's `USER:` source.
+The grant is the human's answer, given in advance, to every entry gate in its
+scope. The agent prepares each such entry answer under the rules file's
+`entry` row, citing the grant's `USER:` source with the disclosure
+§Project gate rules describes, and the person confirms it at the ask.
 It is never the answer to a completion gate. A grant ends at its date, when the
-human withdraws it, or when its scope is done.
+human withdraws it, or when its scope is done; then the default rules apply
+again.
 
 **Under a current grant these rules change:**
 
 | Rule | Normal | Autopilot |
 |---|---|---|
-| Entry gate | The human answers | The agent answers, citing the grant |
+| Entry gate | The human answers | The agent prepares the answer under the `entry` row, citing the grant, and the person confirms it at the ask |
 | Cold review | Up to two rounds, blocking | One pass, then at most one narrow confirmation. Material findings are folded into the packet as tests or boundary lines, and the rest are logged. If the confirmation still fails, the item is built ahead of its record and the failure is logged. |
 | Packet completeness | Items 1–6 and the brief complete before review | Write what the builder needs; a gap the review finds is folded in or logged, never a stop |
 | Preflight facts (suspended selections, stale snapshots, drift, open holds) | Stop selection | Clear each with its documented verb, or log it and continue |
@@ -679,7 +806,8 @@ Timings are observed, never reconstructed.
 answer: behavior, scope, user experience, meaning of data, priority. It asks
 each one when it arises, in plain words. Then it takes the most reasonable
 default and records it in the Epic's decisions as *assumed under autopilot,
-pending confirmation*, with the grant's `USER:` source. Then it continues.
+pending confirmation*, with the grant's `USER:` source, under the rules file's
+`product_assumption` row. Then it continues.
 
 It waits for an answer only when a wrong guess is hard to undo:
 
@@ -1142,6 +1270,7 @@ file-state/
   WORK-SELECTION.md
   BACKLOG.md
   SLICE.md
+  HUMAN-GATES.md
 ```
 
 `EPICS.md` stores optional grouping records. `REQUIREMENTS.md` stores URs, SRs,
@@ -1151,9 +1280,10 @@ selections, and selection history. `BACKLOG.md` stores unrouted triage items
 and gap records. Derived queues and progress views — including the pending
 human-decision projection — are regenerated, not backed up separately.
 
-`SLICE.md` is not a store record: it gives the shape of the tracked slice
-file (§Slices), which is versioned in the repository in both kinds of store
-and holds coordination only.
+`SLICE.md` and `HUMAN-GATES.md` are not store records: they give the shapes
+of the tracked slice file (§Slices) and the project's gate rules file
+(§Project gate rules), which are versioned in the repository in both kinds of
+store. The presets of the gate rules file are under `presets/`.
 
 Backlog, gap, and tooling-gap records are records of the store like every
 other: they are created, routed, and closed there, and their state is read

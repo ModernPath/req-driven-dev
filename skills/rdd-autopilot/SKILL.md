@@ -13,16 +13,20 @@ bounds differ from §Autopilot, §Autopilot applies.
 
 ## Start
 
-1. **Find the grant.** Read the grant that covers the scope and check that it
-   is current. Without one, ask the human for it in one message that names:
+1. **Find the grant.** The grant is the autopilot preset merged into the
+   project's gate rules, `process/rdd-human-gates.md`, with the human's
+   `Decided:` source, `Scope`, and `Expires` (`PROCESS.md` §Project gate
+   rules). Read it and check that it is current and covers the scope.
+   Without one, ask the human for it in one message that names:
    - the slice, or the scope to open one for;
    - the grant's end date (the slice itself has no dates);
    - any excluded areas;
-   - what the human gives up: per-Epic entry approval and waiting on
-     questions;
+   - what the human gives up: writing each entry decision and waiting on
+     questions — each entry answer the agent prepares is confirmed with one
+     keystroke at the ask;
    - what the human keeps: the completion answer at slice end, and merges.
 
-   Record the answer as §Autopilot says.
+   The human merges the filled preset; §Autopilot says what it grants.
 2. **Run `rdd-start`'s preflight, without stopping on it.** Clear each
    preflight fact with its documented verb: reconcile, refresh, or release a
    selection this slice does not need. If a fact will not clear, log it and
@@ -65,8 +69,11 @@ bounds differ from §Autopilot, §Autopilot applies.
      correctness, security, data integrity or data loss, contract,
      traceability, testability — and any changed scope or acceptance, and
      only that change.
-3. **Enter.** Answer the entry gate with the grant's `USER:` source, and apply
-   it.
+3. **Enter.** Prepare the entry answer under the rules file's `entry` row,
+   citing the grant's `USER:` source with the disclosure `decided by the
+   agent under process/rdd-human-gates.md row entry`; the person confirms it
+   at the ask. Then apply it. A change that touches an always-human area
+   waits for the person's own decision.
 4. **Build the journey in connected batches** (`rdd-build`, with
    §Autopilot's batch cadence):
    - write the batch's representative failing tests, with a failing
