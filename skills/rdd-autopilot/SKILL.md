@@ -1,9 +1,9 @@
 ---
 name: rdd-autopilot
-description: Build a larger scope — Epics, an initiative, or a greenfield system — under a human's autopilot grant, keeping requirements, sources, and red-first tests while moving human approval to the end of the sprint. Use when a current autopilot grant covers the scope, or when the human asks to start one. Builds connected user journeys in batches before hardening, asks product questions without waiting on them, clears or logs process refusals instead of stopping, and ends the sprint with full verification, one independent review, and one completion page.
+description: Run a slice on autopilot to build a larger scope — Epics, an initiative, or a greenfield system — under a human's autopilot grant, keeping requirements, sources, and red-first tests while moving human approval to the end of the slice. Use when a current autopilot grant covers the scope, or when the human asks to start one. Builds connected user journeys in batches before hardening, asks product questions without waiting on them, clears or logs process refusals instead of stopping, and ends the slice with full verification, one independent review, and one completion page.
 ---
 
-# Run an autopilot sprint
+# Run a slice on autopilot
 
 Read the project `AGENTS.md` and canonical `PROCESS.md`
 (`.modernpath/rdd/PROCESS.md` in a consuming repository), especially
@@ -15,23 +15,23 @@ bounds differ from §Autopilot, §Autopilot applies.
 
 1. **Find the grant.** Read the grant that covers the scope and check that it
    is current. Without one, ask the human for it in one message that names:
-   - the scope;
-   - the sprint end date;
+   - the slice, or the scope to open one for;
+   - the grant's end date (the slice itself has no dates);
    - any excluded areas;
    - what the human gives up: per-Epic entry approval and waiting on
      questions;
-   - what the human keeps: the completion answer at sprint end, and merges.
+   - what the human keeps: the completion answer at slice end, and merges.
 
    Record the answer as §Autopilot says.
 2. **Run `rdd-start`'s preflight, without stopping on it.** Clear each
    preflight fact with its documented verb: reconcile, refresh, or release a
-   selection this sprint does not need. If a fact will not clear, log it and
-   go on. Only a missing or unreachable store stops the sprint.
+   selection this slice does not need. If a fact will not clear, log it and
+   go on. Only a missing or unreachable store stops the slice.
 3. **Map usable coverage.** Turn the scope into user journeys and the views
    and primary actions each needs, linked to the requirements they need,
    existing or newly written with sources. Start the coverage matrix
-   §Autopilot describes as the sprint's working view, and keep it in the
-   sprint's working record between sessions; it links the records and is not
+   §Autopilot describes as the slice's working view, and keep it in the
+   slice's working record between sessions; it links the records and is not
    a second ledger.
 4. **Order the journeys.** Dependencies first, then the journey that makes
    the most of the product usable. Show the order and the first outcome a
@@ -76,7 +76,7 @@ bounds differ from §Autopilot, §Autopilot applies.
      batch. To land a batch SR by SR, use one RED/GREEN pair per SR. Write a
      journey assertion in the batch that can make it pass;
    - implement the adjacent primary actions together, keeping security,
-     authorization, tenant isolation, and data integrity in this first slice;
+     authorization, tenant isolation, and data integrity in this first increment;
    - run one focused integrated GREEN check, plus targeted regressions where
      the integration needs them — not the full verifier;
    - commit and push the working batch. The full-verifier rule governs your
@@ -88,7 +88,7 @@ bounds differ from §Autopilot, §Autopilot applies.
    end. Stage 3, harden, runs at closeout.
    Record RED, GREEN, and limits as you go. Advance a requirement to
    `IN_REVIEW` only with its full required evidence; a requirement in a
-   partial slice keeps its state.
+   partial increment keeps its state.
 5. **Checkpoint.** Reconcile the batch's records. Update the coverage matrix
    and compare it with the previous checkpoint, as §Autopilot's checkpoint
    rule says. Queue findings that do not block the journey with an owner and
@@ -101,7 +101,7 @@ bounds differ from §Autopilot, §Autopilot applies.
 1. Read the refusal. Run the verb it names, or the one `mp-process-cli` (or
    the project's store guide) lists for it, **once**.
 2. If it still refuses:
-   - file a gap record naming the sprint, the item, the refusal text, and
+   - file a gap record naming the slice, the item, the refusal text, and
      what was tried;
    - if the code is ready, keep building it on the branch ahead of its record;
    - move to the next item.
@@ -117,23 +117,23 @@ bounds differ from §Autopilot, §Autopilot applies.
    *assumed under autopilot, pending confirmation*, and continue.
 4. When the human answers later, apply it. A changed assumption is triaged:
    fix it now if the item is still being built, otherwise queue it for the
-   next sprint.
+   next slice.
 
-## Sprint end
+## Slice end
 
 Run it at the grant's end date, when the scope is built, or when the human
 asks.
 
-1. **Reconcile** every record the sprint touched. Try once more to clear the
+1. **Reconcile** every record the slice touched. Try once more to clear the
    logged refusals.
 2. **Close out.** Run the full required verification and harden the
    combined change (stage 3). Closeout adds verification and hardening, not
    RED for clauses already built; a clause first built at closeout gets its
    own RED like any other. The checkpoint limit on further work on a
-   green slice does not apply here. Repair what fails
+   green increment does not apply here. Repair what fails
    before presenting any item as eligible for completion. The end date is not
    evidence.
-3. **Review.** Run one independent review of everything the sprint built, from
+3. **Review.** Run one independent review of everything the slice built, from
    the code at the branch head, against its requirements and tests
    (`rdd-completion-review`'s audit). Record the findings.
 4. **Present one page:**
@@ -146,7 +146,7 @@ asks.
    Give links to the working-set files.
 5. **Apply** the human's completion answers item by item. A rejected item
    stays `IN_REVIEW`. A changed assumption goes to `rdd-triage`.
-6. **Report** whether the grant continues into another sprint, or ends.
+6. **Report** whether the grant continues into another slice, or ends.
 
 ## Report
 
@@ -154,4 +154,4 @@ At each checkpoint, lead with what a user can now do, the next missing step,
 and any safety or external hold, then the observed split between building and
 preparation or checking. Requirement ids, RED and GREEN commits, and
 assumptions follow as evidence; test and record counts are never reported as
-product progress. At sprint end, the page above.
+product progress. At slice end, the page above.

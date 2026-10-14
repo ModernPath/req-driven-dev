@@ -78,7 +78,11 @@ review audits the change the packet proposes, not the packet as a document.
    failed round, report the remaining material findings to the human;
    do not start a third round automatically. Under an autopilot grant there is
    one pass and at most one narrow confirmation that its folded findings close
-   it; either way the sprint continues (`PROCESS.md` §Autopilot).
+   it; either way the slice continues (`PROCESS.md` §Autopilot).
+   For a slice, each round is one pass over every member's review snapshot,
+   with findings and the verdict recorded per member; an addition to an open
+   slice gets one narrow review of the addition and its effect on the slice,
+   not a re-review of the slice (`PROCESS.md` §Slices).
 10. Return the cold-review trace gate `PASS` only when the material-finding rule
    in `PROCESS.md` is satisfied. Otherwise return `FAIL` with exact blockers.
 

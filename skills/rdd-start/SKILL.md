@@ -51,9 +51,9 @@ continue (`PROCESS.md` §Autopilot, `rdd-autopilot`).
 
 ## Take the scope
 
-Accept the work scope as the argument: an Epic id, a single SR id, an exact
-UR/SR set for candidate or baseline work, a source inventory for onboarding,
-or a raw request.
+Accept the work scope as the argument: a slice id, an Epic id, a single SR id,
+an exact UR/SR set for candidate or baseline work, a source inventory for
+onboarding, or a raw request.
 Without one — including when the request is an orientation question
 rather than a scope — answer from the store: read pending human decisions,
 current and suspended selections, and routed work across all supported phases.
@@ -74,7 +74,9 @@ the loop is stalled — report it as one rather than leaving the reader to count
 rows.
 
 For normal delivery, freeze the Epic or single-SR selection in the existing
-work-selection record. For candidate and baseline work, retain the exact scope
+work-selection record. For a slice, read its members from its slice file
+(`PROCESS.md` §Slices); each member keeps its own selection, and the
+slice's once-per-slice passes run over all of them. For candidate and baseline work, retain the exact scope
 in the applicable authorization, run and decision records. For normal planning,
 entry-packet depth is proportional to the frozen scope; no required item may
 be omitted.
@@ -101,10 +103,10 @@ These rules bind every subsequent phase in the session:
 - timebox the diagnosis of a tooling failure; when the box closes, surface the
   gap through the project's channel and continue on a read-only path or stop.
   Never mutate a shared store to test a hypothesis;
-- commit at waypoints — specification, expected RED, GREEN, cleanup,
-  reconciliation — with RED evidence committed before the change that
-  satisfies it, so red-first is auditable in history (under an autopilot
-  grant, per connected batch — `PROCESS.md` §Autopilot);
+- commit at waypoints — specification, then per connected batch expected RED,
+  GREEN, cleanup, reconciliation — with RED evidence committed before the
+  change that satisfies it, so red-first is auditable in history
+  (`PROCESS.md` §Slices; under an autopilot grant, §Autopilot's batches);
 - work on a reviewable feature branch and preserve RED and passing
   fingerprints;
 - route a discovery through `rdd-triage` to the earliest phase it

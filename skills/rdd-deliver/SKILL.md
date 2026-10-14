@@ -28,7 +28,10 @@ requirements remain normal development work.
 1. Reconcile authoritative state, answered gates, evidence validity, and
    projections. Fix state disagreement before selecting work.
 2. Freeze the selected scope under `PROCESS.md` and find its earliest unmet
-   prerequisite. Never start from the most convenient phase.
+   prerequisite. Never start from the most convenient phase. For a slice,
+   do this per member; the plan review, entry brief, full verification,
+   independent code review and completion brief run once per slice
+   (`PROCESS.md` §Slices).
 3. If input is not authoritative or is `DERIVED`, apply `rdd-discover` and its
    confirmation gate. Continue only with confirmed requirements and relations.
 4. For active work lacking current entry approval, apply `rdd-plan`, then
@@ -60,8 +63,9 @@ human input while the approved scope remains unchanged:
 
 1. Evaluate every selected applicable UR upper trace and SR lower trace. Establish any
    required initial RED observations.
-2. Select the next unmet approved SR clause. Apply `rdd-build` or `rdd-verify`
-   until its lower trace is current and passing.
+2. Select the next connected batch of unmet approved SR clauses, in the order
+   the packet's stages name. Apply `rdd-build` or `rdd-verify` until its lower
+   traces are current and passing.
 3. Rerun affected UR scenarios and update their separate upper evidence.
 4. Repeat for any failing or stale approved trace. Do not stop after the first
    GREEN result or completed SR while another selected trace remains unmet.
