@@ -12,7 +12,8 @@ serialization shapes; it does not contain a project's live delivery state.
 - [`skills/`](skills/) contains focused procedures that apply the process.
 - [`file-state/`](file-state/) contains the canonical serialization shapes for
   Epic, requirement, gate, work-selection, and backlog/gap records, and the
-  shapes of the tracked slice file and gate rules file;
+  shapes of the tracked slice file, gate rules file, and acceptance test
+  guide;
   [`presets/`](presets/) holds the default and autopilot gate rules.
 - Project instructions own only project-specific rules such as architecture,
   repository topology, commands, environments, and test gates. They reference
@@ -44,6 +45,8 @@ on a decision, or what is blocked:
    use `skills/rdd-reverse-engineer-verify/SKILL.md` and
    `skills/rdd-reverse-engineer-accept/SKILL.md` for source-scoped baselines
    with existing proof (one human acceptance directly to DONE);
+   `skills/rdd-acceptance/SKILL.md` runs the acceptance test step inside
+   completion review;
    `skills/rdd-audit/SKILL.md` is a shared utility other passes invoke, not a
    phase;
 4. read the relevant product sources, requirement records, optional epic, and
