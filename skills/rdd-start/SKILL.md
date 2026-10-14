@@ -37,6 +37,13 @@ when local documents lack the information or you need an up-to-date answer.
 5. Count the suspended selections. More than one is a preflight fact: report
    each with its suspended status and reason, and name the mitigation —
    resume one, release one — before selecting new work.
+6. Read the project's gate rules, `process/rdd-human-gates.md`
+   (`PROCESS.md` §Project gate rules), and report them in one line: the kit
+   default, not decided by this project, or the process owner's decision with
+   its source; the rows the agent may decide; and the `Scope` and `Expires`
+   date, with a warning when the end is within seven days. Expired, refused,
+   or missing rules mean the default — say so. The rules count only once
+   merged on the default branch.
 
 The pending-decision projection may already have been delivered into the
 session by the host — a session-start brief injected as context rather than
@@ -123,7 +130,8 @@ its skill; a change that meets the small-change lane's eligibility under a
 current lane authorization is planned, reviewed and entered through that lane: `rdd-discover`, `rdd-plan`, `rdd-cold-review`, `rdd-entry-review`,
 `rdd-build`, `rdd-verify`, `rdd-completion-review`, or `rdd-deliver` for the
 complete loop. When a current autopilot grant covers the scope, or the human
-asks for one, hand off to `rdd-autopilot` instead. Source-inventory
+asks for one, hand off to `rdd-autopilot` instead; the grant is the
+autopilot preset merged into the project's gate rules. Source-inventory
 onboarding uses `rdd-reverse-engineer`.
 
 For genuine source-scoped baseline requirements still in PENDING_VERIFICATION,

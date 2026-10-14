@@ -33,8 +33,17 @@ packet, cold-review findings, current gate records, and relevant sources.
    the current lane authorization, which names the human who answered it; a
    missing, expired, exhausted or non-covering authorization stops here and the
    change follows the single-SR entry.
-5. Do not answer the gate for the human. If the authorized human answers,
-   record the real actor, role, scope, answer, and `USER:` source; apply only
+5. Do not answer the gate for the human. Where the project's gate rules
+   (`PROCESS.md` §Project gate rules) give the row — `entry`,
+   `slice_addition`, or `pre_approved_entry` — to the agent, its condition
+   holds, and the change touches none of the row's always-human areas,
+   prepare the answer: cite the grant's or the pre-approval's `USER:` source
+   and write `decided by the agent under process/rdd-human-gates.md row
+   <row>` with the condition in the answer text; the person confirms it at
+   the ask. When unsure about an area, a person decides. In ModernPath,
+   `factory answer` and `process lane approve` ask the person; a harness that
+   cannot ask refuses them, and the person runs them. If the authorized human
+   answers, record the real actor, role, scope, answer, and `USER:` source; apply only
    named transitions and reconcile all affected records. The answer and its
    application are two steps: apply member requirements before a named epic,
    and report an answer that is recorded but not yet applied as exactly that.
