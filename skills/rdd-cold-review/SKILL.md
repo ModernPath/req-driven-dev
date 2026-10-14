@@ -85,6 +85,10 @@ review audits the change the packet proposes, not the packet as a document.
    with findings and the verdict recorded per member; an addition to an open
    slice gets one narrow review of the addition and its effect on the slice,
    not a re-review of the slice (`PROCESS.md` §Slices).
+   A later round reviews only what changed since the reviewed round, as the
+   review snapshot lists it, plus the closures of earlier findings, each
+   verified against the current packet and code as step 6 requires. Its
+   findings are recorded in one batch, and so are their dispositions.
 10. Return the cold-review trace gate `PASS` only when the material-finding rule
    in `PROCESS.md` is satisfied. Otherwise return `FAIL` with exact blockers.
 
