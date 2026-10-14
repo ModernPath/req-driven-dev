@@ -75,8 +75,10 @@ review audits the change the packet proposes, not the packet as a document.
    finding returns `FAIL` with the instruction that the change leaves the lane
    for single-SR scope.
 9. Run at most two rounds on the selected planning scope. After a second
-   failed round, report the remaining material findings to the human;
-   do not start a third round automatically. Under an autopilot grant there is
+   failed round, report the remaining material findings to the human one at
+   a time — what each means for the product, its context, the options and
+   what each changes (`PROCESS.md` §Gates); do not start a third round
+   automatically. Under an autopilot grant there is
    one pass and at most one narrow confirmation that its folded findings close
    it; either way the slice continues (`PROCESS.md` §Autopilot).
    For a slice, each round is one pass over every member's review snapshot,

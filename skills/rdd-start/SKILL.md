@@ -97,9 +97,13 @@ These rules bind every subsequent phase in the session:
   has happened or will;
 - present the decision brief and linked list of relevant working-set files
   before asking for approval or a choice, following `PROCESS.md` §Gates; state
-  each option's consequences, and treat the answer as a decision, not as an
-  instruction to continue:
-  apply it, report, and wait (`PROCESS.md` §Gates);
+  each option's consequences, and treat the answer as a decision about that
+  gate or question: apply it, report what moved, and continue unless the user
+  asked to stop. Stop only at a human gate, at a question only a human can
+  answer, or where the user asked (`PROCESS.md` §Gates);
+- show everything in plain product language; record ids, fingerprints, gate
+  kinds and verb names appear at most as a trailing breadcrumb, and review
+  findings are walked through with the human one at a time;
 - timebox the diagnosis of a tooling failure; when the box closes, surface the
   gap through the project's channel and continue on a read-only path or stop.
   Never mutate a shared store to test a hypothesis;
@@ -130,9 +134,12 @@ retain precedence. Mixed scopes remain explicit; do not silently change the
 selection or apply normal RED requirements to this dedicated path. Provenance
 alone never reroutes an entered or defect-reopened item.
 
-A pass ends with its report. Enter the next phase only when the human asks
-for it, or when the request at session entry was the complete loop and the
-boundary carried no human answer.
+A pass ends with its report. When the request at session entry was the
+complete loop, continue into the next phase, including after a human answer
+applied at the boundary, unless the user asked to stop. A request that ends at
+one pass, or an orientation question, ends with its report. Merging,
+deploying, and releasing are never entered without the human's explicit
+instruction.
 
 ## Report
 

@@ -376,14 +376,27 @@ earlier answer already implies its answer: preserving a delivered acceptance,
 applying a stance the human has stated, or bookkeeping that follows from a
 decision already given is done and reported, never asked. Each question
 stands alone in one plain sentence about what changes for the product, and
-bookkeeping is never bundled with a decision. A human's answer — to a gate
-or to a question — is a decision about that gate or question, never an
-instruction to enter the next phase: the agent applies it, reports what
-moved, and waits for the human's word before any further phase, in the
-complete loop as in a focused pass. Under an autopilot grant the agent
-continues instead (§Autopilot). An authorized source-scoped
+bookkeeping is never bundled with a decision.
+
+Everything shown to the human — briefs, questions, reports, progress lines —
+is in plain product language: store jargon — record ids, fingerprints, gate
+kinds, verb names, phase codes — appears at most as a trailing breadcrumb.
+Review findings put to the human are walked through one at a time: what the
+finding means for the product, its context, the options and what each
+changes, then the next finding.
+
+A human's answer — to a gate or to a question — is a decision about that gate
+or question: the agent applies it, reports what moved, and continues the loop
+unless the user asked it to stop. An applied entry approval lets the build
+start. The agent stops only at a human gate, at a question only a human can
+answer, or where the user asked it to stop — a request that ends at one pass
+is such a request — never merely because a phase ended. Under an autopilot
+grant the agent continues instead (§Autopilot). An authorized source-scoped
 reverse-engineering run, baseline or derived, continues within that
-authorization (§Source-scoped baseline onboarding).
+authorization (§Source-scoped baseline onboarding). Merging, deploying, and
+releasing are not phases the loop continues into: they stay human acts in the
+project's own tools, and the agent performs one only on a human's explicit
+instruction for it.
 
 ### Automatic transitions
 
@@ -626,7 +639,7 @@ human withdraws it, or when its scope is done.
 | Preflight facts (suspended selections, stale snapshots, drift, open holds) | Stop selection | Clear each with its documented verb, or log it and continue |
 | A refusal at a phase boundary | Stop and report | Try the documented clearing verb once. If it still refuses, log it, move to the next item, and let the record catch up at slice end. |
 | A product question | Asked; the loop waits | Asked, but the loop does not wait: see below |
-| After a gate answer or a pass | Wait for the human's word | Continue |
+| After a gate answer or a pass | Continue, unless the user asked to stop | Continue |
 | Work selection | An Epic or a single SR | A connected journey with the requirements it needs, existing or newly written with sources; more than one SR from an Epic is held as that Epic's selection |
 | Planning and cold review | Once per slice, recorded per member; one narrow review per addition | Once per journey. An unchanged reviewed packet goes straight to entry, or to RED when its entry is already applied and current; any change in a blocking cold-review category — correctness, security, data integrity or data loss, contract, traceability, testability — and any changed scope or acceptance is reviewed again, and only that change |
 | Readiness to build | The complete packet and an applied entry | Code starts once the source, outcome, owning requirements, state and safety boundaries, and representative RED assertions are clear; remaining inventory and record updates run alongside the build. Code written before the entry is applied is reversible local build-ahead (below); the entry is applied before any RED evidence is recorded or any requirement advances |

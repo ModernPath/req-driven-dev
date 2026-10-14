@@ -43,14 +43,15 @@ packet, cold-review findings, current gate records, and relevant sources.
    state and route requested changes. Report any remaining entry approvals
    needed for the selected delivery scope; partial approval does not permit
    development to start on the approved subset.
-7. Report and stop. The entry pass ends with the applied transitions, not
-   with the first build step: the answer was a decision about the gate, not
-   an instruction to build (`PROCESS.md` §Gates). The build begins with a
-   fresh session entry when the human asks for it.
+7. Report the applied transitions in plain product language. An applied
+   entry approval lets the build start: continue into the build unless the
+   user asked to stop after entry or the request ended at this pass
+   (`PROCESS.md` §Gates). Merging, deploying, and releasing still need the
+   human's explicit instruction.
 
 ## Report
 
 Report the entry-trace verdict, exact human-gate state, applied transitions,
 remaining blockers, and the exact handoff: `rdd-build`, `rdd-verify`, or the
-earliest planning pass that must be repeated — named as the next pass for the
-human to open, not entered by this one.
+earliest planning pass that must be repeated — entered next, unless the user
+asked to stop or the request ended at this pass.
