@@ -14,14 +14,14 @@ autopilot preset a process owner copies in to grant autopilot.
 ```markdown
 # Project gate rules
 
-- **Decided:** «USER: source of the process owner who merged this file»
+- **Decided:** <USER: source of the process owner who merged this file>
 - **Preset:** default | autopilot | custom
-- **Scope:** «Epic or requirement ids, comma-separated; omit the line for the whole System»
-- **Expires:** «YYYY-MM-DD; omit the line when no row needs it»
+- **Scope:** <Epic or requirement ids, comma-separated; omit the line for the whole System>
+- **Expires:** <YYYY-MM-DD; omit the line when no row needs it>
 
 | Decision | Decided by | When the agent may decide | Always a human when |
 |---|---|---|---|
-| «row» | «decider» | «condition, or —» | «areas separated by spaces, or —» |
+| <row> | <decider> | <condition, or —> | <areas separated by spaces, or —> |
 ```
 
 ## Header lines
