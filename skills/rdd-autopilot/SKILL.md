@@ -142,13 +142,16 @@ asks.
    evidence.
 3. **Review.** Run one independent review of everything the slice built, from
    the code at the branch head, against its requirements and tests
-   (`rdd-completion-review`'s audit). Record the findings.
+   (`rdd-completion-review`'s audit). Record the findings. Then write the
+   acceptance test guide (`rdd-acceptance`) where `rdd-completion-review`
+   places it.
 4. **Present one page:**
    - the journeys and primary actions a user can now complete, with evidence;
    - the coverage matrix: remaining clauses, and what is not built and why;
    - assumed decisions to confirm;
    - the log;
-   - review findings.
+   - review findings;
+   - the acceptance test guide and its results.
 
    Give links to the working-set files.
 5. **Apply** the human's completion answers item by item. A rejected item

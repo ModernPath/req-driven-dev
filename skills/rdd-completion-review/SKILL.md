@@ -41,6 +41,12 @@ records, and derived views.
    `skills/rdd-audit/SKILL.md` to verify that delivered records, citations,
    and documents still describe the code; a finding it surfaces is a stop
    condition or routes through `rdd-triage`, never a silent correction.
+   Then run `rdd-acceptance` for the acceptance test step (`PROCESS.md`
+   §Evidence and completion) when the project's gate rules require the guide
+   or a tester will check the change. For a slice, a missing, stale, or
+   unfinished required guide stops completion here, as does a missing
+   current acceptance pass where the tester's sign-off is required; outside a
+   slice, a missing or stale guide is disclosed in one line.
 5. Record completion trace `PASS` only for the exact eligible fingerprint, and
    before the human gate exists, so the gate names it as its prerequisite. An
    applicable `STALE` member-scoped cold-review trace from an earlier round blocks an
@@ -48,6 +54,8 @@ records, and derived views.
    epic-scoped pass does not stand in for it. Only then make the scoped human
    completion gate `OPEN` and present its brief and linked list of relevant
    working-set files before asking for acceptance, following `PROCESS.md` §Gates.
+   Link the acceptance test guide and show its results beside the automated
+   evidence.
    Small changes may be completed together in one lane-batch gate that lists
    each change with its evidence and review verdict; the human may reject
    single items, which stay `IN_REVIEW`. A slice presents one completion

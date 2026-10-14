@@ -45,8 +45,8 @@ requirements remain normal development work.
    has a current passing trace and is `IN_REVIEW` or already `DONE`. Keep
    unchanged DONE members as proof dependencies, without reaccepting them.
 6. Apply `rdd-completion-review` to audit, deliver, recheck the delivered
-   revision, reconcile records, run the completion trace gate, and apply the
-   human completion answer.
+   revision, reconcile records, run the acceptance test step (`rdd-acceptance`),
+   run the completion trace gate, and apply the human completion answer.
 7. Apply `rdd-triage` whenever a discovery, contradiction, requested change,
    or invalidation alters the selected trace. Resume at the earliest phase it
    invalidates.

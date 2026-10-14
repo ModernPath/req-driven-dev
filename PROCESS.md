@@ -623,6 +623,7 @@ slice:
 | Tests while building | Focused tests per batch |
 | Full verification | Once, at slice end, at the delivered revision |
 | Independent code review | One review over the whole change, where the slice needs one (§Planning and readiness) |
+| Acceptance test guide | One guide for a human tester, after full verification and before completion (§Evidence and completion) |
 | Completion | One completion brief; each member's completion gate carries it and is answered with its own confirmation, item by item |
 
 The stages in each member's plan (§Entry packet item 5) order its connected
@@ -847,7 +848,8 @@ packets — against its requirements and tests. The human then gets one page:
 - the coverage matrix: remaining clauses and what is still unavailable;
 - the assumed decisions to confirm or change;
 - the log;
-- the review's findings.
+- the review's findings;
+- the acceptance test guide and its results (§Evidence and completion).
 
 The human answers completion item by item, as in a lane batch. A rejected
 item stays `IN_REVIEW`. A changed assumption is triaged into the next slice.
@@ -1020,7 +1022,7 @@ focused skill alone only when the requested scope explicitly ends at that pass.
 | Verify entered work requiring tests | `rdd-verify` | Current UR upper or SR lower evidence; eligible requirement in `IN_REVIEW` |
 | Verify existing baseline | `rdd-reverse-engineer-verify` | Complete applicable current assertion/execution proof and separate repository integration observations; exact eligibility packet |
 | Accept existing baseline | `rdd-reverse-engineer-accept` | One reviewed human decision atomically applied from `PENDING_VERIFICATION` to `DONE`, with durable receipt; compliance unchanged |
-| Deliver/complete | `rdd-completion-review` | Delivered revision, reconciled records, completion trace, and applied human result |
+| Deliver/complete | `rdd-completion-review`, with `rdd-acceptance` for the acceptance test step | Delivered revision, reconciled records, acceptance test guide and results where the project's gate rules require them, completion trace, and applied human result |
 | Route change | `rdd-triage` | Discovery assigned to the earliest phase it invalidates |
 
 Before each phase, reconcile answered gates and state, then select the earliest
@@ -1222,6 +1224,42 @@ pass does not stand in for it — until it is re-evaluated at the current
 fingerprint. Excluded-only proof does not block current work; mixed-scope proof
 retains its live obligations.
 
+**Acceptance test step.** After the evidence is confirmed current at the
+delivered revision — for a slice, its one full verification — and before the
+completion trace, the agent drafts and completes an acceptance test guide for
+a human tester (`rdd-acceptance`). The guide is a tracked file:
+`process/slices/<SLICE-id>/acceptance-guide.md` beside the slice file, or
+`process/acceptance/<scope>.md` for an Epic or requirement outside a slice.
+Testers read it in the change under review. It is not a packet section and
+moves no aggregate, review, or approval. Its shape is
+`file-state/ACCEPTANCE-GUIDE.md`, in six sections: what changed, in product
+language, per user requirement; where to test — environment, revision,
+build, test data, sign-in; manual steps per user scenario with the expected
+result; what the automated tests already prove, per acceptance criterion,
+with the run that proves it; a criteria table; and the known gaps,
+assumptions, and what is out of scope. Its header records the aggregate of
+every scope it covers at drafting, so a later record edit makes it stale: it
+is drafted after the last record edit of those scopes.
+
+A tester's result is an acceptance test result — evidence of kind
+`acceptance` against a criterion or scenario, naming the tester as a `USER:`
+source, the environment, and the revision the tester tested, never the
+recorder's own checkout. An acceptance test result never counts as automated
+evidence, and it is not the as-built acceptance of an existing baseline.
+
+The project's gate rules decide what the step requires (§Project gate
+rules). With `acceptance_guide` required, as in both presets, a slice's
+completion needs a current guide with every section filled; with
+`not_required`, a missing guide is disclosed in one line. With
+`tester_signoff` required — not required in both presets — every criterion
+or scenario not proven by automated evidence needs a current acceptance pass:
+its latest acceptance test result is a pass, at the delivered revision or an
+ancestor of it, recorded at or after the guide was drafted; an automated pass
+on the owning requirement counts as automated proof. Outside a slice, a
+missing or stale guide is disclosed in one line and does not stop
+completion. The completion brief links the guide and shows its results beside
+the automated evidence and, on a deploy path, which revision runs where.
+
 | Item | `DONE` predicate after human acceptance |
 |---|---|
 | SR | Its lower trace is delivered, current, and reconciled |
@@ -1271,6 +1309,7 @@ file-state/
   BACKLOG.md
   SLICE.md
   HUMAN-GATES.md
+  ACCEPTANCE-GUIDE.md
 ```
 
 `EPICS.md` stores optional grouping records. `REQUIREMENTS.md` stores URs, SRs,
@@ -1280,10 +1319,11 @@ selections, and selection history. `BACKLOG.md` stores unrouted triage items
 and gap records. Derived queues and progress views — including the pending
 human-decision projection — are regenerated, not backed up separately.
 
-`SLICE.md` and `HUMAN-GATES.md` are not store records: they give the shapes
-of the tracked slice file (§Slices) and the project's gate rules file
-(§Project gate rules), which are versioned in the repository in both kinds of
-store. The presets of the gate rules file are under `presets/`.
+`SLICE.md`, `HUMAN-GATES.md`, and `ACCEPTANCE-GUIDE.md` are not store
+records: they give the shapes of the tracked slice file (§Slices), the
+project's gate rules file (§Project gate rules), and the acceptance test
+guide (§Evidence and completion), which are versioned in the repository in
+both kinds of store. The presets of the gate rules file are under `presets/`.
 
 Backlog, gap, and tooling-gap records are records of the store like every
 other: they are created, routed, and closed there, and their state is read
