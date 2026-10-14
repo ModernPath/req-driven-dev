@@ -22,7 +22,9 @@ records, and derived views.
    are proof dependencies; keep them DONE when their evidence is current and
    exclude them from new acceptance transitions. Obtain an independent code
    review of the built change for Epic scope. For single-SR scope, obtain one
-   when required by project gates or requested by the user. Use a context
+   when required by project gates or requested by the user. For a slice, run
+   this audit and one such review once, over the whole change
+   (`PROCESS.md` §Slices). Use a context
    independent of implementation; record the reviewer, reviewed revision,
    findings, and verdict separately from planning review. Verify fixes against
    their commits and test evidence.
@@ -35,7 +37,7 @@ records, and derived views.
    integration path while keeping awaiting entities `IN_REVIEW`.
 4. Re-run or confirm evidence against the delivered revision — the revision
    the authorized integration path produced, not the branch head that fed
-   it — and reconcile all authoritative records and derived views. Use
+   it; for a slice this is its one full verification — and reconcile all authoritative records and derived views. Use
    `skills/rdd-audit/SKILL.md` to verify that delivered records, citations,
    and documents still describe the code; a finding it surfaces is a stop
    condition or routes through `rdd-triage`, never a silent correction.
@@ -48,7 +50,9 @@ records, and derived views.
    working-set files before asking for acceptance, following `PROCESS.md` §Gates.
    Small changes may be completed together in one lane-batch gate that lists
    each change with its evidence and review verdict; the human may reject
-   single items, which stay `IN_REVIEW`.
+   single items, which stay `IN_REVIEW`. A slice presents one completion
+   brief, carried by each member's completion gate and answered item by
+   item.
 6. Do not answer the gate for the human. If the authorized human answers,
    record the real actor, role, exact scope, answer, and `USER:` source.
 7. Apply `DONE` only to accepted named entities that independently satisfy the

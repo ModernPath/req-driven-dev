@@ -476,6 +476,41 @@ Normal delivery selection requires exactly one active release with a `USER:`
 source. Candidate confirmation and source-scoped baseline work do not select a
 delivery release and do not require one to be active.
 
+### Slices
+
+A slice is a named set of Epics and requirements a developer delivers as one
+package. It is recorded in a tracked `process/slices/<SLICE-id>.md` file in
+the shape `file-state/SLICE.md` gives, and changed the way the project
+reviews any other repository change. It has no dates: the developer opens it
+and closes it. It may hold one requirement. Members are added while it is
+open; each addition gets its own review and entry through its normal gates —
+a plan review of the addition and its effect on the slice, not a re-review of
+the slice. A member leaves only by becoming `DEFERRED` or `OBSOLETE`. Each
+member keeps its own records, gates, and selection; the slice file is
+coordination and never states a status — where it and a record disagree, the
+record holds. The work-selection record carries no slice: which slice names a
+scope is read from the open slice files.
+
+What the loop otherwise does per Epic or per requirement happens once per
+slice:
+
+| Activity | Once per slice |
+|---|---|
+| Plan review | One cold review: one independent reviewer pass over every member's review snapshot, its findings and verdict recorded per member; one narrow review per addition |
+| Entry | One entry brief; each member's entry gate carries it, and the human answers each gate with its own confirmation |
+| Red-first | Per connected batch: one RED commit carrying a failing assertion for every clause the batch implements, then the commit that turns it green |
+| Tests while building | Focused tests per batch |
+| Full verification | Once, at slice end, at the delivered revision |
+| Independent code review | One review over the whole change, where the slice needs one (§Planning and readiness) |
+| Completion | One completion brief; each member's completion gate carries it and is answered with its own confirmation, item by item |
+
+The stages in each member's plan (§Entry packet item 5) order its connected
+batches; a slice file may list stages across members. A one-requirement slice
+is the single-SR loop with one review and one completion. Per-requirement
+evidence, traces, and the store's per-requirement checks do not change; only
+their timing follows the slice's batches. Autopilot is a way of running a
+slice (§Autopilot).
+
 ### Small-change lane
 
 The small-change lane scales review and gates to the size of the change; it
@@ -510,8 +545,9 @@ is never forced through.
 
 Autopilot is for building larger scopes — greenfield systems, initiatives,
 many Epics — when stopping at every process check costs more than the check
-protects. It keeps the records and the tests. It moves the human checkpoint to
-the end of a sprint, and turns process refusals into logged work instead of
+protects. It is a way of running a slice (§Slices), not a separate period of
+work. It keeps the records and the tests. It moves the human checkpoint to
+the end of the slice, and turns process refusals into logged work instead of
 stops.
 
 **The unit of work is a connected journey.** A connected journey is a set of
@@ -530,20 +566,20 @@ selection kind. Within the scope, a missing view or primary action outranks
 refining one that already works. This changes the order of work, never what a
 requirement means or what completion requires.
 
-The sprint keeps a usable-coverage matrix: for each journey, whether its
+The slice keeps a usable-coverage matrix: for each journey, whether its
 entry point is reachable, its primary action is connected to real state, the
 state persists, the next step works, and end-to-end evidence exists — each
 marked built, partial, missing, or externally held. Externally held means the
-cell waits on something the sprint cannot supply — a human answer, access, or
+cell waits on something the slice cannot supply — a human answer, access, or
 an outside party. It is a matrix mark, not a lifecycle state: when the hold
 stops work on a requirement, that requirement is `BLOCKED` with the blocker
 recorded; otherwise the requirement keeps its state and its matrix cell names
 the hold. A navigable prototype, a
 mocked response, or an isolated backend test does not make a journey built.
 Every unfinished requirement clause stays visible in it. The matrix is a
-working view of the sprint, reported at checkpoints and on the sprint-end
+working view of the slice, reported at checkpoints and on the slice-end
 page; it links requirement records and never stands in for them. Between
-sessions it is kept in the sprint's working record with the checkpoint
+sessions it is kept in the slice's working record with the checkpoint
 reports, not in the store unless the project says so; where it and a record
 disagree, the record holds.
 
@@ -557,23 +593,23 @@ A journey is built in three stages:
 3. harden the remaining acceptance clauses, edge cases, scale, and
    presentation.
 
-Stages 1 and 2 run per journey during the sprint; stage 3 runs at the sprint's
+Stages 1 and 2 run per journey during the slice; stage 3 runs at the slice's
 closeout. A stage proceeds in batches: a batch is the adjacent primary
 actions built together under one RED commit and the commit that turns it
-green, and the working code a batch lands is a slice.
+green, and the working code a batch lands is an increment.
 
 Security, authorization, tenant isolation, and atomic data integrity belong to
-the first functioning slice. They are never deferred to the hardening stage.
+the first functioning increment. They are never deferred to the hardening stage.
 
 **Build-time and completion-time verification are separate.** During the
-sprint, focused checks are the feedback gate: a focused-green slice is a
+slice, focused checks are the feedback gate: a focused-green increment is a
 development waypoint, not a completion event, and the next step is the next
 missing capability. A run of the full verifier before closeout needs a
 concrete cross-system risk that focused checks cannot bound, or a human's
 request, and the reason is stated. The full-verifier rule governs the agent's
 own feedback runs; the project's commit gate runs on every commit as
 configured, even when it runs the full suite. Full regression and hardening
-run in the sprint's closeout, with time reserved for repairs. Closeout adds
+run in the slice's closeout, with time reserved for repairs. Closeout adds
 verification and hardening, not RED for clauses already built. Missing or
 failing required evidence keeps an item from `IN_REVIEW`: it stops
 acceptance, not the building of the next authorized action.
@@ -582,7 +618,7 @@ acceptance, not the building of the next authorized action.
 grants autopilot once. The grant names:
 
 - the scope (Epics, an initiative, or a system);
-- the end of the sprint (a date);
+- the end of the grant (a date) — the slice itself has no dates;
 - any areas that stay out of it.
 
 It is recorded with its `USER:` source where the scope's decisions are
@@ -601,17 +637,17 @@ human withdraws it, or when its scope is done.
 | Cold review | Up to two rounds, blocking | One pass, then at most one narrow confirmation. Material findings are folded into the packet as tests or boundary lines, and the rest are logged. If the confirmation still fails, the item is built ahead of its record and the failure is logged. |
 | Packet completeness | Items 1–6 and the brief complete before review | Write what the builder needs; a gap the review finds is folded in or logged, never a stop |
 | Preflight facts (suspended selections, stale snapshots, drift, open holds) | Stop selection | Clear each with its documented verb, or log it and continue |
-| A refusal at a phase boundary | Stop and report | Try the documented clearing verb once. If it still refuses, log it, move to the next item, and let the record catch up at sprint end. |
+| A refusal at a phase boundary | Stop and report | Try the documented clearing verb once. If it still refuses, log it, move to the next item, and let the record catch up at slice end. |
 | A product question | Asked; the loop waits | Asked, but the loop does not wait: see below |
 | After a gate answer or a pass | Continue the requested work to the next human decision | Continue |
 | Work selection | An Epic or a single SR | A connected journey with the requirements it needs, existing or newly written with sources; more than one SR from an Epic is held as that Epic's selection |
-| Planning and cold review | Per selected scope | Once per journey. An unchanged reviewed packet goes straight to entry, or to RED when its entry is already applied and current; any change in a blocking cold-review category — correctness, security, data integrity or data loss, contract, traceability, testability — and any changed scope or acceptance is reviewed again, and only that change |
+| Planning and cold review | Once per slice, recorded per member; one narrow review per addition | Once per journey. An unchanged reviewed packet goes straight to entry, or to RED when its entry is already applied and current; any change in a blocking cold-review category — correctness, security, data integrity or data loss, contract, traceability, testability — and any changed scope or acceptance is reviewed again, and only that change |
 | Readiness to build | The complete packet and an applied entry | Code starts once the source, outcome, owning requirements, state and safety boundaries, and representative RED assertions are clear; remaining inventory and record updates run alongside the build. Code written before the entry is applied is reversible local build-ahead (below); the entry is applied before any RED evidence is recorded or any requirement advances |
 | Cold review timing | Before any code | May run alongside reversible local build-ahead. A material safety finding is repaired before the affected code is committed past its RED commit |
-| AI TDD inner loop | One SR clause at a time, rerunning affected URs each iteration | Batch: representative journey and state-boundary REDs cover adjacent primary actions, which are implemented together and checked with one focused integrated GREEN run. The batch's RED commit carries a failing assertion for every clause the batch implements; representative REDs only reduce the number of commits, never the assertions |
-| Commits | At each waypoint: RED, GREEN, cleanup, reconciliation | Per connected batch: one RED commit carrying the batch's failing tests, its RED evidence recorded there, then the working batch. A RED commit carries only failing tests that its next commit turns green; that commit lands the whole batch. To land a batch SR by SR, use one RED/GREEN pair per SR. A journey assertion is written in the batch that can make it pass. A test is never skipped, disabled or left failing to get a commit past the project's gate, other than the declared RED tests of a RED commit as the gate admits them; the gate runs on every commit as configured |
+| AI TDD inner loop | Per connected batch: one RED commit with a failing assertion for every clause the batch implements, then its GREEN, rerunning affected URs each batch | Batch: representative journey and state-boundary REDs cover adjacent primary actions, which are implemented together and checked with one focused integrated GREEN run. The batch's RED commit carries a failing assertion for every clause the batch implements; representative REDs only reduce the number of commits, never the assertions |
+| Commits | Per connected batch: RED, GREEN, cleanup, reconciliation | Per connected batch: one RED commit carrying the batch's failing tests, its RED evidence recorded there, then the working batch. A RED commit carries only failing tests that its next commit turns green; that commit lands the whole batch. To land a batch SR by SR, use one RED/GREEN pair per SR. A journey assertion is written in the batch that can make it pass. A test is never skipped, disabled or left failing to get a commit past the project's gate, other than the declared RED tests of a RED commit as the gate admits them; the gate runs on every commit as configured |
 | Records | Reconciled after each pass | Reconciled at each integration checkpoint; record grooming never holds the build |
-| Full verification | At each phase's required exit | The agent's full-verifier feedback runs wait for sprint closeout, unless the exception above applies; the project's commit gate is unchanged |
+| Full verification | Once per slice, at slice end, at the delivered revision; focused tests per batch before it | The agent's full-verifier feedback runs wait for slice closeout, unless the exception above applies; the project's commit gate is unchanged |
 
 **Reversible local build-ahead** is uncommitted work on the feature branch,
 written before the entry is applied. It is set aside so that the RED commit
@@ -626,10 +662,10 @@ each integration checkpoint, compare usable coverage with
 the previous checkpoint. When the batch added no user capability and repaired
 no blocking defect, the next action is the next missing journey step; any
 exception is explained in user-outcome terms. Immediate further work on a
-green slice is justified only by a safety or data-integrity defect, a
+green increment is justified only by a safety or data-integrity defect, a
 regression, or a failure that blocks the selected journey; every other finding
 is queued with an owner and a next action. This restriction governs the
-build during the sprint; it does not apply to the hardening stage at
+build during the slice; it does not apply to the hardening stage at
 closeout. Report the observed split between
 implementation and preparation or checking; when preparation and checking
 dominate, stop discretionary process work and build the next missing action.
@@ -659,9 +695,9 @@ It waits for an answer only when a wrong guess is hard to undo:
   clause a batch implements has its failing assertion in the batch's RED
   commit.
 - Security, authorization, tenant isolation, and atomic data integrity hold
-  from the first functioning slice.
-- Every acceptance clause is met before acceptance. Focused-green slices,
-  partial evidence, and the sprint's end date are not acceptance.
+  from the first functioning increment.
+- Every acceptance clause is met before acceptance. Focused-green increments,
+  partial evidence, and the grant's end date are not acceptance.
 - The store's server-side refusals are cleared through the sanctioned tool or
   logged. They are never bypassed with hand-made writes.
 - Merging, deploying, and releasing stay with humans.
@@ -669,13 +705,13 @@ It waits for an answer only when a wrong guess is hard to undo:
 
 **The log.** Each skipped check, uncleared refusal, advisory finding left
 open, and build ahead of its record is filed as a gap record naming the
-sprint. Nothing is dropped silently.
+slice. Nothing is dropped silently.
 
-**Sprint end.** Closeout runs the full required verification and the
+**Slice end.** Closeout runs the full required verification and the
 hardening stage, and repairs what fails; it adds verification and hardening,
 not RED for clauses already built. An item is presented
 as eligible for completion only when its required evidence passes. Then one
-independent review reads everything the sprint built — the change, not the
+independent review reads everything the slice built — the change, not the
 packets — against its requirements and tests. The human then gets one page:
 
 - the journeys and primary actions a user can now complete, with evidence;
@@ -685,7 +721,7 @@ packets — against its requirements and tests. The human then gets one page:
 - the review's findings.
 
 The human answers completion item by item, as in a lane batch. A rejected
-item stays `IN_REVIEW`. A changed assumption is triaged into the next sprint.
+item stays `IN_REVIEW`. A changed assumption is triaged into the next slice.
 Only then does normal gate discipline apply again to anything the grant did
 not cover.
 
@@ -726,7 +762,9 @@ The fingerprinted packet must contain:
 5. an upper-RED strategy for selected UR scenarios requiring new evidence, a
    lower-RED strategy for selected SR clauses requiring new evidence, and
    proportional regression gates; unchanged proven scenarios need revalidation,
-   not a new RED;
+   not a new RED. The strategy names the stages: the ordered connected batches
+   the build runs, each naming the clauses its RED commit carries and its
+   focused tests;
 6. sourced decisions, conflicts, gaps, deferrals, blockers, and unknowns;
 7. cold-review findings and verdict; and
 8. the human entry brief.
@@ -793,7 +831,8 @@ Changes to approved behavior, scope, architecture, acceptance, or a material
 technical decision return to the affected planning pass. A review finding does
 not itself authorize implementation.
 
-At most two cold-review rounds run on the selected planning scope. A later
+At most two cold-review rounds run on the selected planning scope. In a
+slice, each round is one pass over every member (§Slices). A later
 round reviews what changed since the previous round's recorded trace — the
 records and sections whose fingerprints moved, the findings still open, and
 what those touch — and carries the unchanged remainder at that round's verdict;
@@ -807,7 +846,7 @@ round: a blocking finding sends it out of the lane.
 
 Completion review requires an independent code review of the built change for
 Epic scope. For single-SR scope, obtain one when project gates or the user
-require it. The review runs from a context independent of implementation;
+require it. In a slice, one such review covers the whole change once. The review runs from a context independent of implementation;
 record the reviewer, reviewed revision, findings, and verdict separately from
 planning review. Missing required review or open material findings stop
 delivery and completion. Resolved implementation findings cite the correcting
@@ -912,8 +951,8 @@ while the approved scope remains unchanged.
 
 ```text
 establish required selected UR upper RED
-  -> select an unmet approved SR clause
-  -> SR lower RED -> GREEN -> CLEAN -> lower verify
+  -> select the next connected batch of unmet approved SR clauses
+  -> batch lower RED -> GREEN -> CLEAN -> focused verify
   -> rerun affected UR upper evidence
   -> all applicable trace gates PASS?
        no  -> repeat
@@ -924,11 +963,16 @@ Run the loop as follows:
 
 1. Establish the expected upper RED for every selected applicable UR requiring new
    evidence. A standalone SR has no upper step.
-2. If an SR trace is unmet, select one approved clause, establish its focused
-   lower RED, implement the smallest passing behavior, and perform scoped
-   behavior-preserving cleanup.
-3. Run the SR's focused and boundary-appropriate regression gates on the
-   cleaned content, then rerun each affected UR scenario.
+2. If an SR trace is unmet, select the next connected batch: the approved
+   clauses built together, in the order the packet's stages name — one
+   clause, or several adjacent ones. Commit a failing assertion for every
+   clause in the batch and establish the batch's focused lower RED at that
+   commit, implement the smallest passing behavior for the whole batch, and
+   perform scoped behavior-preserving cleanup. A RED commit carries only
+   failing tests that its next commit turns green.
+3. Run the batch's focused tests on the cleaned content, then rerun each
+   affected UR scenario. Full verification runs once per slice, at slice end,
+   at the delivered revision (§Evidence and completion).
 4. Re-evaluate every selected applicable SR lower trace and UR upper trace independently.
    A trace `FAIL` caused by unmet approved behavior starts another iteration;
    it does not request human input.
@@ -936,8 +980,9 @@ Run the loop as follows:
    `PASS`, and every selected applicable UR upper trace is current and `PASS` with all of
    its applicable required SRs in `IN_REVIEW` or `DONE`.
 
-Under a current autopilot grant, §Autopilot's batch cadence replaces the
-per-clause rhythm of steps 2–4, at closeout as during the sprint: a clause
+Under a current autopilot grant, §Autopilot's batch cadence — representative
+journey and state-boundary assertions over adjacent primary actions — applies
+to steps 2–4, at closeout as during the slice: a clause
 first built at closeout gets its own RED like any other. Step 1 changes in
 one respect: a UR scenario's upper RED is established in the batch that can
 make it pass, and it still fails at that batch's RED revision. The exit in
@@ -1006,7 +1051,7 @@ uses the requirements under As-built verification and acceptance instead.
 
 | Requirement/evidence | Required evidence |
 |---|---|
-| SR lower — `LOWER_VERIFIED` | Sourced SR clause; expected focused failure; named regression-sensitive assertions; linked code; passing focused and proportional post-cleanup gates at the cited revision |
+| SR lower — `LOWER_VERIFIED` | Sourced SR clause; expected focused failure in its batch's RED commit; named regression-sensitive assertions; linked code; passing focused post-cleanup gates for its batch at the cited revision; proportional and full regression run once per slice (§Slices) |
 | UR upper — `UPPER_VALIDATED` | Sourced UR scenario; expected user-flow failure; passing result; required runtime/browser observation; linked revision |
 
 Choose evidence by boundary: unit/property for domain rules, component plus
@@ -1032,6 +1077,11 @@ work back to planning.
 One completion human gate may name many small changes — a lane batch — each
 meeting its own predicate below; the human may reject single items, which stay
 `IN_REVIEW`.
+
+A slice completes the same way, item by item: one completion brief, carried
+by each member's completion gate and answered with its own confirmation; a
+rejected item stays `IN_REVIEW`. The slice's full required verification runs
+once, at the delivered revision, before that brief is presented.
 
 A normal completion human gate may open only when named items are `IN_REVIEW`,
 code is delivered, evidence is current at the delivered revision, state is reconciled,
@@ -1090,6 +1140,7 @@ file-state/
   GATES.md
   WORK-SELECTION.md
   BACKLOG.md
+  SLICE.md
 ```
 
 `EPICS.md` stores optional grouping records. `REQUIREMENTS.md` stores URs, SRs,
@@ -1098,6 +1149,10 @@ human gate record. `WORK-SELECTION.md` stores the frozen delivery scope, suspend
 selections, and selection history. `BACKLOG.md` stores unrouted triage items
 and gap records. Derived queues and progress views — including the pending
 human-decision projection — are regenerated, not backed up separately.
+
+`SLICE.md` is not a store record: it gives the shape of the tracked slice
+file (§Slices), which is versioned in the repository in both kinds of store
+and holds coordination only.
 
 Backlog, gap, and tooling-gap records are records of the store like every
 other: they are created, routed, and closed there, and their state is read

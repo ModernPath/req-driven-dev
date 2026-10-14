@@ -11,7 +11,8 @@ serialization shapes; it does not contain a project's live delivery state.
   completion, records, and reconciliation.
 - [`skills/`](skills/) contains focused procedures that apply the process.
 - [`file-state/`](file-state/) contains the canonical serialization shapes for
-  Epic, requirement, gate, work-selection, and backlog/gap records.
+  Epic, requirement, gate, work-selection, and backlog/gap records, and the
+  shape of the tracked slice file.
 - Project instructions own only project-specific rules such as architecture,
   repository topology, commands, environments, and test gates. They reference
   rather than redefine the process. They name the project's sanctioned tool
@@ -32,7 +33,7 @@ on a decision, or what is blocked:
 3. enter the session with `skills/rdd-start/SKILL.md` — it verifies the store
    binding before selection and the active release for normal delivery; then use
    `skills/rdd-deliver/SKILL.md` for end-to-end delivery,
-   `skills/rdd-autopilot/SKILL.md` for a sprint under a human's autopilot
+   `skills/rdd-autopilot/SKILL.md` for a slice run under a human's autopilot
    grant, or the applicable
    focused `skills/rdd-*/SKILL.md` when the request explicitly ends at one
    process pass; use `skills/rdd-verify/SKILL.md` for entered verification work
