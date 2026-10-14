@@ -92,7 +92,7 @@ Drift in a receipt's proof pins does not itself change lifecycle state. Route
 an established invalidation through `rdd-triage`, retaining the receipt as historical evidence;
 normal development resumes according to the item's entry approval and state.
 
-After applying a human answer, report and wait as required by `PROCESS.md`,
-including during the complete loop. Merge, publication and deployment need their
+After applying a human answer, report what moved and continue as `PROCESS.md`
+§Gates says, including during the complete loop. Merge, publication and deployment need their
 own authority. Missing operations go to the sanctioned tooling-gap channel,
 not raw API/store writes.
