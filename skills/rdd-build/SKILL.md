@@ -3,7 +3,7 @@ name: rdd-build
 description: Implement one approved SR from TODO through current lower evidence and IN_REVIEW using RED, GREEN, cleanup and regression checks. Use after normal development entry for new or changed behavior. Use rdd-verify for entered verification work and rdd-reverse-engineer-verify for eligible source-scoped baselines with existing proof.
 ---
 
-# Build one SR slice
+# Build one SR increment
 
 Read the project `AGENTS.md`, canonical `PROCESS.md`
 (`.modernpath/rdd/PROCESS.md` in a consuming repository), selected SR,
@@ -19,23 +19,32 @@ code, tests, and current records.
    planning and entry first. Under a current autopilot grant, reversible
    local build-ahead (`PROCESS.md` §Autopilot) may precede this check; it is
    set aside before RED and authorizes no RED evidence or status change.
+   A fix-first change on a light path the project's gate rules turn on
+   (`PROCESS.md` §Project gate rules) may be implemented before this check;
+   its reproduction proof stands as its RED, and its SR, entry answer and
+   evidence follow before other work is selected.
    Work on a reviewable feature branch and preserve unrelated changes.
 2. Before its first implementation iteration, establish upper RED for selected
    UR scenarios requiring new evidence. Re-validation of previously proven
    unchanged scenarios needs no new RED. Keep upper evidence on the UR.
    Under an autopilot grant, a scenario's upper RED is established in the
    batch that can make it pass (`PROCESS.md` §AI TDD inner loop).
-3. Select one unmet approved SR clause, establish its focused lower RED for the
-   expected reason, and link the stable test identity to the clause.
-4. Implement the smallest behavior that makes the focused evidence pass.
+3. Select the next connected batch of unmet approved SR clauses — one clause,
+   or several built together, in the order the packet's stages name. Commit a
+   failing assertion for every clause in the batch, establish the batch's
+   focused lower RED at that commit for the expected reason, and link each
+   stable test identity to its clause.
+4. Implement the smallest behavior that makes the batch's focused evidence pass.
    Capture discoveries instead of silently expanding scope.
 5. Perform requirement-scoped cleanup or record a no-op. Return to RED if the
    cleanup exposes a correctness change.
-6. Run focused and proportional post-cleanup gates and record current SR lower
-   evidence. Separately rerun affected UR scenarios and update their upper
+6. Run the batch's focused tests on the cleaned content and record current SR
+   lower evidence. Full verification runs once per slice, at slice end
+   (`rdd-completion-review`). Separately rerun affected UR scenarios and update their upper
    evidence, including live-browser and screenshot evidence for UI behavior.
 7. Re-evaluate the selected SR clauses and affected UR scenarios. Repeat from
-   step 3 while an unmet result is caused by approved behavior in this SR.
+   step 3, with the next batch, while an unmet result is caused by approved
+   behavior in this SR.
 8. Move the SR to `IN_REVIEW` when its lower trace passes. An affected UR moves
    to `IN_REVIEW` only when its upper trace passes and every applicable required SR is
    `IN_REVIEW` or `DONE`.
@@ -48,21 +57,21 @@ Do not ask for human input inside the loop. Return to planning only when drift
 creates a new product, scope, architecture, acceptance, priority, release,
 workflow, or material technical decision. Record an external blocker exactly.
 
-The project's commit gate binds the GREEN, cleanup, and reconciliation
-commits. A RED waypoint may legitimately fail the very suite the gate runs —
+A RED commit carries only failing tests that its next commit turns green;
+that commit lands the whole batch. The project's commit gate binds the GREEN,
+cleanup, and reconciliation commits. A RED waypoint may legitimately fail the
+very suite the gate runs —
 its targeted failing test is its gate, and committing it before the change
 that satisfies it is what makes red-first auditable in history. Record the
 RED evidence while the repository stands at the RED commit, so the evidence
 is pinned to the revision that produced it.
 
 Under a current autopilot grant, `PROCESS.md` §Autopilot's batch cadence
-applies: one RED commit carries a connected batch's failing tests, with a
-failing assertion for every clause the batch implements; adjacent
-actions are implemented together, and full-verifier feedback runs wait for
-closeout.
-A RED commit carries only failing tests that its next commit turns green;
-that commit lands the whole batch. To land a batch SR by SR, use one RED/GREEN
-pair per SR. A journey assertion is written in the batch that can make it
+applies: one RED commit carries a connected batch's representative journey
+and state-boundary failing tests, with a failing assertion for every clause
+the batch implements; adjacent actions are implemented together, and
+full-verifier feedback runs wait for closeout.
+To land a batch SR by SR, use one RED/GREEN pair per SR. A journey assertion is written in the batch that can make it
 pass. A test is never skipped, disabled or left failing to get a commit past
 the project's gate, other than the declared RED tests of a RED commit as the
 gate admits them; the gate runs on every commit as configured, even when it

@@ -69,6 +69,9 @@ retains its live obligations.
    code at the planning revision for the stated reason; a case that would
    already pass cannot serve as RED evidence. Check that reason against the
    current code during planning.
+   Name the stages: the ordered connected batches the build runs, each naming
+   the clauses its RED commit carries and its focused tests. In a slice, the
+   slice file may order stages across members.
    Planned commands and test identities are proposals; actual commands and
    outcomes become evidence when executed at the RED revision. A migration or
    schema change that satisfies the test lands with GREEN. For entered

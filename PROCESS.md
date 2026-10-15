@@ -44,7 +44,9 @@ release, and workflow. Agents establish facts and propose options; they do not
 make those decisions by assumption. Ask humans only for decisions that cannot
 be established from authoritative records, code, tests, or runtime evidence.
 Under an autopilot grant an agent may take a reversible product decision as a
-recorded assumption pending confirmation (§Autopilot).
+recorded assumption pending confirmation (§Autopilot). Where the project's gate
+rules let the agent decide a gate, it decides only under the row's condition
+and discloses it in the answer (§Project gate rules).
 
 | Tag | Source |
 |---|---|
@@ -281,7 +283,8 @@ part of onboarding completion, not evidence of product verification.
 
 A trace gate evaluates non-human facts at an exact fingerprint. A human gate
 records a decision by an authorized human. A human gate may become `OPEN` only
-after every prerequisite trace gate is `PASS`.
+after every prerequisite trace gate is `PASS`. Who decides each decision point
+is the project's gate rules (§Project gate rules).
 
 An approval-scope fingerprint identifies the requirement content, declared
 relations, scope, and decisions being approved. An evidence fingerprint identifies
@@ -376,14 +379,146 @@ earlier answer already implies its answer: preserving a delivered acceptance,
 applying a stance the human has stated, or bookkeeping that follows from a
 decision already given is done and reported, never asked. Each question
 stands alone in one plain sentence about what changes for the product, and
-bookkeeping is never bundled with a decision. A human's answer — to a gate
-or to a question — is a decision about that gate or question, never an
-instruction to enter the next phase: the agent applies it, reports what
-moved, and waits for the human's word before any further phase, in the
-complete loop as in a focused pass. Under an autopilot grant the agent
-continues instead (§Autopilot). An authorized source-scoped
+bookkeeping is never bundled with a decision.
+
+Everything shown to the human — briefs, questions, reports, progress lines —
+is in plain product language: store jargon — record ids, fingerprints, gate
+kinds, verb names, phase codes — appears at most as a trailing breadcrumb.
+Review findings put to the human are walked through one at a time: what the
+finding means for the product, its context, the options and what each
+changes, then the next finding.
+
+A human's answer — to a gate or to a question — is a decision about that gate
+or question: the agent applies it, reports what moved, and continues the loop
+unless the user asked it to stop. An applied entry approval lets the build
+start. The agent stops only at a human gate, at a question only a human can
+answer, or where the user asked it to stop — a request that ends at one pass
+is such a request — never merely because a phase ended. Under an autopilot
+grant the agent continues instead (§Autopilot). An authorized source-scoped
 reverse-engineering run, baseline or derived, continues within that
-authorization (§Source-scoped baseline onboarding).
+authorization (§Source-scoped baseline onboarding). Merging, deploying, and
+releasing are not phases the loop continues into: they stay human acts in the
+project's own tools, and the agent performs one only on a human's explicit
+instruction for it.
+
+### Project gate rules
+
+This section names the decision points and what each must carry. Who decides
+each one is the project's rule, kept in `process/rdd-human-gates.md` in the
+shape `file-state/HUMAN-GATES.md` gives. The process ships two presets of that
+file: `presets/default.md` and `presets/autopilot.md`. Installation seeds the
+project's file once from the default preset and never overwrites it; a
+deleted file is seeded again.
+
+The file has one row per decision point: `entry`, `slice_addition`,
+`small_change_entry`, `pre_approved_entry`, `defect_fix`, `incident_fix`,
+`product_assumption`, `completion`, `candidate_confirmation`, `demotion`,
+`acceptance_guide`, `tester_signoff`, and the rows that are always a person's —
+`baseline_acceptance`, `gate_rules`, and `lane_authorization`. Each row says
+who decides — a person (`human`) or the agent (`agent`) — the one condition
+under which the agent may decide, and the always-human areas: `sign_in`,
+`payments`, `existing_data`, and `external_contract`. When a change touches an
+area a row names, a person decides that row, whatever else it says; when the
+agent is unsure whether a change touches one, a person decides. Candidate
+confirmation, demotion, and the always-human rows are never the agent's.
+`acceptance_guide` and `tester_signoff` say `required` or `not_required`
+instead (§Evidence and completion).
+
+The rules count only when they are merged on the project's default branch
+with a `Decided:` line carrying the process owner's `USER:` source. The rows
+`entry`, `slice_addition`, `product_assumption`, and `completion` may be the
+agent's only in a file with an `Expires` date; a file may also name the Epics
+and requirements it covers (`Scope`). Expired, refused, or missing rules mean
+the default preset, and the session says so at its start; nothing expires
+silently.
+
+- **Default preset.** Today's rules with the light paths off: a person
+  decides entry, additions, product assumptions, completion, and the light
+  paths `pre_approved_entry`, `defect_fix`, and `incident_fix`;
+  `small_change_entry` is the small-change lane as it stands. The acceptance
+  test guide is required and the tester's sign-off is not. The seeded file
+  carries `kit-default` in place of a `USER:` source and is shown as "kit
+  default, not decided by this project". The marker is valid only while the
+  file is identical to the kit's default preset; a project that edits the
+  file decides it with its own `Decided:` source.
+- **Autopilot preset.** The default, plus: the agent may decide entry after a
+  passing plan review, an addition after its passing narrow review, and a
+  reversible product assumption inside the scope; the light paths are on —
+  a recorded pre-approval is honoured, and reproduced defects and declared
+  incidents are fixed first. Completion stays a person's. It carries `Scope`
+  and `Expires` placeholders that must be filled before it counts (§Autopilot).
+
+In both presets every row the agent may decide names all four always-human
+areas — the incident path names `sign_in`, `payments`, and `existing_data` —
+and completion is a person's, so a slice that touches sign-in, payments,
+existing data, or an external contract is completed by a person. A project
+may change this in its own copy, except that the incident path always keeps
+`sign_in`, `payments`, and `existing_data` with a person. Merging, deploying,
+and releasing are not decision points of this process: they stay human acts
+in the project's own tools.
+
+**Light paths.** On only where the project's rules turn them on — the
+autopilot preset or the process owner's own copy:
+
+- **Pre-approved entry** (`pre_approved_entry`): a person's earlier words
+  naming the exact scope are cited as the entry answer's `USER:` source,
+  without a new decision brief. A recorded pre-approval naming the scope is
+  honoured; one that does not name it is not.
+- **Defect fixed first** (`defect_fix`): a reproduced defect is fixed first
+  and recorded afterwards. The reproduction test is committed failing before
+  the fix; the SR, the entry answer, the evidence, and a gap record naming
+  the fix-first follow before other work is selected.
+- **Incident fixed first** (`incident_fix`): only for an incident a person
+  declared. An incident counts as declared only when a person's words
+  declaring it are quoted as a `USER:` source in the fix-first gap record;
+  the agent never declares one. The fix may go first and the reproduction
+  test follow as verification: the test is shown failing at the pre-fix
+  revision and passing at the fix, and the gap record cites both runs. The
+  SR, the entry answer, and the evidence follow before other work is
+  selected. The incident path keeps `sign_in`,
+  `payments`, and `existing_data` with a person.
+- **Small change** (`small_change_entry`): the small-change lane
+  (§Small-change lane), under a lane authorization whose end is shown before
+  it comes.
+
+The always-human areas apply to every light path.
+
+**How an agent decision is recorded.** The commands that send a gate answer
+or a lane approval as the person's ask the person before they run; a harness
+that cannot ask refuses them, and the person runs them. When a rules row lets
+the agent decide, the agent prepares the answer and writes `decided by the
+agent under process/rdd-human-gates.md row <row>`, with the condition it
+relied on, in the answer text; the person confirms it at the ask. This
+disclosure is a known limit: the store records the answer as the person's.
+
+**Residual risks.** Until the store enforces the rules, these risks are
+accepted and stated:
+
+1. The server does not read the rules file and records every answer as the
+   signed-in person's.
+2. The disclosure in the answer text is a convention the server does not
+   check.
+3. The rules are not enforced: the agent assesses its own conditions, the
+   always-human areas, and whether a person declared an incident; when
+   unsure, a person decides.
+4. The rules are read from the working tree, so a branch or an uncommitted
+   edit changes what the agent is shown; they count only once merged on the
+   default branch.
+5. A harness running without prompts cannot ask: prompt-skipping modes are
+   denied rather than asked.
+6. A missing CLI binary fails the hook open: the permission setting then
+   applies with no ask.
+7. Direct API use with the developer's token bypasses the ask.
+8. Other commands that record or apply a person's decision — a finding
+   disposition with a decision, an advance, a gate withdrawal, an entry
+   reapplied or re-entered, a demotion, an as-built acceptance applied — are
+   asked only where the workspace's permission settings place them on ask,
+   which not every harness honours.
+9. Outage replay: an answer kept during a store outage can be replayed
+   without a new ask until BACKLOG-CLI-OUTAGE-09 is delivered.
+10. On the store, fix-first evidence ordering is unverified: whether it
+    accepts RED evidence recorded at a revision before the entry answer is
+    not yet known.
 
 ### Automatic transitions
 
@@ -463,6 +598,42 @@ Normal delivery selection requires exactly one active release with a `USER:`
 source. Candidate confirmation and source-scoped baseline work do not select a
 delivery release and do not require one to be active.
 
+### Slices
+
+A slice is a named set of Epics and requirements a developer delivers as one
+package. It is recorded in a tracked `process/slices/<SLICE-id>.md` file in
+the shape `file-state/SLICE.md` gives, and changed the way the project
+reviews any other repository change. It has no dates: the developer opens it
+and closes it. It may hold one requirement. Members are added while it is
+open; each addition gets its own review and entry through its normal gates —
+a plan review of the addition and its effect on the slice, not a re-review of
+the slice. A member leaves only by becoming `DEFERRED` or `OBSOLETE`. Each
+member keeps its own records, gates, and selection; the slice file is
+coordination and never states a status — where it and a record disagree, the
+record holds. The work-selection record carries no slice: which slice names a
+scope is read from the open slice files.
+
+What the loop otherwise does per Epic or per requirement happens once per
+slice:
+
+| Activity | Once per slice |
+|---|---|
+| Plan review | One cold review: one independent reviewer pass over every member's review snapshot, its findings and verdict recorded per member; one narrow review per addition |
+| Entry | One entry brief; each member's entry gate carries it, and the human answers each gate with its own confirmation |
+| Red-first | Per connected batch: one RED commit carrying a failing assertion for every clause the batch implements, then the commit that turns it green |
+| Tests while building | Focused tests per batch |
+| Full verification | Once, at slice closeout, carried to the delivered revision by containment (§Evidence and completion) |
+| Independent code review | One review over the whole change, where the slice needs one (§Planning and readiness) |
+| Acceptance test guide | One guide for a human tester, after full verification and before completion (§Evidence and completion) |
+| Completion | One completion brief; each member's completion gate carries it and is answered with its own confirmation, item by item |
+
+The stages in each member's plan (§Entry packet item 5) order its connected
+batches; a slice file may list stages across members. A one-requirement slice
+is the single-SR loop with one review and one completion. Per-requirement
+evidence, traces, and the store's per-requirement checks do not change; only
+their timing follows the slice's batches. Autopilot is a way of running a
+slice (§Autopilot).
+
 ### Small-change lane
 
 The small-change lane scales review and gates to the size of the change; it
@@ -493,12 +664,17 @@ A change that stops being eligible — a finding, a wider boundary, an excluded
 area — leaves the lane for single-SR scope with its full packet and review. It
 is never forced through.
 
+In the project's gate rules the lane is the `small_change_entry` row
+(§Project gate rules). The end of the current lane authorization is shown
+before it comes.
+
 ### Autopilot
 
 Autopilot is for building larger scopes — greenfield systems, initiatives,
 many Epics — when stopping at every process check costs more than the check
-protects. It keeps the records and the tests. It moves the human checkpoint to
-the end of a sprint, and turns process refusals into logged work instead of
+protects. It is a way of running a slice (§Slices), not a separate period of
+work. It keeps the records and the tests. It moves the human checkpoint to
+the end of the slice, and turns process refusals into logged work instead of
 stops.
 
 **The unit of work is a connected journey.** A connected journey is a set of
@@ -517,20 +693,20 @@ selection kind. Within the scope, a missing view or primary action outranks
 refining one that already works. This changes the order of work, never what a
 requirement means or what completion requires.
 
-The sprint keeps a usable-coverage matrix: for each journey, whether its
+The slice keeps a usable-coverage matrix: for each journey, whether its
 entry point is reachable, its primary action is connected to real state, the
 state persists, the next step works, and end-to-end evidence exists — each
 marked built, partial, missing, or externally held. Externally held means the
-cell waits on something the sprint cannot supply — a human answer, access, or
+cell waits on something the slice cannot supply — a human answer, access, or
 an outside party. It is a matrix mark, not a lifecycle state: when the hold
 stops work on a requirement, that requirement is `BLOCKED` with the blocker
 recorded; otherwise the requirement keeps its state and its matrix cell names
 the hold. A navigable prototype, a
 mocked response, or an isolated backend test does not make a journey built.
 Every unfinished requirement clause stays visible in it. The matrix is a
-working view of the sprint, reported at checkpoints and on the sprint-end
+working view of the slice, reported at checkpoints and on the slice-end
 page; it links requirement records and never stands in for them. Between
-sessions it is kept in the sprint's working record with the checkpoint
+sessions it is kept in the slice's working record with the checkpoint
 reports, not in the store unless the project says so; where it and a record
 disagree, the record holds.
 
@@ -544,61 +720,64 @@ A journey is built in three stages:
 3. harden the remaining acceptance clauses, edge cases, scale, and
    presentation.
 
-Stages 1 and 2 run per journey during the sprint; stage 3 runs at the sprint's
+Stages 1 and 2 run per journey during the slice; stage 3 runs at the slice's
 closeout. A stage proceeds in batches: a batch is the adjacent primary
 actions built together under one RED commit and the commit that turns it
-green, and the working code a batch lands is a slice.
+green, and the working code a batch lands is an increment.
 
 Security, authorization, tenant isolation, and atomic data integrity belong to
-the first functioning slice. They are never deferred to the hardening stage.
+the first functioning increment. They are never deferred to the hardening stage.
 
 **Build-time and completion-time verification are separate.** During the
-sprint, focused checks are the feedback gate: a focused-green slice is a
+slice, focused checks are the feedback gate: a focused-green increment is a
 development waypoint, not a completion event, and the next step is the next
 missing capability. A run of the full verifier before closeout needs a
 concrete cross-system risk that focused checks cannot bound, or a human's
 request, and the reason is stated. The full-verifier rule governs the agent's
 own feedback runs; the project's commit gate runs on every commit as
 configured, even when it runs the full suite. Full regression and hardening
-run in the sprint's closeout, with time reserved for repairs. Closeout adds
+run in the slice's closeout, with time reserved for repairs. Closeout adds
 verification and hardening, not RED for clauses already built. Missing or
 failing required evidence keeps an item from `IN_REVIEW`: it stops
 acceptance, not the building of the next authorized action.
 
 **The grant.** A human who may answer entry and completion gates for the scope
-grants autopilot once. The grant names:
+grants autopilot once, by merging the autopilot preset into the project's
+gate rules (§Project gate rules) with their own `Decided:` `USER:` source. The
+grant names:
 
-- the scope (Epics, an initiative, or a system);
-- the end of the sprint (a date);
-- any areas that stay out of it.
+- the scope (Epics, an initiative, or a system) — the rules file's `Scope`;
+- the end of the grant (a date) — its `Expires`; the slice itself has no dates;
+- any areas that stay out of it — the always-human areas, and any the human
+  adds.
 
-It is recorded with its `USER:` source where the scope's decisions are
-recorded: in each Epic's decisions as it is selected, in a store-backed
-repository, and as `process/autopilot.md` in a file-backed one. The grant is
-the human's answer, given in advance, to every entry gate in its scope. The
-agent applies it by answering each such gate with the grant's `USER:` source.
+The grant is the human's answer, given in advance, to every entry gate in its
+scope. The agent prepares each such entry answer under the rules file's
+`entry` row, citing the grant's `USER:` source with the disclosure
+§Project gate rules describes, and the person confirms it at the ask.
 It is never the answer to a completion gate. A grant ends at its date, when the
-human withdraws it, or when its scope is done.
+human withdraws it, or when its scope is done; then the default rules apply
+again.
 
 **Under a current grant these rules change:**
 
 | Rule | Normal | Autopilot |
 |---|---|---|
-| Entry gate | The human answers | The agent answers, citing the grant |
+| Entry gate | The human answers | The agent prepares the answer under the `entry` row, citing the grant, and the person confirms it at the ask |
 | Cold review | Up to two rounds, blocking | One pass, then at most one narrow confirmation. Material findings are folded into the packet as tests or boundary lines, and the rest are logged. If the confirmation still fails, the item is built ahead of its record and the failure is logged. |
 | Packet completeness | Items 1–6 and the brief complete before review | Write what the builder needs; a gap the review finds is folded in or logged, never a stop |
 | Preflight facts (suspended selections, stale snapshots, drift, open holds) | Stop selection | Clear each with its documented verb, or log it and continue |
-| A refusal at a phase boundary | Stop and report | Try the documented clearing verb once. If it still refuses, log it, move to the next item, and let the record catch up at sprint end. |
+| A refusal at a phase boundary | Stop and report | Try the documented clearing verb once. If it still refuses, log it, move to the next item, and let the record catch up at slice end. |
 | A product question | Asked; the loop waits | Asked, but the loop does not wait: see below |
-| After a gate answer or a pass | Wait for the human's word | Continue |
+| After a gate answer or a pass | Continue, unless the user asked to stop | Continue |
 | Work selection | An Epic or a single SR | A connected journey with the requirements it needs, existing or newly written with sources; more than one SR from an Epic is held as that Epic's selection |
-| Planning and cold review | Per selected scope | Once per journey. An unchanged reviewed packet goes straight to entry, or to RED when its entry is already applied and current; any change in a blocking cold-review category — correctness, security, data integrity or data loss, contract, traceability, testability — and any changed scope or acceptance is reviewed again, and only that change |
+| Planning and cold review | Once per slice, recorded per member; one narrow review per addition | Once per journey. An unchanged reviewed packet goes straight to entry, or to RED when its entry is already applied and current; any change in a blocking cold-review category — correctness, security, data integrity or data loss, contract, traceability, testability — and any changed scope or acceptance is reviewed again, and only that change |
 | Readiness to build | The complete packet and an applied entry | Code starts once the source, outcome, owning requirements, state and safety boundaries, and representative RED assertions are clear; remaining inventory and record updates run alongside the build. Code written before the entry is applied is reversible local build-ahead (below); the entry is applied before any RED evidence is recorded or any requirement advances |
 | Cold review timing | Before any code | May run alongside reversible local build-ahead. A material safety finding is repaired before the affected code is committed past its RED commit |
-| AI TDD inner loop | One SR clause at a time, rerunning affected URs each iteration | Batch: representative journey and state-boundary REDs cover adjacent primary actions, which are implemented together and checked with one focused integrated GREEN run. The batch's RED commit carries a failing assertion for every clause the batch implements; representative REDs only reduce the number of commits, never the assertions |
-| Commits | At each waypoint: RED, GREEN, cleanup, reconciliation | Per connected batch: one RED commit carrying the batch's failing tests, its RED evidence recorded there, then the working batch. A RED commit carries only failing tests that its next commit turns green; that commit lands the whole batch. To land a batch SR by SR, use one RED/GREEN pair per SR. A journey assertion is written in the batch that can make it pass. A test is never skipped, disabled or left failing to get a commit past the project's gate, other than the declared RED tests of a RED commit as the gate admits them; the gate runs on every commit as configured |
+| AI TDD inner loop | Per connected batch: one RED commit with a failing assertion for every clause the batch implements, then its GREEN, rerunning affected URs each batch | Batch: representative journey and state-boundary REDs cover adjacent primary actions, which are implemented together and checked with one focused integrated GREEN run. The batch's RED commit carries a failing assertion for every clause the batch implements; representative REDs only reduce the number of commits, never the assertions |
+| Commits | Per connected batch: RED, GREEN, cleanup, reconciliation | Per connected batch: one RED commit carrying the batch's failing tests, its RED evidence recorded there, then the working batch. A RED commit carries only failing tests that its next commit turns green; that commit lands the whole batch. To land a batch SR by SR, use one RED/GREEN pair per SR. A journey assertion is written in the batch that can make it pass. A test is never skipped, disabled or left failing to get a commit past the project's gate, other than the declared RED tests of a RED commit as the gate admits them; the gate runs on every commit as configured |
 | Records | Reconciled after each pass | Reconciled at each integration checkpoint; record grooming never holds the build |
-| Full verification | At each phase's required exit | The agent's full-verifier feedback runs wait for sprint closeout, unless the exception above applies; the project's commit gate is unchanged |
+| Full verification | Once per slice, at slice closeout, carried to the delivered revision by containment; focused tests per batch before it | The agent's full-verifier feedback runs wait for slice closeout, unless the exception above applies; the project's commit gate is unchanged |
 
 **Reversible local build-ahead** is uncommitted work on the feature branch,
 written before the entry is applied. It is set aside so that the RED commit
@@ -613,10 +792,10 @@ each integration checkpoint, compare usable coverage with
 the previous checkpoint. When the batch added no user capability and repaired
 no blocking defect, the next action is the next missing journey step; any
 exception is explained in user-outcome terms. Immediate further work on a
-green slice is justified only by a safety or data-integrity defect, a
+green increment is justified only by a safety or data-integrity defect, a
 regression, or a failure that blocks the selected journey; every other finding
 is queued with an owner and a next action. This restriction governs the
-build during the sprint; it does not apply to the hardening stage at
+build during the slice; it does not apply to the hardening stage at
 closeout. Report the observed split between
 implementation and preparation or checking; when preparation and checking
 dominate, stop discretionary process work and build the next missing action.
@@ -629,7 +808,8 @@ Timings are observed, never reconstructed.
 answer: behavior, scope, user experience, meaning of data, priority. It asks
 each one when it arises, in plain words. Then it takes the most reasonable
 default and records it in the Epic's decisions as *assumed under autopilot,
-pending confirmation*, with the grant's `USER:` source. Then it continues.
+pending confirmation*, with the grant's `USER:` source, under the rules file's
+`product_assumption` row. Then it continues.
 
 It waits for an answer only when a wrong guess is hard to undo:
 
@@ -644,11 +824,14 @@ It waits for an answer only when a wrong guess is hard to undo:
 - Red-first tests, with evidence recorded. A RED is observed before the code
   that satisfies it, and no evidence is reconstructed after the fact. Every
   clause a batch implements has its failing assertion in the batch's RED
-  commit.
+  commit. A fix-first change on a light path the gate rules turn on
+  (§Project gate rules) meets this with its reproduction proof: for a defect,
+  the test committed failing before the fix; for an incident, the test shown
+  failing at the pre-fix revision and passing at the fix.
 - Security, authorization, tenant isolation, and atomic data integrity hold
-  from the first functioning slice.
-- Every acceptance clause is met before acceptance. Focused-green slices,
-  partial evidence, and the sprint's end date are not acceptance.
+  from the first functioning increment.
+- Every acceptance clause is met before acceptance. Focused-green increments,
+  partial evidence, and the grant's end date are not acceptance.
 - The store's server-side refusals are cleared through the sanctioned tool or
   logged. They are never bypassed with hand-made writes.
 - Merging, deploying, and releasing stay with humans.
@@ -656,23 +839,25 @@ It waits for an answer only when a wrong guess is hard to undo:
 
 **The log.** Each skipped check, uncleared refusal, advisory finding left
 open, and build ahead of its record is filed as a gap record naming the
-sprint. Nothing is dropped silently.
+slice. Nothing is dropped silently.
 
-**Sprint end.** Closeout runs the full required verification and the
+**Slice end.** Closeout runs the full required verification — the slice's
+one full verification (§Slices) — and the
 hardening stage, and repairs what fails; it adds verification and hardening,
 not RED for clauses already built. An item is presented
 as eligible for completion only when its required evidence passes. Then one
-independent review reads everything the sprint built — the change, not the
+independent review reads everything the slice built — the change, not the
 packets — against its requirements and tests. The human then gets one page:
 
 - the journeys and primary actions a user can now complete, with evidence;
 - the coverage matrix: remaining clauses and what is still unavailable;
 - the assumed decisions to confirm or change;
 - the log;
-- the review's findings.
+- the review's findings;
+- the acceptance test guide and its results (§Evidence and completion).
 
 The human answers completion item by item, as in a lane batch. A rejected
-item stays `IN_REVIEW`. A changed assumption is triaged into the next sprint.
+item stays `IN_REVIEW`. A changed assumption is triaged into the next slice.
 Only then does normal gate discipline apply again to anything the grant did
 not cover.
 
@@ -713,7 +898,9 @@ The fingerprinted packet must contain:
 5. an upper-RED strategy for selected UR scenarios requiring new evidence, a
    lower-RED strategy for selected SR clauses requiring new evidence, and
    proportional regression gates; unchanged proven scenarios need revalidation,
-   not a new RED;
+   not a new RED. The strategy names the stages: the ordered connected batches
+   the build runs, each naming the clauses its RED commit carries and its
+   focused tests;
 6. sourced decisions, conflicts, gaps, deferrals, blockers, and unknowns;
 7. cold-review findings and verdict; and
 8. the human entry brief.
@@ -780,7 +967,8 @@ Changes to approved behavior, scope, architecture, acceptance, or a material
 technical decision return to the affected planning pass. A review finding does
 not itself authorize implementation.
 
-At most two cold-review rounds run on the selected planning scope. A later
+At most two cold-review rounds run on the selected planning scope. In a
+slice, each round is one pass over every member (§Slices). A later
 round reviews what changed since the previous round's recorded trace — the
 records and sections whose fingerprints moved, the findings still open, and
 what those touch — and carries the unchanged remainder at that round's verdict;
@@ -794,7 +982,7 @@ round: a blocking finding sends it out of the lane.
 
 Completion review requires an independent code review of the built change for
 Epic scope. For single-SR scope, obtain one when project gates or the user
-require it. The review runs from a context independent of implementation;
+require it. In a slice, one such review covers the whole change once. The review runs from a context independent of implementation;
 record the reviewer, reviewed revision, findings, and verdict separately from
 planning review. Missing required review or open material findings stop
 delivery and completion. Resolved implementation findings cite the correcting
@@ -806,7 +994,7 @@ change tests or implementation until current applied entry approval covers the
 whole selected delivery scope, including the Epic when selected. Newly entered
 items must be `TODO`; already-entered items retain their current states.
 Unchanged `DONE` dependencies are not re-entered. Partial entry approval does
-not permit development to start on the approved subset. There are two
+not permit development to start on the approved subset. There are three
 exceptions. The first is the defect lane: when a defect is already diagnosed
 and the change is bounded, the failing test may be written first, on a branch
 and before entry, and cited in the packet as a `RUN:` source: it is the reconnaissance,
@@ -816,6 +1004,10 @@ RED, which is re-established after entry, and it authorizes no implementation.
 The second is reversible local build-ahead under a current autopilot grant
 (§Autopilot): uncommitted code, set aside before the RED commit, that
 authorizes no RED evidence and no status change before entry.
+The third is a fix-first change on a light path the project's gate rules turn
+on (`defect_fix`, `incident_fix`, §Project gate rules): the fix may precede
+entry, its reproduction proof stands as its RED, and its SR, entry answer,
+evidence and fix-first gap record follow before other work is selected.
 
 ## Development loop
 
@@ -839,7 +1031,7 @@ focused skill alone only when the requested scope explicitly ends at that pass.
 | Verify entered work requiring tests | `rdd-verify` | Current UR upper or SR lower evidence; eligible requirement in `IN_REVIEW` |
 | Verify existing baseline | `rdd-reverse-engineer-verify` | Complete applicable current assertion/execution proof and separate repository integration observations; exact eligibility packet |
 | Accept existing baseline | `rdd-reverse-engineer-accept` | One reviewed human decision atomically applied from `PENDING_VERIFICATION` to `DONE`, with durable receipt; compliance unchanged |
-| Deliver/complete | `rdd-completion-review` | Delivered revision, reconciled records, completion trace, and applied human result |
+| Deliver/complete | `rdd-completion-review`, with `rdd-acceptance` for the acceptance test step | Delivered revision, reconciled records, acceptance test guide and results where the project's gate rules require them, completion trace, and applied human result |
 | Route change | `rdd-triage` | Discovery assigned to the earliest phase it invalidates |
 
 Before each phase, reconcile answered gates and state, then select the earliest
@@ -870,6 +1062,8 @@ A dedicated existing-behavior path may move exactly reviewed URs/SRs directly to
   Retain the observed remote identity. If the integration check does not validate
   it against an independently declared repository identity, disclose that
   limitation; a local origin setting alone does not establish repository ownership.
+  The project's declared integration path (§Evidence and completion) governs
+  completion and does not change this observation.
 - A current eligibility trace evaluated through the sanctioned tool supports
   the exact human decision.
   Its attributed reviewed answer and guarded application recheck the complete
@@ -899,8 +1093,8 @@ while the approved scope remains unchanged.
 
 ```text
 establish required selected UR upper RED
-  -> select an unmet approved SR clause
-  -> SR lower RED -> GREEN -> CLEAN -> lower verify
+  -> select the next connected batch of unmet approved SR clauses
+  -> batch lower RED -> GREEN -> CLEAN -> focused verify
   -> rerun affected UR upper evidence
   -> all applicable trace gates PASS?
        no  -> repeat
@@ -911,11 +1105,17 @@ Run the loop as follows:
 
 1. Establish the expected upper RED for every selected applicable UR requiring new
    evidence. A standalone SR has no upper step.
-2. If an SR trace is unmet, select one approved clause, establish its focused
-   lower RED, implement the smallest passing behavior, and perform scoped
-   behavior-preserving cleanup.
-3. Run the SR's focused and boundary-appropriate regression gates on the
-   cleaned content, then rerun each affected UR scenario.
+2. If an SR trace is unmet, select the next connected batch: the approved
+   clauses built together, in the order the packet's stages name — one
+   clause, or several adjacent ones. Commit a failing assertion for every
+   clause in the batch and establish the batch's focused lower RED at that
+   commit, implement the smallest passing behavior for the whole batch, and
+   perform scoped behavior-preserving cleanup. A RED commit carries only
+   failing tests that its next commit turns green.
+3. Run the batch's focused tests on the cleaned content, then rerun each
+   affected UR scenario. Full verification runs once per slice, at slice
+   closeout, and carries to the delivered revision by containment
+   (§Evidence and completion).
 4. Re-evaluate every selected applicable SR lower trace and UR upper trace independently.
    A trace `FAIL` caused by unmet approved behavior starts another iteration;
    it does not request human input.
@@ -923,8 +1123,9 @@ Run the loop as follows:
    `PASS`, and every selected applicable UR upper trace is current and `PASS` with all of
    its applicable required SRs in `IN_REVIEW` or `DONE`.
 
-Under a current autopilot grant, §Autopilot's batch cadence replaces the
-per-clause rhythm of steps 2–4, at closeout as during the sprint: a clause
+Under a current autopilot grant, §Autopilot's batch cadence — representative
+journey and state-boundary assertions over adjacent primary actions — applies
+to steps 2–4, at closeout as during the slice: a clause
 first built at closeout gets its own RED like any other. Step 1 changes in
 one respect: a UR scenario's upper RED is established in the batch that can
 make it pass, and it still fails at that batch's RED revision. The exit in
@@ -993,7 +1194,7 @@ uses the requirements under As-built verification and acceptance instead.
 
 | Requirement/evidence | Required evidence |
 |---|---|
-| SR lower — `LOWER_VERIFIED` | Sourced SR clause; expected focused failure; named regression-sensitive assertions; linked code; passing focused and proportional post-cleanup gates at the cited revision |
+| SR lower — `LOWER_VERIFIED` | Sourced SR clause; expected focused failure in its batch's RED commit; named regression-sensitive assertions; linked code; passing focused post-cleanup gates for its batch at the cited revision; proportional and full regression run once per slice (§Slices) |
 | UR upper — `UPPER_VALIDATED` | Sourced UR scenario; expected user-flow failure; passing result; required runtime/browser observation; linked revision |
 
 Choose evidence by boundary: unit/property for domain rules, component plus
@@ -1020,15 +1221,76 @@ One completion human gate may name many small changes — a lane batch — each
 meeting its own predicate below; the human may reject single items, which stay
 `IN_REVIEW`.
 
+A slice completes the same way, item by item: one completion brief, carried
+by each member's completion gate and answered with its own confirmation; a
+rejected item stays `IN_REVIEW`. The slice's full required verification runs
+once, at closeout, and counts at the delivered revision when that revision
+contains its tested commit; otherwise it is re-run at the delivered revision.
+Either way it passes before that brief is presented.
+
 A normal completion human gate may open only when named items are `IN_REVIEW`,
 code is delivered, evidence is current at the delivered revision, state is reconciled,
 candidate relations are excluded, and gaps/deferrals/decisions are disclosed.
 The delivered revision is the one the authorized integration path produced,
-not the branch head that fed it. An applicable member-scoped trace from an
+not the branch head that fed it.
+
+**Integration path.** A project declares how it delivers in the tracked file
+`process/integration-path.md` (shape: `file-state/INTEGRATION-PATH.md`):
+`merge`, the default when the file is absent, or `deploy`. A person declares
+it in a reviewed commit. On `merge`, the delivered revision is the fetched
+tip of the remote default branch, and that branch must contain the tested
+commit of every requirement being completed, wherever the checkout sits — on
+another branch or behind the tip. On `deploy`, the deployed commit is named
+as the delivered revision, and the completion records a deployment run that
+names the environment and the smoke checks. On both, a requirement whose
+latest evidence is failing, stale, or missing, or whose tested commit is not
+contained in the delivered revision, is refused by name before anything is
+written. A squash or rebase merge leaves the tested commit outside the
+default branch, so containment cannot be proven; the team re-runs the tests
+at the merged commit and records that run.
+
+An applicable member-scoped trace from an
 earlier round that is `STALE` still counts against its Epic — an Epic-scoped
 pass does not stand in for it — until it is re-evaluated at the current
 fingerprint. Excluded-only proof does not block current work; mixed-scope proof
 retains its live obligations.
+
+**Acceptance test step.** After the evidence is confirmed current at the
+delivered revision — for a slice, its one full verification, carried by
+containment or re-run there — and before the
+completion trace, the agent drafts and completes an acceptance test guide for
+a human tester (`rdd-acceptance`). The guide is a tracked file:
+`process/slices/<SLICE-id>/acceptance-guide.md` beside the slice file, or
+`process/acceptance/<scope>.md` for an Epic or requirement outside a slice.
+Testers read it in the change under review. It is not a packet section and
+moves no aggregate, review, or approval. Its shape is
+`file-state/ACCEPTANCE-GUIDE.md`, in six sections: what changed, in product
+language, per user requirement; where to test — environment, revision,
+build, test data, sign-in; manual steps per user scenario with the expected
+result; what the automated tests already prove, per acceptance criterion,
+with the run that proves it; a criteria table; and the known gaps,
+assumptions, and what is out of scope. Its header records the aggregate of
+every scope it covers at drafting, so a later record edit makes it stale: it
+is drafted after the last record edit of those scopes.
+
+A tester's result is an acceptance test result — evidence of kind
+`acceptance` against a criterion or scenario, naming the tester as a `USER:`
+source, the environment, and the revision the tester tested, never the
+recorder's own checkout. An acceptance test result never counts as automated
+evidence, and it is not the as-built acceptance of an existing baseline.
+
+The project's gate rules decide what the step requires (§Project gate
+rules). With `acceptance_guide` required, as in both presets, a slice's
+completion needs a current guide with every section filled; with
+`not_required`, a missing guide is disclosed in one line. With
+`tester_signoff` required — not required in both presets — every criterion
+or scenario not proven by automated evidence needs a current acceptance pass:
+its latest acceptance test result is a pass, at the delivered revision or an
+ancestor of it, recorded at or after the guide was drafted; an automated pass
+on the owning requirement counts as automated proof. Outside a slice, a
+missing or stale guide is disclosed in one line and does not stop
+completion. The completion brief links the guide and shows its results beside
+the automated evidence and, on a deploy path, which revision runs where.
 
 | Item | `DONE` predicate after human acceptance |
 |---|---|
@@ -1077,6 +1339,10 @@ file-state/
   GATES.md
   WORK-SELECTION.md
   BACKLOG.md
+  SLICE.md
+  HUMAN-GATES.md
+  ACCEPTANCE-GUIDE.md
+  INTEGRATION-PATH.md
 ```
 
 `EPICS.md` stores optional grouping records. `REQUIREMENTS.md` stores URs, SRs,
@@ -1085,6 +1351,13 @@ human gate record. `WORK-SELECTION.md` stores the frozen delivery scope, suspend
 selections, and selection history. `BACKLOG.md` stores unrouted triage items
 and gap records. Derived queues and progress views — including the pending
 human-decision projection — are regenerated, not backed up separately.
+
+`SLICE.md`, `HUMAN-GATES.md`, `ACCEPTANCE-GUIDE.md`, and `INTEGRATION-PATH.md`
+are not store records: they give the shapes of the tracked slice file
+(§Slices), the project's gate rules file (§Project gate rules), the
+acceptance test guide, and the project's integration path declaration
+(§Evidence and completion), which are versioned in the repository in both
+kinds of store. The presets of the gate rules file are under `presets/`.
 
 Backlog, gap, and tooling-gap records are records of the store like every
 other: they are created, routed, and closed there, and their state is read

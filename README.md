@@ -14,7 +14,7 @@ SR -> CODE -> TEST_CASE -> TEST_RESULT
 
 Normal development passes planning, technical review, human entry, red-first
 evidence, implementation, cleanup, verification, delivery, reconciliation,
-and human completion. An eligible source-scoped baseline uses existing-proof
+the acceptance test step, and human completion. An eligible source-scoped baseline uses existing-proof
 verification and one human acceptance instead; publication alone proves neither
 verification nor delivery.
 
@@ -45,8 +45,9 @@ apply that model; `file-state/` serializes its records without redefining it.
 |---|---|
 | `AGENTS.md` | shared agent policy and canonical entry point |
 | `PROCESS.md` | complete canonical process |
-| `skills/` | delivery orchestration, an autopilot sprint (`rdd-autopilot`), and focused passes; `rdd-verify` for entered verification work; `rdd-reverse-engineer` for baseline publication or DERIVED additions; `rdd-reverse-engineer-verify` and `rdd-reverse-engineer-accept` for eligible existing baselines; `rdd-audit` for documents and citations |
-| `file-state/` | canonical serialization shapes for Epic, requirement, gate, work-selection, and backlog/gap records |
+| `skills/` | delivery orchestration, a slice run on autopilot (`rdd-autopilot`), and focused passes; `rdd-verify` for entered verification work; `rdd-reverse-engineer` for baseline publication or DERIVED additions; `rdd-reverse-engineer-verify` and `rdd-reverse-engineer-accept` for eligible existing baselines; `rdd-acceptance` for the acceptance test guide before completion; `rdd-audit` for documents and citations |
+| `file-state/` | canonical serialization shapes for Epic, requirement, gate, work-selection, and backlog/gap records, and the shapes of the tracked slice file, gate rules file, acceptance test guide, and integration path declaration |
+| `presets/` | the default and autopilot presets of a project's gate rules file, `process/rdd-human-gates.md` |
 
 ## Distribution
 

@@ -37,6 +37,13 @@ when local documents lack the information or you need an up-to-date answer.
 5. Count the suspended selections. More than one is a preflight fact: report
    each with its suspended status and reason, and name the mitigation —
    resume one, release one — before selecting new work.
+6. Read the project's gate rules, `process/rdd-human-gates.md`
+   (`PROCESS.md` §Project gate rules), and report them in one line: the kit
+   default, not decided by this project, or the process owner's decision with
+   its source; the rows the agent may decide; and the `Scope` and `Expires`
+   date, with a warning when the end is within seven days. Expired, refused,
+   or missing rules mean the default — say so. The rules count only once
+   merged on the default branch.
 
 The pending-decision projection may already have been delivered into the
 session by the host — a session-start brief injected as context rather than
@@ -51,9 +58,9 @@ continue (`PROCESS.md` §Autopilot, `rdd-autopilot`).
 
 ## Take the scope
 
-Accept the work scope as the argument: an Epic id, a single SR id, an exact
-UR/SR set for candidate or baseline work, a source inventory for onboarding,
-or a raw request.
+Accept the work scope as the argument: a slice id, an Epic id, a single SR id,
+an exact UR/SR set for candidate or baseline work, a source inventory for
+onboarding, or a raw request.
 Without one — including when the request is an orientation question
 rather than a scope — answer from the store: read pending human decisions,
 current and suspended selections, and routed work across all supported phases.
@@ -74,7 +81,9 @@ the loop is stalled — report it as one rather than leaving the reader to count
 rows.
 
 For normal delivery, freeze the Epic or single-SR selection in the existing
-work-selection record. For candidate and baseline work, retain the exact scope
+work-selection record. For a slice, read its members from its slice file
+(`PROCESS.md` §Slices); each member keeps its own selection, and the
+slice's once-per-slice passes run over all of them. For candidate and baseline work, retain the exact scope
 in the applicable authorization, run and decision records. For normal planning,
 entry-packet depth is proportional to the frozen scope; no required item may
 be omitted.
@@ -95,16 +104,20 @@ These rules bind every subsequent phase in the session:
   has happened or will;
 - present the decision brief and linked list of relevant working-set files
   before asking for approval or a choice, following `PROCESS.md` §Gates; state
-  each option's consequences, and treat the answer as a decision, not as an
-  instruction to continue:
-  apply it, report, and wait (`PROCESS.md` §Gates);
+  each option's consequences, and treat the answer as a decision about that
+  gate or question: apply it, report what moved, and continue unless the user
+  asked to stop. Stop only at a human gate, at a question only a human can
+  answer, or where the user asked (`PROCESS.md` §Gates);
+- show everything in plain product language; record ids, fingerprints, gate
+  kinds and verb names appear at most as a trailing breadcrumb, and review
+  findings are walked through with the human one at a time;
 - timebox the diagnosis of a tooling failure; when the box closes, surface the
   gap through the project's channel and continue on a read-only path or stop.
   Never mutate a shared store to test a hypothesis;
-- commit at waypoints — specification, expected RED, GREEN, cleanup,
-  reconciliation — with RED evidence committed before the change that
-  satisfies it, so red-first is auditable in history (under an autopilot
-  grant, per connected batch — `PROCESS.md` §Autopilot);
+- commit at waypoints — specification, then per connected batch expected RED,
+  GREEN, cleanup, reconciliation — with RED evidence committed before the
+  change that satisfies it, so red-first is auditable in history
+  (`PROCESS.md` §Slices; under an autopilot grant, §Autopilot's batches);
 - work on a reviewable feature branch and preserve RED and passing
   fingerprints;
 - route a discovery through `rdd-triage` to the earliest phase it
@@ -117,7 +130,8 @@ its skill; a change that meets the small-change lane's eligibility under a
 current lane authorization is planned, reviewed and entered through that lane: `rdd-discover`, `rdd-plan`, `rdd-cold-review`, `rdd-entry-review`,
 `rdd-build`, `rdd-verify`, `rdd-completion-review`, or `rdd-deliver` for the
 complete loop. When a current autopilot grant covers the scope, or the human
-asks for one, hand off to `rdd-autopilot` instead. Source-inventory
+asks for one, hand off to `rdd-autopilot` instead; the grant is the
+autopilot preset merged into the project's gate rules. Source-inventory
 onboarding uses `rdd-reverse-engineer`.
 
 For genuine source-scoped baseline requirements still in PENDING_VERIFICATION,
@@ -128,9 +142,12 @@ retain precedence. Mixed scopes remain explicit; do not silently change the
 selection or apply normal RED requirements to this dedicated path. Provenance
 alone never reroutes an entered or defect-reopened item.
 
-A pass ends with its report. Enter the next phase only when the human asks
-for it, or when the request at session entry was the complete loop and the
-boundary carried no human answer.
+A pass ends with its report. When the request at session entry was the
+complete loop, continue into the next phase, including after a human answer
+applied at the boundary, unless the user asked to stop. A request that ends at
+one pass, or an orientation question, ends with its report. Merging,
+deploying, and releasing are never entered without the human's explicit
+instruction.
 
 ## Report
 
