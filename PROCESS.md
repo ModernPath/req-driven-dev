@@ -472,8 +472,10 @@ autopilot preset or the process owner's own copy:
   declared. An incident counts as declared only when a person's words
   declaring it are quoted as a `USER:` source in the fix-first gap record;
   the agent never declares one. The fix may go first and the reproduction
-  test follow as verification; the SR, the entry answer, and the evidence
-  follow before other work is selected. The incident path keeps `sign_in`,
+  test follow as verification: the test is shown failing at the pre-fix
+  revision and passing at the fix, and the gap record cites both runs. The
+  SR, the entry answer, and the evidence follow before other work is
+  selected. The incident path keeps `sign_in`,
   `payments`, and `existing_data` with a person.
 - **Small change** (`small_change_entry`): the small-change lane
   (§Small-change lane), under a lane authorization whose end is shown before
@@ -620,7 +622,7 @@ slice:
 | Entry | One entry brief; each member's entry gate carries it, and the human answers each gate with its own confirmation |
 | Red-first | Per connected batch: one RED commit carrying a failing assertion for every clause the batch implements, then the commit that turns it green |
 | Tests while building | Focused tests per batch |
-| Full verification | Once, at slice end, at the delivered revision |
+| Full verification | Once, at slice closeout, carried to the delivered revision by containment (§Evidence and completion) |
 | Independent code review | One review over the whole change, where the slice needs one (§Planning and readiness) |
 | Acceptance test guide | One guide for a human tester, after full verification and before completion (§Evidence and completion) |
 | Completion | One completion brief; each member's completion gate carries it and is answered with its own confirmation, item by item |
@@ -775,7 +777,7 @@ again.
 | AI TDD inner loop | Per connected batch: one RED commit with a failing assertion for every clause the batch implements, then its GREEN, rerunning affected URs each batch | Batch: representative journey and state-boundary REDs cover adjacent primary actions, which are implemented together and checked with one focused integrated GREEN run. The batch's RED commit carries a failing assertion for every clause the batch implements; representative REDs only reduce the number of commits, never the assertions |
 | Commits | Per connected batch: RED, GREEN, cleanup, reconciliation | Per connected batch: one RED commit carrying the batch's failing tests, its RED evidence recorded there, then the working batch. A RED commit carries only failing tests that its next commit turns green; that commit lands the whole batch. To land a batch SR by SR, use one RED/GREEN pair per SR. A journey assertion is written in the batch that can make it pass. A test is never skipped, disabled or left failing to get a commit past the project's gate, other than the declared RED tests of a RED commit as the gate admits them; the gate runs on every commit as configured |
 | Records | Reconciled after each pass | Reconciled at each integration checkpoint; record grooming never holds the build |
-| Full verification | Once per slice, at slice end, at the delivered revision; focused tests per batch before it | The agent's full-verifier feedback runs wait for slice closeout, unless the exception above applies; the project's commit gate is unchanged |
+| Full verification | Once per slice, at slice closeout, carried to the delivered revision by containment; focused tests per batch before it | The agent's full-verifier feedback runs wait for slice closeout, unless the exception above applies; the project's commit gate is unchanged |
 
 **Reversible local build-ahead** is uncommitted work on the feature branch,
 written before the entry is applied. It is set aside so that the RED commit
@@ -822,7 +824,10 @@ It waits for an answer only when a wrong guess is hard to undo:
 - Red-first tests, with evidence recorded. A RED is observed before the code
   that satisfies it, and no evidence is reconstructed after the fact. Every
   clause a batch implements has its failing assertion in the batch's RED
-  commit.
+  commit. A fix-first change on a light path the gate rules turn on
+  (§Project gate rules) meets this with its reproduction proof: for a defect,
+  the test committed failing before the fix; for an incident, the test shown
+  failing at the pre-fix revision and passing at the fix.
 - Security, authorization, tenant isolation, and atomic data integrity hold
   from the first functioning increment.
 - Every acceptance clause is met before acceptance. Focused-green increments,
@@ -836,7 +841,8 @@ It waits for an answer only when a wrong guess is hard to undo:
 open, and build ahead of its record is filed as a gap record naming the
 slice. Nothing is dropped silently.
 
-**Slice end.** Closeout runs the full required verification and the
+**Slice end.** Closeout runs the full required verification — the slice's
+one full verification (§Slices) — and the
 hardening stage, and repairs what fails; it adds verification and hardening,
 not RED for clauses already built. An item is presented
 as eligible for completion only when its required evidence passes. Then one
@@ -988,7 +994,7 @@ change tests or implementation until current applied entry approval covers the
 whole selected delivery scope, including the Epic when selected. Newly entered
 items must be `TODO`; already-entered items retain their current states.
 Unchanged `DONE` dependencies are not re-entered. Partial entry approval does
-not permit development to start on the approved subset. There are two
+not permit development to start on the approved subset. There are three
 exceptions. The first is the defect lane: when a defect is already diagnosed
 and the change is bounded, the failing test may be written first, on a branch
 and before entry, and cited in the packet as a `RUN:` source: it is the reconnaissance,
@@ -998,6 +1004,10 @@ RED, which is re-established after entry, and it authorizes no implementation.
 The second is reversible local build-ahead under a current autopilot grant
 (§Autopilot): uncommitted code, set aside before the RED commit, that
 authorizes no RED evidence and no status change before entry.
+The third is a fix-first change on a light path the project's gate rules turn
+on (`defect_fix`, `incident_fix`, §Project gate rules): the fix may precede
+entry, its reproduction proof stands as its RED, and its SR, entry answer,
+evidence and fix-first gap record follow before other work is selected.
 
 ## Development loop
 
@@ -1103,8 +1113,9 @@ Run the loop as follows:
    perform scoped behavior-preserving cleanup. A RED commit carries only
    failing tests that its next commit turns green.
 3. Run the batch's focused tests on the cleaned content, then rerun each
-   affected UR scenario. Full verification runs once per slice, at slice end,
-   at the delivered revision (§Evidence and completion).
+   affected UR scenario. Full verification runs once per slice, at slice
+   closeout, and carries to the delivered revision by containment
+   (§Evidence and completion).
 4. Re-evaluate every selected applicable SR lower trace and UR upper trace independently.
    A trace `FAIL` caused by unmet approved behavior starts another iteration;
    it does not request human input.
@@ -1213,7 +1224,9 @@ meeting its own predicate below; the human may reject single items, which stay
 A slice completes the same way, item by item: one completion brief, carried
 by each member's completion gate and answered with its own confirmation; a
 rejected item stays `IN_REVIEW`. The slice's full required verification runs
-once, at the delivered revision, before that brief is presented.
+once, at closeout, and counts at the delivered revision when that revision
+contains its tested commit; otherwise it is re-run at the delivered revision.
+Either way it passes before that brief is presented.
 
 A normal completion human gate may open only when named items are `IN_REVIEW`,
 code is delivered, evidence is current at the delivered revision, state is reconciled,
@@ -1243,7 +1256,8 @@ fingerprint. Excluded-only proof does not block current work; mixed-scope proof
 retains its live obligations.
 
 **Acceptance test step.** After the evidence is confirmed current at the
-delivered revision — for a slice, its one full verification — and before the
+delivered revision — for a slice, its one full verification, carried by
+containment or re-run there — and before the
 completion trace, the agent drafts and completes an acceptance test guide for
 a human tester (`rdd-acceptance`). The guide is a tracked file:
 `process/slices/<SLICE-id>/acceptance-guide.md` beside the slice file, or

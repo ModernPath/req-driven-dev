@@ -133,7 +133,9 @@ asks.
 
 1. **Reconcile** every record the slice touched. Try once more to clear the
    logged refusals.
-2. **Close out.** Run the full required verification and harden the
+2. **Close out.** Run the full required verification — the slice's one full
+   verification, carried to the delivered revision by containment
+   (`PROCESS.md` §Slices) — and harden the
    combined change (stage 3). Closeout adds verification and hardening, not
    RED for clauses already built; a clause first built at closeout gets its
    own RED like any other. The checkpoint limit on further work on a

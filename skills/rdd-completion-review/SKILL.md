@@ -29,7 +29,9 @@ records, and derived views.
    findings, and verdict separately from planning review. Verify fixes against
    their commits and test evidence.
 2. Stop for any `DERIVED` dependency, candidate link counted as authoritative,
-   stale or inherited-unverified evidence, missing required RED observation,
+   stale or inherited-unverified evidence, missing required RED observation
+   (for a fix-first change, the reproduction proof `PROCESS.md` §Project gate
+   rules names),
    missing required independent code review, unresolved material finding from
    planning or implementation review, undisclosed gap, or incomplete
    reconciliation.
@@ -39,7 +41,9 @@ records, and derived views.
    the file is absent, or `deploy` (`PROCESS.md` §Evidence and completion).
 4. Re-run or confirm evidence against the delivered revision — the revision
    the authorized integration path produced, not the branch head that fed
-   it; for a slice this is its one full verification — and reconcile all authoritative records and derived views.
+   it; for a slice, its closeout full verification counts when the delivered
+   revision contains its tested commit, and otherwise this re-run is the
+   slice's one full verification — and reconcile all authoritative records and derived views.
    On `merge`, the delivered revision is the fetched remote default-branch
    tip, and it must contain every requirement's tested commit; the checkout
    need not sit on the tip. On `deploy`, name the deployed commit and record
