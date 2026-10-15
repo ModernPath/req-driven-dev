@@ -19,6 +19,10 @@ code, tests, and current records.
    planning and entry first. Under a current autopilot grant, reversible
    local build-ahead (`PROCESS.md` §Autopilot) may precede this check; it is
    set aside before RED and authorizes no RED evidence or status change.
+   A fix-first change on a light path the project's gate rules turn on
+   (`PROCESS.md` §Project gate rules) may be implemented before this check;
+   its reproduction proof stands as its RED, and its SR, entry answer and
+   evidence follow before other work is selected.
    Work on a reviewable feature branch and preserve unrelated changes.
 2. Before its first implementation iteration, establish upper RED for selected
    UR scenarios requiring new evidence. Re-validation of previously proven
