@@ -188,7 +188,13 @@ many rows it makes. In particular:
 
 - **A UI control is a step, not an outcome.** Continue, close a dialog, open a
   menu or a URL, poll a status: these are steps inside the outcome they serve,
-  which is where they belong as scenario steps.
+  which is where they belong as scenario steps. A private method, an event
+  handler, a view or composable name and a test name are never a title.
+- **One outcome across its layers.** A flow that runs through the client, the
+  gateway and the backend is one UR. The layers are its SRs. A guard,
+  validation or security rule is a scenario or criterion of the outcome it
+  guards, never a UR of its own. The same mechanism behind several products is
+  one SR serving each product's UR.
 - **Title and statement in the domain's words.** The title names what the actor
   achieves, as the product or its users would say it, never a split identifier
   ("update continue", "b2 b cards", "view transaction guid"). The statement says
@@ -196,7 +202,14 @@ many rows it makes. In particular:
   share a statement.
 - **Actor and outcome are set on every UR.** The actor is the real role, such
   as customer, cashier, operator or a named integrating system, never a catch-all
-  such as "service or provider".
+  such as "service or provider". Trace who calls the entry point: a customer
+  call through a gateway is the customer's, a service-to-service call is that
+  service's, and a call with no outside caller is an SR, not a UR. The verb is
+  what the actor does: showing is not adding, filtering is not paying.
+- **Live code only.** Code marked obsolete, sitting in a retired module, or
+  reached by no entry point is not baselined as live behavior. Record it as an
+  open question. When two source trees hold the same client, find out which one
+  ships, or ask once and record the answer, before citing either.
 - **Scenarios carry the code's rules.** The main path and each refusal or
   variant the code implements, with the preconditions, data, limits and
   observable results the code shows: which card types are accepted, what
@@ -211,7 +224,8 @@ many rows it makes. In particular:
 - **Cite where the behavior is.** A citation is a file where the stated
   behavior is implemented or tested. Migrations, dependency wiring, telemetry,
   Swagger set-up and every file of a folder are not citations of a behavior the
-  requirement does not state. When one repository holds a copy of another's
+  requirement does not state. A cited test exercises this behavior, not a
+  neighbor in the same folder or another product. When one repository holds a copy of another's
   code, cite the original and disclose the copy.
 
 Depth takes time on a large codebase. Neither the person's urgency nor the
