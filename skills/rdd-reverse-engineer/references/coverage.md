@@ -121,10 +121,13 @@ with that requirement named in the reason. That assessment covers the file, not
 its surface units: a unit whose outcome the earlier requirement does not state
 is still extracted.
 
-In a batch, a captured file outside the repositories and directories its
-context owns, which none of the context's requirements cites, is assessed as
-reviewed with the owning context named in the reason; the owning context's
-run reads it and gives it its own disposition. A file a requirement of the
+A captured file outside the repositories and directories its context owns,
+which none of the context's requirements cites, is assessed as reviewed with
+a reason in the ownership form, `Owned by <context code>, run <run key>: <why
+this context does not cite it>`; the owning context's run reads it and gives
+it its own disposition. The ownership form is the one reason that repeats
+across files. A file no context owns, such as a shared library outside every
+scope, is read by the context that captured it. A file a requirement of the
 context cites is linked whoever owns it.
 
 A context is finished when its latest run meets the finish condition. A later

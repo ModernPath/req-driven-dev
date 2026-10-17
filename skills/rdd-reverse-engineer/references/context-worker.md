@@ -46,8 +46,9 @@ your slice:
 - Assess each file you disposition by reading it. A file no rule matched is
   unresolved, never given a default reason. A captured file outside the
   repositories and directories your context owns, which none of your
-  requirements cites, is assessed as reviewed with its owning context named;
-  you do not read it, its owner does.
+  requirements cites, is assessed as reviewed in the ownership form,
+  `Owned by <context code>, run <run key>: <why you do not cite it>`; you do
+  not read it, its owner does. A file no context owns is yours to read.
 - A file of your own repositories that you have not read and dispositioned
   is remaining work: leave it unassessed and hand back `partial`, never
   assess it unresolved to finish.
