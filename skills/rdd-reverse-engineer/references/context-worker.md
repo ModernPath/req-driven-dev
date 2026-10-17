@@ -44,7 +44,12 @@ your slice:
   yourself, from the code. A script may enumerate, group and measure; it never
   writes requirement text.
 - Assess each file you disposition by reading it. A file no rule matched is
-  unresolved, never given a default reason.
+  unresolved, never given a default reason. A captured file outside the
+  repositories and directories your context owns, which none of your
+  requirements cites, is assessed as reviewed with its owning context named;
+  you do not read it, its owner does.
+- Report a correction you made as made, never as confirmed: the next
+  independent read decides whether it fixed the finding.
 - Do not write SRs for a mechanism another context owns. Record which of your
   URs that owner's SRs serve, for the merge.
 - Stage each coherent group as one JSON file in `<run folder>/groups/`, in

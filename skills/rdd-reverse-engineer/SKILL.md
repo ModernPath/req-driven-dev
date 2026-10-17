@@ -108,13 +108,17 @@ store. A batch has a setup, the workers, the independent reads and a merge.
    such as sign-in, payment authorization, notifications or a shared client
    library, has its SRs in one owning context. The other contexts do not write
    their own SRs for it; they record which of their URs the owner's SRs serve.
-   Give each context its own id prefix.
+   Name the owner of every repository and directory too: a context's scope
+   takes whole repositories, so several runs capture the same files, and each
+   file is read and assessed by the context that owns it. Give each context
+   its own id prefix.
 3. Authorize and capture one run per context. An authorization records a run
    and changes no requirement, so the runs are authorized back to back; when
    one is refused as stale, read preflight again.
 4. Write the batch plan to `batch-plan.md` in the sweep's working folder: each
-   context's run id, scope, id prefix and the shared mechanisms it owns and
-   uses. Every worker reads it first.
+   context's run id, scope, id prefix, the repositories and directories it
+   owns, and the shared mechanisms it owns and uses. Every worker reads it
+   first.
 
 **Context workers, in parallel.** The orchestrating session delegates each
 context to a context worker, as many at once as the harness allows, and the
@@ -159,7 +163,10 @@ independent reviewer that wrote none of it reads its sample
 ([coverage](references/coverage.md#content-quality)). The reads of different
 contexts run at the same time. The orchestrating session records the
 verdicts and sends the findings to a worker for the context, whose corrected
-drafts and named writes it then applies.
+drafts and named writes it then applies. A finding marked fixed by the session
+or worker that made the correction is not a verdict: the corrected context
+gets a new independent read, of a new sample that includes the corrected
+records, before it can be reported finished.
 
 **Merge, by the orchestrating session,** after every context has reported:
 
