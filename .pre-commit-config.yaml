@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: source-audit-tests
+        name: Shared source audit tests
+        entry: env -u GIT_INDEX_FILE -u GIT_DIR -u GIT_WORK_TREE node --test skills/rdd-audit/audit-citations.test.mjs
+        language: system
+        pass_filenames: false
+        always_run: true
