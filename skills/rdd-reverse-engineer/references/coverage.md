@@ -38,6 +38,14 @@ Record stable unit identities and mappings so the checker can report:
 | Executed verification | Requirements in the run | None in this pass; a cited test is never counted here |
 | Reverse mapping | Every persisted requirement/source reference in the batch | Resolve inside authorized inventory or to an explicitly authorized existing identity |
 
+A file is assessed by reading it. A script may group files by path and propose
+a reason, but each reason is checked against the file before it is recorded,
+and a file no rule matched stays unresolved: a default reason such as "outside
+the described behavior" is never assigned to a file nobody read. A file that
+sets behavior a requirement states — options validation, serialization,
+deployment settings such as schedules, retries and message lifetimes — is
+linked to that requirement, not assessed as unsupported.
+
 State absent surfaces as inapplicable only after checking; unexplored surfaces
 remain unresolved. A file disposition does not establish behavioral coverage,
 and candidate links do not establish governed or verified behavior. Counts and
