@@ -142,7 +142,12 @@ across files. A file no context owns, such as a shared library outside every
 scope, is read by the context that captured it. A file a requirement of the
 context cites is linked whoever owns it.
 
-A context is finished when its latest run meets the finish condition. A later
+A context is finished when its latest run meets the finish condition. A
+publication cites only its own run's captures, so a few files the context's
+runs left out, such as a gateway definition, are captured by an extra run
+scoped to them, and their behavior is a requirement of that run, citing only
+them, which the earlier requirements name. The context is then finished when
+each of those runs meets the finish condition. A later
 run of the same context whose capture holds the whole repositories or
 directories an earlier run left out supersedes that earlier run's capture
 completeness check: the report names the earlier run as superseded by the
