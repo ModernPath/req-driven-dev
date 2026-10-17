@@ -105,7 +105,11 @@ fails the group, and so do weak verdicts on more than one in ten of the
 sample. Report the verdict totals.
 
 Validate each mechanical check against a known-bad input. A requirement that
-fails is rewritten from the code, never patched by changing its template.
+fails is rewritten from the code, never patched by changing its template. It
+is rewritten in place, under its own identifier. A new requirement that
+restates an existing one while the existing one stays is a duplicate, and
+fails the distinct statements check. Rewrite the existing one, or ask for its
+retirement before adding a replacement.
 
 ## When a run is finished
 
