@@ -119,8 +119,10 @@ store. A batch has a setup, the workers, the independent reads and a merge.
 **Context workers, in parallel.** The orchestrating session delegates each
 context to a context worker, as many at once as the harness allows, and the
 next as one returns. A large context is split into named slices, such as one
-repository or one group of surfaces, each a worker's assignment. The
-`mp-process-cli` onboarding names the installed worker definition. A worker
+repository or one group of surfaces, each a worker's assignment. A worker
+takes the [context worker role](references/context-worker.md), which the
+orchestrating session hands it with the assignment, through the harness's
+installed agent definition where there is one. A worker
 follows step 2 and the staging part of step 3 for its slice: it reads the
 code, writes the requirements, stages them as group files in its run folder,
 runs the offline content check, reads a sample against the code, and hands
