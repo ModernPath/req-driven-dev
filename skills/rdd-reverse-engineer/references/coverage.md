@@ -50,12 +50,20 @@ for its file and says what the file is; one sentence filled in with each
 file's path or digest is a generated reason, however many files it covers.
 A file assessed unresolved has not been assessed: report it with the
 unassessed files as remaining work, and never assess a file of the context's
-own repositories as unresolved to bring the unassessed count to zero.
+own repositories as unresolved to bring the unassessed count to zero. A link
+made later does not clear an unresolved assessment: assess the linked file
+again as reviewed, naming the requirement that cites it.
 
 State absent surfaces as inapplicable only after checking; unexplored surfaces
 remain unresolved. A file disposition does not establish behavioral coverage,
 and candidate links do not establish governed or verified behavior. Counts and
 percentages describe the inventory; they do not define a passing gate.
+
+An excluded subtree is not enumerated, so the count of excluded files is
+unknown whenever a subtree is excluded. That is not remaining work and not
+part of the finish condition: report each excluded subtree with a reason that
+says what it holds, such as build output or editor settings. A subtree is
+excluded for what it is, never because the run did not read it.
 
 Missing denominators, unresolved mappings, and inputs that do not match the
 authorized inventory/read-back are incomplete measurements. Validate any checker
