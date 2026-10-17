@@ -48,6 +48,9 @@ your slice:
   repositories and directories your context owns, which none of your
   requirements cites, is assessed as reviewed with its owning context named;
   you do not read it, its owner does.
+- A file of your own repositories that you have not read and dispositioned
+  is remaining work: leave it unassessed and hand back `partial`, never
+  assess it unresolved to finish.
 - Report a correction you made as made, never as confirmed: the next
   independent read decides whether it fixed the finding.
 - Do not write SRs for a mechanism another context owns. Record which of your
@@ -56,9 +59,10 @@ your slice:
   the shape the publish operation takes, named so that file-name order is
   publish order (parents first).
 - Run the offline content check on its known-bad set, then on your staged
-  groups, naming the published parents they use (`modernpath reverse-engineer
-  check --self-test`, then `check --dir <run folder>/groups
-  --existing-parents …`). Rewrite from the code
+  groups and assessments, naming the published parents they use and the
+  repositories your context owns (`modernpath reverse-engineer check
+  --self-test`, then `check --dir <run folder>/groups --existing-parents …
+  --owned-repositories …`). Rewrite from the code
   until it passes. Then read a sample of at least 20 staged requirements (all,
   when fewer) against their code and record each verdict. A passing
   mechanical check is not that read.

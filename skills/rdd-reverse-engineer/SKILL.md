@@ -139,7 +139,11 @@ The orchestrating session reads each handoff when it arrives and acts on it:
 
 - **Partial:** the worker returned before its slice was accounted for.
   Continue it, or start a new worker, with the remainder the handoff lists.
-  A returned worker is not a finished context.
+  A returned worker is not a finished context. Name the remainder by owner:
+  the files of the context's own repositories and directories are read and
+  linked or given a reason of their own; files another context owns are
+  assessed by ownership. A continuation never tells a worker to leave files
+  unresolved, and never supplies the wording of a reason.
 - **Ready:** publish the staged groups, read them back, compare them with the
   staged files, and make the writes the handoff names, such as a correction to
   an earlier published record or a trace refresh. A refused publish goes back

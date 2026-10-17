@@ -45,7 +45,12 @@ and a file no rule matched stays unresolved: a default reason such as "outside
 the described behavior" is never assigned to a file nobody read. A file that
 sets behavior a requirement states — options validation, serialization,
 deployment settings such as schedules, retries and message lifetimes — is
-linked to that requirement, not assessed as unsupported.
+linked to that requirement, not assessed as unsupported. A reason is written
+for its file and says what the file is; one sentence filled in with each
+file's path or digest is a generated reason, however many files it covers.
+A file assessed unresolved has not been assessed: report it with the
+unassessed files as remaining work, and never assess a file of the context's
+own repositories as unresolved to bring the unassessed count to zero.
 
 State absent surfaces as inapplicable only after checking; unexplored surfaces
 remain unresolved. A file disposition does not establish behavioral coverage,
