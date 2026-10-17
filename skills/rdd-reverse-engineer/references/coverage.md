@@ -106,3 +106,11 @@ although a requirement from an earlier run covers it, is assessed as reviewed
 with that requirement named in the reason. That assessment covers the file, not
 its surface units: a unit whose outcome the earlier requirement does not state
 is still extracted.
+
+A context is finished when its latest run meets the finish condition. A later
+run of the same context whose capture holds the whole repositories or
+directories an earlier run left out supersedes that earlier run's capture
+completeness check: the report names the earlier run as superseded by the
+later one, not as failed, and the earlier run's other measurements stand.
+Links are never moved from one run's capture to another to repair an
+inventory that was fixed at its capture.
