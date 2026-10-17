@@ -110,8 +110,13 @@ store. A batch has a setup, the workers, the independent reads and a merge.
    their own SRs for it; they record which of their URs the owner's SRs serve.
    Name the owner of every repository and directory too: a context's scope
    takes whole repositories, so several runs capture the same files, and each
-   file is read and assessed by the context that owns it. Give each context
-   its own id prefix.
+   file is read and assessed by the context that owns it. A repository laid
+   out by layer, such as models, services and controllers, has no directory
+   a feature context owns: assign its files to owners by what they implement,
+   and give its shared plumbing one owner. Every file that more than one run
+   captures has an owner in the batch plan before a worker starts, so the
+   other runs assess it in the ownership form instead of reading it again.
+   Give each context its own id prefix.
 3. Authorize and capture one run per context. An authorization records a run
    and changes no requirement, so the runs are authorized back to back; when
    one is refused as stale, read preflight again.
