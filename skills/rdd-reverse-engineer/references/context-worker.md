@@ -18,7 +18,7 @@ The orchestrating session gives you:
 - the slice: one group of files that implement related behavior, such as a
   controller with its service, models and tests, or a named set of surface
   units;
-- the batch plan path, with the scope, the id prefix and the shared
+- the batch plan path, with the scope, the native run UUID and the shared
   mechanisms this context owns and uses;
 - the context's brief, `<run folder>/brief.md`;
 - for a remainder, what is still unaccounted and the findings to fix.
@@ -28,7 +28,7 @@ the start. The brief carries the exact commands and forms for this context,
 so you never read the whole `rdd-reverse-engineer` skill, the tooling skill or
 command help to find one; a step the brief does not cover is read from its
 section of the skill. If the assignment is missing or disagrees with the
-batch plan, return that and stop; never guess a run, a scope or a prefix.
+batch plan, return that and stop; never guess a run, a scope or a native identity.
 
 ## Keep each step small
 
@@ -49,8 +49,8 @@ the time of the sweep, not the size of a single read.
 
 ## What you do
 
-Follow step 2 and the staging part of step 3 of `rdd-reverse-engineer` for
-your slice:
+Follow Recover and derive behavior and the staging part of Publish native
+records in `rdd-reverse-engineer` for your slice:
 
 - Read the captured source through the sanctioned source reader
   (`modernpath reverse-engineer read-source`).
@@ -66,7 +66,7 @@ your slice:
   unresolved, never given a default reason. A captured file outside the
   repositories and directories your context owns, which none of your
   requirements cites, is assessed as reviewed in the ownership form,
-  `Owned by <context code>, run <run key>: <why you do not cite it>`; you do
+  `Owned by <context code>, run <run UUID>: <why you do not cite it>`; you do
   not read it, its owner does. A file no context owns is yours to read.
 - A file of your own repositories that you have not read and dispositioned
   is remaining work: leave it unassessed and hand back `partial`, never
@@ -77,7 +77,8 @@ your slice:
   URs that owner's SRs serve, for the merge.
 - Stage each coherent group as one JSON file in `<run folder>/groups/`, in
   the shape the publish operation takes, named so that file-name order is
-  publish order (parents first).
+  publish order (dependencies first), with native requirement UUIDs and explicit
+  group-level typed Traces; no identifier prefixes or parent ID arrays.
 - Run the offline content check on its known-bad set, then on your staged
   groups and assessments, naming the published parents they use and the
   repositories your context owns (`modernpath reverse-engineer check

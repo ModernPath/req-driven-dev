@@ -135,7 +135,7 @@ is still extracted.
 
 A captured file outside the repositories and directories its context owns,
 which none of the context's requirements cites, is assessed as reviewed with
-a reason in the ownership form, `Owned by <context code>, run <run key>: <why
+a reason in the ownership form, `Owned by <context code>, run <run UUID>: <why
 this context does not cite it>`; the owning context's run reads it and gives
 it its own disposition. The ownership form is the one reason that repeats
 across files. A file no context owns, such as a shared library outside every
