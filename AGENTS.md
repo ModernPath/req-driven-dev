@@ -28,10 +28,10 @@ answering what to work on next — read the project's root `AGENTS.md`, this
 file and `PROCESS.md`. Enter with `skills/rdd-start/SKILL.md`; use
 `skills/rdd-deliver/SKILL.md` for end-to-end work or the focused skill when the
 request ends at one pass. Use `skills/rdd-autopilot/SKILL.md` only under an
-explicit human grant. Use `skills/rdd-reverse-engineer/SKILL.md`,
-`skills/rdd-reverse-engineer-verify/SKILL.md` and
-`skills/rdd-reverse-engineer-accept/SKILL.md` only for their source-scoped
-baseline and existing-proof work. `skills/rdd-audit/SKILL.md` is a shared
+explicit human grant. Use `skills/rdd-reverse-engineer/SKILL.md` for
+source-scoped baselines and DERIVED proposals, and
+`skills/rdd-reverse-engineer-verify/SKILL.md` to review existing behavior
+evidence for ordinary Epic completion. `skills/rdd-audit/SKILL.md` is a shared
 utility invoked by other passes, not a phase.
 
 Read relevant product documents and inspect their cited code and tests. A
