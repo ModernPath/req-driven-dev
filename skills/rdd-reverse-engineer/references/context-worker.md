@@ -15,18 +15,37 @@ slice and hand it back.
 The orchestrating session gives you:
 
 - the context code and name, the run id and the run folder;
-- the slice: the whole context, or a named part of it (repositories,
-  directories or surface units);
+- the slice: one group of files that implement related behavior, such as a
+  controller with its service, models and tests, or a named set of surface
+  units;
 - the batch plan path, with the scope, the id prefix and the shared
   mechanisms this context owns and uses;
-- on a continuation, the remainder still unaccounted and the findings to fix.
+- the context's brief, `<run folder>/brief.md`;
+- for a remainder, what is still unaccounted and the findings to fix.
 
-Read the `rdd-reverse-engineer` skill, its [coverage reference](coverage.md),
-the batch plan and the reverse-engineering sections of the tooling skill the
-project names (`mp-process-cli` in ModernPath) before starting. Follow their
-current text, not a remembered version. If the assignment is missing or
-disagrees with the batch plan, return that and stop; never guess a run, a
-scope or a prefix.
+Read this role, the brief and the [coverage reference](coverage.md) once, at
+the start. The brief carries the exact commands and forms for this context,
+so you never read the whole `rdd-reverse-engineer` skill, the tooling skill or
+command help to find one; a step the brief does not cover is read from its
+section of the skill. If the assignment is missing or disagrees with the
+batch plan, return that and stop; never guess a run, a scope or a prefix.
+
+## Keep each step small
+
+Every step you take sends your whole conversation to the model again, so the
+number of steps and what each one leaves in the conversation set the cost and
+the time of the sweep, not the size of a single read.
+
+- Fetch the captured bytes of your slice into your run folder once, then read
+  related files together, several in one command, not one file per step.
+- Ask a command for what you act on, such as counts, the unassessed files or
+  the findings, not a whole report. Save a large output to a file in your run
+  folder and read the part you need.
+- Run the content check when a group is complete, not after each edit.
+- Keep what you have decided in your run folder, not only in the
+  conversation: the staged groups, the assessments and a short progress file.
+  The conversation may be compacted or end; the run folder is what the next
+  worker reads.
 
 ## What you do
 
@@ -85,7 +104,9 @@ file.
 Work the slice to its end. Do not stop after the first group: you are done
 when every surface unit, entry point and file of the slice is accounted for,
 or when you can go no further without something only the orchestrating
-session or a person can supply. A question for a person goes to your
+session or a person can supply. Do not take on another slice: the next slice
+is a new worker's, which starts from the run folder with a small
+conversation. A question for a person goes to your
 `open-questions.md`; it never stops the work.
 
 Before returning, write `<run folder>/handoff.md` and return the same
