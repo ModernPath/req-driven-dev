@@ -124,11 +124,24 @@ store. A batch has a setup, the workers, the independent reads and a merge.
    context's run id, scope, id prefix, the repositories and directories it
    owns, and the shared mechanisms it owns and uses. Every worker reads it
    first.
+5. Write each context's brief to `<run folder>/brief.md`: the rules a worker
+   applies on every file and requirement, in the context's own terms, and the
+   exact commands it runs with this run's values filled in — reading the
+   captured source, the content check with its existing parents and owned
+   repositories, and the staging shape. A worker reads the brief instead of
+   this skill, so it carries the reason forms, the finish condition and the
+   content checks, and names the step of this skill for anything else.
 
 **Context workers, in parallel.** The orchestrating session delegates each
-context to a context worker, as many at once as the harness allows, and the
-next as one returns. A large context is split into named slices, such as one
-repository or one group of surfaces, each a worker's assignment. A worker
+context to context workers, as many at once as the model's rate limit
+allows, and the next as one returns. A context is split into slices, each one
+worker's assignment: a group of files the context owns that implement related
+behavior, such as a controller with its service, models and tests, small
+enough that the worker reads all of it with room left for writing. A worker
+ends with its slice; the next slice, or the remainder of a partial one, goes
+to a new worker that starts from the run folder. A long-running worker
+carries every file it has read into each later step, so it costs more with
+every step and is the first to hit a rate limit. A worker
 takes the [context worker role](references/context-worker.md), which the
 orchestrating session hands it with the assignment, through the harness's
 installed agent definition where there is one. A worker
@@ -140,10 +153,11 @@ surface units, entry points and files out of their totals, and the writes it
 needs. It writes only in its run folder and never runs a store write, even
 where a step names one.
 
-The orchestrating session reads each handoff when it arrives and acts on it:
+The orchestrating session follows the workers by their handoffs, not by
+polling run status, and reads each handoff when it arrives and acts on it:
 
 - **Partial:** the worker returned before its slice was accounted for.
-  Continue it, or start a new worker, with the remainder the handoff lists.
+  Start a new worker with the remainder the handoff lists.
   A returned worker is not a finished context. Name the remainder by owner:
   the files of the context's own repositories and directories are read and
   linked or given a reason of their own; files another context owns are
