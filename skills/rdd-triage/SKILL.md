@@ -38,7 +38,13 @@ order.
    `PROPOSED`. A defect or invalidated required evidence returns affected
    requirements and Epics to `IN_PROGRESS`. Preserve prior acceptance receipts;
    reopening does not waive the entry prerequisites for changing code or tests.
-6. Re-evaluate stale gates and evidence, then reconcile authoritative records,
+6. Record a fix-first change — a defect or incident light path the project's
+   gate rules turn on (`PROCESS.md` §Project gate rules) — as a gap record
+   naming the fix-first. For an incident, quote the person's words declaring
+   it as a `USER:` source in that gap record; never declare an incident
+   yourself. Route its SR, entry answer, and evidence before other work is
+   selected.
+7. Re-evaluate stale gates and evidence, then reconcile authoritative records,
    release scope, work selection, and derived views. Never promote to `TODO`
    without the strict entry gate.
 

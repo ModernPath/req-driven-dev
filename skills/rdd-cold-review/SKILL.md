@@ -75,10 +75,20 @@ review audits the change the packet proposes, not the packet as a document.
    finding returns `FAIL` with the instruction that the change leaves the lane
    for single-SR scope.
 9. Run at most two rounds on the selected planning scope. After a second
-   failed round, report the remaining material findings to the human;
-   do not start a third round automatically. Under an autopilot grant there is
+   failed round, report the remaining material findings to the human one at
+   a time — what each means for the product, its context, the options and
+   what each changes (`PROCESS.md` §Gates); do not start a third round
+   automatically. Under an autopilot grant there is
    one pass and at most one narrow confirmation that its folded findings close
-   it; either way the sprint continues (`PROCESS.md` §Autopilot).
+   it; either way the slice continues (`PROCESS.md` §Autopilot).
+   For a slice, each round is one pass over every member's review snapshot,
+   with findings and the verdict recorded per member; an addition to an open
+   slice gets one narrow review of the addition and its effect on the slice,
+   not a re-review of the slice (`PROCESS.md` §Slices).
+   A later round reviews only what changed since the reviewed round, as the
+   review snapshot lists it, plus the closures of earlier findings, each
+   verified against the current packet and code as step 6 requires. Its
+   findings are recorded in one batch, and so are their dispositions.
 10. Return the cold-review trace gate `PASS` only when the material-finding rule
    in `PROCESS.md` is satisfied. Otherwise return `FAIL` with exact blockers.
 

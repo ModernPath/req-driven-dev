@@ -22,7 +22,7 @@ only where `PROCESS.md` explicitly permits it, such as an attributable demotion.
 - **Fingerprint:** «approval-scope or evidence fingerprint and the exact inputs evaluated, per PROCESS.md»
 - **State:** «trace: PENDING / PASS / FAIL / STALE — human: DRAFT / OPEN / ANSWERED / CLOSED / SUPERSEDED»
 - **Verdict / answer:** «trace verdict with exact blockers, or the human answer as given»
-- **Actor / evaluator:** «real human actor and role for a human gate; evaluating agent or check for a trace gate»
+- **Actor / evaluator:** «real human actor and role for a human gate; evaluating agent or check for a trace gate». An answer the agent prepared under a gate rules row carries `decided by the agent under process/rdd-human-gates.md row <row>` and the condition it relied on in its answer text; the actor is still the person who confirmed it
 - **Sources:** «USER:/DOC:/CODE:/TEST:/RUN:/EPIC: support for the verdict or answer»
 - **Timestamps:** «evaluated/opened at; answered at; closed at»
 - **Application:** «NOT_APPLICABLE / PENDING / APPLIED / FAILED» at «revision»
