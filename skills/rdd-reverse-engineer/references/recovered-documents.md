@@ -40,7 +40,7 @@ choice, not human acceptance.
 Derive in-scope NFRs through the same authorized requirement route. Consider
 performance, scalability, availability, security, privacy, operability,
 maintainability and compatibility without duplicating existing ownership. Bare
-configuration values with unknown intent remain questions or DERIVED exceptions.
+configuration values with unknown intent remain explicit unresolved questions.
 Check the full expression and units before interpreting a numeric value.
 
 Before reporting, account for the requested document roles, relevant integration

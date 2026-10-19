@@ -96,37 +96,6 @@ documents and tests are traces. Requirement-to-document traces use `relates`.
 `BLOCKED`, `DEFERRED` and `OBSOLETE` retain their actual reason and history when
 applicable; none authorizes publication or erases an accepted version.
 
-### Derived requirement hold
-
-While a requirement is `DERIVED`:
-
-- record its candidate statement, inference sources, proposed relations,
-  conflicts, consequences, and confirmation brief;
-- label every proposed relation `CANDIDATE`;
-- exclude it from authoritative trace, release, readiness, coverage, progress,
-  and completion;
-- candidate statements may include proposed UR scenarios, related candidates,
-  source links and references to existing tests so they are reviewable together;
-  all such content and artifacts remain candidate-only, excluded from ordinary
-  test lists, coverage, release snapshots and execution assignment;
-- do not use a candidate to authorize implementation, test execution,
-  verification, entry, release commitments or delivery.
-
-```text
-DERIVED -> confirmed/corrected ----------> PROPOSED
-        -> rejected ---------------------> OBSOLETE
-```
-
-Confirmation records the reviewed candidate content and explicitly selected typed
-relationships, using native requirement identities and kinds. Unselected links
-remain candidate-only. Rejection publishes no links; deferral leaves the
-candidate unchanged. Confirmation never overwrites an existing requirement or
-its compliance approval and does not authorize implementation or completion.
-Those decisions belong to the saved Epic plan and its human approvals.
-
-Confirmed candidates become PROPOSED and use the ordinary Epic lifecycle.
-Confirmation records no test result or completion approval.
-
 ### Reverse engineering
 
 Reverse engineering records requirements and their typed Traces to source files
