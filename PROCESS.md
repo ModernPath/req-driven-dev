@@ -12,16 +12,20 @@ SR -> CODE -> TEST_CASE -> TEST_RESULT
 
 EPIC: PROPOSED -> IN_PROGRESS -> IN_REVIEW -> DONE
 UR/SR: PROPOSED -> IN_PROGRESS -> IN_REVIEW -> DONE
+      PROPOSED -> DONE (verified existing behavior, explicit acceptance)
         BLOCKED | DEFERRED | OBSOLETE when applicable
 
 Human decisions: implementation approval -> completion approval
+                 or explicit acceptance of verified existing behavior
 ```
 
 The Epic is the normal unit of authorized delivery. Requirements express
 behavior and link to implementation and evidence; they do not replace the
 Epic's saved plan or human approvals. Upper evidence exercises a user outcome;
 lower evidence exercises a system behavior. Reverse engineering records
-requirements and source traces directly, as described below.
+requirements and source traces directly. An explicit request to verify and
+accept behavior already present may use the separate PROPOSED-to-DONE path
+below; any requested implementation or test change uses the normal Epic path.
 
 ## Authority and sources
 
@@ -88,6 +92,25 @@ an immutable accepted version with criteria and trace meaning, record the
 actor, time, reason and originating Epic, and release ownership. A failed write
 must roll back all effects; repeating completion must not publish twice.
 
+For an explicit request to verify and accept behavior that already exists,
+unowned `PROPOSED` requirements may move directly to `DONE` after complete,
+applicable passing evidence and explicit human acceptance of the exact
+requirement content and evidence. The supported acceptance operation atomically
+publishes the accepted versions, increments each revision once, retains the
+immutable accepted versions with criteria and trace meaning, and retains the
+evidence links. It records the acceptance actor, time and reason with no
+originating Epic, and leaves the scope unchanged on failure. It is idempotent.
+It must reject changed content or evidence, incomplete or failing evidence, and
+any requirement owned by active implementation work. It does not create an
+Epic, an implementation approval, or an ownership lock. Already-DONE
+requirements are left unchanged. A missing human decision leaves requirements
+PROPOSED. If the sanctioned interface does not provide this operation, report
+the tooling gap and leave them PROPOSED.
+
+This path describes and accepts existing behavior only. If behavior or tests
+need to change, route that work through an Epic plan and implementation
+approval; verification evidence alone never authorizes the change.
+
 There is no READY/TODO entry step, requirement stage, evidence-conclusion status,
 plan-revision token, fingerprint, generic gate or separate ownership framework.
 Requirements keep their own native UUIDs and types; Epic membership and criterion
@@ -117,6 +140,17 @@ referenced by native identity and kind without replacing their content.
 Authentication, tenant and System scope, valid native endpoints and atomic
 writes remain normal store integrity rules.
 
+After recording, verification is a separate pass using
+`rdd-reverse-engineer-verify`: it checks the current PROPOSED content against
+the implementation, maps every in-scope criterion to meaningful assertions,
+and records actual test outcomes and traces. Complete passing evidence is a
+prerequisite for the separate `rdd-reverse-engineer-accept` pass, not a
+prerequisite for recording. Acceptance presents exact targets and evidence to
+the human and applies only an explicit attributable decision through the
+supported atomic operation above. If behavior or tests need to change, return
+to the normal Epic path. Verification does not alter lifecycle state, and
+neither recording nor passing evidence implies human acceptance.
+
 Local working-set files may hold store projections and development inputs.
 They are not a second authority and need no fingerprint or synchronization
 ceremony. Read back the recorded requirements and traces through the sanctioned
@@ -143,6 +177,14 @@ records audit history and releases ownership in one transaction. Implementation
 approval, review, an autopilot grant, a commit, merge or silence is not a
 completion answer.
 
+For existing-behavior acceptance, present the exact PROPOSED content and its
+criterion-level verification evidence, tested revisions, exclusions and
+remaining risks. Obtain explicit acceptance attributable to the human for
+those targets and that evidence. A passing test, prior approval to record or
+verify, or acceptance of different content is not acceptance. The supported
+operation and its read-back follow the lifecycle rules above; this decision
+does not stand in for implementation or completion approval on Epic work.
+
 Git and PR/CI systems own code revisions, commits, merges and conflicts. Retain
 links and tested code revisions for traceability; their hashes do not define
 requirement identity, versions or approval validity. Never describe a code
@@ -150,11 +192,18 @@ branch as merged or deployed without inspecting that external state.
 
 ## Work scope
 
-Work on the Epic scope the user selected. If scope is missing, ask which Epic
-to use or whether to prepare a sourced proposal. Read its native ID, saved plan,
-approved proposal, human decisions and affected requirements from the sanctioned
-interface. Choosing work creates no separate selection record or Epic lock.
-Requirement ownership is acquired by implementation approval, not session entry.
+For changed behavior or tests, work on the Epic scope the user selected. If
+scope is missing, ask which Epic to use or whether to prepare a sourced
+proposal. Read its native ID, saved plan, approved proposal, human decisions
+and affected requirements from the sanctioned interface. Choosing work
+creates no separate selection record or Epic lock. Requirement ownership is
+acquired by implementation approval, not session entry.
+
+For an explicit request limited to recording, verifying or accepting existing
+behavior, an Epic is not required. Read the native System and requirement IDs,
+current content, evidence and implementation ownership from the sanctioned
+interface, then route to the corresponding reverse-engineering pass. If the
+request entails a behavior or test change, use the Epic path above.
 
 Keep work within the approved outcome and exclusions. Disclose changed intent,
 acceptance or scope and obtain fresh human approval before implementing it.
@@ -231,7 +280,7 @@ gap.
 
 | Phase | Skill | Exit |
 |---|---|---|
-| Session entry and scope | `rdd-start` | Explicit Epic scope and current saved plan read; next needed phase identified |
+| Session entry and scope | `rdd-start` | Epic plan read for changed behavior, or native System/requirements/evidence read for an explicit existing-behavior pass; next phase identified |
 | Discover and classify | `rdd-discover` | Sources and proposed scope/decisions recorded for the selected Epic |
 | Plan | `rdd-plan` | Saved plan and exact proposed content ready for independent review |
 | Cold review | `rdd-cold-review` | Findings resolved or clearly disclosed; reviewed content identified |
@@ -239,6 +288,8 @@ gap.
 | Implement | `rdd-build` | Red-first implementation and focused checks complete |
 | Verify | `rdd-verify` | Required lower and upper evidence passes at the candidate revision |
 | Review, publish and complete | `rdd-completion-review` | Human-approved content atomically published/versioned/audited, ownership released, or incomplete work reported |
+| Verify existing behavior | `rdd-reverse-engineer-verify` | Current PROPOSED content traced to existing behavior and complete applicable test outcomes recorded; no lifecycle transition |
+| Accept existing behavior | `rdd-reverse-engineer-accept` | Exact verified targets explicitly accepted by a human and atomically published as DONE, or left PROPOSED with the tooling gap reported |
 | Discoveries and blockers | `rdd-triage` | Discovery routed into the saved plan or reported as a decision/blocker |
 
 A focused pass is a handoff, not whole-task completion. Stop when its exit is
@@ -324,8 +375,9 @@ human decisions.
 ## Process state and reconciliation
 
 The server-backed process interface is the sole authority for the Epic,
-requirements, saved plan and exact proposed content, implementation and completion approvals,
-and their native relationships. This process defines no file-backed ledger,
+requirements, saved plan and exact proposed content, implementation,
+completion and existing-behavior acceptance decisions, and their native
+relationships. This process defines no file-backed ledger,
 local process snapshot, generic gate format, local plan authority, or
 synchronization/reconciliation protocol. Ordinary product documents remain
 in their project repositories and are read or refreshed by that project's

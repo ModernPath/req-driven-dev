@@ -8,14 +8,20 @@ human approvals. This repository defines no local delivery ledger.
 ## Instruction ownership
 
 - [`PROCESS.md`](PROCESS.md) defines product authority, native item identity,
-  traces, Epic scope, implementation approval, engineering, evidence and human
-  completion.
+  traces, Epic scope, implementation approval, engineering, evidence, human
+  completion and existing-behavior acceptance.
 - [`skills/`](skills/) contains focused procedures that apply that process.
   They use the consuming project's sanctioned process interface and do not
   prescribe or invent its CLI verbs.
 - Project instructions own project-specific architecture, repository layout,
   commands, environments and test gates. They name the sanctioned process
   interface and the channel for reporting a tooling gap.
+- `skills/rdd-reverse-engineer-verify/SKILL.md` verifies PROPOSED requirements
+  against existing behavior and actual test evidence; it does not change their
+  lifecycle.
+- `skills/rdd-reverse-engineer-accept/SKILL.md` obtains explicit human
+  acceptance and uses the supported atomic PROPOSED-to-DONE operation for
+  verified existing behavior.
 
 If the process interface lacks a required read or write, report that gap. Do
 not create a local ledger, direct transport, or another authority as a
@@ -30,6 +36,11 @@ file and `PROCESS.md`. Enter with `skills/rdd-start/SKILL.md`; use
 request ends at one pass. Use `skills/rdd-autopilot/SKILL.md` only under an
 explicit human grant. Use `skills/rdd-reverse-engineer/SKILL.md` for
 recording requirements and their traces to source files.
+Use `skills/rdd-reverse-engineer-verify/SKILL.md` and
+`skills/rdd-reverse-engineer-accept/SKILL.md` to verify and explicitly accept
+existing behavior without an implementation Epic when no behavior or test
+change is requested. Route any required code or test change through the normal
+Epic delivery path.
 `skills/rdd-audit/SKILL.md` is a shared utility invoked by other passes, not a phase.
 
 Read relevant product documents and inspect their cited code and tests. A
@@ -47,9 +58,13 @@ product loop does not apply. Do not create process records for meta-work.
 
 ## Authority and tooling gaps
 
-The human selects an Epic and approves its exact saved plan and proposed content for
-implementation, atomically locking its requirements to one user and that Epic, and separately approves completion. Agents establish facts,
-plan, review, implement approved work and report results. A human retains
+For changed behavior or tests, the human selects an Epic and approves its exact
+saved plan and proposed content for implementation, atomically locking its
+requirements to one user and that Epic, and separately approves completion.
+For an explicit existing-behavior acceptance pass, the human accepts the exact
+PROPOSED requirements and complete passing evidence through the supported
+atomic operation; active Epic-owned requirements stay on the Epic path. Agents
+establish facts, plan, review, implement approved work and report results. A human retains
 merge, deployment and release authority. Never infer approval from silence,
 code, test results, commits, a passing review or a repository status.
 
@@ -65,7 +80,8 @@ documentation workflow.
 Be terse and factual. Ground technical claims in sources, code, tests or
 observed runs. Prefer simple, robust changes. Preserve red-first test evidence,
 run the focused and proportional regression checks, and report commands and
-results. Read back accepted requirement versions after completion approval;
+results. Read back accepted requirement versions after completion approval or
+existing-behavior acceptance;
 verify Git, PR and deployment state separately before making those claims.
 
 ## Repository checks

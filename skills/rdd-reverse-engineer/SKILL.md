@@ -29,9 +29,14 @@ or file traces. Authentication, tenant/System scope, native endpoint validation
 and atomic writes remain normal store integrity rules.
 
 Local working-set files may hold projections and development inputs. The server
-remains authoritative. Recording requirements does not assert test PASS or
-completion; subsequent implementation and verification use the ordinary Epic
-lifecycle when requested. Missing tests do not block recording.
+remains authoritative. Recording requirements does not assert test PASS,
+verification or completion. Missing tests do not block recording. When asked
+to verify existing behavior, use
+[rdd-reverse-engineer-verify](../rdd-reverse-engineer-verify/SKILL.md). After
+complete applicable passing evidence, explicit human acceptance may use
+[rdd-reverse-engineer-accept](../rdd-reverse-engineer-accept/SKILL.md) to
+publish unowned PROPOSED requirements as DONE. If behavior or tests need
+changes, use the ordinary Epic lifecycle instead.
 
 For a requested coverage report, report the scope inspected and the remaining
 files or behavior honestly; see [coverage reporting](references/coverage.md).
