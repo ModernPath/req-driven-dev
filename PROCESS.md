@@ -12,16 +12,20 @@ SR -> CODE -> TEST_CASE -> TEST_RESULT
 
 EPIC: PROPOSED -> IN_PROGRESS -> IN_REVIEW -> DONE
 UR/SR: PROPOSED -> IN_PROGRESS -> IN_REVIEW -> DONE
+      PROPOSED -> DONE (verified existing behavior, explicit acceptance)
         BLOCKED | DEFERRED | OBSOLETE when applicable
 
 Human decisions: implementation approval -> completion approval
+                 or explicit acceptance of verified existing behavior
 ```
 
 The Epic is the normal unit of authorized delivery. Requirements express
 behavior and link to implementation and evidence; they do not replace the
 Epic's saved plan or human approvals. Upper evidence exercises a user outcome;
-lower evidence exercises a system behavior. Existing-baseline work follows
-its dedicated source-scoped process below.
+lower evidence exercises a system behavior. Reverse engineering records
+requirements and source traces directly. An explicit request to verify and
+accept behavior already present may use the separate PROPOSED-to-DONE path
+below; any requested implementation or test change uses the normal Epic path.
 
 ## Authority and sources
 
@@ -80,6 +84,12 @@ and proposed requirement content separately from published content. It atomicall
 locks the whole requirement set to that Epic and one user. A conflicting owner
 must leave the whole approval unchanged.
 
+The approved Epic plan, its scope and the owned requirement content are read-only
+through `IN_PROGRESS` and `IN_REVIEW`. Do not revise an active approval in place
+or treat a new request as permission to edit it. Surface a requested scope or
+acceptance change as a human decision and record the new work separately;
+implementation continues only within the approved scope.
+
 `IN_REVIEW` means implementation is complete and awaits human completion
 approval. The ownership lock, approved proposal and prior published requirement
 content remain unchanged. `DONE` follows human completion approval: atomically
@@ -87,6 +97,25 @@ publish the approved content, increment each requirement revision once, retain
 an immutable accepted version with criteria and trace meaning, record the
 actor, time, reason and originating Epic, and release ownership. A failed write
 must roll back all effects; repeating completion must not publish twice.
+
+For an explicit request to verify and accept behavior that already exists,
+unowned `PROPOSED` requirements may move directly to `DONE` after complete,
+applicable passing evidence and explicit human acceptance of the exact
+requirement content and evidence. The supported acceptance operation atomically
+publishes the accepted versions, increments each revision once, retains the
+immutable accepted versions with criteria and trace meaning, and retains the
+evidence links. It records the acceptance actor, time and reason with no
+originating Epic, and leaves the scope unchanged on failure. It is idempotent.
+It must reject changed content or evidence, incomplete or failing evidence, and
+any requirement owned by active implementation work. It does not create an
+Epic, an implementation approval, or an ownership lock. Already-DONE
+requirements are left unchanged. A missing human decision leaves requirements
+PROPOSED. If the sanctioned interface does not provide this operation, report
+the tooling gap and leave them PROPOSED.
+
+This path describes and accepts existing behavior only. If behavior or tests
+need to change, route that work through an Epic plan and implementation
+approval; verification evidence alone never authorizes the change.
 
 There is no READY/TODO entry step, requirement stage, evidence-conclusion status,
 plan-revision token, fingerprint, generic gate or separate ownership framework.
@@ -96,85 +125,42 @@ documents and tests are traces. Requirement-to-document traces use `relates`.
 `BLOCKED`, `DEFERRED` and `OBSOLETE` retain their actual reason and history when
 applicable; none authorizes publication or erases an accepted version.
 
-### Derived requirement hold
+### Reverse engineering
 
-While a requirement is `DERIVED`:
+Reverse engineering records requirements and their typed Traces to source files
+in the server store. Read the code and documents within the user's requested
+scope and write statements that describe the behavior actually found. Use the
+existing domain vocabulary and preserve existing requirement content.
 
-- record its candidate statement, inference sources, proposed relations,
-  conflicts, consequences, and confirmation brief;
-- label every proposed relation `CANDIDATE`;
-- exclude it from authoritative trace, release, readiness, coverage, progress,
-  and completion;
-- candidate statements may include proposed UR scenarios, related candidates,
-  source links and references to existing tests so they are reviewable together;
-  all such content and artifacts remain candidate-only, excluded from ordinary
-  test lists, coverage, release snapshots and execution assignment;
-- do not use a candidate to authorize implementation, test execution,
-  verification, entry, release commitments or delivery.
+Record requirements, file references and their traces atomically. A source file
+reference has its native identity, repository and path; a known revision is
+optional descriptive context. Do not hash files, documents, inventories or
+reports, capture source snapshots, or require an authorization run, publication
+group, proof packet, clean checkout, matching revision, coverage gate or
+as-built acceptance before recording. Source changes do not invalidate recorded
+requirements or their traces.
 
-```text
-DERIVED -> confirmed/corrected ----------> PROPOSED
-        -> confirmed accurate as-built --> PENDING_VERIFICATION
-        -> rejected ---------------------> OBSOLETE
-```
+New requirements start as PROPOSED. Recording is not implementation approval,
+verification, compliance approval or completion. Existing requirements may be
+referenced by native identity and kind without replacing their content.
+Authentication, tenant and System scope, valid native endpoints and atomic
+writes remain normal store integrity rules.
 
-Confirmation records the reviewed candidate content and explicitly selected typed
-relationships, using native requirement identities and kinds. Unselected links
-remain candidate-only. Rejection publishes no links; deferral leaves the
-candidate unchanged. Confirmation never overwrites an existing requirement or
-its compliance approval and does not authorize implementation or completion.
-Those decisions belong to the saved Epic plan and its human approvals.
+After recording, verification is a separate pass using
+`rdd-reverse-engineer-verify`: it checks the current PROPOSED content against
+the implementation, maps every in-scope criterion to meaningful assertions,
+and records actual test outcomes and traces. Complete passing evidence is a
+prerequisite for the separate `rdd-reverse-engineer-accept` pass, not a
+prerequisite for recording. Acceptance presents exact targets and evidence to
+the human and applies only an explicit attributable decision through the
+supported atomic operation above. If behavior or tests need to change, return
+to the normal Epic path. Verification does not alter lifecycle state, and
+neither recording nor passing evidence implies human acceptance.
 
-Accepting as-built scope places it in Base/PENDING_VERIFICATION; accepting new
-desired intent makes it PROPOSED and eligible for normal delivery planning.
-Base is the store's destination for established as-built requirements, separate
-from a delivery release; the project's store interface identifies that destination.
-Neither action approves entry, verifies behavior, records a passing test result
-or marks anything DONE. DERIVED proposals remain distinct from baselines and
-normal delivery requirements until handled through the sanctioned Epic process.
-
-### Source-scoped baseline onboarding
-
-Reverse-engineering can establish a usable requirement base or propose additions
-to an existing corpus. Before publication, present both modes and require an
-explicit choice. Recommend baseline when the corpus is empty, is the sweep's
-own earlier baseline, or the person has stated an as-built base as the purpose;
-recommend DERIVED additions otherwise when it is populated. The choice is asked
-once: the person's words settle it when they state the purpose or ask to
-proceed on the recommendation shown, and the same question is not put again.
-Existing content and approvals are preserved in both modes.
-
-A baseline authorization names the authenticated actor, system/store, immutable
-repository/file and document revision inventory, Base destination, permitted
-relationship publication.
-It authorizes derivation and publication of grounded as-built URs/SRs with
-inline scenarios and canonical source/UR–SR/code/test relationships. It does
-**not** assert the human reviewed statements that had not yet been generated.
-No per-row or per-context confirmation is required within this approved scope.
-URs are derived one per distinct actor outcome over an enumerated inventory of
-the surfaces actors reach, never one per context or subsystem; file linkage
-alone never shows that a sweep is complete. Each requirement is written from
-the code it cites, with its actor, outcome and the code's own rules; text
-generated by filling a template from identifiers is not a requirement. Every UR
-is served by the SRs that implement it.
-
-Publish coherent groups atomically. Out-of-scope sources or conflicting
-existing content cannot silently expand the authorization. Unchanged existing
-requirements may be reused only by native identity and kind.
-Essential unresolved evidence remains an explicit DERIVED exception, never an
-authoritative guess. Report partial publication and the exact remainder.
-
-Baseline requirements are PENDING_VERIFICATION, not compliance-approved or
-verified. They and their grounded confirmed graph appear in authoritative
-requirement views; DERIVED additions appear only in candidate review. A test
-reference or stub is not an execution result. Optional Epics need real intended
-members; do not manufacture discovery-container Epics or membership.
-
-Source capture preserves immutable repository/revision/path/digest identity,
-including local changes. A historical read never substitutes latest code.
-Unavailability or explicit source revocation is shown honestly while retaining
-audit identity. Source/store read-backs and explicit coverage denominators are
-part of onboarding completion, not evidence of product verification.
+Local working-set files may hold store projections and development inputs.
+They are not a second authority and need no fingerprint or synchronization
+ceremony. Read back the recorded requirements and traces through the sanctioned
+interface and report what was recorded and any remaining work.
 
 ## Human approvals
 
@@ -197,11 +183,13 @@ records audit history and releases ownership in one transaction. Implementation
 approval, review, an autopilot grant, a commit, merge or silence is not a
 completion answer.
 
-Apply and report a human's answer, then continue through the phases of the
-requested work. Stop only at an open human approval, a question only the human
-can answer, or a stop the human requested. Confirmed implementation approval
-lets the build start without another request. A focused pass ends with its
-report. Merging, deploying and releasing still require the human's word.
+For existing-behavior acceptance, present the exact PROPOSED content and its
+criterion-level verification evidence, tested revisions, exclusions and
+remaining risks. Obtain explicit acceptance attributable to the human for
+those targets and that evidence. A passing test, prior approval to record or
+verify, or acceptance of different content is not acceptance. The supported
+operation and its read-back follow the lifecycle rules above; this decision
+does not stand in for implementation or completion approval on Epic work.
 
 Git and PR/CI systems own code revisions, commits, merges and conflicts. Retain
 links and tested code revisions for traceability; their hashes do not define
@@ -210,11 +198,18 @@ branch as merged or deployed without inspecting that external state.
 
 ## Work scope
 
-Work on the Epic scope the user selected. If scope is missing, ask which Epic
-to use or whether to prepare a sourced proposal. Read its native ID, saved plan,
-approved proposal, human decisions and affected requirements from the sanctioned
-interface. Choosing work creates no separate selection record or Epic lock.
-Requirement ownership is acquired by implementation approval, not session entry.
+For changed behavior or tests, work on the Epic scope the user selected. If
+scope is missing, ask which Epic to use or whether to prepare a sourced
+proposal. Read its native ID, saved plan, approved proposal, human decisions
+and affected requirements from the sanctioned interface. Choosing work
+creates no separate selection record or Epic lock. Requirement ownership is
+acquired by implementation approval, not session entry.
+
+For an explicit request limited to recording, verifying or accepting existing
+behavior, an Epic is not required. Read the native System and requirement IDs,
+current content, evidence and implementation ownership from the sanctioned
+interface, then route to the corresponding reverse-engineering pass. If the
+request entails a behavior or test change, use the Epic path above.
 
 Keep work within the approved outcome and exclusions. Disclose changed intent,
 acceptance or scope and obtain fresh human approval before implementing it.
@@ -291,7 +286,7 @@ gap.
 
 | Phase | Skill | Exit |
 |---|---|---|
-| Session entry and scope | `rdd-start` | Explicit Epic scope and current saved plan read; next needed phase identified |
+| Session entry and scope | `rdd-start` | Epic plan read for changed behavior, or native System/requirements/evidence read for an explicit existing-behavior pass; next phase identified |
 | Discover and classify | `rdd-discover` | Sources and proposed scope/decisions recorded for the selected Epic |
 | Plan | `rdd-plan` | Saved plan and exact proposed content ready for independent review |
 | Cold review | `rdd-cold-review` | Findings resolved or clearly disclosed; reviewed content identified |
@@ -299,32 +294,12 @@ gap.
 | Implement | `rdd-build` | Red-first implementation and focused checks complete |
 | Verify | `rdd-verify` | Required lower and upper evidence passes at the candidate revision |
 | Review, publish and complete | `rdd-completion-review` | Human-approved content atomically published/versioned/audited, ownership released, or incomplete work reported |
+| Verify existing behavior | `rdd-reverse-engineer-verify` | Current PROPOSED content traced to existing behavior and complete applicable test outcomes recorded; no lifecycle transition |
+| Accept existing behavior | `rdd-reverse-engineer-accept` | Exact verified targets explicitly accepted by a human and atomically published as DONE, or left PROPOSED with the tooling gap reported |
 | Discoveries and blockers | `rdd-triage` | Discovery routed into the saved plan or reported as a decision/blocker |
 
 A focused pass is a handoff, not whole-task completion. Stop when its exit is
 reached and report what remains.
-
-### Verification of an as-built baseline
-
-A published source-scoped baseline starts in `PENDING_VERIFICATION`.
-Publication establishes authority for the as-built statements, not test PASS,
-delivery, or compliance approval. Review each active criterion against the
-captured source and genuine execution evidence; evaluate UR outcomes separately
-from their required SR behavior. Preserve source capture integrity digests and
-the native typed Traces that identify the actual requirements, SourceFiles,
-documents, tests, and evidence.
-
-Baseline evidence is input to ordinary Epic planning, verification, and
-completion review. It does not create a separate lifecycle transition or
-permit requirements to move directly to `DONE`. The selected Epic must have
-its normally saved and human-approved plan and exact proposed content; required
-tests pass under `rdd-verify`; `rdd-completion-review` presents the evidence for
-the ordinary human completion approval. That approval publishes the accepted
-content and audit history and releases Epic ownership. Compliance approval
-remains separate. Missing tests or changed behavior are gaps for normal scoped
-development. If the sanctioned process cannot place baseline evidence and
-requirements into the ordinary Epic lifecycle, report that tooling/process gap
-rather than inventing a gate, receipt, key, or direct-completion path.
 
 ### AI TDD inner loop
 
@@ -406,8 +381,9 @@ human decisions.
 ## Process state and reconciliation
 
 The server-backed process interface is the sole authority for the Epic,
-requirements, saved plan and exact proposed content, implementation and completion approvals,
-and their native relationships. This process defines no file-backed ledger,
+requirements, saved plan and exact proposed content, implementation,
+completion and existing-behavior acceptance decisions, and their native
+relationships. This process defines no file-backed ledger,
 local process snapshot, generic gate format, local plan authority, or
 synchronization/reconciliation protocol. Ordinary product documents remain
 in their project repositories and are read or refreshed by that project's

@@ -1,67 +1,44 @@
 ---
 name: rdd-reverse-engineer-verify
-description: Review existing source-scoped baseline behavior using captured source, semantic assertions, genuine test execution and repository integration evidence. Use as evidence input to ordinary Epic completion review; missing behavior requires normal development.
+description: Verify reverse-engineered requirements against existing behavior and real test executions before human acceptance. Use when implementation already exists; route missing behavior or tests to normal development.
 ---
 
-# Verify existing baseline behavior
+# Verify existing behavior
 
-## Purpose
+Read the project's instructions, current process and sanctioned CLI reference.
+Start from an explicit System and native user/system requirement IDs. Read their
+current content, active acceptance criteria and implementation/test traces.
+Acceptance targets are PROPOSED. Existing DONE requirements may support the
+trace, but are not accepted again. Verification does not change lifecycle state.
 
-Inspect actual evidence for published PENDING_VERIFICATION baseline
-requirements. This pass changes no product/test code, requirement content,
-lifecycle, or compliance approval. It does not fabricate RED or PASS and does
-not create an acceptance decision. Its findings support the ordinary
-`rdd-verify` and `rdd-completion-review` process for a selected Epic.
+1. Identify what each acceptance criterion requires and where the existing
+   implementation supplies it. Preserve the actual requirement, code and test
+   identities. A source link or test name alone does not establish correctness.
+2. Map every in-scope criterion to meaningful assertions. For a user requirement,
+   assess its user-facing scenarios independently of lower-level system tests.
+   Include the supporting system requirements actually required by those
+   scenarios; do not invent relationships or parents to fill a diagram.
+3. Run the existing tests, or inspect retained execution results that genuinely
+   apply to the inspected implementation. Record the command/report, environment,
+   tested code revision, test identities, criterion targets and actual PASS,
+   FAIL or SKIP outcomes through the sanctioned evidence interface. A broad
+   passing suite proves only the assertions it executed.
+4. Report uncovered criteria, failures, skipped checks and uncertainty. If tests
+   or behavior need changing, leave the requirements PROPOSED and hand the
+   missing work to normal planning/build/verification. Do not change product or
+   test code during this pass or fabricate a RED result for existing behavior.
+5. Read back the stored evidence and traces. Recheck that the requirement
+   content and relevant implementation still match what was evaluated. Present
+   the exact requirement set, criterion-level results, exclusions and remaining
+   risks. Complete evidence is ready for rdd-reverse-engineer-accept; it is not
+   human acceptance and does not itself mark anything DONE.
 
-## Inputs
+Record grounded requirements even when tests are missing; verification is a
+subsequent requested operation, not a prerequisite for recording. Do not restore
+source captures, authorization runs, publication groups, fingerprints, generic
+gates or the DERIVED/PENDING_VERIFICATION states for this path.
 
-Read the project `AGENTS.md`, canonical `PROCESS.md`, and the project's
-sanctioned process interface instructions. In ModernPath, use the installed
-`mp-process-cli` skill and `.modernpath/cli-reference.md`.
-
-Read the authoritative requirement and Epic records. Identify requirements by
-native UUID and full kind. Confirm that selected baseline requirements are in
-PENDING_VERIFICATION and have baseline provenance. Read their active criteria,
-typed Traces, native source/run identities, and actual captured source bytes.
-Include every required SR serving a selected UR. Do not invent parent
-relationships or include a DERIVED proposal as an established baseline.
-
-This review contributes evidence to an Epic's completion; it does not bypass
-Epic scope, saved-plan approval, ownership, or the normal lifecycle. If there
-is no Epic that can legitimately contain the work, report the process gap for
-normal planning rather than inventing a direct-to-DONE path.
-
-## Evidence review
-
-1. **Set the denominator.** Inspect every active criterion on each selected
-   UR and SR. Evaluate a UR's upper scenarios independently from its lower SR
-   evidence. List omissions and unsupported criteria.
-2. **Check semantic assertions.** Read captured code and tests at their actual
-   SourceFile UUIDs, paths, revisions, and bytes. Map each criterion to the
-   production behavior and meaningful assertion that exercises it. A test
-   name, badge, adjacent passing test, or source link without an assertion is
-   insufficient. Treat capture SHA-256 values as byte-integrity checks only;
-   they do not authorize or approve content.
-3. **Check execution.** Run only through the project's authorized test path or
-   inspect a genuine retained result. Record the command, environment, tested
-   revision, named outcomes, and report identity. Distinguish lower SR evidence
-   from upper UR evidence; an SR pass does not prove its UR. Do not call an
-   unexecuted reference a pass.
-4. **Check integration where required.** For each repository, inspect genuine
-   evidence that the tested clean revision is integrated at the remote default
-   branch. Record the observed remote and any limits of the evidence. Passing
-   branch tests alone do not prove integration, and integration is not a
-   deployment claim.
-5. **Report findings.** For each native requirement UUID and kind, state
-   criterion coverage, exact supporting Traces and captures, execution and
-   integration evidence, and gaps. Stale, contradictory, inaccessible, or
-   revoked evidence remains a gap. Do not edit records to make evidence fit.
-
-## Handoff
-
-Return evidence findings to the normal Epic completion review. An incomplete
-criterion, missing test, or changed behavior is a development gap for normal
-scoped planning/build/verification. Only the ordinary human Epic completion
-approval changes lifecycle and publishes completion history. If the process
-interface lacks a needed read or write, report that tooling gap through the
-sanctioned channel; do not call the API or edit process state directly.
+Use verified capabilities from the current CLI reference. If evidence cannot be
+stored or read back, report the tooling gap and retain the actual results as
+reviewable evidence without claiming they are persisted. Do not call the gateway
+or edit process state as a workaround.

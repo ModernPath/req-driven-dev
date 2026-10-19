@@ -24,12 +24,6 @@ revision and the work remains within approved scope.
 5. Report failures as implementation work within approved behavior, or route
    material scope/acceptance changes back to `rdd-plan` for renewed approval.
 
-Read the exact assertions and confirm the test executes the real production
-subject. Trace material inputs to the caller, parser or serializer that can
-produce them in production. A mocked subject, an unreachable input shape, or
-an assertion satisfied only by surrounding UI or fixture data leaves the
-behavior unverified; report that gap rather than claiming a pass.
-
 Do not claim completion here. Hand the passing candidate and evidence to
 `rdd-completion-review`; if the process interface cannot store or read back
 required evidence, report the tooling gap and its effect.

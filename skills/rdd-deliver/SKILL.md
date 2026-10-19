@@ -26,7 +26,3 @@ returns to planning for a revised plan and renewed approval. Report blockers,
 assumptions, excluded work and evidence honestly. A focused skill exit is a
 handoff, not completion. Never infer completion from code, tests, review or
 publication alone.
-
-Apply and report each human answer, then continue the requested loop to the
-next human decision. Confirmed implementation approval lets the build start;
-merge, deployment and release still require the human's word.

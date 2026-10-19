@@ -1,6 +1,6 @@
 ---
 name: rdd-entry-review
-description: Present the exact saved Epic plan and proposed content for human implementation approval. A focused pass stops before implementation.
+description: Present the exact saved Epic plan and proposed content for human implementation approval. Stops before implementation.
 ---
 
 # Obtain implementation approval
@@ -23,7 +23,3 @@ Do not answer for the human or start test/code changes before the
 approval is confirmed. If rejected or revised, report that result and route
 back to `rdd-plan`. If the interface cannot record/read back the approval,
 report the tooling gap and stop before implementation.
-
-Report the applied approval and next phase. A focused entry-review request ends
-with that report; in the complete delivery loop, continue into the build once
-implementation approval is confirmed, without asking for another start.

@@ -24,4 +24,4 @@ sanctioned interface for process state and preserve native IDs.
 
 Do not implement in this pass. Report sources inspected, confirmed intent,
 open questions and the next needed phase. The dedicated reverse-engineering
-skills retain their separate baseline rules.
+skill records requirements and file traces directly.

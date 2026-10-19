@@ -18,8 +18,9 @@ its plan and proposed content, and obtains implementation approval. That approva
 locks requirements to one user and Epic and starts implementation. Review keeps
 the published content and lock unchanged. Human completion approval atomically
 publishes approved content, raises revisions, retains immutable accepted versions,
-records audit and releases ownership. Existing source-scoped baseline
-work has its own eligibility and proof rules in `PROCESS.md`.
+records audit and releases ownership. Reverse engineering records requirements
+and file traces directly; it has no hash, source capture or as-built proof
+prerequisite.
 
 ## Read first
 
