@@ -7,8 +7,10 @@ description: Implement behavior within a human-approved Epic plan, using red-fir
 
 Read `PROCESS.md` and verify through the sanctioned interface that the current
 saved plan and proposed content has human implementation approval. Confirm the Epic and
-requirement IDs and remain inside approved scope. A scope or acceptance
-change returns to planning.
+requirement IDs and remain inside approved scope. The active approved plan and
+owned requirement content are read-only during implementation and completion
+review. Surface a requested scope or acceptance change as a human decision and
+record the new work separately; do not revise the active approval in place.
 
 For each behavior:
 

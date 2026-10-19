@@ -30,8 +30,10 @@ interface for all process reads.
 5. If Epic implementation is approved, route to `rdd-build` or `rdd-verify` based
    on current evidence. If ready for delivery, route to
    `rdd-completion-review`.
-6. If Epic scope or acceptance changed, route back to planning and obtain renewed
-   human approval before affected work continues.
+6. If scope or acceptance changes while the Epic is PROPOSED, route back to
+   planning and obtain human approval before implementation. Once implementation
+   is approved, keep the active plan and owned requirements read-only, surface
+   the new request as a human decision and record new work separately.
 
 If the interface cannot read the current state, report the missing capability
 through the project's tooling-gap channel. Do not recreate state from notes,

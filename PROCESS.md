@@ -84,6 +84,12 @@ and proposed requirement content separately from published content. It atomicall
 locks the whole requirement set to that Epic and one user. A conflicting owner
 must leave the whole approval unchanged.
 
+The approved Epic plan, its scope and the owned requirement content are read-only
+through `IN_PROGRESS` and `IN_REVIEW`. Do not revise an active approval in place
+or treat a new request as permission to edit it. Surface a requested scope or
+acceptance change as a human decision and record the new work separately;
+implementation continues only within the approved scope.
+
 `IN_REVIEW` means implementation is complete and awaits human completion
 approval. The ownership lock, approved proposal and prior published requirement
 content remain unchanged. `DONE` follows human completion approval: atomically
