@@ -16,6 +16,10 @@ process authority.
    changed scope as a human decision and record new work separately for its
    own plan and human implementation approval. Continue unaffected work
    within the active approved scope.
+   Include one or more native UR/SR requirements covering all in-scope
+   behavior, with explicit criteria and planned code/test traces. Use each
+   kind as applicable; small changes have no exemption, and plan-only
+   acceptance checks do not substitute for native requirements.
 2. Ground claims in source passages, code, tests or observed runs. Verify
    important citations by reading the source; a path alone is insufficient.
 3. Inspect affected control/data flow, persistence, interfaces, integrations,

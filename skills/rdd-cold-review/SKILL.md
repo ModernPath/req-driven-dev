@@ -13,6 +13,9 @@ Check that:
 
 - the user outcome, scope and exclusions are explicit and consistent with
   authoritative sources;
+- one or more native UR/SR requirements cover all in-scope behavior, with
+  explicit criteria and planned code/test traces; an empty requirement set
+  or plan-only acceptance checks is a material finding;
 - acceptance and requirement links trace to the intended behavior using
   native identities;
 - reconnaissance covers affected state, interfaces, integrations, failure

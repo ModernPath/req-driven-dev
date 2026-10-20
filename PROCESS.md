@@ -5,7 +5,7 @@ This document defines the delivery process. Skills apply it. The project's sanct
 ## Canonical model
 
 ```text
-EPIC -> optional UR/SR requirements -> native code and test references
+EPIC -> required UR/SR requirements -> native code and test references
 UR -> acceptance scenario -> TEST_CASE -> TEST_RESULT
 UR acceptance scenario -- may require --> SR
 SR -> CODE -> TEST_CASE -> TEST_RESULT
@@ -18,6 +18,16 @@ UR/SR: PROPOSED -> IN_PROGRESS -> IN_REVIEW -> DONE
 Human decisions: implementation approval -> completion approval
                  or explicit acceptance of verified existing behavior
 ```
+
+Every product Epic must include one or more native UR/SR requirements that
+cover its in-scope behavior, with explicit acceptance criteria and planned
+code/test traces before implementation approval. Use URs for user outcomes
+and SRs for system behavior as applicable; both kinds are not required for
+every Epic. Acceptance checks written only in a saved plan do not substitute
+for native requirements. Small changes have no exemption. During delivery,
+connect those requirements to actual implementation and criterion-level test
+evidence before completion review. Meta-work remains outside the product
+loop under `AGENTS.md` §Product work and meta-work.
 
 The Epic is the normal unit of authorized delivery. Requirements express
 behavior and link to implementation and evidence; they do not replace the
@@ -264,6 +274,11 @@ source. A source inventory is not an implementation plan. For persisted or
 shared state, inspect the actual writers, readers, existing data shapes,
 partial-failure behavior and recovery; document the risks and mitigation in
 the saved plan. Do not replace reconnaissance with a citation list.
+
+A plan with no native requirements, uncovered in-scope behavior, missing
+criteria or missing planned code/test traces is not ready for implementation
+approval. Return it to planning rather than approving plan-only acceptance
+checks.
 
 An independent cold review checks the saved plan against its sources, scope,
 acceptance, architecture, state boundaries, risks and test strategy. Record

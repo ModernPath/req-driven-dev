@@ -7,7 +7,7 @@ engineering and traceable evidence.
 The process traces:
 
 ```text
-EPIC -> optional UR/SR requirements
+EPIC -> required UR/SR requirements
 UR -> acceptance scenario -> TEST_CASE -> TEST_RESULT
 UR acceptance scenario -- may require --> SR
 SR -> CODE -> TEST_CASE -> TEST_RESULT
