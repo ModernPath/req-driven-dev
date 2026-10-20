@@ -30,12 +30,20 @@ prove semantic coverage or authorize a lifecycle transition.
 
 ## Check citations
 
-Use `audit-citations.mjs` beside this skill for local Markdown citations. Pass
-the actual document roots and source repositories explicitly. Substitute the
-paths and repository keys in this command:
+Locate the existing `audit-citations.mjs` for local Markdown citations. In a
+consuming project, use `.modernpath/rdd/skills/rdd-audit/audit-citations.mjs`
+relative to its root; in this source checkout, use
+`skills/rdd-audit/audit-citations.mjs` relative to its root. An agent-specific
+skill copy such as `.claude/skills/rdd-audit/` may contain only `SKILL.md`.
+Confirm the script exists at the canonical location before running it; do not
+copy it beside an agent-specific skill. If neither location provides it,
+report the missing installation artifact.
+
+Pass the actual document roots and source repositories explicitly. Substitute
+the resolved script path, paths and repository keys in this command:
 
 ```text
-node <skill-directory>/audit-citations.mjs <document-root> --repository=<key>=<source-root>
+node <resolved-script-path> <document-root> --repository=<key>=<source-root>
 ```
 
 Repeat `--repository` for multiple repositories. Git worktrees and explicitly

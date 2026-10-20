@@ -9,8 +9,13 @@ Read `PROCESS.md`, the selected Epic and its native requirement links. Inspect
 relevant product documents, code and tests; do not treat repository state as
 process authority.
 
-1. Confirm the exact Epic and intended outcome. Preserve native IDs and
-   identify included requirements and explicit exclusions.
+1. Confirm the exact Epic, its lifecycle and intended outcome. Preserve
+   native IDs and identify included requirements and explicit exclusions.
+   Create or revise its plan only while it is `PROPOSED`. Once implementation
+   is approved, keep the active plan and owned requirements read-only; surface
+   changed scope as a human decision and record new work separately for its
+   own plan and human implementation approval. Continue unaffected work
+   within the active approved scope.
 2. Ground claims in source passages, code, tests or observed runs. Verify
    important citations by reading the source; a path alone is insufficient.
 3. Inspect affected control/data flow, persistence, interfaces, integrations,

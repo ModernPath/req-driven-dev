@@ -88,7 +88,9 @@ The approved Epic plan, its scope and the owned requirement content are read-onl
 through `IN_PROGRESS` and `IN_REVIEW`. Do not revise an active approval in place
 or treat a new request as permission to edit it. Surface a requested scope or
 acceptance change as a human decision and record the new work separately;
-implementation continues only within the approved scope.
+implementation continues only within the approved scope. New work requires
+its own saved plan and human implementation approval; unaffected authorized
+implementation may continue.
 
 `IN_REVIEW` means implementation is complete and awaits human completion
 approval. The ownership lock, approved proposal and prior published requirement
@@ -296,7 +298,7 @@ gap.
 | Review, publish and complete | `rdd-completion-review` | Human-approved content atomically published/versioned/audited, ownership released, or incomplete work reported |
 | Verify existing behavior | `rdd-reverse-engineer-verify` | Current PROPOSED content traced to existing behavior and complete applicable test outcomes recorded; no lifecycle transition |
 | Accept existing behavior | `rdd-reverse-engineer-accept` | Exact verified targets explicitly accepted by a human and atomically published as DONE, or left PROPOSED with the tooling gap reported |
-| Discoveries and blockers | `rdd-triage` | Discovery routed into the saved plan or reported as a decision/blocker |
+| Discoveries and blockers | `rdd-triage` | Discovery routed into a draft plan or reported as a separate-work decision/blocker; active approvals preserved |
 
 A focused pass is a handoff, not whole-task completion. Stop when its exit is
 reached and report what remains.
@@ -322,12 +324,14 @@ failures; do not restore removed machinery, invent replacements, weaken tests
 of retained behavior or manufacture RED/GREEN evidence.
 
 If an upper/user-flow failure remains after lower-level requirements pass,
-diagnose it. Repeat the loop when it is within approved behavior. Return to
-planning and obtain renewed approval when fixing it requires changed scope,
-acceptance, architecture, priority or a material technical decision. Record an
-external impediment as blocked. UI evidence requires the live stack, loaded
-assets and inspected browser output; never mutate production-like data to
-verify rendering.
+diagnose it. Repeat the loop when it is within approved behavior. If fixing it
+requires changed scope, acceptance, architecture, priority or a material
+technical decision, keep the active approved plan and owned requirements
+read-only, surface the change as a human decision and record new work
+separately for its own plan and human implementation approval. Continue
+unaffected work within the active approved scope. Record an external impediment
+as blocked. UI evidence requires the live stack, loaded assets and inspected
+browser output; never mutate production-like data to verify rendering.
 
 ### Delegated passes
 
@@ -400,7 +404,7 @@ tooling gap and leave the item explicitly incomplete.
 
 | Discovery | Route |
 |---|---|
-| New behavior or changed user outcome | Add sourced scope to the Epic plan and obtain renewed human implementation approval before affected work |
+| New behavior or changed user outcome | Revise the saved plan only while the Epic is PROPOSED and obtain human implementation approval; after approval, preserve the active plan and owned requirements and record new work separately for its own plan and human approval, continuing unaffected authorized work |
 | Missing human decision or ambiguous intent | Ask the human and record the answer with its source before relying on it |
 | Technical failure inside approved behavior | Continue red-first implementation and verification |
 | External impediment | Report the blocker, its owner and the next action |
