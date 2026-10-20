@@ -35,7 +35,9 @@ revision and the work remains within approved scope.
    owned requirements read-only, surface the change as a human decision and
    record new work separately for its own plan and human implementation
    approval. Continue unaffected implementation and verification within the
-   active approved scope.
+   active approved scope. Verification may add assertions within the approved
+   criteria. A change to product behavior is implementation work: route it
+   back to `rdd-build`.
 
 Finish evidence collection before independent implementation review. A rerun
 that changes reviewed evidence requires renewing that review.

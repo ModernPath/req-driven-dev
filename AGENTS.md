@@ -75,7 +75,10 @@ code, test results, commits, a passing review or a repository status.
 Use only the project's CLI for process reads and
 writes. If it lacks a needed read or transition, report the gap through the
 project's named channel. Never read credentials or private configuration,
-call its transport directly, or write process state by hand. Ordinary product
+call its transport directly, or write process state by hand. Do not change
+process records just to discover how a command works; use its documentation
+or help output. A `USER:` attribution carries only the human's verbatim answer;
+never compose, paraphrase or predict one. Ordinary product
 documents remain in their project repository and use its documented
 documentation workflow.
 
