@@ -26,7 +26,7 @@ Check that:
 - material security, data-integrity, operational, migration and testability
   concerns are addressed.
 
-A file citation resolving is not proof that it supports the claim. Open the
+A source link resolving is not proof that it supports the claim. Open the
 source and assess the connection. Report findings with severity, the precise
 claim or plan section, inspected evidence and a concrete correction. The
 orchestrator updates and resubmits a materially changed plan. Do not implement,

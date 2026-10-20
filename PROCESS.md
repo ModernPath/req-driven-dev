@@ -273,7 +273,7 @@ existing ownership and constraints, then verify each relevant match in its
 source. A source inventory is not an implementation plan. For persisted or
 shared state, inspect the actual writers, readers, existing data shapes,
 partial-failure behavior and recovery; document the risks and mitigation in
-the saved plan. Do not replace reconnaissance with a citation list.
+the saved plan. Do not replace reconnaissance with a list of source links.
 
 A plan with no native requirements, uncovered in-scope behavior, missing
 criteria or missing planned code/test traces is not ready for implementation

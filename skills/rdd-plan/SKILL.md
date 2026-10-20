@@ -21,7 +21,7 @@ process authority.
    kind as applicable; small changes have no exemption, and plan-only
    acceptance checks do not substitute for native requirements.
 2. Ground claims in source passages, code, tests or observed runs. Verify
-   important citations by reading the source; a path alone is insufficient.
+   important source references by reading the source; a path alone is insufficient.
 3. Inspect affected control/data flow, persistence, interfaces, integrations,
    failure modes, dependencies and project test gates. For shared or persisted
    state, identify actual writers, readers, existing shapes, partial-failure

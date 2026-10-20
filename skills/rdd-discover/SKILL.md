@@ -11,7 +11,7 @@ sanctioned interface for process state and preserve native IDs.
 1. Separate explicit user intent from facts established by documents, code,
    tests and runtime evidence.
 2. Inspect the exact source passage or behavior supporting each material
-   claim. Distinguish a source citation from proof that the source supports
+   claim. Distinguish a source reference from proof that the source supports
    the claim.
 3. Identify existing requirements, affected behavior, acceptance, conflicts,
    dependencies, risks and unknowns. Do not create a requirement merely to
