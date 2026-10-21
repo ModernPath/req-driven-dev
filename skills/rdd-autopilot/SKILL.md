@@ -27,7 +27,7 @@ grant is missing, expired or ambiguous.
    and hardening for closeout. Do not skip project commit checks.
 5. At closeout, finish evidence collection, then follow `rdd-completion-review`
    to retain and record the independent implementation review, resolve findings,
-   submit and retain the human completion presentation. Audit its native
+   submit and retain the human completion presentation. Audit its
    Epic/requirement/code/test traces. Record tested code revisions through
    version control and present assumptions, findings, evidence and unfinished
    scope. Keep published requirement content and ownership unchanged in review.

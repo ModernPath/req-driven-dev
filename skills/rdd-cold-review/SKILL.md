@@ -5,7 +5,7 @@ description: Independently review a saved Epic plan before human implementation 
 
 # Review the saved plan independently
 
-Read `PROCESS.md`, the exact saved plan and proposed content, its linked native Epic and
+Read `PROCESS.md`, the exact saved plan and proposed content, its linked Epic and
 requirements, and the sources needed to assess its claims. Do not rely on the
 author's session summary when source material can be inspected.
 
@@ -20,11 +20,11 @@ Check that:
 
 - the user outcome, scope and exclusions are explicit and consistent with
   authoritative sources;
-- one or more native UR/SR requirements cover all in-scope behavior, with
+- one or more UR/SR requirements cover all in-scope behavior, with
   explicit criteria and planned code/test traces; an empty requirement set
   or plan-only acceptance checks is a material finding;
 - acceptance and requirement links trace to the intended behavior using
-  native identities;
+  identities;
 - reconnaissance covers affected state, interfaces, integrations, failure
   modes, risks and project test gates;
 - the change boundary says what changes and what must remain unchanged;

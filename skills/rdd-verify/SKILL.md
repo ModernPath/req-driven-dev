@@ -5,7 +5,7 @@ description: Verify implementation under an approved Epic plan, including curren
 
 # Verify approved work
 
-Read `PROCESS.md`, the approved plan and proposed content and its native requirement,
+Read `PROCESS.md`, the approved plan and proposed content and its requirement,
 code and test links. Confirm the tested content is the current candidate
 revision and the work remains within approved scope.
 
@@ -23,7 +23,7 @@ revision and the work remains within approved scope.
 3. Rerun affected user acceptance scenarios and report runtime/browser
    observations. UI evidence requires the live stack, loaded assets and
    inspected output.
-4. Link each result to its native requirement, test identity and exact code
+4. Link each result to its requirement, test identity and exact code
    revision. Broad suite output proves only exercised assertions. Do not
    reconstruct evidence or mark a skipped test as passing.
 5. Report failures within approved behavior as implementation work. For a

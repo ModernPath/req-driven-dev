@@ -14,10 +14,10 @@ interface for all process reads.
    worktree. Changed behavior or tests require the normal Epic path. Explicit
    recording, verification or acceptance of existing behavior needs no
    implementation Epic.
-2. For the Epic path, confirm the user-selected Epic by its native ID. If none
+2. For the Epic path, confirm the user-selected Epic by its ID. If none
    is selected, ask which one to work on. Read the Epic, its latest saved plan, implementation approval,
    lifecycle, linked requirements, recent evidence and completion state.
-   If a draft Epic has no native requirements, or its requirements lack
+   If a draft Epic has no requirements, or its requirements lack
    behavior coverage, criteria or planned code/test traces, route to
    `rdd-plan` before approval. If already approved with these gaps, surface
    the conflict for a human decision; do not silently edit approved content
@@ -27,7 +27,7 @@ interface for all process reads.
    preserving published content and history. Read back recovery, then route to
    planning, independent review and fresh implementation approval. If unsupported,
    report the tooling gap; do not perform recovery by editing active records.
-3. For an explicit existing-behavior pass, read the native System and
+3. For an explicit existing-behavior pass, read the System and
    requirement IDs, current content, criteria, traces, evidence and ownership
    from the sanctioned interface. Route recording to `rdd-reverse-engineer`,
    verification to `rdd-reverse-engineer-verify`, or requested human

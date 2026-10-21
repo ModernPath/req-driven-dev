@@ -9,7 +9,7 @@ Read `PROCESS.md`, the Epic's exact saved plan and proposed content, independent
 review findings and their resolution. Confirm that the human is reviewing that
 content and its stated scope.
 
-Before requesting approval, confirm the Epic includes native UR/SR
+Before requesting approval, confirm the Epic includes UR/SR
 requirements covering all in-scope behavior, with explicit criteria and
 planned code/test traces. An empty requirement set or plan-only acceptance
 checks is not ready; return it to `rdd-plan`.

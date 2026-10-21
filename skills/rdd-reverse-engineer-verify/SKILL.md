@@ -6,7 +6,7 @@ description: Verify reverse-engineered requirements against existing behavior an
 # Verify existing behavior
 
 Read the project's instructions, current process and sanctioned CLI reference.
-Start from an explicit System and native user/system requirement IDs. Read their
+Start from an explicit System and user/system requirement IDs. Read their
 current content, active acceptance criteria and implementation/test traces.
 Acceptance targets are PROPOSED. Existing DONE requirements may support the
 trace, but are not accepted again. Verification does not change lifecycle state.

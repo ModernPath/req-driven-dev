@@ -1,6 +1,6 @@
 ---
 name: rdd-audit
-description: Inspect native Traces, their endpoints, requirement coverage and actual evidence. Use within reverse-engineering, planning review, completion review or an explicitly requested audit. Reports findings and limits without changing lifecycle or granting approval.
+description: Inspect Traces, their endpoints, requirement coverage and actual evidence. Use within reverse-engineering, planning review, completion review or an explicitly requested audit. Reports findings and limits without changing lifecycle or granting approval.
 ---
 
 # Audit Traces and evidence
@@ -11,9 +11,9 @@ through `rdd-triage`. An audit alone authorizes no record or implementation chan
 
 ## Establish scope
 
-Identify the native System, Epic or requirements and the criteria being checked.
+Identify the System, Epic or requirements by their IDs and list the criteria being checked.
 Read current records and Traces through the project's sanctioned interface.
-Use native endpoint identities and kinds; never infer the corpus from local
+Use endpoint identities and kinds; never infer the corpus from local
 files or recreate retired ledgers. If a required read is unavailable, report
 the tooling gap and leave the check incomplete.
 
@@ -23,10 +23,10 @@ unit, enumeration method and exclusions. Compare both directions: requirements
 without support and relevant implementation or tests without requirement coverage.
 Disclose unresolved items; counts alone do not prove semantic coverage.
 
-## Inspect native Traces
+## Inspect Traces
 
 1. Enumerate Traces touching each in-scope requirement and criterion. Follow
-   pagination to completion. Inspect both endpoints, their native kinds,
+   pagination to completion. Inspect both endpoints, their kinds,
    relationship and System scope. Report missing, invalid, cross-System or
    wrongly related endpoints.
 2. Inspect the connected records and actual source material. Requirement-to-
@@ -64,7 +64,7 @@ route and compare actual content; length alone does not prove equality.
 
 ## Report
 
-Report native scope, inspected Trace identities and endpoints, criterion-level
+Report scope, inspected Trace identities and endpoints, criterion-level
 coverage, sources and actual test observations. Include confirmed findings,
 exclusions, unresolved checks and command outcomes. State what each observation
 proves and its limits. Route findings through the invoking pass; an audit does

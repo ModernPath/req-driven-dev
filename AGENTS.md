@@ -7,7 +7,7 @@ human approvals. This repository defines no local delivery ledger.
 
 ## Instruction ownership
 
-- [`PROCESS.md`](PROCESS.md) defines product authority, native item identity,
+- [`PROCESS.md`](PROCESS.md) defines product authority, item identity,
   traces, Epic scope, implementation approval, engineering, evidence, human
   completion and existing-behavior acceptance.
 - [`skills/`](skills/) contains focused procedures that apply that process.
@@ -87,6 +87,6 @@ verify Git, PR and deployment state separately before making those claims.
 ## Repository checks
 
 Process edits require review of internal links and competing instruction
-statements, and `git diff --check`. Inspect native Traces and their supporting
+statements, and `git diff --check`. Inspect Traces and their supporting
 records through the consuming project's sanctioned interface; this repository
 has no process store or local evidence checker.

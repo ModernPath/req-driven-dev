@@ -5,21 +5,21 @@ description: Prepare and save a reviewable plan and proposed content for a human
 
 # Prepare the Epic plan
 
-Read `PROCESS.md`, the selected Epic and its native requirement links. Inspect
+Read `PROCESS.md`, the selected Epic and its requirement links. Inspect
 relevant product documents, code and tests; do not treat repository state as
 process authority.
 
 1. Confirm the exact Epic, its lifecycle and intended outcome. Preserve
-   native IDs and identify included requirements and explicit exclusions.
+   IDs and identify included requirements and explicit exclusions.
    Create or revise its plan only while it is `PROPOSED`. Once implementation
    is approved, keep the active plan and owned requirements read-only; surface
    changed scope as a human decision and record new work separately for its
    own plan and human implementation approval. Continue unaffected work
    within the active approved scope.
-   Include one or more native UR/SR requirements covering all in-scope
+   Include one or more UR/SR requirements covering all in-scope
    behavior, with explicit criteria and planned code/test traces. Use each
    kind as applicable; small changes have no exemption, and plan-only
-   acceptance checks do not substitute for native requirements.
+   acceptance checks do not substitute for requirements.
 2. Ground claims in source passages, code, tests or observed runs. Verify
    important source references by reading the source; a path alone is insufficient.
 3. Inspect affected control/data flow, persistence, interfaces, integrations,
@@ -29,9 +29,9 @@ process authority.
 4. Define behavior boundaries, acceptance scenarios, code/test targets,
    expected RED assertions, focused and proportional regression checks,
    operational and security risks, and the requirement content that completion would publish.
-5. Create or reuse native test definitions before readiness review. Declare
+5. Create or reuse test definitions before readiness review. Declare
    every active criterion and required project check as a verification obligation,
-   with native test identity, boundary and expected observation. Identify changed
+   with test identity, boundary and expected observation. Identify changed
    criteria requiring RED, applicable boundaries and exclusion reasons, author
    context, and required human decisions using interface-issued identities.
    Retain each declared question beside its effective human answer.

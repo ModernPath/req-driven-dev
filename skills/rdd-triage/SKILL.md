@@ -6,7 +6,7 @@ description: Route discoveries, defects, blockers, conflicts and deferred work i
 # Triage a discovery
 
 Read `PROCESS.md`, the selected Epic and its current saved plan, plus relevant
-source, code and test evidence. Preserve native IDs.
+source, code and test evidence. Preserve IDs.
 
 1. Classify the discovery: behavior within approved scope, changed acceptance
    or scope, implementation defect, external blocker, contradictory source,
@@ -25,5 +25,5 @@ source, code and test evidence. Preserve native IDs.
    another Epic, invent a local record, or declare a process-tool refusal
    cleared.
 
-Report evidence, affected native items, the earliest needed phase and what
+Report evidence, affected items, the earliest needed phase and what
 remains incomplete.

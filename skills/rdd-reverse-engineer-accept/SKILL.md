@@ -10,7 +10,7 @@ current process and sanctioned CLI reference. This path accepts an accurate,
 verified description of existing behavior; it does not approve a requested code
 change or require an implementation Epic merely to manufacture a lifecycle path.
 
-1. Read the exact native requirement set, current content and acceptance
+1. Read the exact requirement set, current content and acceptance
    criteria, implementation/test traces and persisted execution evidence.
    Targets must remain PROPOSED and have complete applicable passing evidence.
    Leave already DONE requirements unchanged. Requirements owned by active
