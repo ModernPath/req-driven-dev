@@ -295,6 +295,22 @@ change, not the amount of prose or the presence of links.
 
 ### Epic gates, verification and review
 
+The four Epic gates and their CLI checks are:
+
+| Epic gate | Required conditions | CLI check |
+|---|---|---|
+| Plan readiness (`plan-ready`) | Saved requirements, criteria, code/test traces, test definitions and verification obligations; answered decisions; current independent plan review and resolved material findings. | `modernpath epics gates check <epic-id> --phase plan-ready --json` |
+| Implementation approval (`implementation`) | Plan readiness and requirements available for ownership. Approval also checks the exact reviewed plan and, for declared decisions, the retained presentation shown to the user. | `modernpath epics gates check <epic-id> --phase implementation --json` |
+| Completion review (`completion-review`) | Current candidate, intact membership and ownership, passing results for every obligation, qualifying RED evidence for changed criteria, current implementation review confirming scope, and resolved material findings. | `modernpath epics gates check <epic-id> --phase completion-review --json` |
+| Completion approval (`completion`) | Completion-review conditions while the Epic is IN_REVIEW. Approval also checks the exact retained completion presentation and requires the user's explicit decision. | `modernpath epics gates check <epic-id> --phase completion --json` |
+
+Each check returns readiness and all detected blockers without changing the
+Epic. Passing a check grants no approval. The transition commands recheck the
+conditions: `modernpath epics plan approve-implementation`,
+`modernpath epics plan submit-review`, and
+`modernpath epics plan approve-completion`. Follow the CLI reference for their
+required Epic ID, input files and approval arguments.
+
 Before the final plan review, create or reuse test definitions and declare
 verification obligations for every active criterion and required project check.
 Each obligation identifies its test, boundary and expected observation;
