@@ -250,6 +250,9 @@ failures and incomplete work at sprint closeout.
 
 ## Planning and readiness
 
+Epic gates check the recorded conditions for planning readiness, implementation
+approval, completion review and completion approval.
+
 Planning produces a saved, reviewable Epic plan and exact proposed content. It is useful to a
 builder and an independent reviewer without depending on session memory. It
 contains:
@@ -292,7 +295,7 @@ resolutions for material findings, including findings from superseded reviews;
 editing the plan alone does not record their disposition. The review audits the planned
 change, not the amount of prose or the presence of links.
 
-### Recorded verification and review
+### Epic gates, verification and review
 
 Before the final plan review, create or reuse native test definitions and declare
 verification obligations for every active criterion and required project check.
