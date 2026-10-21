@@ -316,6 +316,13 @@ conditions: `modernpath epics plan approve-implementation`,
 `modernpath epics plan approve-completion`. Follow the CLI reference for their
 required Epic ID, input files and approval arguments.
 
+After recording the independent plan review, `rdd-cold-review` runs the
+`plan-ready` check. Before asking for implementation approval,
+`rdd-entry-review` runs `implementation`. `rdd-completion-review` runs
+`completion-review` before submission and `completion` before asking for
+human completion approval. Inspect each recorded result and resolve blockers
+through the appropriate pass. None of these checks records a human approval.
+
 Before the final plan review, create or reuse test definitions and declare
 verification obligations for every active criterion and required project check.
 Each obligation identifies its test, boundary and expected observation;

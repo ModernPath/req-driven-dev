@@ -24,10 +24,14 @@ still-published requirements, ownership, implementation, traces and evidence.
    source, test, code-revision and PR links as evidence, not approval tokens.
    If reviewed content or evidence changes, renew the independent review before
    submission. Do not silently replace the bundle attached to an earlier review.
-3. Check readiness, then submit completed implementation for review. Read back
+3. Run the `completion-review` Epic gate check and inspect its recorded result
+   and blockers. Resolve blockers before submitting completed implementation
+   for review. Read back
    IN_REVIEW while the
    approved proposal, ownership and prior published requirements stay intact.
-4. Fetch and retain the authoritative completion presentation before asking.
+4. Run the `completion` Epic gate check while the Epic is IN_REVIEW; resolve
+   blockers before asking for completion approval. Fetch and retain the
+   authoritative completion presentation before asking.
    Present its exact approved proposal, current published content, evidence,
    findings, risks, assumptions and any unfinished scope to the human. Obtain
    the separate explicit completion answer; never infer it from implementation

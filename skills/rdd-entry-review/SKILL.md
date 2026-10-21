@@ -12,7 +12,10 @@ content and its stated scope.
 Before requesting approval, confirm the Epic includes UR/SR
 requirements covering all in-scope behavior, with explicit criteria and
 planned code/test traces. An empty requirement set or plan-only acceptance
-checks is not ready; return it to `rdd-plan`.
+checks is not ready; return it to `rdd-plan`. Run the `implementation` Epic
+gate check after the plan review and record its result before asking for approval.
+If it reports blockers, resolve them through the appropriate pass and check
+again. A passing check does not record the human's approval.
 
 Resolve and record declared human decisions before the final independent review.
 Retain the authoritative review bundle and its exact saved plan before asking

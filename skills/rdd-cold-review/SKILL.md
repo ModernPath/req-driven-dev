@@ -38,6 +38,8 @@ A source link resolving is not proof that it supports the claim. Open the
 source and assess the connection. Report findings with severity, the precise
 claim or plan section, inspected evidence and a concrete correction. The agent handling the task
 records the review against the retained bundle, records explicit
-material-finding resolutions, and resubmits whenever reviewed content changes,
+material-finding resolutions, then runs the `plan-ready` Epic gate check and
+reports its recorded result and blockers. A passing review alone is not a passing
+gate check or human approval. That agent resubmits whenever reviewed content changes,
 including decision answers or test definitions. Do not implement,
 change process state, or approve on the human's behalf.
