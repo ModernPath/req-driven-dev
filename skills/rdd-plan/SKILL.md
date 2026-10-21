@@ -5,6 +5,11 @@ description: Prepare and save a reviewable plan and proposed content for a human
 
 # Prepare the Epic plan
 
+Start the saved plan with a short, plain-language summary of what will change,
+why it is needed, and its expected impact on users and affected parts of the
+product. Put this before the detailed scope, requirements and implementation
+approach so the human can quickly understand the proposed change.
+
 Read `PROCESS.md`, the selected Epic and its requirement links. Inspect
 relevant product documents, code and tests; do not treat repository state as
 process authority.
