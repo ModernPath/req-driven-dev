@@ -9,6 +9,13 @@ Read `PROCESS.md`, the exact saved plan and proposed content, its linked native 
 requirements, and the sources needed to assess its claims. Do not rely on the
 author's session summary when source material can be inspected.
 
+The orchestrator first obtains answers to declared human decisions, then fetches
+and retains the authoritative review bundle and supplies it with source access.
+Use that exact bundle; do not run unavailable process tools or substitute a later
+bundle. Return coverage of every criterion and verification obligation, reviewer
+context, reason, findings and limitations. Context separation is an attestation,
+not proof of different human identities.
+
 Check that:
 
 - the user outcome, scope and exclusions are explicit and consistent with
@@ -29,5 +36,7 @@ Check that:
 A source link resolving is not proof that it supports the claim. Open the
 source and assess the connection. Report findings with severity, the precise
 claim or plan section, inspected evidence and a concrete correction. The
-orchestrator updates and resubmits a materially changed plan. Do not implement,
+orchestrator records the review against the retained bundle, records explicit
+material-finding resolutions, and resubmits whenever reviewed content changes,
+including decision answers or test definitions. Do not implement,
 change process state, or approve on the human's behalf.

@@ -21,7 +21,12 @@ interface for all process reads.
    behavior coverage, criteria or planned code/test traces, route to
    `rdd-plan` before approval. If already approved with these gaps, surface
    the conflict for a human decision; do not silently edit approved content
-   or treat plan-only checks as sufficient.
+   or treat plan-only checks as sufficient. For a legacy active plan missing
+   verification obligations, explain the supported audited recovery: explicit
+   human authorization returns it to PROPOSED and releases ownership while
+   preserving published content and history. Read back recovery, then route to
+   planning, independent review and fresh implementation approval. If unsupported,
+   report the tooling gap; do not perform recovery by editing active records.
 3. For an explicit existing-behavior pass, read the native System and
    requirement IDs, current content, criteria, traces, evidence and ownership
    from the sanctioned interface. Route recording to `rdd-reverse-engineer`,

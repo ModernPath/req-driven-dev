@@ -29,9 +29,18 @@ process authority.
 4. Define behavior boundaries, acceptance scenarios, code/test targets,
    expected RED assertions, focused and proportional regression checks,
    operational and security risks, and the requirement content that completion would publish.
-5. Record open questions, conflicts, assumptions, deferred scope and risk in
+5. Create or reuse native test definitions before readiness review. Declare
+   every active criterion and required project check as a verification obligation,
+   with native test identity, boundary and expected observation. Identify changed
+   criteria requiring RED, applicable boundaries and exclusion reasons, author
+   context, and required human decisions using interface-issued identities.
+   Retain each declared question beside its effective human answer.
+   This creates test definitions, not executable tests before approval.
+6. Record open questions, conflicts, assumptions, deferred scope and risk in
    plain language. Do not invent a CLI verb or local plan format.
-6. Save the plan through the sanctioned process interface and read back the exact saved content. Stop for independent review and human implementation
+7. Save the plan through the sanctioned process interface and read back the exact
+   saved content. Obtain and record answers to declared decisions, then retain the
+   review bundle. Stop for independent review and human implementation
    approval; do not change tests or product code in this pass.
 
 Report the Epic ID, saved plan and proposed content, material decisions, sources and the

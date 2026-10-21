@@ -14,13 +14,19 @@ requirements covering all in-scope behavior, with explicit criteria and
 planned code/test traces. An empty requirement set or plan-only acceptance
 checks is not ready; return it to `rdd-plan`.
 
+Resolve and record declared human decisions before the final independent review.
+Retain the authoritative review bundle and its exact saved plan before asking
+for implementation approval. A changed answer or reviewed content requires
+renewed review. Present only this retained content.
+
 Present the user outcome, included requirements and exclusions, material
-sources, risks, test strategy, unresolved decisions and recommendation in
+sources, risks, test strategy, recorded decision answers and recommendation in
 plain language. Ask the human to approve or revise the plan for
 implementation. Do not imply that a passing review or autopilot grant is
 completion approval.
 
-If approved, record the human's actual answer and `USER:` attribution through
+If approved, submit the unchanged retained presentation with the human's actual
+answer and `USER:` attribution through
 the sanctioned interface and read back the resulting Epic state and plan
 content. Confirm the named requirements atomically acquired the human/Epic
 ownership and moved directly to IN_PROGRESS, with published content unchanged.

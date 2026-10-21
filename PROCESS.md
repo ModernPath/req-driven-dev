@@ -100,7 +100,9 @@ or treat a new request as permission to edit it. Surface a requested scope or
 acceptance change as a human decision and record the new work separately;
 implementation continues only within the approved scope. New work requires
 its own saved plan and human implementation approval; unaffected authorized
-implementation may continue.
+implementation may continue. The narrowly scoped legacy recovery operation below
+is an explicit human-authorized exception that ends the active approval rather
+than revising it in place.
 
 `IN_REVIEW` means implementation is complete and awaits human completion
 approval. The ownership lock, approved proposal and prior published requirement
@@ -283,15 +285,58 @@ checks.
 An independent cold review checks the saved plan against its sources, scope,
 acceptance, architecture, state boundaries, risks and test strategy. Record
 material findings and correct the plan before asking for implementation
-approval. Re-review material plan changes. The review audits the planned
+approval. Renew the review whenever its reviewed content changes, including
+decision answers, membership, test definitions, candidate or relevant evidence.
+An identical saved value does not itself require another review. Record explicit
+resolutions for material findings, including findings from superseded reviews;
+editing the plan alone does not record their disposition. The review audits the planned
 change, not the amount of prose or the presence of links.
+
+### Recorded verification and review
+
+Before the final plan review, create or reuse native test definitions and declare
+verification obligations for every active criterion and required project check.
+Each obligation identifies its native test, boundary and expected observation;
+each criterion states whether behavior changes and therefore needs RED evidence.
+Record applicable boundaries and reasons for exclusions, the plan author's
+context, and required human decisions using identities issued by the sanctioned
+interface. Retain each decision question beside its effective human answer.
+These are test definitions, not executable test changes before approval.
+Obtain and record answers to declared decisions before the final independent
+review. A later answer changes the reviewed content and requires a renewed review.
+
+The orchestrator fetches and retains the authoritative review bundle, supplies it
+to a context independent of the author, and records the returned review against
+that exact bundle. The reviewer covers every criterion and obligation, reports
+material findings separately from notes, and states limitations. Distinct author
+and reviewer context labels attest to separate contexts; they do not prove that
+different people performed the work. Do not replace an independent review with
+an author-assigned label. The orchestrator records finding resolutions and reads
+back the review; a changed bundle needs review again.
+
+Retain the exact plan and decision answers presented for implementation approval
+before asking the human. Apply their answer to that retained presentation; do
+not refresh it silently to reuse an earlier answer. At completion, similarly
+retain the presentation containing the approved proposal, published baseline,
+candidate, evidence, reviews and readiness before asking. Changed presented
+content requires a current presentation and a fresh human answer.
+
+A legacy active Epic whose approved plan lacks verification obligations needs
+explicit human-authorized recovery through a supported audited operation. Such
+recovery returns it to PROPOSED, releases implementation ownership, preserves
+published content and history, and requires a new saved plan, independent review
+and implementation approval. It is not permission to edit an active approval.
+If that operation is unavailable, report the gap and leave the work incomplete.
 
 ## Development loop
 
 ```text
-CHOOSE EPIC -> SAVE PLAN AND PROPOSED CONTENT -> INDEPENDENT REVIEW
+CHOOSE EPIC -> SAVE PLAN AND PROPOSED CONTENT -> ANSWER DECLARED DECISIONS
+-> RETAIN REVIEW BUNDLE -> INDEPENDENT REVIEW + RECORDED RESOLUTIONS
 -> HUMAN IMPLEMENTATION APPROVAL / IN_PROGRESS + REQUIREMENT OWNERSHIP
--> RED -> GREEN -> CLEANUP -> VERIFY -> IN_REVIEW
+-> REGISTER / EXECUTE / FINALIZE RED -> CANDIDATE
+-> REGISTER / EXECUTE / FINALIZE GREEN -> CLEANUP -> VERIFY
+-> RECORDED INDEPENDENT IMPLEMENTATION REVIEW -> IN_REVIEW
 -> HUMAN COMPLETION APPROVAL / ATOMIC PUBLICATION + REVISION + AUDIT + UNLOCK
 ```
 
@@ -324,12 +369,27 @@ After implementation approval, establish each changed clause's expected
 failure before implementing it. For each clause:
 
 1. Write or select a focused assertion that expresses the approved behavior.
-2. Run it against the current implementation and confirm the expected failure;
+2. Register the RED execution through the sanctioned interface before running
+   it, identifying obligations, revision, command and environment. Run it
+   against the current implementation and confirm the expected failure;
    a build error or unrelated failure is not RED evidence.
-3. Implement the smallest change that makes the assertion pass.
-4. Run the focused test, then proportional boundary and regression checks.
-5. Clean up without changing behavior and rerun affected checks.
+3. Finalize and read back the actual RED evidence before registering GREEN.
+   Implement the smallest change that makes the assertion pass.
+4. Declare the candidate revision before GREEN. Register each execution before
+   running the focused test and proportional boundary and regression checks;
+   finalize each returned execution identity with its actual evidence.
+5. Clean up without changing behavior and rerun affected checks with fresh
+   registrations. A changed candidate needs fresh passing evidence and review.
 6. Re-run affected user scenarios and verify the complete changed trace.
+
+Registration is required for evidence claimed against active declared obligations,
+including CI and delegated verification. Use the sanctioned interface's authorized
+registration account; a runner attribution does not grant write authority. A
+candidate is required before GREEN, not before RED. If GREEN was registered too
+early, finalize the valid original RED and register and execute a new GREEN;
+do not manufacture a replacement RED. Every rerun needs a new registration.
+Finish evidence collection before the implementation review; a change to reviewed
+evidence requires renewed review before submission.
 
 Do not reconstruct RED or passing evidence after the fact. Preserve the test
 output, command, environment and revision for each result. Never skip or
