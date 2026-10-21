@@ -34,8 +34,9 @@ Disclose unresolved items; counts alone do not prove semantic coverage.
    intent and that code implements the requirement's behavior. A valid Trace
    establishes a relationship, not the truth of a claim.
 3. Map each UR acceptance scenario to meaningful user-outcome assertions and
-   any required SRs. Map each SR criterion to implementation, test cases and
-   actual results. During planning inspect proposed targets and expected RED
+   any required SRs. For each SR criterion, follow the SR's implementation and
+   test-case traces, then inspect the results that exercise that criterion.
+   During planning inspect proposed targets and expected RED
    assertions; do not require execution evidence for unimplemented behavior.
 4. For verification and completion inspect actual results, commands/reports,
    tested revisions, environment where relevant and assertions exercised.
