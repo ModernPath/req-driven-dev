@@ -305,13 +305,13 @@ These are test definitions, not executable test changes before approval.
 Obtain and record answers to declared decisions before the final independent
 review. A later answer changes the reviewed content and requires a renewed review.
 
-The orchestrator fetches and retains the authoritative review bundle, supplies it
+The agent handling the task fetches and retains the authoritative review bundle, supplies it
 to a context independent of the author, and records the returned review against
 that exact bundle. The reviewer covers every criterion and obligation, reports
 material findings separately from notes, and states limitations. Distinct author
 and reviewer context labels attest to separate contexts; they do not prove that
 different people performed the work. Do not replace an independent review with
-an author-assigned label. The orchestrator records finding resolutions and reads
+an author-assigned label. The agent handling the task records finding resolutions and reads
 back the review; a changed bundle needs review again.
 
 Retain the exact plan and decision answers presented for implementation approval
@@ -411,10 +411,9 @@ browser output; never mutate production-like data to verify rendering.
 ### Delegated passes
 
 A cold review or verification pass may run in an independent context. It
-returns findings, verdict and sources to the orchestrating session; the
-orchestrator records them through the CLI. A
-reviewer's returned verdict does not turn the orchestrator into an independent
-reviewer. A delegated pass that encounters a permission, authentication or
+returns findings, verdict and sources to the agent handling the task, who
+records them through the CLI. Recording a reviewer's verdict does not make that
+agent an independent reviewer. A delegated pass that encounters a permission, authentication or
 process-tool refusal stops and returns it verbatim; it does not retry by
 rewriting or splitting the refused action.
 
