@@ -20,7 +20,7 @@ source, code and test evidence. Preserve IDs.
    human implementation approval. Continue unaffected work within the active
    approved scope.
 4. Ask the human to resolve intent that sources cannot establish. Record the
-   decision through the sanctioned interface before relying on it.
+   decision through the CLI before relying on it.
 5. Disclose blockers, assumptions and deferred work. Do not silently add
    another Epic, invent a local record, or declare a process-tool refusal
    cleared.

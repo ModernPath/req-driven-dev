@@ -12,7 +12,7 @@ through `rdd-triage`. An audit alone authorizes no record or implementation chan
 ## Establish scope
 
 Identify the System, Epic or requirements by their IDs and list the criteria being checked.
-Read current records and Traces through the project's sanctioned interface.
+Read current records and Traces through the project's CLI.
 Use endpoint identities and kinds; never infer the corpus from local
 files or recreate retired ledgers. If a required read is unavailable, report
 the tooling gap and leave the check incomplete.
@@ -60,7 +60,7 @@ intent for a human decision instead of resolving it by timestamp or majority.
 Use the project's supported source readers and ordinary repository files.
 Unavailable historical material is a disclosed limit, not a reason to recreate
 retired source-capture machinery. Keep uninspected findings separate from
-confirmed defects. If checking published copies, use the sanctioned read-back
+confirmed defects. If checking published copies, use the CLI's read-back
 route and compare actual content; length alone does not prove equality.
 
 ## Report

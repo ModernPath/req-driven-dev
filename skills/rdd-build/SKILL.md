@@ -5,7 +5,7 @@ description: Implement behavior within a human-approved Epic plan, using red-fir
 
 # Build approved behavior
 
-Read `PROCESS.md` and verify through the sanctioned interface that the current
+Read `PROCESS.md` and verify through the CLI that the current
 saved plan and proposed content has human implementation approval. Confirm the Epic and
 requirement IDs and remain inside approved scope. The active approved plan and
 owned requirement content are read-only during implementation and completion

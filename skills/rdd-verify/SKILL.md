@@ -37,5 +37,5 @@ Finish evidence collection before independent implementation review. A rerun
 that changes reviewed evidence requires renewing that review.
 
 Do not claim completion here. Hand the passing candidate and evidence to
-`rdd-completion-review`; if the process interface cannot store or read back
+`rdd-completion-review`; if the CLI cannot store or read back
 required evidence, report the tooling gap and its effect.

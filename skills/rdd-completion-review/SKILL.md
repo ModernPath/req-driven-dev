@@ -33,7 +33,7 @@ still-published requirements, ownership, implementation, traces and evidence.
    the separate explicit completion answer; never infer it from implementation
    approval, an autopilot grant, tests, code review or repository state.
 5. Apply only the human's actual approval with the unchanged retained
-   presentation through the sanctioned interface. If it changed, present current
+   presentation through the CLI. If it changed, present current
    content and obtain a new answer; never refresh it silently to reuse consent.
    Read back the atomic publication of approved content, one revision increment
    per requirement, immutable accepted versions with criteria and trace meaning,

@@ -5,8 +5,7 @@ description: Run a bounded implementation sprint under an explicit human autopil
 
 # Run an autopilot sprint
 
-Read `PROCESS.md`, confirm the grant through the sanctioned process
-interface, and verify its Epic scope, end date and excluded areas. Stop if the
+Read `PROCESS.md`, confirm the grant through the CLI, and verify its Epic scope, end date and excluded areas. Stop if the
 grant is missing, expired or ambiguous.
 
 1. Confirm each selected Epic and its current saved plan. Do not expand scope.
@@ -37,5 +36,5 @@ grant is missing, expired or ambiguous.
    Merge, deployment and release remain human acts.
 
 Record skipped checks, unresolved findings, assumptions and impediments in the
-sanctioned process interface when it supports them. If it does not, report the
+CLI when it supports them. If it does not, report the
 gap; never invent a local record format or bypass a refusal.

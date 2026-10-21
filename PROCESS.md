@@ -1,6 +1,6 @@
 # Requirement-driven delivery process
 
-This document defines the delivery process. Skills apply it. The project's sanctioned process interface is the only way to read or change delivery state; its server is authoritative. This process does not define local ledger formats or add a second record system.
+This document defines the delivery process. Skills apply it. The project's CLI is the only way to read or change delivery state; its server is authoritative. This process does not define local ledger formats or add a second record system.
 
 ## Canonical model
 
@@ -44,7 +44,7 @@ workflow. Agents establish facts, write and review plans, implement approved
 work, and report evidence. They do not infer human approval from silence,
 prior work, a passing test, a commit, or a repository state.
 
-Use the project's sanctioned process interface to read the Epic and its
+Use the project's CLI to read the Epic and its
 requirements, save a plan, obtain recorded approvals, and read back results.
 If it lacks a needed read or write, report the tooling gap through the
 project's named channel. Do not read or edit process state through a local
@@ -56,7 +56,7 @@ faithfully summarize it with the file and location. Code proves existing
 behavior, not intended behavior. Repository status and a change list describe
 the repository; they do not establish process approval or completion.
 
-The process interface attributes human decisions and approvals to the person
+The CLI attributes human decisions and approvals to the person
 who made them. In the saved plan, cite product sources in ordinary prose with
 links or file locations and enough quoted or summarized context for another
 reviewer to inspect the claim. A link audit checks whether a reference
@@ -124,7 +124,7 @@ It must reject changed content or evidence, incomplete or failing evidence, and
 any requirement owned by active implementation work. It does not create an
 Epic, an implementation approval, or an ownership lock. Already-DONE
 requirements are left unchanged. A missing human decision leaves requirements
-PROPOSED. If the sanctioned interface does not provide this operation, report
+PROPOSED. If the CLI does not provide this operation, report
 the tooling gap and leave them PROPOSED.
 
 This path describes and accepts existing behavior only. If behavior or tests
@@ -173,15 +173,14 @@ neither recording nor passing evidence implies human acceptance.
 
 Local working-set files may hold store projections and development inputs.
 They are not a second authority and need no fingerprint or synchronization
-ceremony. Read back the recorded requirements and traces through the sanctioned
-interface and report what was recorded and any remaining work.
+ceremony. Read back the recorded requirements and traces through the CLI and report what was recorded and any remaining work.
 
 ## Human approvals
 
 The human reviews a saved Epic plan and its exact proposed requirement
 content, criteria and traces. Implementation approval retains that content and
 the decision's actor, time and reason. Read back the approval and requirement
-ownership through the sanctioned interface before implementation. A later
+ownership through the CLI before implementation. A later
 changed intent needs fresh human approval; never silently change what an
 existing approval accepted.
 
@@ -215,14 +214,13 @@ branch as merged or deployed without inspecting that external state.
 For changed behavior or tests, work on the Epic scope the user selected. If
 scope is missing, ask which Epic to use or whether to prepare a sourced
 proposal. Read its ID, saved plan, approved proposal, human decisions
-and affected requirements from the sanctioned interface. Choosing work
+and affected requirements from the CLI. Choosing work
 creates no separate selection record or Epic lock. Requirement ownership is
 acquired by implementation approval, not session entry.
 
 For an explicit request limited to recording, verifying or accepting existing
 behavior, an Epic is not required. Read the System and requirement IDs,
-current content, evidence and implementation ownership from the sanctioned
-interface, then route to the corresponding reverse-engineering pass. If the
+current content, evidence and implementation ownership from the CLI, then route to the corresponding reverse-engineering pass. If the
 request entails a behavior or test change, use the Epic path above.
 
 Keep work within the approved outcome and exclusions. Disclose changed intent,
@@ -235,7 +233,7 @@ result.
 Autopilot is a human-granted way to continue implementation across a bounded
 sprint; it is not a completion approval. The grant names the Epic or Epics,
 end date and excluded areas and is recorded with its `USER:` source through
-the sanctioned interface. Under a current grant, the agent may continue
+the CLI. Under a current grant, the agent may continue
 within an approved saved plan and may record ordinary, reversible product
 assumptions for later human confirmation. Unless already explicitly authorized, it must stop for decisions whose
 wrong answer is hard to undo, including deletion or migration of existing
@@ -302,8 +300,7 @@ verification obligations for every active criterion and required project check.
 Each obligation identifies its test, boundary and expected observation;
 each criterion states whether behavior changes and therefore needs RED evidence.
 Record applicable boundaries and reasons for exclusions, the plan author's
-context, and required human decisions using identities issued by the sanctioned
-interface. Retain each decision question beside its effective human answer.
+context, and required human decisions using identities issued by the CLI. Retain each decision question beside its effective human answer.
 These are test definitions, not executable test changes before approval.
 Obtain and record answers to declared decisions before the final independent
 review. A later answer changes the reviewed content and requires a renewed review.
@@ -345,8 +342,8 @@ CHOOSE EPIC -> SAVE PLAN AND PROPOSED CONTENT -> ANSWER DECLARED DECISIONS
 
 Enter with `rdd-start`. Use `rdd-deliver` for an end-to-end request, and a
 focused skill only when the user explicitly ends the task at that pass. Each
-skill uses the project's sanctioned process interface; it does not prescribe
-or invent CLI verbs. A missing interface capability is reported as a tooling
+skill uses the project's CLI; it does not prescribe
+or invent CLI commands. A missing CLI capability is reported as a tooling
 gap.
 
 | Phase | Skill | Exit |
@@ -372,7 +369,7 @@ After implementation approval, establish each changed clause's expected
 failure before implementing it. For each clause:
 
 1. Write or select a focused assertion that expresses the approved behavior.
-2. Register the RED execution through the sanctioned interface before running
+2. Register the RED execution through the CLI before running
    it, identifying obligations, revision, command and environment. Run it
    against the current implementation and confirm the expected failure;
    a build error or unrelated failure is not RED evidence.
@@ -386,7 +383,7 @@ failure before implementing it. For each clause:
 6. Re-run affected user scenarios and verify the complete changed trace.
 
 Registration is required for evidence claimed against active declared obligations,
-including CI and delegated verification. Use the sanctioned interface's authorized
+including CI and delegated verification. Use the CLI's authorized
 registration account; a runner attribution does not grant write authority. A
 candidate is required before GREEN, not before RED. If GREEN was registered too
 early, finalize the valid original RED and register and execute a new GREEN;
@@ -415,7 +412,7 @@ browser output; never mutate production-like data to verify rendering.
 
 A cold review or verification pass may run in an independent context. It
 returns findings, verdict and sources to the orchestrating session; the
-orchestrator records them through the sanctioned process interface. A
+orchestrator records them through the CLI. A
 reviewer's returned verdict does not turn the orchestrator into an independent
 reviewer. A delegated pass that encounters a permission, authentication or
 process-tool refusal stops and returns it verbatim; it does not retry by
@@ -462,7 +459,7 @@ human decisions.
 
 ## Process state and reconciliation
 
-The server-backed process interface is the sole authority for the Epic,
+The server holds the authoritative records for the Epic,
 requirements, saved plan and exact proposed content, implementation,
 completion and existing-behavior acceptance decisions, and their
 relationships. This process defines no file-backed ledger,

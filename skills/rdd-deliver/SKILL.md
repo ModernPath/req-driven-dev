@@ -5,7 +5,7 @@ description: Deliver an authorized Epic through its saved plan, human implementa
 
 # Deliver an Epic
 
-Read `PROCESS.md` and use the project's sanctioned process interface. Confirm
+Read `PROCESS.md` and use the project's CLI. Confirm
 the human-selected Epic and its latest saved plan before acting.
 
 1. Run `rdd-start` and identify the earliest incomplete phase.

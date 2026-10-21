@@ -27,10 +27,10 @@ completion approval.
 
 If approved, submit the unchanged retained presentation with the human's actual
 answer and `USER:` attribution through
-the sanctioned interface and read back the resulting Epic state and plan
+the CLI and read back the resulting Epic state and plan
 content. Confirm the named requirements atomically acquired the human/Epic
 ownership and moved directly to IN_PROGRESS, with published content unchanged.
 Do not answer for the human or start test/code changes before the
 approval is confirmed. If rejected or revised, report that result and route
-back to `rdd-plan`. If the interface cannot record/read back the approval,
+back to `rdd-plan`. If the CLI cannot record/read back the approval,
 report the tooling gap and stop before implementation.

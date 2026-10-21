@@ -6,8 +6,7 @@ description: Read existing code and documentation and record requirements with t
 # Record requirements from existing code
 
 Read the project's `AGENTS.md`, `PROCESS.md` and current CLI reference. Establish
-the user's requested repository and behavior scope. Use the sanctioned process
-interface to read existing requirements and record new ones.
+the user's requested repository and behavior scope. Use the CLI to read existing requirements and record new ones.
 
 1. Read the relevant code, tests and documentation. Describe the behavior found,
    its actor, outcome, limits and side effects using the existing domain terms.

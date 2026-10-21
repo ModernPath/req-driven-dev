@@ -33,12 +33,12 @@ process authority.
    every active criterion and required project check as a verification obligation,
    with test identity, boundary and expected observation. Identify changed
    criteria requiring RED, applicable boundaries and exclusion reasons, author
-   context, and required human decisions using interface-issued identities.
+   context, and required human decisions using IDs issued through the CLI.
    Retain each declared question beside its effective human answer.
    This creates test definitions, not executable tests before approval.
 6. Record open questions, conflicts, assumptions, deferred scope and risk in
-   plain language. Do not invent a CLI verb or local plan format.
-7. Save the plan through the sanctioned process interface and read back the exact
+   plain language. Do not invent a CLI command or local plan format.
+7. Save the plan through the CLI and read back the exact
    saved content. Obtain and record answers to declared decisions, then retain the
    review bundle. Stop for independent review and human implementation
    approval; do not change tests or product code in this pass.

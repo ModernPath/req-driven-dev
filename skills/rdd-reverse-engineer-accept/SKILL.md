@@ -6,7 +6,7 @@ description: Present verified existing behavior for explicit human acceptance an
 # Accept verified existing behavior
 
 Use the results of rdd-reverse-engineer-verify. Read the project's instructions,
-current process and sanctioned CLI reference. This path accepts an accurate,
+current process and CLI reference. This path accepts an accurate,
 verified description of existing behavior; it does not approve a requested code
 change or require an implementation Epic merely to manufacture a lifecycle path.
 

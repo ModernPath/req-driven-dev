@@ -6,8 +6,7 @@ description: Enter a product-delivery session, confirm Epic scope or an explicit
 # Enter the delivery session
 
 Read the consuming project's root instructions and `.modernpath/rdd/PROCESS.md`
-(or this repository's `PROCESS.md`). Use the project's sanctioned process
-interface for all process reads.
+(or this repository's `PROCESS.md`). Use the project's CLI for all process reads.
 
 1. Determine whether the user explicitly requests changed behavior/tests or a
    pass limited to existing behavior. Do not infer this from the branch or
@@ -29,7 +28,7 @@ interface for all process reads.
    report the tooling gap; do not perform recovery by editing active records.
 3. For an explicit existing-behavior pass, read the System and
    requirement IDs, current content, criteria, traces, evidence and ownership
-   from the sanctioned interface. Route recording to `rdd-reverse-engineer`,
+   from the CLI. Route recording to `rdd-reverse-engineer`,
    verification to `rdd-reverse-engineer-verify`, or requested human
    acceptance to `rdd-reverse-engineer-accept`. Active Epic-owned requirements
    remain on the Epic path. If behavior or tests need to change, stop this
@@ -45,7 +44,7 @@ interface for all process reads.
    is approved, keep the active plan and owned requirements read-only, surface
    the new request as a human decision and record new work separately.
 
-If the interface cannot read the current state, report the missing capability
+If the CLI cannot read the current state, report the missing capability
 through the project's tooling-gap channel. Do not recreate state from notes,
 branches, local files or memory. Report the selected Epic, saved plan,
 proposed content, approval state and evidence, or the selected System,
