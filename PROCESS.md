@@ -544,5 +544,13 @@ tooling gap and leave the item explicitly incomplete.
 | Known future work outside the approved scope | Disclose it and leave it for a separately authorized Epic |
 | Contradicted or removed behavior | Explain the conflict and ask the human how the approved outcome changes |
 
+Backlog, gap and tooling records are records of the authoritative process
+store like every other: they are created, routed and closed there. A record is
+routed to the Epic whose saved plan delivers it and closed by that Epic after
+human completion approval; a record the human keeps open stays open with a
+note. Dispositions are read from the store, not from a plan body; a plan names
+the records it delivers and is a projection at best. A discovery that lives
+only in a note is not yet a record.
+
 Preserve competing authoritative sources and ask for a human decision; never
 resolve intent by timestamp, branch state, or a convenient test result.

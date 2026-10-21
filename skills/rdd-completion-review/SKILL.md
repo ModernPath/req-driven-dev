@@ -43,6 +43,9 @@ still-published requirements, ownership, implementation, traces and evidence.
    per requirement, immutable accepted versions with criteria and trace meaning,
    attributable Epic/requirement audit and released ownership. A failed action
    must leave all effects unchanged; a repeated completion must not republish.
+6. Once that publication is read back, set each backlog, gap or tooling record
+   routed to the Epic to closed by the Epic through the sanctioned interface
+   and read it back. A record the human keeps open stays open with a note.
 
 Git and PR/CI own code integration. Never merge a PR without the user's explicit
 approval for that PR. Deployment is a separate human act. If a required process
