@@ -304,8 +304,13 @@ The four Epic gates and their CLI checks are:
 | Completion review (`completion-review`) | Current candidate, intact membership and ownership, passing results for every obligation, qualifying RED evidence for changed criteria, current implementation review confirming scope, and resolved material findings. | `modernpath epics gates check <epic-id> --phase completion-review --json` |
 | Completion approval (`completion`) | Completion-review conditions while the Epic is IN_REVIEW. Approval also checks the exact retained completion presentation and requires the user's explicit decision. | `modernpath epics gates check <epic-id> --phase completion --json` |
 
-Each check returns readiness and all detected blockers without changing the
-Epic. Passing a check grants no approval. The transition commands recheck the
+Each explicit check records its readiness result and blockers in the Audit Trail,
+with the actor, server time and Git SHA source, without changing Epic lifecycle.
+The CLI uses checkout HEAD and known dirty status by default; `--git-sha` supplies
+an explicit full SHA. When no SHA is available, the record says so. A supplied
+SHA is trace information and does not prove that the repository was verified.
+Both passing and blocked checks are recorded. Reading a preview or review bundle
+does not record a check. Passing a check grants no approval. The transition commands recheck the
 conditions: `modernpath epics plan approve-implementation`,
 `modernpath epics plan submit-review`, and
 `modernpath epics plan approve-completion`. Follow the CLI reference for their
