@@ -24,6 +24,9 @@ defines no local delivery ledger.
 - `skills/rdd-reverse-engineer-accept/SKILL.md` obtains explicit human
   acceptance and uses the supported atomic PROPOSED-to-DONE operation for
   verified existing behavior.
+- `skills/rdd-legacy-closeout/SKILL.md` records human-authorized historical
+  RED exceptions for recovered legacy scope before normal verification and
+  completion review.
 
 If the CLI lacks a required read or write, report that gap. Do
 not create a local ledger, direct transport, or another authority as a

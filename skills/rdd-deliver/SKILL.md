@@ -20,7 +20,9 @@ human-selected Epic and its latest saved plan before acting.
 4. Present the exact saved plan and proposed content for human implementation approval
    with `rdd-entry-review`. Do not implement before approval.
 5. Implement red-first with `rdd-build`, then run `rdd-verify` for required
-   focused, boundary and user-flow evidence.
+   focused, boundary and user-flow evidence. For already-implemented recovered
+   legacy scope needing a historical RED exception, use
+   [rdd-legacy-closeout](../rdd-legacy-closeout/SKILL.md) before verification.
 6. Use `rdd-completion-review` for independent code review, trace audit and
    separate human completion approval. Only that approval publishes requirement
    content, raises revisions, records audit and releases ownership atomically.

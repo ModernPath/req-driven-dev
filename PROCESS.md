@@ -383,6 +383,9 @@ If that operation is unavailable, report the gap and leave the work incomplete.
 
 ### Human-authorized legacy closeout
 
+Use [rdd-legacy-closeout](skills/rdd-legacy-closeout/SKILL.md) to apply this
+policy through the project's CLI.
+
 Already-implemented scope in a recovered legacy Epic may use an explicit human
 exception for historical RED. No historical RED report is required. Retain any
 genuine reports available and record missing proof, coverage gaps and the human's
@@ -434,6 +437,7 @@ gap.
 | Cold review | `rdd-cold-review` | Findings resolved or clearly disclosed; reviewed content identified |
 | Implementation approval | `rdd-entry-review` | Human implementation approval read back for the exact saved plan and exact proposed content |
 | Implement | `rdd-build` | Red-first implementation and focused checks complete |
+| Authorize legacy RED gaps | `rdd-legacy-closeout` | Recovered scope, human authorization, retained proof and disclosed gaps recorded; normal verification and completion remain required |
 | Verify | `rdd-verify` | Required lower and upper evidence passes at the candidate revision |
 | Review, publish and complete | `rdd-completion-review` | Human-approved content atomically published/versioned/audited, ownership released, or incomplete work reported |
 | Verify existing behavior | `rdd-reverse-engineer-verify` | Current PROPOSED content traced to existing behavior and complete applicable test outcomes recorded; no lifecycle transition |

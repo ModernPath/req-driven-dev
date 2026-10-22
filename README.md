@@ -36,6 +36,10 @@ evidence. See [Small changes](PROCESS.md#small-changes).
 4. [`skills/rdd-deliver/SKILL.md`](skills/rdd-deliver/SKILL.md) — complete-loop
    orchestration; use a focused skill when a request ends at one pass.
 
+For already-implemented recovered legacy scope with missing historical RED,
+use [`rdd-legacy-closeout`](skills/rdd-legacy-closeout/SKILL.md) to record the
+human-authorized exception before normal verification and completion review.
+
 ## Process authority
 
 [`PROCESS.md`](PROCESS.md) is the process authority. Skills apply it using the

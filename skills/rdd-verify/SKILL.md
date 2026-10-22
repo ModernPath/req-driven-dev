@@ -13,11 +13,8 @@ For Epic work, read `PROCESS.md`, the approved plan and proposed content and
 its requirement, code and test links. Confirm the tested content is the current candidate
 revision and the work remains within approved scope.
 
-For already-implemented recovered legacy scope with a supported, recorded human
-closeout exception, historical RED is optional. Inspect the authorized scope,
-retained reports and disclosed absence/gaps; require complete current GREEN and
-independent review. Later-added behavior keeps normal RED. See `PROCESS.md`
-§Human-authorized legacy closeout.
+For a recorded legacy exception, check its applicability and disclosed gaps
+under [rdd-legacy-closeout](../rdd-legacy-closeout/SKILL.md).
 
 1. Outside that scoped legacy exception, confirm each changed behavior has a recorded expected RED and passing
    result, with RED finalized before GREEN registration. If GREEN started too
