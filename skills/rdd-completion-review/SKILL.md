@@ -8,9 +8,7 @@ description: Review implemented Epic work and present its exact approved proposa
 Read `PROCESS.md`, the Epic's approved plan and exact proposed content, the
 still-published requirements, ownership, implementation, traces and evidence.
 
-1. Inspect each approved requirement and its actual evidence, including any
-   applicable exception and gap disclosure from
-   [rdd-legacy-closeout](../rdd-legacy-closeout/SKILL.md). Run the owning
+1. Inspect each approved requirement and its actual evidence. Run the owning
    checks with registration before execution and finalized evidence afterward;
    record outcomes and limits before obtaining the implementation review.
    Explicitly authorized deletion

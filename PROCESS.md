@@ -326,7 +326,7 @@ The four Epic gates and their CLI checks are:
 |---|---|---|
 | Plan readiness (`plan-ready`) | Saved requirements, criteria, code/test traces, test definitions and verification obligations; answered decisions; current independent plan review and resolved material findings. | `modernpath epics gates check <epic-id> --phase plan-ready --json` |
 | Implementation approval (`implementation`) | Plan readiness and requirements available for ownership. Approval also checks the exact reviewed plan and, for declared decisions, the retained presentation shown to the user. | `modernpath epics gates check <epic-id> --phase implementation --json` |
-| Completion review (`completion-review`) | Current candidate, intact membership and ownership, passing results for every obligation, qualifying RED evidence for changed criteria or a recorded scoped legacy exception, current implementation review confirming scope, and resolved material findings. | `modernpath epics gates check <epic-id> --phase completion-review --json` |
+| Completion review (`completion-review`) | Current candidate, intact membership and ownership, passing results for every obligation, qualifying RED evidence for changed criteria, current implementation review confirming scope, and resolved material findings. | `modernpath epics gates check <epic-id> --phase completion-review --json` |
 | Completion approval (`completion`) | Completion-review conditions while the Epic is IN_REVIEW. Approval also checks the exact retained completion presentation and requires the user's explicit decision. | `modernpath epics gates check <epic-id> --phase completion --json` |
 
 Each explicit check records its readiness result and blockers in the Audit Trail,
@@ -383,8 +383,13 @@ If that operation is unavailable, report the gap and leave the work incomplete.
 
 ### Human-authorized legacy closeout
 
-Use [rdd-legacy-closeout](skills/rdd-legacy-closeout/SKILL.md) to apply this
-policy through the project's CLI.
+This policy is available only through the isolated
+[rdd-legacy-closeout](skills/rdd-legacy-closeout/SKILL.md) workflow when the
+human explicitly invokes it for a named Epic. Normal delivery skills retain
+their RED requirements and never route here. Missing evidence, a failing gate,
+old code or a general instruction to finish work is not authorization to
+select this workflow. It handles verification and completion itself using
+the existing four gates; it adds no gate to normal delivery.
 
 Already-implemented scope in a recovered legacy Epic may use an explicit human
 exception for historical RED. No historical RED report is required. Retain any
@@ -437,7 +442,6 @@ gap.
 | Cold review | `rdd-cold-review` | Findings resolved or clearly disclosed; reviewed content identified |
 | Implementation approval | `rdd-entry-review` | Human implementation approval read back for the exact saved plan and exact proposed content |
 | Implement | `rdd-build` | Red-first implementation and focused checks complete |
-| Authorize legacy RED gaps | `rdd-legacy-closeout` | Recovered scope, human authorization, retained proof and disclosed gaps recorded; normal verification and completion remain required |
 | Verify | `rdd-verify` | Required lower and upper evidence passes at the candidate revision |
 | Review, publish and complete | `rdd-completion-review` | Human-approved content atomically published/versioned/audited, ownership released, or incomplete work reported |
 | Verify existing behavior | `rdd-reverse-engineer-verify` | Current PROPOSED content traced to existing behavior and complete applicable test outcomes recorded; no lifecycle transition |

@@ -36,9 +36,10 @@ evidence. See [Small changes](PROCESS.md#small-changes).
 4. [`skills/rdd-deliver/SKILL.md`](skills/rdd-deliver/SKILL.md) — complete-loop
    orchestration; use a focused skill when a request ends at one pass.
 
-For already-implemented recovered legacy scope with missing historical RED,
-use [`rdd-legacy-closeout`](skills/rdd-legacy-closeout/SKILL.md) to record the
-human-authorized exception before normal verification and completion review.
+The isolated [`rdd-legacy-closeout`](skills/rdd-legacy-closeout/SKILL.md)
+workflow requires explicit human invocation for a named Epic. It handles
+historical gaps, current verification and completion itself; normal delivery
+skills never route to it or relax their RED requirement.
 
 ## Process authority
 

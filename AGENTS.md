@@ -24,9 +24,6 @@ defines no local delivery ledger.
 - `skills/rdd-reverse-engineer-accept/SKILL.md` obtains explicit human
   acceptance and uses the supported atomic PROPOSED-to-DONE operation for
   verified existing behavior.
-- `skills/rdd-legacy-closeout/SKILL.md` records human-authorized historical
-  RED exceptions for recovered legacy scope before normal verification and
-  completion review.
 
 If the CLI lacks a required read or write, report that gap. Do
 not create a local ledger, direct transport, or another authority as a
@@ -47,6 +44,10 @@ existing behavior without an implementation Epic when no behavior or test
 change is requested. Route code or test changes through `PROCESS.md`
 §Work scope, including its small-change exception.
 `skills/rdd-audit/SKILL.md` is a shared utility invoked by other passes, not a phase.
+
+`skills/rdd-legacy-closeout/SKILL.md` is an isolated maintenance workflow,
+available only when the human explicitly invokes it for a named Epic. Normal
+delivery never routes to it or relaxes RED because evidence is missing.
 
 Read relevant product documents and inspect their cited code and tests. A
 valid Trace establishes a relationship; inspect its endpoints and source

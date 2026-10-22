@@ -23,10 +23,7 @@ Read the consuming project's root instructions and `.modernpath/rdd/PROCESS.md`
    behavior coverage, criteria or planned code/test traces, route to
    `rdd-plan` before approval. If already approved with these gaps, surface
    the conflict for a human decision; do not silently edit approved content
-   or treat plan-only checks as sufficient. For already-implemented legacy
-   work needing recovery or an exception for missing historical RED, route to
-   [rdd-legacy-closeout](../rdd-legacy-closeout/SKILL.md). It handles recovery
-   prerequisites and the scoped authorization before normal verification.
+   or treat plan-only checks as sufficient.
 3. For an explicit existing-behavior pass, read the System and
    requirement IDs, current content, criteria, traces, evidence and ownership
    from the CLI. Route recording to `rdd-reverse-engineer`,

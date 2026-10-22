@@ -13,10 +13,7 @@ For Epic work, read `PROCESS.md`, the approved plan and proposed content and
 its requirement, code and test links. Confirm the tested content is the current candidate
 revision and the work remains within approved scope.
 
-For a recorded legacy exception, check its applicability and disclosed gaps
-under [rdd-legacy-closeout](../rdd-legacy-closeout/SKILL.md).
-
-1. Outside that scoped legacy exception, confirm each changed behavior has a recorded expected RED and passing
+1. Confirm each changed behavior has a recorded expected RED and passing
    result, with RED finalized before GREEN registration. If GREEN started too
    early, finalize valid original RED and register and execute a new GREEN.
    A build error or unrelated failure does not count as RED.
