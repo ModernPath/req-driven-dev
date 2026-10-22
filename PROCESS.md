@@ -235,8 +235,10 @@ result.
 
 Small changes do not require an Epic. A small change has a clear requested
 outcome, a narrow code and test boundary, and focused tests plus proportional
-regression checks that can verify it. Judge the behavior and dependencies,
-not the number of changed lines. State the scope and expected observation
+regression checks that can verify it. It may relate to a single system
+requirement; that relationship is optional and does not by itself require an
+Epic. When present, cite the requirement in the PR or handoff. Judge the
+behavior and dependencies, not the number of changed lines. State the scope and expected observation
 briefly in the session; the user's request authorizes work within that scope.
 No separate Epic plan or implementation-approval ceremony is required.
 
