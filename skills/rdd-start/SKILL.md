@@ -29,6 +29,11 @@ Read the consuming project's root instructions and `.modernpath/rdd/PROCESS.md`
    preserving published content and history. Read back recovery, then route to
    planning, independent review and fresh implementation approval. If unsupported,
    report the tooling gap; do not perform recovery by editing active records.
+   Already-implemented recovered scope may use a supported human-authorized
+   legacy closeout exception for missing historical RED, including zero reports.
+   Read its scope and absence/gap disclosure; current GREEN, independent review
+   and separate completion approval remain required. New behavior keeps normal
+   RED. See `PROCESS.md` §Human-authorized legacy closeout.
 3. For an explicit existing-behavior pass, read the System and
    requirement IDs, current content, criteria, traces, evidence and ownership
    from the CLI. Route recording to `rdd-reverse-engineer`,

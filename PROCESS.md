@@ -326,7 +326,7 @@ The four Epic gates and their CLI checks are:
 |---|---|---|
 | Plan readiness (`plan-ready`) | Saved requirements, criteria, code/test traces, test definitions and verification obligations; answered decisions; current independent plan review and resolved material findings. | `modernpath epics gates check <epic-id> --phase plan-ready --json` |
 | Implementation approval (`implementation`) | Plan readiness and requirements available for ownership. Approval also checks the exact reviewed plan and, for declared decisions, the retained presentation shown to the user. | `modernpath epics gates check <epic-id> --phase implementation --json` |
-| Completion review (`completion-review`) | Current candidate, intact membership and ownership, passing results for every obligation, qualifying RED evidence for changed criteria, current implementation review confirming scope, and resolved material findings. | `modernpath epics gates check <epic-id> --phase completion-review --json` |
+| Completion review (`completion-review`) | Current candidate, intact membership and ownership, passing results for every obligation, qualifying RED evidence for changed criteria or a recorded scoped legacy exception, current implementation review confirming scope, and resolved material findings. | `modernpath epics gates check <epic-id> --phase completion-review --json` |
 | Completion approval (`completion`) | Completion-review conditions while the Epic is IN_REVIEW. Approval also checks the exact retained completion presentation and requires the user's explicit decision. | `modernpath epics gates check <epic-id> --phase completion --json` |
 
 Each explicit check records its readiness result and blockers in the Audit Trail,
@@ -380,6 +380,30 @@ recovery returns it to PROPOSED, releases implementation ownership, preserves
 published content and history, and requires a new saved plan, independent review
 and implementation approval. It is not permission to edit an active approval.
 If that operation is unavailable, report the gap and leave the work incomplete.
+
+### Human-authorized legacy closeout
+
+Already-implemented scope in a recovered legacy Epic may use an explicit human
+exception for historical RED. No historical RED report is required. Retain any
+genuine reports available and record missing proof, coverage gaps and the human's
+authorization and reason. Do not invent old failures, metadata or registration
+times, and do not represent the exception as per-criterion RED evidence.
+
+The supported operation binds the exception to that Epic's recovery record,
+exact approved plan, current test definitions and explicitly mapped legacy
+criteria. Changed wording or identities need a reason identifying the same
+existing behavior. New behavior added after recovery retains normal RED. The
+implementation approver records the exception through the CLI; its immutable
+record and audit retain original proof snapshots separately from the new actor
+and recording time. Exact retries are idempotent; stale or unauthorized inputs
+are refused atomically.
+
+Current GREEN for every criterion and project check, candidate and ownership
+checks, independent implementation review, resolution of material findings and
+separate exact human completion approval remain required. Review and completion
+presentations disclose the exception and historical gaps. Changed scope or test
+definitions require renewed authorization; changed evidence requires fresh
+review. This is a historical RED exception, not automatic submission or completion.
 
 ## Development loop
 
