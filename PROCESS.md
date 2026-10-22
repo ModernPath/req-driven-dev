@@ -238,20 +238,12 @@ outcome, a narrow code and test boundary, and focused tests plus proportional
 regression checks that can verify it. It may relate to a single system
 requirement; that relationship is optional and does not by itself require an
 Epic. When present, cite the requirement in the PR or handoff. Judge the
-behavior and dependencies, not the number of changed lines. State the scope and expected observation
-briefly in the session; the user's request authorizes work within that scope.
+behavior and dependencies, not the number of changed lines. State the scope
+and expected observation briefly in the session; the user's request authorizes work within that scope.
 No separate Epic plan or implementation-approval ceremony is required.
 
-Use this RED/GREEN loop for every changed behavior:
-
-1. Write or select a focused test for the requested outcome. Run it before
-   implementing the change and confirm the expected assertion failure (RED).
-   A compile error or unrelated failure does not count.
-2. Make the smallest implementation change and run the test to passing (GREEN).
-3. Clean up and rerun affected tests and proportional regression checks.
-4. Retain the actual RED and GREEN commands, outputs and tested revisions;
-   summarize them in the PR or handoff, with any failures or unverified paths.
-   Do not reconstruct evidence or weaken tests to obtain a pass.
+Small changes follow the [AI TDD inner loop](#ai-tdd-inner-loop), including
+RED/GREEN execution, regression checks and retained evidence.
 
 Do not create Epic, requirement or execution-registration records solely to
 use this exception. PR and test evidence suffice for this path; they do not
@@ -391,7 +383,7 @@ If that operation is unavailable, report the gap and leave the work incomplete.
 
 ## Development loop
 
-Small changes follow the RED/GREEN loop in [Small changes](#small-changes).
+Small changes use the [AI TDD inner loop](#ai-tdd-inner-loop) directly.
 The Epic delivery loop is:
 
 ```text
@@ -429,8 +421,11 @@ reached and report what remains.
 
 ### AI TDD inner loop
 
-After implementation approval, establish each changed clause's expected
-failure before implementing it. For each clause:
+Establish each changed clause's expected failure before implementing it.
+For Epic work, begin after implementation approval. Small changes use the
+same test sequence, omitting Epic candidate declaration, execution registration
+and store finalization/read-back; retain the evidence in the PR or handoff
+instead. For each clause:
 
 1. Write or select a focused assertion that expresses the approved behavior.
 2. Register the RED execution through the CLI before running
