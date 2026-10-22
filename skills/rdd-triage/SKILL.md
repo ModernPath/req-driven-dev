@@ -18,11 +18,10 @@ source, code and test evidence. Preserve IDs.
    keep the active plan and owned requirements read-only, surface the change
    as a human decision and record new work separately for its own plan and
    human implementation approval. Continue unaffected work within the active
-   approved scope. When the discovery is, or becomes, a backlog, gap or
-   tooling record that a plan delivers, set the record's disposition to routed
-   to the Epic through the sanctioned process interface, with a reference
-   naming the plan save, and read it back; a plan body that names the record
-   does not route it.
+   approved scope. When a saved plan delivers a backlog, gap or tooling
+   record, use the CLI to mark the record as routed to that Epic, with a
+   reference to the plan save, and read it back. Listing the record in the
+   plan body does not route it.
 4. Ask the human to resolve intent that sources cannot establish. Record the
    decision through the CLI before relying on it.
 5. Disclose blockers, assumptions and deferred work. Do not silently add
