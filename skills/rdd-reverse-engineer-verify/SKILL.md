@@ -18,8 +18,8 @@ trace, but are not accepted again. Verification does not change lifecycle state.
    assess its user-facing scenarios independently of lower-level system tests.
    Include the supporting system requirements actually required by those
    scenarios; do not invent relationships or parents to fill a diagram.
-3. Inspect executable assertions and resolve each real test to a native TestCase.
-   Reuse the same native UUID when one test supports several requirements or
+3. Inspect executable assertions and resolve each real test to a TestCase.
+   Reuse the same UUID when one test supports several requirements or
    criteria. Preserve source-file, repository, runner and exact selector identity;
    titles and filenames alone cannot establish identity. Retain meaningful
    preconditions, ordered steps and expected observations from the inspected test.
@@ -35,7 +35,7 @@ trace, but are not accepted again. Verification does not change lifecycle state.
    its execution-specific criterion/assertion traces; do not store another
    criterion-conclusion result. Keep partial coverage unverified even when its
    supporting test passes. Preserve FAIL, SKIP, ERROR, INCONCLUSIVE, missing,
-   running and stale evidence. Record command/report, environment, tested code revision, native
+   running and stale evidence. Record command/report, environment, tested code revision, record
    identities, the executed TestCase definition revision and its complete
    procedure/assertion snapshot in EvidenceResult detail. A later definition edit
    does not rewrite history or make an earlier PASS prove changed assertions.
@@ -53,7 +53,7 @@ trace, but are not accepted again. Verification does not change lifecycle state.
    original result UUIDs, conclusions, reports and execution times unchanged.
    Unsnapshotted history cannot be filled from today's edited TestCase. Missing
    per-test observations and ambiguous references remain unresolved.
-8. Read back native TestCase, criterion owner, run, EvidenceResult and every
+8. Read back TestCase, criterion owner, run, EvidenceResult and every
    required TRACE identity through the CLI. Confirm the stored assertions,
    definition snapshots, attribution, revisions, environment and outcomes. A
    file-only link, text reference or passing suite is insufficient. Check current
@@ -64,7 +64,7 @@ trace, but are not accepted again. Verification does not change lifecycle state.
    work to normal planning/build/verification. Do not change product or test code
    during this pass or fabricate RED evidence for existing behavior. Present the
    exact requirement set, derived criterion coverage, actual results, exclusions and remaining risks.
-   Report complete verification only after the native chain is read back without
+   Report complete verification only after the recorded relationships is read back without
    unresolved required links. Complete evidence is ready for
    rdd-reverse-engineer-accept; it is not human acceptance or a DONE transition.
 

@@ -199,7 +199,7 @@ supported atomic operation above. If behavior or tests need to change, return
 to [Work scope](#work-scope) to choose small-change or Epic delivery.
 Verification does not alter lifecycle state, and neither recording nor passing
 evidence implies human acceptance.
-Verification retains native TestCase identities and typed TRACEs to requirements,
+Verification retains TestCase identities and typed TRACEs to requirements,
 criteria and actual EvidenceResult observations. Record one result per executed
 test. Execution-specific typed Traces retain the criteria and assertions covered;
 derive requirement and criterion coverage from those traces and actual outcomes.
@@ -209,8 +209,8 @@ Reserve and retain a server-issued run identity before a new execution, bind it
 to its authenticated reserving principal, finalize/replay exactly under that
 identity and retain the executed TestCase definition revision and snapshot.
 Historical reconciliation adds supported links without rewriting proof or time;
-missing native links, observations and definition provenance remain explicit.
-Read back the native chain before reporting verification complete.
+missing links, observations and definition provenance remain explicit.
+Read back the recorded relationships before reporting verification complete.
 
 Local working-set files may hold store projections and development inputs.
 They are not a second authority and need no fingerprint or synchronization
