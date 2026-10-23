@@ -200,8 +200,11 @@ to [Work scope](#work-scope) to choose small-change or Epic delivery.
 Verification does not alter lifecycle state, and neither recording nor passing
 evidence implies human acceptance.
 Verification retains native TestCase identities and typed TRACEs to requirements,
-criteria and actual EvidenceResult observations. Actual per-test outcomes and
-criterion conclusions are distinct; partial coverage remains inconclusive.
+criteria and actual EvidenceResult observations. Record one result per executed
+test. Execution-specific typed Traces retain the criteria and assertions covered;
+derive requirement and criterion coverage from those traces and actual outcomes.
+Do not store a second criterion-conclusion result for the same test execution.
+Partial coverage remains unverified even when the supporting test passes.
 Reserve and retain a server-issued run identity before a new execution, bind it
 to its authenticated reserving principal, finalize/replay exactly under that
 identity and retain the executed TestCase definition revision and snapshot.

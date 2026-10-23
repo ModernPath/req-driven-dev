@@ -31,16 +31,19 @@ trace, but are not accepted again. Verification does not change lifecycle state.
    and do not execute under an unknown identity. Epic work uses its existing
    registered-execution protocol and declared criterion/check mappings.
 5. Execute the existing tests once and finalize under the retained run UUID.
-   Record each actual per-test observation once, separately from every criterion
-   conclusion. Keep partial coverage INCONCLUSIVE even if its supporting test
-   passed. Preserve FAIL, SKIP, ERROR, INCONCLUSIVE, missing, running and stale
-   evidence. Record command/report, environment, tested code revision, native
+   Record one EvidenceResult per executed test. Derive criterion coverage from
+   its execution-specific criterion/assertion traces; do not store another
+   criterion-conclusion result. Keep partial coverage unverified even when its
+   supporting test passes. Preserve FAIL, SKIP, ERROR, INCONCLUSIVE, missing,
+   running and stale evidence. Record command/report, environment, tested code revision, native
    identities, the executed TestCase definition revision and its complete
    procedure/assertion snapshot in EvidenceResult detail. A later definition edit
    does not rewrite history or make an earlier PASS prove changed assertions.
 6. Record confirmed typed TRACEs from TestCase to the requirements and criteria
-   it verifies, and EvidenceResult relates TestCase relationships for actual
-   observations and supporting criterion conclusions. Criterion ownership remains
+   it verifies, EvidenceResult relates TestCase for executed identity, and
+   EvidenceResult verifies criterion with the assertions and full/partial coverage
+   exercised by that execution. Mapping changes must not reinterpret older proof.
+   Criterion ownership remains
    its existing requirement/Epic foreign key. Do not create parallel owners,
    duplicate TestCases, duplicate executions, or a second result model.
 7. Recover a lost finalization response through scoped readback or exact replay
@@ -60,7 +63,7 @@ trace, but are not accepted again. Verification does not change lifecycle state.
    or behavior need changing, leave the requirements PROPOSED and hand missing
    work to normal planning/build/verification. Do not change product or test code
    during this pass or fabricate RED evidence for existing behavior. Present the
-   exact requirement set, criterion-level results, exclusions and remaining risks.
+   exact requirement set, derived criterion coverage, actual results, exclusions and remaining risks.
    Report complete verification only after the native chain is read back without
    unresolved required links. Complete evidence is ready for
    rdd-reverse-engineer-accept; it is not human acceptance or a DONE transition.
